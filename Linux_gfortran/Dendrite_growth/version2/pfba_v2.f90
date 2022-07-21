@@ -244,7 +244,7 @@
 !-----------------------------------------------------------------------
       
       if( phi(0,1,Ny-10) .le. 0.5) goto 500
-      write(6,*) "calculation has finished", l
+      write(6,*) "calculation has finished", l, "cycles"
       
       end
       
