@@ -1,0 +1,27 @@
+#!/usr/bin/gnuplot
+
+No = "009"
+
+set pm3d     # 3D color
+set pm3d map # color map
+#set ticslevel 0
+#set cbrange[0:1]
+#set palette defined ( 0 "black", 1 "white")
+
+#set nokey
+set tics font 'Times,14'
+set size square
+
+#set xrange[0:100] # x range
+#set yrange[0:100] # y range
+
+splot "output".No.".dat" u 1:2:4 with pm3d t ""
+pause -1
+
+set terminal png
+set output "output".No.".png"
+splot "output".No.".dat" u 1:2:4 with pm3d t ""
+
+#set pm3d interpolate 15, 15
+#set output "output".No.".gif"
+#splot "output".No.".dat" u 1:2:4 with pm3d

@@ -1,0 +1,19 @@
+modsave  = 2000.0      ! outout at every modsave, int(modsave)
+triangle = 15.0        ! initial triangle, int(triangle)
+Nx       = 750.0       ! Number of mesh in x direction, int(Nx)
+Ny       = 750.0       ! Number of mesh in y direction, int(Ny)
+dx       = 1.0e-8      ! mesh size, 1.0e-8 = 0.01 micro meter
+dy       = 1.0e-8      ! mesh size, 1.0e-8 = 0.01 micro meter
+Dl       = 3.0e-9      ! Di(i=L), diffusion coefficient of Liquid
+Ds       = 3.0e-13     ! Di(i=S), diffusion coefficient of Solid
+co       = 0.0196      ! initial solute content
+T        = 900.0       ! initial temperature [K]
+Tmelt    = 933.3       ! melting point [K]
+Vm       = 10.547e-6   ! moler volume
+me       = 640.0       ! liquidus slope
+ke       = 0.14        ! partition coefficient
+beta     = 0.0         ! kinetic coefficient
+v        = 0.03        ! anisotropy, ep=ep*(1.0+v*cos(yk*theta))
+yk       = 4.0         ! anisotropy, ep=ep*(1.0+v*cos(yk*theta))
+sigma    = 0.093       ! interface energy
+comnoise = 0.0         ! noise
