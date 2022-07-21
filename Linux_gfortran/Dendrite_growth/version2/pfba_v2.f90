@@ -279,8 +279,8 @@
       me=data(13)    ! liquidus slope
       ke=data(14)    ! partition coefficient
       beta=data(15)  ! kinetic coefficient
-      v =data(16)    ! anisotropy, ep=ep*(1.0+v*cos(yk*theta))
-      yk=data(17)    ! anisotropy, ep=ep*(1.0+v*cos(yk*theta))
+      v =data(16)    ! anisotropy, (1.0+v*cos(yk*theta))
+      yk=data(17)    ! anisotropy, (1.0+v*cos(yk*theta))
       sigma=data(18) ! interface energy
       comnoise=data(19) ! noise
       

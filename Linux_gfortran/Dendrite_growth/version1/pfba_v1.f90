@@ -272,8 +272,8 @@
       me=640.0      ! liquidus slope
       ke=0.14       ! partition coefficient
       beta=0.0      ! kinetic coefficient
-      v=0.03        ! anisotropy, ep=ep*(1.0+v*cos(yk*theta))
-      yk=4.0        ! anisotropy, ep=ep*(1.0+v*cos(yk*theta))
+      v=0.03        ! anisotropy, (1.0+v*cos(yk*theta))
+      yk=4.0        ! anisotropy, (1.0+v*cos(yk*theta))
       sigma=0.093   ! interface energy
       comnoise=0.0  ! noise
       
