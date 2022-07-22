@@ -181,10 +181,10 @@
             fccs=2.0*d1/fcc(i,j)*d4/fcc(i,j+1)/( d1/fcc(i,j) + d4/fcc(i,j+1) )
             fccn=2.0*d1/fcc(i,j)*d5/fcc(i,j-1)/( d1/fcc(i,j) + d5/fcc(i,j-1) )
             
-            xj1=( -fcl(i,j) + fcl(i-1,j) )/dx*fccw
-            xj2=( -fcl(i,j) + fcl(i+1,j) )/dx*fcce
-            xj3=( -fcl(i,j) + fcl(i,j+1) )/dy*fccs
-            xj4=( -fcl(i,j) + fcl(i,j-1) )/dy*fccn
+            xj1=fccw*( -fcl(i,j) + fcl(i-1,j) )/dx
+            xj2=fcce*( -fcl(i,j) + fcl(i+1,j) )/dx
+            xj3=fccs*( -fcl(i,j) + fcl(i,j+1) )/dy
+            xj4=fccn*( -fcl(i,j) + fcl(i,j-1) )/dy
             
             dc=( xj1 + xj2 )/dx + ( xj3 + xj4 )/dy   ! eq.6
             
