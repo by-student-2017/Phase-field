@@ -1,0 +1,24 @@
+step_end              = 10000.0   ! total number of time steps
+step_out              = 1000.0    ! interval of output
+grid_x                = 700.0     ! number of computational grids along x-axis
+grid_y                = 700.0     ! number of computational grids along y-axis
+dt                    = 0.3e-6    ! time increment [s]
+dx                    = 0.04e-6   ! spacing of computational grids along x-axis [m]
+latent_heat_A         = 2.350E+09 ! latent heat of element A [J/m3]
+latent_heat_B         = 1.728E+09 ! latent heat of element B [J/m3]
+melting_temp_A        = 1728.0    ! melting temperature of element A [K]
+melting_temp_B        = 1358.0    ! melting temperature of element B [K]
+int_energy_A          = 0.37      ! interfacial energy of element A [J/m2]
+int_energy_B          = 0.29      ! interfacial energy of element B [J/m2]
+kinetic_coeff_A       = 0.0033    ! kinetic coefficient [m/K/s]
+kinetic_coeff_B       = 0.0039    ! kinetic coefficient [m/K/s]
+diff_coeff_liquid     = 1.0E-09   ! diffusion coefficient of element B in liquid [m2/s]
+diff_coeff_solid      = 1.0E-13
+vmol                  = 7.4E-06   ! molar volume [m3/mol]
+aniso_mode            = 4.0       ! anisotropic mode number of interfacial anisotropy
+aniso_stre            = 0.04      ! strength of interfacial anisotropy (must be smaller than 1/((aniso_mode)^2-1)
+magnitude_noise       = 0.05      ! magnitude of noise
+theta_0               = 0.0       ! preferential growth direction [degree]
+initial_concentration = 0.4083    ! initial concentration of element B in liquid []
+initial_temperature   = 1574.0    ! initial temperature of the system [K]
+
