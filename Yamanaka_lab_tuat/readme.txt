@@ -5,7 +5,7 @@ This site is maintained by Yamanaka research group, Tokyo University of Agricult
 You can use this site only if you agree to the following terms.
 
 1. Copyright on each source code attributes to its developer.
-2. We prohibit all uses or diversions of all contents in this website without permission or quoting this website.
+2. We prohibit all uses or diversions of all contents in this website without permission or quoting this website (https://web.tuat.ac.jp/~yamanaka/opensource.html).
 3. We do not guarantee the accuracy of source code in this site.
 4. It is your responsibility for the use of the source codes.
 
