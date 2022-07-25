@@ -1,0 +1,31 @@
+ig        = 7.0       ! 
+grid      = 128.0     ! number of computational grids (must be 2^ig)
+step_end  = 10000.0   ! number of time steps
+step_out  = 500.0     ! interval of output
+length    = 256.e-09  ! length of computationa domain [m]
+dt        = 0.02      ! time increment [dimensionless time]
+temp      = 355.0     ! temperature [K]
+mobility  = 1.0       ! mobility of phase-field
+vm0       = 7.0e-6    ! molar volume [m3/mol]
+aa        = 0.15      ! constant A for chemical free energy
+bb        = 12.45     ! constant B for chemical free energy
+cc        = 12.3      ! constant C for chemical free energy
+c11       = 1.4       ! elastic constant: C11=140GPa
+c22       = 1.4       ! c11 to mu0 multiplied by stress_unit
+c33       = 1.4       ! stress_unit=(1.0e+11)*vm0/rr/temp in code)
+c44       = 0.28      ! C44=(C11-C12)/2 because of isotropic material
+c55       = 0.28
+c66       = 0.28
+c12       = 0.84      ! C12=84GPa
+c13       = 0.84
+c21       = 0.84
+c23       = 0.84
+c31       = 0.84
+c32       = 0.84
+ram0      = 0.84      ! Lame's constant lambda 
+mu0       = 0.28      ! Lame's constant mu
+nu0       = 0.3745    ! Poisson's ratio, nu0=ram0/2./(ram0+mu0)
+munu0     = 83.00     ! munu0=2.*mu0*(1.-nu0) * stress_unit
+sig22_a   = 0.0       ! applied stress along y direction
+ep11_a    = 0.0       ! ep11_a=-c12/(c11-c12)/(c11+2.*c12)*sig22_a
+ep22_a    = 0.0       ! ep22_a=(c11+c12)/(c11-c12)/(c11+2.*c12)*sig22_a
