@@ -8,3 +8,5 @@ check ubuntu 18.04 LTS
 ----------------------------------
 3. java PD2D_001.java
 ----------------------------------
+
+Note: Comments in the source code are in Japanese.

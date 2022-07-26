@@ -1,11 +1,10 @@
-//*** [プログラム (MT2D_A001.java)] ************************************************
+//*** [プログラム (MT2D_001.java)] ************************************************
 //*** [インポート文] ****************************
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-public class MT2D_A001 extends Frame{
-
+public class MT2D_001 extends Frame{
 //*** [グローバル変数] *****************************************************************************************
 	static int ND=128;				//組織１辺の分割数
 	static int IG=7;					//2^IG=ND
@@ -24,20 +23,21 @@ public class MT2D_A001 extends Frame{
 	static double [][] s1h=new double[ND][ND];		//組織内の秩序変数デ－タs1配列
 	static double [][] s2h=new double[ND][ND];		//組織内の秩序変数デ－タs2配列
 	static Graphics g;									//自由エネルギー曲線画面のグラフィックスオブジェクト
-	static double time1;				//計算時間（カウント数）
-	static double temp; 				//温度[K]
+	static double time1;									//計算時間（カウント数）
+	static double temp; 									//温度[K]
 
-	static double qs;									//フ－リエ変換(qs:-1)と逆フ－リエ変換(qs:1)の区別
-	static double [][] xr = new double[ND][ND];	//フ－リエ変換の実数パ－トと虚数パ－トに使用する配列
-	static double [][] xi = new double[ND][ND];	
-	static double [] xrf = new double[ND];			//フ－リエ変換の実数パ－トと虚数パ－トに使用する配列
-	static double [] xif = new double[ND];
-	static double [] s = new double[ND];			//sinのテーブル
-	static double [] c = new double[ND];			//cosのテーブル
-	static int [] ik = new int[ND];					//ビット反転配列
+	//高速フーリエ変換のプログラムについては、文献(9)をご参照下さい。
+	static double qs;										//フ－リエ変換(qs:-1)と逆フ－リエ変換(qs:1)の区別
+	static double [][] xr = new double[ND][ND];		//フ－リエ変換の実数パ－トに使用する配列
+	static double [][] xi = new double[ND][ND];		//フ－リエ変換の虚数パ－トに使用する配列
+	static double [] xrf = new double[ND];				//フ－リエ変換の実数パ－トに使用する配列
+	static double [] xif = new double[ND];				//フ－リエ変換の虚数パ－トに使用する配列
+	static double [] s = new double[ND];				//sinのテーブル
+	static double [] c = new double[ND];				//cosのテーブル
+	static int [] ik = new int[ND];						//ビット反転操作の配列
 
 //*** [コンストラクタ] ****************************
-	public MT2D_A001(){
+	public MT2D_001(){
 		xwidth=400; yheight=400; 			//描画画面の横と縦の長さ（ピクセル単位）
 		insetx=4; insety=30;					//描画画面のふちの長さ
 		width=xwidth+insetx*2;  			//描画Window全体の横の長さ
@@ -54,7 +54,7 @@ public class MT2D_A001 extends Frame{
 //*** [メインプログラム] *******************************************************************************************
 	public static void main(String[] args) throws Exception{//例外処理は行わない
 
-		MT2D_A001 prog=new MT2D_A001();		//MT2D_A001のインスタンスprogを生成
+		MT2D_001 prog=new MT2D_001();		//MT2D_001のインスタンスprogを生成
 
 		double [][] ec11 = new double[ND][ND];			//拘束歪変動量
 		double [][] ec22 = new double[ND][ND];			//拘束歪変動量
@@ -69,33 +69,33 @@ public class MT2D_A001 extends Frame{
 		double [][] s1k_su = new double[ND][ND];		//勾配ポテンシャル
 		double [][] s2k_su = new double[ND][ND];		//勾配ポテンシャル
 
-		double s1, s2;									//マルテンサイトのphase field
-		double s1k_chem, s1k_str;						//化学ポテンシャル、弾性ポテンシャル
-		double s2k_chem, s2k_str;						//化学ポテンシャル、弾性ポテンシャル
-		double c11, c12, c44, lam0, mu0, nu0;		//弾性定数
-		double el_fac;									//弾性定数規格化変数
-		double ep11T, ep22T;							//個々の歪成分の和
-		double ep11_0, ep22_0;						//組織内の変態歪の平均値
-		double ep11_a, ep22_a, ep12_a, ep21_a;	//外力に起因する歪
-		double sig11_a, sig22_a;						//外力
-		double Z11ep, Z12ep, Z21ep, Z22ep;		//フーリエ変換時に使用する係数
+		double s1, s2;										//マルテンサイトのphase field
+		double s1k_chem, s1k_str;							//化学ポテンシャル、弾性ポテンシャル
+		double s2k_chem, s2k_str;							//化学ポテンシャル、弾性ポテンシャル
+		double c11, c12, c44, lam0, mu0, nu0;			//弾性定数
+		double el_fac;										//弾性定数規格化変数
+		double ep11T, ep22T;								//個々の歪成分の和
+		double ep11_0, ep22_0;							//組織内の変態歪の平均値
+		double ep11_a, ep22_a, ep12_a, ep21_a;		//外力に起因する歪
+		double sig11_a, sig22_a;							//外力
+		double Z11ep, Z12ep, Z21ep, Z22ep;			//フーリエ変換時に使用する係数
 		double sum11, sum22;
-		double s1ddtt, s2ddtt;							//phase fieldの時間変化量
-		double delt;										//時間きざみ
+		double s1ddtt, s2ddtt;								//phase fieldの時間変化量
+		double delt;											//時間きざみ
 
-		int   i, j, k, l, ii=0, jj=0, kk, iii, jjj;				//整数
-		int   p, q, m, n;									//整数
-		int   ip, im, jp, jm, Nstep;						//整数
-		double al, temp;									//計算領域、温度
-		double time1max;								//最大時間（計算を止める際に使用）
-		double b1, vm0, atom_n;						//規格化長さ、モル体積、単位胞内の原子数
-		double smob;									//マルテンサイト変態ダイナミクスの緩和係数
-		double nx, ny, nxx, nyy, alnn;					//逆空間の基本ベクトル、ノルム
+		int   i, j, k, l, ii=0, jj=0, kk, iii, jjj;								//整数
+		int   p, q, m, n;										//整数
+		int   ip, im, jp, jm;									//整数
+		double al, temp;										//計算領域、温度
+		double time1max;									//最大時間（計算を止める際に使用）
+		double b1, vm0, atom_n;							//規格化長さ、モル体積、単位胞内の原子数
+		double smob;										//マルテンサイト変態ダイナミクスの緩和係数
+		double nx, ny, nxx, nyy, alnn;						//逆空間の基本ベクトル、その自乗、ノルム
 
-		double AA0, AA1, AA2, AA3;					//化学的駆動力定数
-		double a1_c, b1_c, c1_c;						//格子定数
-		double kappa_s1, kappa_s2;					//結晶度勾配エネルギ－定数
-		double ds_fac;									//phase fieldの揺らぎの大きさ
+		double AA0, AA1, AA2, AA3;						//化学的駆動力定数
+		double a1_c, b1_c, c1_c;							//格子定数
+		double kappa_s1, kappa_s2;						//勾配エネルギ－定数
+		double ds_fac;										//phase fieldの揺らぎの大きさ
 
 //---- 各種パラメータ設定 ----------------------------------------------------
 
@@ -139,27 +139,25 @@ public class MT2D_A001 extends Frame{
 		nu0=lam0/2.0/(lam0+mu0);	//ポアソン比
 
 //---- 外力の設定 ---------------------------------------------
-		//sig22_a=0.0;						//ここでは外力を0に設定
- 		sig22_a=-1000.0*1.0e+06*vm0/RR/temp; //-1GPa
+		sig22_a=-200.0*1.0e+06*vm0/RR/temp;						//ここでは外力を0に設定
 		ep11_a=-lam0/4.0/mu0/(lam0+mu0)*sig22_a;					//平面歪を想定
 		ep22_a=(lam0+2.0*mu0)/4.0/mu0/(lam0+mu0)*sig22_a;
 		ep12_a=ep21_a=0.0;
 
 //**** phase fieldの初期場設定と、sinおよびcosテーブルの設定 *******************************************
-		prog.datin();				//phase fieldの初期場設定
-		//prog.ini_field();				//phase fieldの初期場設定
+		prog.ini_field();				//phase fieldの初期場設定
 		prog.table();					//フーリエ変換のためのsinとcosのテーブルとビット変換配列の設定
 
 //**** phase fieldの時間発展の計算 *******************************************************************************
 		while(time1<=time1max){
 
 //---- phase fieldの表示 ----------------------------------------------------
-			if((((int)(time1) % 50)==0)){ prog.update_draw(g); }	
-			//if((((int)(time1) % 100)==0)){ prog.repaint(); }		//カウント数が50の倍数おきに場を描画
+			if((((int)(time1) % 50)==0)){ prog.update_draw(g); }		//カウント数が50の倍数おきに場を描画
+			//if((((int)(time1) % 100)==0)){ prog.repaint(); } 
 
 //---- phase fieldの保存 ----------------------------------------------------
-			//if((((int)(time1) % 200)==0)){ prog.datsave(); }		//カウント数が200の倍数おきに場を保存
-			//if(time1==3000.0){ prog.datsave(); }					//カウント数が3000の時に場を保存
+			//if((((int)(time1) % 200)==0)){ prog.datsave(); }			//カウント数が200の倍数おきに場を保存
+			//if(time1==3000.0){ prog.datsave(); }						//カウント数が3000の時に場を保存
 
 //***** 勾配ポテンシャル *******************************************
 			for(i=0;i<=ndm;i++){
@@ -167,19 +165,19 @@ public class MT2D_A001 extends Frame{
 					ip=i+1; im=i-1; jp=j+1; jm=j-1;
 					if(i==ndm){ip=0;}  if(i==0){im=ndm;}
 					if(j==ndm){jp=0;}  if(j==0){jm=ndm;}
-					s1k_su[i][j]=-kappa_s1*(s1h[ip][j]+s1h[im][j]+s1h[i][jp]+s1h[i][jm]-4.0*s1h[i][j]);
-					s2k_su[i][j]=-kappa_s2*(s2h[ip][j]+s2h[im][j]+s2h[i][jp]+s2h[i][jm]-4.0*s2h[i][j]);
+					s1k_su[i][j]=-kappa_s1*(s1h[ip][j]+s1h[im][j]+s1h[i][jp]+s1h[i][jm]-4.0*s1h[i][j]);		//式(4)
+					s2k_su[i][j]=-kappa_s2*(s2h[ip][j]+s2h[im][j]+s2h[i][jp]+s2h[i][jm]-4.0*s2h[i][j]);		//式(4)
 				}
 			}
 
 //**** 変態歪場のフ－リエ変換 ep11 ********************************
 			for(i=0;i<=ndm;i++){
 				for(j=0;j<=ndm;j++){
-					xr[i][j]=ep11h0[i][j]=eta_s1[1][1]*s1h[i][j]+eta_s2[1][1]*s2h[i][j];
+					xr[i][j]=ep11h0[i][j]=eta_s1[1][1]*s1h[i][j]+eta_s2[1][1]*s2h[i][j];		//式(5)
 					xi[i][j]=0.0;
 				}
 			}
-			qs=-1.0; prog.rcfft();
+			qs=-1.0; prog.rcfft();		//実空間からフーリエ空間への変換(qs<0)
 			for(i=0;i<=ndm;i++){
 				for(j=0;j<=ndm;j++){ 
 					ep11qrh0[i][j]=xr[i][j];  ep11qih0[i][j]=xi[i][j];
@@ -190,11 +188,11 @@ public class MT2D_A001 extends Frame{
 //**** 変態歪場のフ－リエ変換 ep22 ********************************
 			for(i=0;i<=ndm;i++){
 				for(j=0;j<=ndm;j++){
-					xr[i][j]=ep22h0[i][j]=eta_s1[2][2]*s1h[i][j]+eta_s2[2][2]*s2h[i][j];
+					xr[i][j]=ep22h0[i][j]=eta_s1[2][2]*s1h[i][j]+eta_s2[2][2]*s2h[i][j]; 	//式(5)
 					xi[i][j]=0.0;
 				}
 			}
-			qs=-1.0; prog.rcfft();
+			qs=-1.0; prog.rcfft();		//実空間からフーリエ空間への変換(qs<0)
 			for(i=0;i<=ndm;i++){
 				for(j=0;j<=ndm;j++){ 
 					ep22qrh0[i][j]=xr[i][j];  ep22qih0[i][j]=xi[i][j];
@@ -220,11 +218,11 @@ public class MT2D_A001 extends Frame{
 					nyy=(double)jj/alnn*(double)jj/alnn;
 					Z11ep=nxx*(2.0*(1.0-nu0)-nxx-nu0/(1.0-nu0)*nyy)/(1.0-2.0*nu0);
 					Z12ep=nxx*(2.0*nu0     -nyy-nu0/(1.0-nu0)*nxx)/(1.0-2.0*nu0);
-					xr[i][j]=Z11ep*ep11qrh0[i][j]+Z12ep*ep22qrh0[i][j];
-					xi[i][j]=Z11ep*ep11qih0[i][j]+Z12ep*ep22qih0[i][j];
+					xr[i][j]=Z11ep*ep11qrh0[i][j]+Z12ep*ep22qrh0[i][j]; 		//式(10)
+					xi[i][j]=Z11ep*ep11qih0[i][j]+Z12ep*ep22qih0[i][j]; 		//式(10)
 				}
 			}
-			qs=1.0; prog.rcfft();
+			qs=1.0; prog.rcfft();		//フーリエ空間から実空間への変換(qs>0)
 			for(i=0;i<=ndm;i++){
 				for(j=0;j<=ndm;j++){ ec11[i][j]=xr[i][j]; }
 			}
@@ -240,36 +238,36 @@ public class MT2D_A001 extends Frame{
 					nyy=(double)jj/alnn*(double)jj/alnn;
 					Z21ep=nyy*(2.0*nu0     -nxx-nu0/(1.0-nu0)*nyy)/(1.0-2.0*nu0);
 					Z22ep=nyy*(2.0*(1.0-nu0)-nyy-nu0/(1.0-nu0)*nxx)/(1.0-2.0*nu0);
-					xr[i][j]=Z21ep*ep11qrh0[i][j]+Z22ep*ep22qrh0[i][j];
-					xi[i][j]=Z21ep*ep11qih0[i][j]+Z22ep*ep22qih0[i][j];
+					xr[i][j]=Z21ep*ep11qrh0[i][j]+Z22ep*ep22qrh0[i][j]; 		//式(10)
+					xi[i][j]=Z21ep*ep11qih0[i][j]+Z22ep*ep22qih0[i][j]; 		//式(10)
 				}
 			}
-			qs=1.0; prog.rcfft();
+			qs=1.0; prog.rcfft();		//フーリエ空間から実空間への変換(qs>0)
 			for(i=0;i<=ndm;i++){
 				for(j=0;j<=ndm;j++){ ec22[i][j]=xr[i][j]; }
 			}
 
-//****** ポテンシャルの計算 *******************************************************************************
+//****** ポテンシャルと発展方程式の計算 ************************************************************************
 			for(i=0;i<=ndm;i++){
 				for(j=0;j<=ndm;j++){
 					s1=s1h[i][j];  	s2=s2h[i][j];
 
 //****** 化学ポテンシャルの計算 ********************************
-					s1k_chem=AA0*s1*(AA1-AA2*s1+AA3*(s1*s1+s2*s2));
-					s2k_chem=AA0*s2*(AA1-AA2*s2+AA3*(s1*s1+s2*s2));
+					s1k_chem=AA0*s1*(AA1-AA2*s1+AA3*(s1*s1+s2*s2)); 		//式(2)
+					s2k_chem=AA0*s2*(AA1-AA2*s2+AA3*(s1*s1+s2*s2)); 		//式(2)
 
 //****** 弾性ポテンシャルの計算 ********************************
 					ep11T=ep11h0[i][j]-ep11_0-ec11[i][j]-ep11_a;
 					ep22T=ep22h0[i][j]-ep22_0-ec22[i][j]-ep22_a;
 
 					s1k_str=ep11T*((lam0+2.0*mu0)*eta_s1[1][1]+lam0*eta_s1[2][2])
-								 +ep22T*((lam0+2.0*mu0)*eta_s1[2][2]+lam0*eta_s1[1][1]);
+								 +ep22T*((lam0+2.0*mu0)*eta_s1[2][2]+lam0*eta_s1[1][1]); 		//式(7)
 					s2k_str=ep11T*((lam0+2.0*mu0)*eta_s2[1][1]+lam0*eta_s2[2][2])
-								 +ep22T*((lam0+2.0*mu0)*eta_s2[2][2]+lam0*eta_s2[1][1]);
+								 +ep22T*((lam0+2.0*mu0)*eta_s2[2][2]+lam0*eta_s2[1][1]); 		//式(7)
 
 //****** phase fieldの時間発展の計算 ********************************
-					s1ddtt=-smob*(s1k_chem+s1k_su[i][j]+s1k_str);
-					s2ddtt=-smob*(s2k_chem+s2k_su[i][j]+s2k_str);
+					s1ddtt=-smob*(s1k_chem+s1k_su[i][j]+s1k_str); 				//式(12)
+					s2ddtt=-smob*(s2k_chem+s2k_su[i][j]+s2k_str); 				//式(12)
 					s1h[i][j]=s1h[i][j]+( s1ddtt+ds_fac*(2.0*Math.random()-1.0) )*delt;
 					s2h[i][j]=s2h[i][j]+( s2ddtt+ds_fac*(2.0*Math.random()-1.0) )*delt;
 
@@ -296,15 +294,14 @@ public class MT2D_A001 extends Frame{
 		fac1=0.5; //最大の初期揺らぎ
 		for(i=0;i<=ndm;i++){
 			for(j=0;j<=ndm;j++){
-				//s1h[i][j]=fac1*Math.random(); s2h[i][j]=fac1*Math.random();
-				if(Math.abs(j-nd2)<(nd/40)){s1h[i][j]=Math.random(); s2h[i][j]=Math.random();}
-				//if(Math.abs(i-nd2)<(nd/40)){s1h[i][j]=Math.random(); s2h[i][j]=Math.random();}
+				//s1h[i][j]=fac1*Math.random(); s2h[i][j]=fac1*Math.random();						//均一に核を置く場合
+				if(Math.abs(j-nd2)<(nd/40)){s1h[i][j]=Math.random(); s2h[i][j]=Math.random();}	//中央に核を置く場合
 			}
 		}
 
 	}
 
-	//******* [フーリエ変換のためのsinとcosのテーブルとビット変換配列の設定] **********************
+	//******* [フーリエ変換のためのsinとcosのテーブルと、ビット変換配列の設定] **********************
 	public void table(){
 		int it, it1, it2, mc, mn;
 		double q;
@@ -342,14 +339,14 @@ public class MT2D_A001 extends Frame{
 
 		for(i=0;i<=nd;i++){
 			for(j=0;j<=nd;j++){
-				//濃度場の位置座標（実際の値）
+				//phase fieldの位置座標（実際の値）
 				x=1.0/(double)nd*(double)i+rad0;
 				y=1.0/(double)nd*(double)j+rad0;
-				//濃度場の位置座標（スクリーン座標に変換）
+				// phase fieldの位置座標（スクリーン座標に変換）
 				igx=(int)( ((double)ixmax-(double)ixmin)*(x-xmin)/(xmax-xmin)+(double)ixmin );
 				igy=(int)( ((double)iymax-(double)iymin)*(y-ymin)/(ymax-ymin)+(double)iymin );
 
-				//個々の差分ブロックの濃度値
+				//個々の差分ブロックのphase field値
 				ii=i; jj=j;
 				if(i==nd){ii=0;} if(j==nd){jj=0;}			//周期的境界条件
 
@@ -397,11 +394,11 @@ public class MT2D_A001 extends Frame{
 			for(ic=0;ic<=ndm;ic++){ xr[ir][ic]=xrf[ik[ic]];  xi[ir][ic]=xif[ik[ic]]; }
 		}
 		for(ic=0;ic<=ndm;ic++){
-			for(ir=0;ir<=ndm;ir++){ 	xrf[ir]=xr[ir][ic];  xif[ir]=xi[ir][ic]; }
+			for(ir=0;ir<=ndm;ir++){ xrf[ir]=xr[ir][ic];  xif[ir]=xi[ir][ic]; }
 			fft();
-			for(ir=0;ir<=ndm;ir++){ 	xr[ir][ic]=xrf[ik[ir]];  xi[ir][ic]=xif[ik[ir]]; }
+			for(ir=0;ir<=ndm;ir++){ xr[ir][ic]=xrf[ik[ir]];  xi[ir][ic]=xif[ik[ir]]; }
 		}
-		if(qs>0.){return;}
+		if(qs>0.0){return;}
 		for(i=0;i<=ndm;i++){
 			for(j=0;j<=ndm;j++){ xr[i][j]=xr[i][j]/nd/nd;  xi[i][j]=xi[i][j]/nd/nd; }
 		}
@@ -418,7 +415,6 @@ public class MT2D_A001 extends Frame{
 		outfile.println(time1);											//カウントの書き込み
 		for(i=0;i<=ndm;i++){
 			for(j=0;j<=ndm;j++){
-				//outfile.printf("%e  %e  ",s1h[i][j], s2h[i][j]);									//phase fieldの書き込み
 				outfile.println(s1h[i][j]);									//phase fieldの書き込み
 				outfile.println(s2h[i][j]);									//phase fieldの書き込み
 			}
@@ -431,7 +427,7 @@ public class MT2D_A001 extends Frame{
 		int	i, j;
 		String s_data;
 
-		BufferedReader infile=new BufferedReader(new FileReader("ini001.dat"));//ファイルのオープン
+		BufferedReader infile=new BufferedReader(new FileReader("ini000.dat"));//ファイルのオープン
 
 		s_data=infile.readLine();  										//文字列として読み込み
 		time1=new Double(s_data).doubleValue();					//文字を数値へ変換
@@ -447,5 +443,5 @@ public class MT2D_A001 extends Frame{
 	}
 
 //*******************************************************************************************************
-}//MT2D_A001
+}//MT2D_001
 //*** プログラム終了 ********************************************************************************

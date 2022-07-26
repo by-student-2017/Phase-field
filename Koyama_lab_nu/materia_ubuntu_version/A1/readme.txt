@@ -6,3 +6,5 @@ check ubuntu 18.04 LTS
 ----------------------------------
 3. java F_curve.java
 ----------------------------------
+
+Note: Comments in the source code are in Japanese.
