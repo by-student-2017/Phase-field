@@ -1,0 +1,11 @@
+# AVS field file 
+ndim=3
+dim1=30      		# dimension of axis 1
+dim2=30      		# dimension of axis 2
+dim3=30      		# dimension of axis 3
+nspace=3				# number of physical coordinates per point
+veclen=1				# number of components at each point
+data=double     # portable data double
+field=uniform   # field type
+
+variable 1 file=./FeCrtest3D.dat filetype=ascii skip=1
