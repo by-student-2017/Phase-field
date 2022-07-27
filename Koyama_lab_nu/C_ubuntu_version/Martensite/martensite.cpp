@@ -413,7 +413,7 @@ void datsave_gnuplot()
 	int 	i, j;
 
 	iout = iout + 1;
-	sprintf(fName,"mt_%06d.dat",iout);
+	sprintf(fName,"mt_result%06d.dat",iout);
 	stream = fopen(fName, "w");
 
 	fprintf(stream, "%e\n", time1);
@@ -433,7 +433,7 @@ void datsave_paraview()
 	int 	i, j;
 	
 	iout = iout + 1;
-	sprintf(fName,"mt_result%05d.vtk",iout);
+	sprintf(fName,"mt_result%06d.vtk",iout);
 	fp = fopen(fName, "w");
 	fprintf(fp,"# vtk DataFile Version 3.0 \n");
 	fprintf(fp,"output.vtk \n");
