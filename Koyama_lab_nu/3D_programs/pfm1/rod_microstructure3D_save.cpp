@@ -19,7 +19,7 @@
 
 	void ini_field();				//初期濃度波設定サブル－チン
 	//void graph_c();				//グラフ表示サブル－チン
-	//void datsave();				//濃度デ－タ保存サブル－チン
+	void datsave();				//濃度デ－タ保存サブル－チン
 	void datsave_paraview();		//濃度デ－タ保存サブル－チン
 	//void datin();					//初期濃度波読み込みサブル－チン
 
