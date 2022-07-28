@@ -9,8 +9,8 @@ ubuntu 18.04 LTS
 6. paraview
   a1. File -> Open ... -> lamella_3D_result..vtk -> OK
   a2. (click) [Apply] 
-  a3. (click) Slice
-  a4. (move red line)
+  a3. (click) Clip1
+  a4. (move red line to origin (0 0 0))
   a5. (click) [Apply] 
   a6. (click "play") |>
   a7. (click "Rescale to Data Range")
@@ -26,8 +26,8 @@ ubuntu 18.04 LTS
 6. paraview
   a1. File -> Open ... -> ms_3D_result..vtk -> OK
   a2. (click) [Apply] 
-  a3. (click) Slice
-  a4. (move red line)
+  a3. (click) Clip1
+  a4. (move red line to origin (0 0 0))
   a5. (click) [Apply] 
   a6. (click "play") |>
   a7. (click "Rescale to Data Range")
@@ -43,8 +43,8 @@ ubuntu 18.04 LTS
 6. paraview
   a1. File -> Open ... -> NGms_3D_result..vtk -> OK
   a2. (click) [Apply] 
-  a3. (click) Slice
-  a4. (move red line)
+  a3. (click) Clip1
+  a4. (move red line to origin (0 0 0))
   a5. (click) [Apply] 
   a6. (click "play") |>
   a7. (click "Rescale to Data Range")
@@ -60,8 +60,8 @@ ubuntu 18.04 LTS
 6. paraview
   a1. File -> Open ... -> rodms_3D_result..vtk -> OK
   a2. (click) [Apply] 
-  a3. (click) Slice
-  a4. (move red line)
+  a3. (click) Clip1
+  a4. (move red line to origin (0 0 0))
   a5. (click) [Apply] 
   a6. (click "play") |>
   a7. (click "Rescale to Data Range")
