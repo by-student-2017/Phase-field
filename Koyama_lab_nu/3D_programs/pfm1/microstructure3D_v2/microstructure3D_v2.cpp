@@ -31,7 +31,6 @@ int main(void)
 	int nd, ndm, nd2; 				//組織の分割、組織の分割-1
 	
 	//double ck[ND][ND][ND];			//拡散ポテンシャル
-	//double ch[ND][ND][ND];			//組織内の濃度デ－タ配列
 	//double ch2[ND][ND][ND];
 	double mu_chem, mu_str, mu_surf;
 	int    i, j, k, l;
@@ -40,7 +39,7 @@ int main(void)
 	double amob_c;					//原子の易動度定数
 	double c;						//濃度
 	double cddtt;					//濃度の増分
-	double kapa_c, kapa_c0;			//濃度勾配エネルギ－定数
+	double kapa_c, kapa_c0;		//濃度勾配エネルギ－定数
 	double al;						//計算領域
 	double b1;						//差分ブロックサイズ
 	double L0, L00;
@@ -50,7 +49,7 @@ int main(void)
 	double cip, cim, cjp, cjm, ckp, ckm;
 	double ck1dev, ck2dev;
 	double ck0, ckip, ckim, ckjp, ckjm, ckkp, ckkm;
-	int    ip, im, jp, jm, kp, km;
+	int   ip, im, jp, jm, kp, km;
 	double sumc, dc0;
 	double c_flu, c_flu0;			//濃度場の揺らぎの大きさ
 
@@ -97,24 +96,24 @@ int main(void)
 	double *ch  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//組織内の濃度デ－タ配列
 	double *ch2 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
 	
-	//printf("DELT(0.005)=  "); scanf(" %lf",&delt);	//delt=0.005;
-	//printf("ca (0.4)= "); scanf(" %lf",&c0);	//c0=0.4;
-	//printf("Mx(1.0) = ");	scanf(" %lf",&Mx);	//移動度, Mx=0.01;	//標準値
-	//printf("My(1.0) = ");	scanf(" %lf",&My);	//移動度, My=0.01;	/標準値
-	//printf("Mz(1.0) = ");	scanf(" %lf",&Mz);	//移動度, Mz=1.0; 	//標準値
+	//printf("DELT(0.005)=  "); scanf(" %lf",&delt);	//	delt=0.005;
+	//printf("ca (0.4)= "); scanf(" %lf",&c0);	//	c0=0.4;
+	//printf("Mx(1.0) = ");	scanf(" %lf",&Mx); 	//移動度	Mx=1.0; 	//標準値
+	//printf("My(1.0) = ");	scanf(" %lf",&My); 	//移動度	My=1.0; 	//標準値
+	//printf("Mz(1.0) = ");	scanf(" %lf",&Mz); 	//移動度	Mz=1.0; 	//標準値
 
 	//al=64.0;		// [nm]
 	al=al*1.0e-9;	// [m]
 
 	b1=al/nd;
-	//amob_c=1.0;
+	//amob_c=1.;
 
-	time1=0.0; 
-	//time1max=30001.0;
+	time1=0.0;
+	//time1max=20001.0;
 
-	//temp=1000.0;	// [K]
+	//temp=1000.0;//K
 
-	////L0=2.5e+04/RR/temp;
+	//L0=2.5e+04/RR/temp;
 	//L0=1.0e+03/RR/temp;
 	//kapa_c=5.0e-15/b1/b1/RR/temp;
 	L0=L00/RR/temp;
@@ -126,12 +125,12 @@ int main(void)
 	//My=0.0;  						//易動度
 	//Mz=0.0;  						//易動度
 
-	//c_flu=c_flu0=0.0;				//濃度場の揺らぎ係数, e.g., 0.0 or s0.1
+	//c_flu=c_flu0=0.0;				//濃度場の揺らぎ係数
 	c_flu0 = c_flu;
 
 //*************************************************************************
 	ini_field(ch, ND);
-	//gwinsize(INXY,INXY); ginit(2); gsetorg(0,0);//描画Window表示
+ 	//gwinsize(INXY,INXY); ginit(2); gsetorg(0,0);//描画Window表示
 
 //**** start **************************************************************
 //Nstep = 200;
@@ -156,7 +155,7 @@ start: ;
 				//c=ch[i][j][k];
 				c=ch[i*ND*ND+j*ND+k];
 
-			 	mu_chem=32.0*L0*c*(1.0-c)*(1.0-2.0*c); 		//化学ポテンシャル
+			 	mu_chem=32.0*L0*c*(1.0-c)*(1.0-2.0*c); 	//化学ポテンシャル
 			 	//mu_chem=L0*(1.0-2.0*c)+log(c)-log(1.0-c); //化学ポテンシャル
 
 				//mu_surf=-2.*kapa_c*(ch[ip][j][k]+ch[im][j][k]
@@ -166,7 +165,6 @@ start: ;
 								   +ch[i*ND*ND+jp*ND+k]+ch[i*ND*ND+jm*ND+k]
       							   +ch[i*ND*ND+j*ND+kp]+ch[i*ND*ND+j*ND+km]
 								   -6.0*c);
-				
 				//ck[i][j][k]=mu_chem+mu_surf;
 				ck[i*ND*ND+j*ND+k]= mu_chem+mu_surf;
 			}
@@ -183,8 +181,8 @@ start: ;
 				if(k==ndm) {kp=0;}  if(k==0) {km=ndm;}
 
 				//cddtt=Mx*(ck[ip][j][k]+ck[im][j][k]-2.0*ck[i][j][k])
-				//     +My*(ck[i][jp][k]+ck[i][jm][k]-2.0*ck[i][j][k])
-				//     +Mz*(ck[i][j][kp]+ck[i][j][km]-2.0*ck[i][j][k]);
+				//	 +My*(ck[i][jp][k]+ck[i][jm][k]-2.0*ck[i][j][k])
+				//	 +Mz*(ck[i][j][kp]+ck[i][j][km]-2.0*ck[i][j][k]);
 				cddtt=Mx*(ck[ip*ND*ND+j*ND+k]+ck[im*ND*ND+j*ND+k]-2.0*ck[i*ND*ND+j*ND+k])
 					 +My*(ck[i*ND*ND+jp*ND+k]+ck[i*ND*ND+jm*ND+k]-2.0*ck[i*ND*ND+j*ND+k])
 					 +Mz*(ck[i*ND*ND+j*ND+kp]+ck[i*ND*ND+j*ND+km]-2.0*ck[i*ND*ND+j*ND+k]);
@@ -198,11 +196,11 @@ start: ;
 //******[濃度場の収支の補正]**********************************
 	sumc=0.;
 	for(i=0;i<=ndm;i++){
-		for(j=0;j<=ndm;j++){
-			for(k=0;k<=ndm;k++){
+	   for(j=0;j<=ndm;j++){
+	   	for(k=0;k<=ndm;k++){
 				//sumc+=ch2[i][j][k];
-				sumc+=ch2[i*ND*ND+j*ND+k];
-			}
+	   			sumc+=ch2[i*ND*ND+j*ND+k];
+	   	}
 	   }
 	}
     dc0=sumc/nd/nd/nd-c0;
@@ -260,21 +258,21 @@ void ini_field(double *ch, int ND)
 
 	switch(flg){
 
-	case 1:	//スピーノーダル分解
+	case 1: //スピーノーダル分解
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
-				for(k=0;k<=ndm;k++){
-					//ch[i][j][k]=c0+0.1*(2.*DRND(1)-1.);
-					ch[i*ND*ND+j*ND+k]=c0+0.1*(2.*DRND(1)-1.);
+			for(k=0;k<=ndm;k++){
+				//ch[i][j][k]=c0+0.1*(2.*DRND(1)-1.);
+				ch[i*ND*ND+j*ND+k]=c0+0.1*(2.*DRND(1)-1.);
 			}
 		}
 	}
 	break;
 
 
-	case 2:	//核形成
-	r0=nd/20;	//径r0の核を置く
-	//PN=50;	//核をPN個置く
+	case 2: //核形成
+	r0=nd/20;  //径r0の核を置く
+	//PN=50; //核をPN個置く
 	PN=c0/( 4./3.*PI*(1./20.)*(1./20.)*(1./20.) );
 
 	for(ipn=1;ipn<=PN;ipn++){
@@ -350,8 +348,8 @@ void datsave(double *ch, int ND)
 	int 		i, j, k;
 	int ndm=ND-1;
 
-	//stream = fopen("test3D_lamella.dat", "w");
-	stream = fopen("test3D_lamella.dat", "a");
+	//stream = fopen("test3D.dat", "w");
+	stream = fopen("test3D.dat", "a");
 	fprintf(stream, "%e\n", time1);
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
@@ -373,7 +371,7 @@ void datsave_paraview(double *ch, int ND)
 	int ndm=ND-1;
 	
 	iout = iout + 1;
-	sprintf(fName,"lamella_3D_result%06d.vtk",iout);
+	sprintf(fName,"ms_3D_result%06d.vtk",iout);
 	fp = fopen(fName, "w");
 	fprintf(fp,"# vtk DataFile Version 3.0 \n");
 	fprintf(fp,"output.vtk \n");
