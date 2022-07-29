@@ -1,37 +1,67 @@
       implicit double precision (a-h,o-z)
-c
-      parameter(npo=4)
-      parameter(mlax=51,nlax=mlax+1)
-      parameter(mlay=51,nlay=mlay+1)
-      dimension p(npo,0:nlax,0:nlay),pp(npo,0:nlax,0:nlay)
-      dimension aij(npo,npo),wij(npo,npo),tij(npo,npo),eij(npo,npo)
-      dimension mfij(npo,mlax,mlay),nfij(mlax,mlay)
-      dimension ls(npo),ms(npo)
+!-----------------------------------------------------------------------
+      !parameter(npo=4)
+      !parameter(mlax=51,nlax=mlax+1)
+      !parameter(mlay=51,nlay=mlay+1)
+      allocatable p(:,:,:), pp(:,:,:)
+      !dimension p(npo,0:nlax,0:nlay),pp(npo,0:nlax,0:nlay)
+      allocatable aij(:,:), wij(:,:), tij(:,:), eij(:,:)
+      !dimension aij(npo,npo),wij(npo,npo),tij(npo,npo),eij(npo,npo)
+      allocatable mfij(:,:,:), nfij(:,:)
+      !dimension mfij(npo,mlax,mlay),nfij(mlax,mlay)
+      allocatable ls(:), ms(:)
+      !dimension ls(npo),ms(npo)
       character*6 fname
       character(len=20) filename
+      real data(20)
       integer iout
       iout  = -1
-c
-      dx    = 0.5e-6
-      dy    = dx
+!-----------------------------------------------------------------------
+      open(1,file="parameters.txt")
+      read(1,'(11x,e10.3)') (data(i),i=1,11)
+      close(1)
+!
+      npo   = int(data(1))
+      dx    = data(2)
+      dy    = data(3)
+      mlax  = int(data(4))
+      nlax=mlax+1
+      mlay  = int(data(5))
+      nlay=mlay+1
+      !
+      allocate (  p(npo,0:nlax,0:nlay) )
+      allocate ( pp(npo,0:nlax,0:nlay) )
+      !
+      allocate (aij(npo,npo))
+      allocate (wij(npo,npo))
+      allocate (tij(npo,npo))
+      allocate (eij(npo,npo))
+      !
+      allocate ( mfij(npo,mlax,mlay) )
+      allocate ( nfij(mlax,mlay) )
+      !
+      allocate (ls(npo))
+      allocate (ms(npo))
+!
       gamma = 1.
       delta = 7.*dx
-      pree  = 6.2e-6
-      activ = 2.08e-19
-      tempe = 800
+      pree  = data(6)
+      activ = data(7)
+      tempe = data(8)
       boltz = 1.38e-23
       amobi = pree*exp(-activ/(boltz*tempe))
-      eee   = 1.e+6
+      eee   = data(9)
       pi    = 3.141592654
-c
+!
       aaa   = 2./pi*sqrt(2.*delta*gamma)
-	www   = 4.*gamma/delta
+      www   = 4.*gamma/delta
       pmobi = amobi*pi*pi/(8.*delta)
-c
+!
       dt    = dx*dx/(5.*pmobi*aaa*aaa)
       write(*,*) 'Time increment =',dt,'[s]'
-      nend  = 500
-c
+      nend  = int(data(10))
+      nout  = int(data(11))
+!
       do i=1,npo
       do j=1,npo
          wij(i,j)=www
@@ -47,15 +77,15 @@ c
          if(i.gt.j) eij(i,j)=-eij(i,j)
       enddo
       enddo
-c
-c
+!
+!
       ls(1)=10
       ms(1)=10
       ls(2)=40
       ms(2)=20
       ls(3)=25
       ms(3)=40
-c
+!
       r0=3.*dx
       do m=1,mlay
       do l=1,mlax
@@ -72,7 +102,7 @@ c
          p(npo,l,m)=1.-phi
       enddo
       enddo
-c
+!
       do m=1,mlay
       do l=1,mlax
          do i=1,npo
@@ -80,7 +110,7 @@ c
          enddo
       enddo
       enddo
-c
+!
       do m=0,nlay
       do i=1,npo
          p(i,0,m)   =p(i,mlax,m)
@@ -93,19 +123,19 @@ c
          p(i,l,nlay)=p(i,l,1)
       enddo
       enddo
-c
+!
       nstep=0
       do nstep=1,nend
       write(*,*) 'Step No. =',nstep
-c
+!
       do l=1,mlax
       do m=1,mlay
          n=0
          do i=1,npo
-            if(p(i,l  ,m  ).gt.0..or.
-     &         (p(i,l  ,m  ).eq.0..and.p(i,l+1,m  ).gt.0..or.
-     &                                 p(i,l-1,m  ).gt.0..or.
-     &                                 p(i,l  ,m+1).gt.0..or.
+            if(p(i,l  ,m  ).gt.0..or.                         &
+     &         (p(i,l  ,m  ).eq.0..and.p(i,l+1,m  ).gt.0..or. &
+     &                                 p(i,l-1,m  ).gt.0..or. &
+     &                                 p(i,l  ,m+1).gt.0..or. &
      &                                 p(i,l  ,m-1).gt.0.)   ) then
             n=n+1
             mfij(n,l,m)=i
@@ -114,7 +144,7 @@ c
          nfij(l,m)=n
       enddo
       enddo
-c
+!
       do m=1,mlay
       do l=1,mlax
          do n1=1,nfij(l,m)
@@ -125,21 +155,21 @@ c
             ppp=0.
          do n3=1,nfij(l,m)
             k=mfij(n3,l,m)
-            ppp=ppp+
-     &        (aij(i,k)*aij(i,k)-aij(j,k)*aij(j,k))/2.
-     &        *((p(k,l+1,m)-2.*p(k,l,m)+p(k,l-1,m))/(dx*dx)
-     &         +(p(k,l,m+1)-2.*p(k,l,m)+p(k,l,m-1))/(dy*dy))
+            ppp=ppp+ &
+     &        (aij(i,k)*aij(i,k)-aij(j,k)*aij(j,k))/2.       &
+     &        *((p(k,l+1,m)-2.*p(k,l,m)+p(k,l-1,m))/(dx*dx)  &
+     &         +(p(k,l,m+1)-2.*p(k,l,m)+p(k,l,m-1))/(dy*dy)) &
      &         +(wij(i,k)-wij(j,k))*p(k,l,m)
          enddo
             pee=p(i,l,m)*p(j,l,m)
-            dpi=dpi-2.*tij(i,j)/real(nfij(l,m))
+            dpi=dpi-2.*tij(i,j)/real(nfij(l,m))     &
      &              *(ppp-8./pi*sqrt(pee)*eij(i,j))
          enddo
             pp(i,l,m)=p(i,l,m)+dpi*dt
          enddo
       enddo
       enddo
-c
+!
       do m=1,mlay
       do l=1,mlax
          phi=0.
@@ -156,7 +186,7 @@ c
          enddo
       enddo
       enddo
-c
+!
       do m=0,nlay
       do i=1,npo
          p(i,0,m)   =p(i,mlax,m)
@@ -169,15 +199,15 @@ c
          p(i,l,nlay)=p(i,l,1)
       enddo
       enddo
-c
-c
-c-----output (paraview, vtk format)------------------------------------
+!
+!
+!-----------------------------------------------------------------------
       nout=50
       if(nstep.eq.nstep/nout*nout) then
       iout = iout + 1
-c
+
       write(filename,'(a,i3.3,a)') 'mpf_result',iout,'.vtk'
-c      open(100,file='out'//iout//'.vtk')
+!      open(100,file='out'//iout//'.vtk')
       open(100,file=filename)
       write(100,'(a)') '# vtk DataFile Version 3.0'
       write(100,'(a)') 'output.vtk'
@@ -196,10 +226,10 @@ c      open(100,file='out'//iout//'.vtk')
             pgb=pgb+p(i,l,m)*p(i,l,m)
          enddo
          write(100,'(1f10.6)') pgb
-c         write(100,'(4e16.7)') real(l-1)*dx,real(m-1)*dy,pgb,p(npo,l,m)
+!         write(100,'(4e16.7)') real(l-1)*dx,real(m-1)*dy,pgb,p(npo,l,m)
       enddo
       enddo
-c
+      !
       write(100,'(a)') 'SCALARS phase_field_1 float'
       write(100,'(a)') 'LOOKUP_TABLE default'
       do m=1,mlay
@@ -207,7 +237,7 @@ c
          write(100,'(1f10.6)') p(1,l,m)
       enddo
       enddo
-c
+      !
       write(100,'(a)') 'SCALARS phase_field_2 float'
       write(100,'(a)') 'LOOKUP_TABLE default'
       do m=1,mlay
@@ -215,7 +245,7 @@ c
          write(100,'(1f10.6)') p(2,l,m)
       enddo
       enddo
-c
+      !
       write(100,'(a)') 'SCALARS phase_field_3 float'
       write(100,'(a)') 'LOOKUP_TABLE default'
       do m=1,mlay
@@ -223,7 +253,7 @@ c
          write(100,'(1f10.6)') p(3,l,m)
       enddo
       enddo
-c
+      !
       write(100,'(a)') 'SCALARS phase_field_4 float'
       write(100,'(a)') 'LOOKUP_TABLE default'
       do m=1,mlay
@@ -231,12 +261,26 @@ c
          write(100,'(1f10.6)') p(4,l,m)
       enddo
       enddo
-c
+      !
       close(100)
       endif
-c----------------------------------------------------------------------
-c
+!-----------------------------------------------------------------------
+!
       enddo
-c
+!
+      deallocate (p)
+      deallocate (pp)
+      !
+      deallocate (aij)
+      deallocate (wij)
+      deallocate (tij)
+      deallocate (eij)
+      !
+      deallocate (mfij)
+      deallocate (nfij)
+      !
+      deallocate (ls)
+      deallocate (ms)
+!
       stop
-	end
+      end

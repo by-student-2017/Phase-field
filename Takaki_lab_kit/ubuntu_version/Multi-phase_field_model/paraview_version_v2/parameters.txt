@@ -1,0 +1,11 @@
+npo       = 4.0      ! 
+dx        = 0.5e-6   ! mesh size in x direction
+dy        = 0.5e-6   ! mesh size in y direction
+mlax      = 51.0     ! Number of mesh in x direction
+mlax      = 51.0     ! Number of mesh in y direction
+pree      = 6.2e-6   ! pree*exp(-activ/(kB*T))
+activ     = 2.08e-19 ! pree*exp(-activ/(kB*T))
+tempe     = 800.0    ! Temperature [K] = T
+eee       = 1.0e+6   !
+nend      = 500.0    ! Number of iterations
+nout      = 50.0     ! output at every nout cycles
