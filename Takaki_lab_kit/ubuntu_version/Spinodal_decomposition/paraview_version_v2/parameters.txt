@@ -1,0 +1,15 @@
+nend= 1000           ! Maximum number of cycles
+nout= 100            ! output every "nout"
+nx= 128              ! Number of mesh in x direction
+ny= 128              ! Number of mesh in y direction
+Lx= 3.0e-07          ! mesh size in x direction
+Ly= 3.0e-07          ! mesh size in y direction 
+c_0= 0.4             ! Concentration
+temp= 673.0          ! Temperature [K]
+L0C= 21020.8         ! L0 = L0C + LOS*temp
+LOS= -9.31889        ! L0 = L0C + LOS*temp
+kapa_c= 1.2e-14      !
+da_pree= 1.0e-04     ! da = da_pree*exp(da_active/(kB*T))
+da_activ= -294000.0  ! da = da_pree*exp(da_active/(kB*T))
+db_pree= 2.0e-05     ! db = db_pree*exp(db_active/(kB*T))
+db_activ= -308000.0  ! db = db_pree*exp(db_active/(kB*T))
