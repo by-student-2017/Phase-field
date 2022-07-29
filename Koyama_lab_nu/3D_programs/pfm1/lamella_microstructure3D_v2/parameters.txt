@@ -1,0 +1,15 @@
+ND= 64            ! Division number 
+delt= 0.005       ! timestep
+c0= 0.4           ! Concentration
+Mx= 0.01          ! mobility
+My= 0.01          ! mobility
+Mz= 1.0           ! mobility
+al= 64.0          ! Computation area [nm]
+amob_c= 1.0       ! Atomic mobility constant 
+time1max= 30001.0 ! Max iteration
+temp= 1000.0      ! Temperature [K]
+L00= 1.0e+03      ! L0=L00/RR/temp
+kapa_c0= 5.0e-15  ! Concentration gradient energy constant kapa_c=kapa_c0/b1/b1/RR/temp 
+c_flu= 0.0        ! Fluctuation of concentration field
+flg= 1            ! 1:Spinodal, 2: 
+Nstep= 200        ! output every "Nstep"
