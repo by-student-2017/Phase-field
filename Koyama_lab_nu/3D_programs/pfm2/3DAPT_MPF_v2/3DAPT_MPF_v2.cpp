@@ -165,7 +165,7 @@ iout = -1;
 start: ;
 	printf("time: %f \n", time1);
 	//if(time1>=200.){delt=5.0;
-	//if((((int)(time1) % Nstep)==0)) {datsave(ph, qh, n00, N, ND);}
+	if((((int)(time1) % Nstep)==0)) {datsave(ph, qh, n00, N, ND);}
 	if((((int)(time1) % Nstep)==0)) {datsave_paraview(ph, qh, n00, N, ND);}
 	//if((((int)(time1) % 2)==0)) {graph_a();} 
 

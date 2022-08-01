@@ -85,6 +85,7 @@ int main(void)
 	c_flu   = data[12];
 	flg     = int(data[13]);
 	Nstep   = int(data[14]);
+	printf("---------------------------------\n");
 	//
 	nd=ND;
 	ndm=ND-1;
@@ -137,7 +138,7 @@ int main(void)
 iout = -1;
 start: ;
 	printf("time: %f \n", time1);
-	//if((((int)(time1) % Nstep)==0)) {datsave(ch,ND);}
+	if((((int)(time1) % Nstep)==0)) {datsave(ch,ND);}
 	if((((int)(time1) % Nstep)==0)) {datsave_paraview(ch,ND);}
 
 	//if(time1<1.0e4){c_flu=c_flu0;} else{c_flu=0.0;}
