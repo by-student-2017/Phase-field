@@ -123,9 +123,10 @@ int main(void)
 	//flg     = int(data[13]);
 	//Nstep   = int(data[14]);
 	ep000   = data[15];
-	c11     = data[16];
-	c12     = data[17];
-	c44     = data[18];
+	el_mag  = data[16];
+	c11     = data[17];
+	c12     = data[18];
+	c44     = data[19];
 	printf("---------------------------------\n");
 	//
 	IG=int(log2(ND));
@@ -201,7 +202,7 @@ int main(void)
 	eta_c[1][2]=eta_c[2][1]=eta_c[1][3]=eta_c[3][1]=eta_c[2][3]=eta_c[3][2]=0.0;
 
 //***** Elastic constant of Fe (bcc) ****************************
-	el_mag=1.0E+11/1.0E+09;
+	//el_mag=1.0E+11/1.0E+09;
 	//c11=2.33*el_mag;
 	//c12=1.35*el_mag;
 	//c44=1.18*el_mag;
