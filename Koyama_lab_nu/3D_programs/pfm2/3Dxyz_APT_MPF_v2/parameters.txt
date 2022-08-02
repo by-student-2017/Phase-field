@@ -1,13 +1,14 @@
-NDX= 64.0         ! Division number 
-NDY= 128.0        !
-NDZ= 64.0         !
+NDX= 64.0         ! Division number, x direction
+NDY= 128.0        ! Division number, y direction
+NDZ= 64.0         ! Division number, z direction
 N= 15.0           ! total number of crystal grains
-GNP= 1001.0       !
+GNP= 15.0         ! GNP = N or GNP >= N
 delt= 2.0         ! timestep
-L= 500.0          ! Computation area [nm]
+L= 500.0          ! Computation area [nm], b1=L/(double)NDX*1.0e-9
 time1max= 20001.0 ! Max iteration
 temp= 1000.0      ! Temperature [K]
-vm0= 7.0e-6       ! gamma=0.5*vm0/RR/temp/b1
+vm0= 7.0e-6       ! gamma=gamma0*vm0/RR/temp/b1  (grain boundary energy gamma)
+gamma0= 0.5       ! gamma=gamma0*vm0/RR/temp/b1  (grain boundary energy gamma)
 delta= 3.0        ! Not delt !!! For, aaa, W1 and M1
 amobi= 1.0        ! Atomic mobility constant 
 M0= 8.0           ! M1=amobi*PI*PI/(M0*delta)  (mobility M1)

@@ -65,7 +65,7 @@ int main(void)
 	double sum1, sum2, sum3, sxs;
 	double pddtt;
 
-	double gamma, delta, amobi;
+	double gamma, gamma0, delta, amobi;
 	double aaa, vm0;
 
 //****** reg data ****************************************
@@ -94,12 +94,13 @@ int main(void)
 	L       = data[6];	// [nm]
 	time1max= data[7];
 	temp    = data[8];	// [K]
-	vm0     = data[9];	// gamma=0.5*vm0/RR/temp/b1;
-	delta   = data[10];	// Not delt !!! For, aaa, W1, M1
-	amobi   = data[11];	// M1=amobi*PI*PI/(M0*delta);
-	M0      = data[12];	// M1=amobi*PI*PI/(M0*delta);
-	E0      = data[13];	// E1=E0/RR/temp;
-	Nstep   = int(data[14]);
+	vm0     = data[9];	// gamma=gamma0*vm0/RR/temp/b1;
+	gamma0  = data[10];	// gamma=gamma0*vm0/RR/temp/b1;
+	delta   = data[11];	// Not delt !!! For, aaa, W1, M1
+	amobi   = data[12];	// M1=amobi*PI*PI/(M0*delta);
+	M0      = data[13];	// M1=amobi*PI*PI/(M0*delta);
+	E0      = data[14];	// E1=E0/RR/temp;
+	Nstep   = int(data[15]);
 	printf("---------------------------------\n");
 	//
 	ndx=NDX, ndxm=NDX-1;
@@ -132,7 +133,8 @@ int main(void)
 	//temp=1000.0; // [K]
 	
 	//vm0=7.0e-6;
-	gamma=0.5*vm0/RR/temp/b1;
+	//gamma=0.5*vm0/RR/temp/b1;
+	gamma=gamma0*vm0/RR/temp/b1;
 	//delta=3.0;
 
 	aaa=2.0/PI*sqrt(2.0*delta*gamma);
