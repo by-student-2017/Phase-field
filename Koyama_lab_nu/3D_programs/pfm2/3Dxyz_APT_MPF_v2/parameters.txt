@@ -4,7 +4,7 @@ NDZ= 64.0         !
 N= 15.0           ! number of grains
 GNP= 1001.0       !
 delt= 2.0         ! timestep
-L= 500.0          ! [nm], x direction
+L= 500.0          ! Computation area [nm]
 time1max= 20001.0 ! Max iteration
 temp= 1000.0      ! Temperature [K]
 vm0= 7.0e-6       ! gamma=0.5*vm0/RR/temp/b1
