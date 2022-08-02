@@ -8,8 +8,8 @@ al= 64.0          ! Computation area [nm]
 amob_c= 1.0       ! Atomic mobility constant 
 time1max= 20001.0 ! Max iteration
 temp= 1000.0      ! Temperature [K]
-L00= 1.0e+03      ! L0=L00/RR/temp
-kapa_c0= 5.0e-15  ! Concentration gradient energy constant kapa_c=kapa_c0/b1/b1/RR/temp 
+L00= 1.0e+03      ! L0=L00/RR/temp  (interatomic interaction L0 [dimensionless]=[J/mol]/rr/temp)
+kapa_c0= 5.0e-15  ! kapa_c=kapa_c0/b1/b1/RR/temp (Concentration gradient energy constant kapa_c [dimensionless]=[Jm2/mol]/b1/b1/RR/temp
 c_flu= 0.0        ! Fluctuation of concentration field
 flg= 1            ! 1:Spinodal, 2:Nucleation-Growth Degradation
 Nstep= 200        ! output every "Nstep"

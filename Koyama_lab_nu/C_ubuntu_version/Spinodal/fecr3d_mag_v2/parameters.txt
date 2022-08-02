@@ -1,15 +1,15 @@
 ND= 30            ! Division number 
 delt= 0.05        ! timestep
-ca= 0.4           ! Concentration
+ca= 0.4           ! Concentration, alloy composition (mole fraction)
 temp= 773.0       ! Temperature [K]
 al= 30.0          ! Computation area [nm]
 amob_c= 1.0       ! Atomic mobility constant 
 time1max= 10001.0 ! Max iteration
 a0= 0.28664       ! Lattice constant [nm]=0.1[Angstrom]
 natom= 2.0        ! number of atoms in unit cell
-L01= 21020.8      ! L0=(L01 + L02*temp)/rr/temp
-L02= -9.31889     ! L0=(L01 + L02*temp)/rr/temp
-kapa_c0= 6.0e-15  ! Concentration gradient energy constant kapa_c=kapa_c0/b1/b1/RR/temp 
+L01= 21020.8      ! L0=(L01 + L02*temp)/rr/temp  (interatomic interaction L0 [dimensionless]=[J/mol]/rr/temp)
+L02= -9.31889     ! L0=(L01 + L02*temp)/rr/temp  (interatomic interaction L0 [dimensionless]=[J/mol]/rr/temp)
+kapa_c0= 6.0e-15  ! kapa_c=kapa_c0/b1/b1/RR/temp (Concentration gradient energy constant kapa_c [dimensionless]=[Jm2/mol]/b1/b1/RR/temp
 Nstep= 200        ! output every "Nstep"
 eta= 0.00614      ! Lattice mismatch 
 c11a0= 2.331e11   ! c11a=c11a0*vm0/rr/temp
