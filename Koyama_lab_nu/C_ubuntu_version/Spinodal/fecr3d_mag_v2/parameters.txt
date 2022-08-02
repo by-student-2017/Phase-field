@@ -1,0 +1,49 @@
+ND= 30            ! Division number 
+delt= 0.05        ! timestep
+ca= 0.4           ! Concentration
+temp= 773.0       ! Temperature [K]
+al= 30.0          ! Computation area [nm]
+amob_c= 1.0       ! Atomic mobility constant 
+time1max= 10001.0 ! Max iteration
+a0= 0.28664       ! Lattice constant [nm]=0.1[Angstrom]
+natom= 2.0        ! number of atoms in unit cell
+L01= 21020.8      ! L0=(L01 + L02*temp)/rr/temp
+L02= -9.31889     ! L0=(L01 + L02*temp)/rr/temp
+kapa_c0= 6.0e-15  ! Concentration gradient energy constant kapa_c=kapa_c0/b1/b1/RR/temp 
+Nstep= 200        ! output every "Nstep"
+eta= 0.00614      ! Lattice mismatch 
+c11a0= 2.331e11   ! c11a=c11a0*vm0/rr/temp
+c12a0= 1.3544e11  ! c12a=c12a0*vm0/rr/temp
+c44a0= 1.1783e11  ! c44a=c44a0*vm0/rr/temp
+c11b0= 3.5e11     ! c11b=c11b0*vm0/rr/temp
+c12b0= 0.678e11   ! c12b=c12b0*vm0/rr/temp
+c44b0= 1.008e11   ! c44b=c44b0*vm0/rr/temp
+Dac= 1.0e-4       ! Da=Dac*exp(Dae/rr/temp) of A (e.g., Self-diffusivity coefficient Da of Fe)
+Dae= -294000.0    ! Da=Dac*exp(Dae/rr/temp) of A (e.g., Fe)
+Dbc= 2.0e-5       ! Db=Dbc*exp(Dbe/rr/temp) of B (e.g., Self-diffusivity coefficient Db of Cr)
+Dbe= -308000.0    ! Db=Dbc*exp(Dbe/rr/temp) of B (e.g., Cr)
+Tc1= 1043.0       ! Tc = Tc1*c1 + Tc2*c2 + (Tc3 + Tc4*(c2-c1))*c1*c2
+Tc2= -310.0       !
+Tc3= 1207.3       !
+Tc4= -321.2       ! 
+beta_c1= 2.216    ! beta_c = beta_c1*c1 + beta_c2*c2 + beta_c3*c1*c2
+beta_c2= -0.4     !
+beta_c3= 0.2525   !
+c_alp1_c= 0.96    ! c_alp = c_alp1_c*c1 + c_alp2_c*c2
+c_alp2_c= 1.0     !
+d_Tc1= -1353.0    ! d_Tc = d_Tc1 + (d_Tc2 + d_Tc3*(c2-c1))*(c1-c2) + d_Tc4*c1*c2;
+d_Tc2= 1207.3     !
+d_Tc3= -321.2     !
+d_Tc4= -642.4     !
+d_beta_c1= -2.616 ! d_beta_c = d_beta_c1 + d_beta_c2*(c1-c2);
+d_beta_c2= 0.2525 !
+d_c_alp_c= 0.04   ! d_c_alp = d_c_alp_n
+Tn1= -1873.1      ! Tn = Tn1*c1 + Tn2*c2
+Tn2= 310.0        !
+beta_n1= -2.417   ! beta_n = beta_n1*c1 + beta_n2*c2
+beta_n2= 0.4      !
+c_alp1_n= 0.96    ! c_alp = c_alp1_n*c1 + c_alp2_n*c2
+c_alp2_n= 1.0     !
+d_Tn1= 2183.1     ! d_Tn = c_Tn1
+d_beta_n1= 2.817  ! d_beta_n = d_beta_n1
+d_c_alp_n= 0.04   ! 
