@@ -1,0 +1,70 @@
+## Ferroelectric-Phasefield
+(https://github.com/ruher/Ferroelectric-Phasefield)
+--------- --------- --------- --------- --------- --------- ---------
+## Octave-7.2.0 on windows10
+
+- Installation (Octave)
+1. octave-7.2.0-w64-installer.exe
+  (from https://octave.org/download)
+2. (click) GNU Octave (GUI)
+3. (>>) pkg load statistics
+4. (>>) pkg load image
+
+- Installation (source code (*.m files))
+1. Download ZIP
+  (from https://github.com/ruher/Ferroelectric-Phasefield)
+2. (unpack) Ferroelectric-Phasefield-master.zip
+
+- Usage (PZT, 2D)
+7. Current directory [ Ferroelectric-Phasefield-master ]
+8. Current directory [ PZT_2D ]
+9. (>>) PT
+
+- Usage (BaTiO3, 2D)
+7. Current directory [ Ferroelectric-Phasefield-master ]
+8. Current directory [ BaTiO3_2D ]
+9. (>>) BaTiO3
+
+- Usage (BaTiO3 relaxor, 2D)
+7. Current directory [ Ferroelectric-Phasefield-master ]
+8. Current directory [ BaTiO3_2D ]
+9. Current directory [ relaxor ]
+10. (>>) BTOrelaxor
+
+- Usage (BaTiO3, 3D)
+7. Current directory [ Ferroelectric-Phasefield-master ]
+8. Current directory [ BaTiO3_3D ]
+9. (>>) BaTiO3_3D
+--------- --------- --------- --------- --------- --------- ---------
+## MATLAB R2019a on windows10
+
+- Installation (source code (*.m files))
+1. Download ZIP
+  (from https://github.com/ruher/Ferroelectric-Phasefield)
+2. (unpack) Ferroelectric-Phasefield-master.zip
+
+- Usage (PZT, 2D)
+3. (open) MATLAB R2019a
+4. Current folder [ Ferroelectric-Phasefield-master ]
+5. Current folder [ PZT_2D ]
+6. (>>) PT
+
+- Usage (BaTiO3, 2D)
+3. (open) MATLAB R2019a
+4. Current folder [ Ferroelectric-Phasefield-master ]
+5. Current folder [ BaTiO3_2D ]
+6. (>>) BaTiO3
+
+ž Usage (BaTiO3 relaxor, 2D)
+3. (open) MATLAB R2019a
+4. Current folder [ Ferroelectric-Phasefield-master ]
+5. Current folder [ BaTiO3_2D ]
+6. Current folder [ relaxor ]
+7. (>>) BTOrelaxor
+
+- Usage (BaTiO3, 3D)
+3. (open) MATLAB R2019a
+4. Current folder [ Ferroelectric-Phasefield-master ]
+5. Current folder [ BaTiO3_3D ]
+6. (>>) BaTiO3_3D
+--------- --------- --------- --------- --------- --------- ---------
