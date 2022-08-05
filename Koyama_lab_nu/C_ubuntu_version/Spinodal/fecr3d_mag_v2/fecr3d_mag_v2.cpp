@@ -93,7 +93,7 @@ int main(void)
 	printf("---------------------------------\n");
 	printf("read parameters form parameters.txt\n");
 	FILE *fp;
-	char name[40], comment[72];
+	char name[40], comment[172];
 	float param;
 	float data[100];
 	i = 0;
