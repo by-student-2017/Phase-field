@@ -1,22 +1,22 @@
 -----------------------------------------------------------------------
 Attention !!!
 
-The terms of use for "program.zip" are as follows.
+The terms of use for original "program.zip" and derivatives are as follows.
 "Please consult [Maruzen Publishing Co., Ltd.] for non-research use."
 https://www.maruzen-publishing.co.jp/contact/
 
 Maruzen Publishing Co., Ltd.
 https://www.maruzen-publishing.co.jp/company/cc1485.html
 
-The "program.zip" can be obtained from the following HP. 
+The original "program.zip" can be obtained from the following HP. 
 However, you will need the ID and password shown in the book.
 
-original "programs.zip" (Japanese)
+The original "programs.zip" (Japanese)
   https://www.maruzen-publishing.co.jp/info/?action=detail&news_no=20034
   https://www.maruzen-publishing.co.jp/contents/phase-field/programs.zip
   https://www.maruzen-publishing.co.jp/contents/phase-field/wingxa.zip
 
-The codes in this folder is an improved version of original "program.zip".
+The codes in this folder is an improved version of the original "program.zip".
 (The parameter input file, Paraview output, dynamic memory allocation, and 
 ubuntu version of g ++ have been rewritten to be available.)
 -----------------------------------------------------------------------
