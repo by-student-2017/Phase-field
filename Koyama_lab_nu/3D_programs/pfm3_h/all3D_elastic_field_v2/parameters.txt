@@ -1,4 +1,4 @@
-ND= 64            ! Division number 
+ND= 64            ! Division number, ND=2^n
 delt= 0.005       ! (Not use) timestep
 c0= 0.4           ! (Not use) Concentration
 Mx= 0.01          ! (Not use) mobility
