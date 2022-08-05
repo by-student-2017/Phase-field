@@ -67,7 +67,7 @@ int main(void)
 	cmob22  = data[5];
 	om_12e  = data[6];
 	kapa_c2c= data[7];
-	time1max= data[8];
+	time1max= int(data[8]);
 	Nstep   = int(data[9]);
 	printf("---------------------------------\n");
 	//
