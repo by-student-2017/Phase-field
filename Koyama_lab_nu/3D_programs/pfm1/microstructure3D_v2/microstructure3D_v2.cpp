@@ -78,7 +78,7 @@ int main(void)
 	Mz      = data[5];
 	al      = data[6];	// [nm]
 	amob_c  = data[7];
-	time1max= data[8];
+	time1max= int(data[8]);
 	temp    = data[9];	// [K]
 	L00     = data[10];	//L0=L00/RR/temp;
 	kapa_c0 = data[11];	//kapa_c=kapa_c0/b1/b1/RR/temp;

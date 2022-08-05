@@ -112,7 +112,7 @@ int main(void)
 	temp    = data[3];	// [K]
 	al      = data[4];	// [nm]
 	amob_c  = data[5];
-	time1max= data[6];
+	time1max= int(data[6]);
 	a0      = data[7];
 	natom   = data[8];
 	L01     = data[9];

@@ -80,7 +80,7 @@ int main(void)
 	GNP     = int(data[2]);
 	delt    = data[3];	// timestep
 	L       = data[4];	// [nm]
-	time1max= data[5];
+	time1max= int(data[5]);
 	temp    = data[6];	// [K]
 	vm0     = data[7];	// gamma=gamma0*vm0/RR/temp/b1;
 	gamma0  = data[8];	// gamma=gamma0*vm0/RR/temp/b1;
