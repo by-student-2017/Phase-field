@@ -1,0 +1,10 @@
+ND= 400.0          ! Division number
+delt= 1.0          ! timestep
+temp= 500.0        ! Temperature [K]
+al= 1000.0         ! Computation area [nm]
+smob= 1.0          ! mobility (Relaxation coefficient of crystal transformation)
+AA0e= 200.0        ! Chemical driving force of order-disorder transformation
+kappa_s1c= 5.0e-15 ! kappa_s1c [Jm2/mol], Gradient energy coefficient kappa_s1=kappa_s1c/rr/temp/b1/b1
+vm0= 6.80744227E-6 ! Molar volume vm0=6.02e23*a*b*c/natom, e.g., a=b=c=3.563E-10, natom=4.0
+time1max= 1.0e07   ! Max iterations
+Nstep= 10.0        ! output every "Nstep"
