@@ -12,7 +12,7 @@ Note: Comments in the source code are in Japanese.
 3. sudo apt -y install default-jdk
 4. sudo apt -y install nkf
 5. nkf -g PD2D_001.java
-6. nkf -w --overwite FePt2D_001.java
+6. nkf -w --overwite PD2D_001.java
 7. javac PD2D_001.java -Xlint
 8. rm -f *.class
 9. java PD2D_001
