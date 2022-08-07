@@ -1,4 +1,4 @@
-ND= 64.0            ! Number of divisions (this version is dummy)
+ND= 64.0            ! Number of divisions
 temp= 1000.0        ! Temperature [K]
 c0= 0.4             ! concentration
 delt= 0.04          ! timestep
