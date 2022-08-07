@@ -8,9 +8,12 @@ import java.util.*; // for parameters.txt
 public class PD2D_001_v2 extends Frame{
 
 //*** [Global variables] *****************************************************************************************
-	static int ND=64;			//Number of divisions on one side of the organization
-	static int nd=ND;			//Number of concentration divisions
-	static int ndm=ND-1;		//Number of divisions of concentration-1
+	//static int ND=64;			//Number of divisions on one side of the organization
+	//static int nd=ND;			//Number of concentration divisions
+	//static int ndm=ND-1;		//Number of divisions of concentration-1
+	static int ND;				//Number of divisions on one side of the organization
+	static int nd;				//Number of concentration divisions
+	static int ndm;				//Number of divisions of concentration-1
 	static int width;			//Overall width of the window
 	static int height;			//Overall height of the window
 	static int xwidth;			//Drawing area width
@@ -19,7 +22,8 @@ public class PD2D_001_v2 extends Frame{
 	static int insety;			//Window frame width (top)
 	static double PI=3.141592;	//pi
 	static double RR=8.3145;	//Gas constant
-	static double [][] ch=new double[ND][ND];	//Concentration data array in tissue
+	//static double [][] ch=new double[ND][ND];	//Concentration data array in tissue
+	static double [][] ch;	//Concentration data array in tissue
 	static Graphics g;			//Free energy curve screen graphics object
 	static double time1;		//Calculation time (count number)
 	static double temp; 		//Temperature [K]
@@ -51,8 +55,10 @@ public class PD2D_001_v2 extends Frame{
 		double delt;							//Time step (dimensionless)
 		double al;								//Length of one side of the calculation area
 		double time1max;						//Calculation time (maximum count number)
-		double [][] ck = new double[ND][ND];	//Diffusion potential
-		double [][] ch2 = new double[ND][ND]; 	//Concentration data preliminary sequence in tissue
+		//double [][] ck = new double[ND][ND];	//Diffusion potential
+		//double [][] ch2 = new double[ND][ND]; 	//Concentration data preliminary sequence in tissue
+		double [][] ck;							//Diffusion potential
+		double [][] ch2; 						//Concentration data preliminary sequence in tissue
 		double mu_chem, mu_surf;				//Each potential
 		double c1, c2;							//Concentration (Fe: 1, Cu: 2)
 		double L0;								//Interatomic interaction parameters
@@ -91,6 +97,13 @@ public class PD2D_001_v2 extends Frame{
 		kappa_c  = data[7];
 		M0       = data[8];
 		c_flu    = data[9];
+		//
+		nd=ND;		//Number of concentration divisions
+		ndm=ND-1;	//Number of divisions of concentration-1
+		//
+		ch  = new double[ND][ND];
+		ck  = new double[ND][ND];	//Diffusion potential
+		ch2 = new double[ND][ND]; 	//Concentration data preliminary sequence in tissue
 		//
 		//temp=1000.0;  			//[K]
 		//c0=0.4;					//Average composition of alloy (A-40at% B alloy is set here)
