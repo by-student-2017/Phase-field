@@ -341,6 +341,13 @@ void datsave_paraview(double *ph, int ND, int N)
 	char	fName[256];
 	int 	i, j, k;
 	int nd=ND, ndm=ND-1, nm=N-1, nmm=N-2;
+	double *pht  = (double *)malloc(sizeof(double)*( ND*ND + ND ));
+	
+	for(j=0;j<=ndm;j++){
+		for(i=0;i<=ndm;i++){
+			pht[i*ND+j]=0.0;
+		}
+	}
 	
 	iout = iout + 1;
 	printf("paraview output no.%06d \n",iout);
@@ -362,8 +369,49 @@ void datsave_paraview(double *ph, int ND, int N)
 				//fprintf(stream, "%e   ", ph[k][i][j]);//フェーズフィールドの保存
 				//fprintf(fp,"%10.6f\n", ph[k][i][j]);
 				fprintf(fp,"%10.6f\n", ph[k*ND*ND+i*ND+j]);
+				pht[i*ND+j]+=ph[k*ND*ND+i*ND+j]*float(k+1.0);
 			}
 		}
 		fclose(fp);
 	}
+	
+	sprintf(fName,"mpf0_N%03d_result%06d.vtk",(nm+1),iout);
+	fp = fopen(fName, "w");
+	fprintf(fp,"# vtk DataFile Version 3.0 \n");
+	fprintf(fp,"output.vtk \n");
+	fprintf(fp,"ASCII \n");
+	fprintf(fp,"DATASET STRUCTURED_POINTS \n");
+	fprintf(fp,"DIMENSIONS %5d %5d %5d \n",(ndm+1),(ndm+1),1);
+	fprintf(fp,"ORIGIN 0.0 0.0 0.0 \n");
+	fprintf(fp,"ASPECT_RATIO 1 1 1 \n");
+	fprintf(fp,"POINT_DATA %16d \n",((ndm+1)*(ndm+1)*1));
+	fprintf(fp,"SCALARS phase_field float \n");
+	fprintf(fp,"LOOKUP_TABLE default \n");
+	for(j=0;j<=ndm;j++){
+		for(i=0;i<=ndm;i++){
+			fprintf(fp,"%10.6f\n", pht[i*ND+j]);
+		}
+	}
+	fclose(fp);
+	free(pht);
+}
+//*********** データ入力サブルーチン **************************
+void datin(double *ph, int ND, int N)
+{
+	FILE		*datin0;//ストリームのポインタ設定
+	int 		i, j, k;//整数
+	int nd=ND, ndm=ND-1, nm=N-1, nmm=N-2;
+
+	datin0 = fopen("test.dat", "r");//読み込み元のファイルをオープン
+	fscanf(datin0, "%lf", &time1);	//計算カウント数の読み込み
+	for(i=0;i<=ndm;i++){
+		for(j=0;j<=ndm;j++){
+			for(k=0;k<=nm;k++){
+				//fscanf(datin0, "%lf  ", &ph[k][i][j]);//フェーズフィールドの読み込み
+				fscanf(datin0, "%lf  ", &ph[k*ND*ND+i*ND+j]);//フェーズフィールドの読み込み
+			}
+		}
+	}
+	fclose(datin0);//ファイルをクローズ
+
 }
