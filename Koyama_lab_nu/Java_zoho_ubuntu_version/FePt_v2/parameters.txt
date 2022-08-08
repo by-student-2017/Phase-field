@@ -1,5 +1,5 @@
-ND= 128.0           ! Number of divisions, ND=2^N
-delt= 0.05          ! timestep
+ND= 128.0           ! Number of divisions, ND=2^n, n=integer
+delt= 0.05          ! timestep [dimensionless] (smob=1 [dimensionless])
 temp= 873.0         ! Temperature [K]
 al= 200.0           ! The length of one side of the calculation area [nm]
 time1max= 1.0e08    ! Max iterations
@@ -14,7 +14,7 @@ AA5= 4.0            !
 AA6= 4.0            !
 kappa_s1= 1.5e-14   ! Gradient energy constant [Jm2/mol]
 kappa_s2= 1.5e-14   ! Gradient energy constant [Jm2/mol]
-vm0= 7.29915E-6     ! vm0=6.02E23*a*b*c/natom
+vm0= 7.29915E-6     ! vm0=6.02E23*a*b*c/natom [m3/mol]
 eta_s1_11= -0.06    !
 eta_s1_22= 0.06     !
 eta_s1_33= 0.0      !
@@ -22,9 +22,9 @@ eta_s1_12= 0.0      !
 eta_s1_13= 0.0      !
 eta_s1_23= 0.0      !
 el_fac_c= 1.0E+11   ! el_fac=el_fac_c*vm0/RR/temp
-c11c= 1.54          ! c11=c11c*el_fac
-c12c= 1.22          ! c12=c12c*el_fac
-c44c= 0.77          ! c44=c44c*el_fac
+c11c= 1.54          ! Elastic modulus [Pa], c11=c11c*el_fac
+c12c= 1.22          ! Elastic modulus [Pa], c12=c12c*el_fac
+c44c= 0.77          ! Elastic modulus [Pa], c44=c44c*el_fac
 sig22_a= 0.0        ! external force [MPa]
 ep11_a= 0.0         ! Assuming plane distortion ep11_a=-lam0/4.0/mu0/(lam0+mu0)*sig22_a
 ep22_a= 0.0         ! ep22_a=(lam0+2.0*mu0)/4.0/mu0/(lam0+mu0)*sig22_a

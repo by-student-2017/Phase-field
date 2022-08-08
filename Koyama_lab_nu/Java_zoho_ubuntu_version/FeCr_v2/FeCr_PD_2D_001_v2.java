@@ -193,9 +193,9 @@ public class FeCr_PD_2D_001_v2 extends Frame{
 			System.out.printf("Y<100>= %f \n",y100);
 		}
 
-		//TcFe=1043.0; TcCr=-311.5; TcbFe0=1650.0; TcbFe1=550.0;//Curie temperature-related coefficients
+		//TcFe=1043.0; TcCr=-311.5; TcCrFe0=1650.0; TcCrFe1=550.0;//Curie temperature-related coefficients
 		//Tca=1043.0;  Tcb=-311.5;  Tcab0=1650.0;  Tcab1=550.0;//Curie temperature-related coefficients
-		//BcFe=2.22;   BcCr=-0.008; BcbFe0=-0.85;//Bohr magneton-related coefficients
+		//BcFe=2.22;   BcCr=-0.008; BcCrFe0=-0.85;//Bohr magneton-related coefficients
 		//Bca=2.22;    Bcb=-0.008;  Bcab0=-0.85;//Bohr magneton-related coefficients
 		//p_mag=0.4;								//(bcc)
 		//D_mag=518.0/1125.0+11692.0/15975.0*(1.0/p_mag-1.0);

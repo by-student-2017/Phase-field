@@ -1,5 +1,5 @@
 ND= 30            ! Division number 
-delt= 0.05        ! timestep
+delt= 0.05        ! timestep [dimensionless] (amob_c=1 [dimensionless])
 ca= 0.4           ! Concentration
 temp= 773.0       ! Temperature [K]
 al= 30.0          ! Computation area [nm]
@@ -7,17 +7,17 @@ amob_c= 1.0       ! Atomic mobility constant
 time1max= 10001.0 ! Max iteration
 a0= 0.28664       ! Lattice constant [nm]=0.1[Angstrom]
 natom= 2.0        ! number of atoms in unit cell, vm0=6.02E23*a0*a0*a0/natom
-L01= 21020.8      ! L0=(L01 + L02*temp)/rr/temp
-L02= -9.31889     ! L0=(L01 + L02*temp)/rr/temp
-kapa_c0= 6.0e-15  ! Concentration gradient energy constant kapa_c=kapa_c0/b1/b1/RR/temp 
+L01= 21020.8      ! L01 [J/mol], Interatomic interaction L0=(L01 + L02*temp) [J/mol]
+L02= -9.31889     ! L02 [J/mol/K], Interatomic interaction L0=(L01 + L02*temp) [J/mol]
+kapa_c0= 6.0e-15  ! Concentration gradient energy constant kapa_c0 [Jm2/mol]
 Nstep= 200        ! output every "Nstep"
 eta= 0.00614      ! Lattice mismatch 
-c11a0= 2.331e11   ! c11a=c11a0*vm0/rr/temp
-c12a0= 1.3544e11  ! c12a=c12a0*vm0/rr/temp
-c44a0= 1.1783e11  ! c44a=c44a0*vm0/rr/temp
-c11b0= 3.5e11     ! c11b=c11b0*vm0/rr/temp
-c12b0= 0.678e11   ! c12b=c12b0*vm0/rr/temp
-c44b0= 1.008e11   ! c44b=c44b0*vm0/rr/temp
+c11a0= 2.331e11   ! elastic constant c11a0 [Pa], c11a=c11a0*vm0/rr/temp, (2.33*10^11 [Pa] = 233.0 [GPa])
+c12a0= 1.3544e11  ! elastic constant c12a0 [Pa], c12a=c12a0*vm0/rr/temp, (1.35*10^11 [Pa] = 135.0 [GPa])
+c44a0= 1.1783e11  ! elastic constant c44a0 [Pa], c44a=c44a0*vm0/rr/temp, (1.1783*10^11 [Pa] = 117.83 [GPa])
+c11b0= 3.5e11     ! elastic constant c11b0 [Pa], c11b=c11b0*vm0/rr/temp, (3.5*10^11 [Pa] = 350.0 [GPa])
+c12b0= 0.678e11   ! elastic constant c12b0 [Pa], c12b=c12b0*vm0/rr/temp, (0.678*10^11 [Pa] = 67.8 [GPa])
+c44b0= 1.008e11   ! elastic constant c44b0 [Pa], c44b=c44b0*vm0/rr/temp, (1.008*10^11 [Pa] = 100.8 [GPa])
 y100= 0.0         ! 0.0 case, y100=c11+c12-2.*(c12*c12/c11)
 Dac= 1.0e-4       ! Da=Dac*exp(Dae/rr/temp) of A (e.g., Self-diffusivity coefficient Da of Fe)
 Dae= -294000.0    ! Da=Dac*exp(Dae/rr/temp) of A (e.g., Fe)
@@ -26,7 +26,7 @@ Dbe= -308000.0    ! Db=Dbc*exp(Dbe/rr/temp) of B (e.g., Cr)
 Tc1= 1043.0       ! Tc = Tc1*c1 + Tc2*c2 + (Tc3 + Tc4*(c2-c1))*c1*c2
 Tc2= -310.0       !
 Tc3= 1207.3       !
-Tc4= -321.2       ! 
+Tc4= -321.2       !
 beta_c1= 2.216    ! beta_c = beta_c1*c1 + beta_c2*c2 + beta_c3*c1*c2
 beta_c2= -0.4     !
 beta_c3= 0.2525   !
