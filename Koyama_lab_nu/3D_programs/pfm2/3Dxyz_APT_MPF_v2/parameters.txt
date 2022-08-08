@@ -7,10 +7,10 @@ delt= 2.0         ! timestep [dimensionless] (amobi=1 [dimensionless])
 L= 500.0          ! Computation area [nm], b1=L/(double)NDX*1.0e-9
 time1max= 20001.0 ! Max iteration
 temp= 1000.0      ! Temperature [K]
-vm0= 7.0e-6       ! [m3/mol], gamma=gamma0*vm0/RR/temp/b1  (grain boundary energy gamma)
-gamma0= 0.5       ! gamma=gamma0*vm0/RR/temp/b1  (grain boundary energy gamma)
-delta= 3.0        ! Not delt !!! For, aaa, W1 and M1
+vm0= 7.0e-6       ! Molar volume [m3/mol]
+gamma0= 0.5       ! Grain boundary energy [J/m2]
+delta= 3.0        ! Grain boundary width (is related with aaa, W1 and M1)
 amobi= 1.0        ! Atomic mobility constant 
-M0= 8.0           ! M1=amobi*PI*PI/(M0*delta)  (mobility M1)
+M0= 8.0           ! mobility M1=amobi*PI*PI/(M0*delta) 
 E0= 500.0         ! Interatomic interaction E0 [J/mol]
 Nstep= 10.0       ! output every "Nstep"

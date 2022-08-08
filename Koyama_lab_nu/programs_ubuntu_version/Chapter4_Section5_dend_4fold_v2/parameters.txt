@@ -14,7 +14,7 @@ Tini= 1511.2       ! Initial temperature [K]
 skine= 2.0         ! Kinetic Growth Coefficient [m/Ks]
 th0= 0.0           ! Angle of priority growth direction
 aaac= 3.0          ! Gradient energy coefficient ( aaa=sqrt(aaac*delta*gamma/bbb) )
-wwwc= 6.0          ! Penalty term energy barrier ( www=wwwc*gamma*bbb/delta  )
+wwwc= 6.0          ! Penalty term energy barrier ( www=wwwc*gamma*bbb/delta )
 pmobic= 3.0        ! Phase field mobility ( pmobi=bbb*Tm*skine/(pmobi*delta*rlate) )
 anois= 0.1         ! Noise amplitude
 time1max= 1.0e08   ! Max iterations

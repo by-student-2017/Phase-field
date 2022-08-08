@@ -65,8 +65,8 @@ int main(void)
 	double smob;									//モビリティー（結晶変態の緩和係数）
 	double nxx, nyy, nxy, alnn;						//フーリエ空間の基本ベクトルの積、ノルム
 
-	double AA0, AA1, AA2, AA3;						//ギズブエネルギー内の係数
-	double AA0e;									//ギズブエネルギー内の係数
+	double AA0, AA1, AA2, AA3;						//ギブスエネルギー内の係数
+	double AA0e;									//ギブスエネルギー内の係数
 	double a1_c, b1_c, c1_c;						//格子定数
 	double a1_t, b1_t, c1_t;						//格子定数
 	double kappa_s1, kappa_s2;						//勾配エネルギ－係数
@@ -164,7 +164,7 @@ int main(void)
 
 	//AA0=1000.0/rr/temp;			//マルテンサイト変態の化学的駆動力
 	AA0=AA0e/rr/temp;			//マルテンサイト変態の化学的駆動力
-	//AA1=1.0;  AA2=3.0*AA1+12.0;  AA3=2.0*AA1+12.0;	//ギズブエネルギー内の係数
+	//AA1=1.0;  AA2=3.0*AA1+12.0;  AA3=2.0*AA1+12.0;	//ギブスエネルギー内の係数
 
 	//kappa_s1=kappa_s2=5.0e-15/rr/temp/b1/b1;	//勾配エネルギ－係数
 	kappa_s1=kappa_s1c/rr/temp/b1/b1;	//勾配エネルギ－係数

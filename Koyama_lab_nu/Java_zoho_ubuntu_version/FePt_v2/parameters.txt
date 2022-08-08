@@ -14,17 +14,17 @@ AA5= 4.0            !
 AA6= 4.0            !
 kappa_s1= 1.5e-14   ! Gradient energy constant [Jm2/mol]
 kappa_s2= 1.5e-14   ! Gradient energy constant [Jm2/mol]
-vm0= 7.29915E-6     ! vm0=6.02E23*a*b*c/natom [m3/mol]
-eta_s1_11= -0.06    !
-eta_s1_22= 0.06     !
-eta_s1_33= 0.0      !
-eta_s1_12= 0.0      !
-eta_s1_13= 0.0      !
-eta_s1_23= 0.0      !
+vm0= 7.29915E-6     ! Molar volume vm0=6.02E23*a*b*c/natom [m3/mol]
+eta_s1_11= -0.06    ! transformation strain, eta_s1[1][1]
+eta_s1_22= 0.06     ! transformation strain, eta_s1[2][2]
+eta_s1_33= 0.0      ! transformation strain, eta_s1[3][3]
+eta_s1_12= 0.0      ! transformation strain, eta_s1[1][2]
+eta_s1_13= 0.0      ! transformation strain, eta_s1[1][3]
+eta_s1_23= 0.0      ! transformation strain, eta_s1[2][3]
 el_fac_c= 1.0E+11   ! el_fac=el_fac_c*vm0/RR/temp
-c11c= 1.54          ! Elastic modulus [Pa], c11=c11c*el_fac
-c12c= 1.22          ! Elastic modulus [Pa], c12=c12c*el_fac
-c44c= 0.77          ! Elastic modulus [Pa], c44=c44c*el_fac
+c11c= 1.54          ! elastic constant c11c, (1.54*10^11 [Pa] = 154 [GPa]), c11=c11c*el_fac
+c12c= 1.22          ! elastic constant c11c, (1.22*10^11 [Pa] = 122 [GPa]), c12=c12c*el_fac
+c44c= 0.77          ! elastic constant c44c, (0.77*10^11 [Pa] =  77 [GPa]), c44=c44c*el_fac
 sig22_a= 0.0        ! external force [MPa]
 ep11_a= 0.0         ! Assuming plane distortion ep11_a=-lam0/4.0/mu0/(lam0+mu0)*sig22_a
 ep22_a= 0.0         ! ep22_a=(lam0+2.0*mu0)/4.0/mu0/(lam0+mu0)*sig22_a

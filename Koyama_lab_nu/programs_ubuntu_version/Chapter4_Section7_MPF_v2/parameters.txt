@@ -10,7 +10,7 @@ K0= 8.0            ! Gradient energy coefficient ( K1=K0*delta*gamma/PI/PI )
 W0= 4.0            ! Coefficient of penalty term ( W1=W0*gamma/delta )
 amobi= 1.0         ! Grain boundary mobility ( M1=amobi*PI*PI/(M0*delta) )
 M0= 8.0            ! Grain boundary mobility ( M1=amobi*PI*PI/(M0*delta) )
-E0= 50.0           ! E0 [J/mol], Driving force for grain boundary movement ( E1=E0/RR/temp )
+E0= 50.0           ! Driving force for grain boundary movement E0 [J/mol]
 time1max= 1.0e08   ! Max iterations
 Nstep= 100.0       ! output every "Nstep"
 nalph= 4           ! Number of alpha-phase crystal orientations (number of alpha-phase crystal grains considered)
