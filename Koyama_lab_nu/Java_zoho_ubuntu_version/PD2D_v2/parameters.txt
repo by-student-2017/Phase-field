@@ -1,4 +1,4 @@
-ND= 64.0            ! Number of divisions
+ND= 64.0            ! Number of divisions (this version is dummy)
 temp= 1000.0        ! Temperature [K]
 c0= 0.4             ! concentration
 delt= 0.04          ! timestep
@@ -6,5 +6,6 @@ time1max= 1.0e08    ! Max iterations
 al= 60.0            ! The length of one side of the calculation area [nm]
 L0= 2.5e+04         ! Interatomic interaction parameter [J/mol]
 kappa_c= 5.0e-15    ! Concentration gradient energy coefficient, unit is [Jm2/mol]
-M0= 1.0             ! Mobility of diffusion Mc=c0*(M0-c0)
+Mc= 0.24            ! Mobility of diffusion Mc=c0*(1.0-c0)
 c_flu= 0.1          ! 
+Nstep= 50.0         ! output every "Nstep"

@@ -72,6 +72,7 @@ public class PD2D_001_v2 extends Frame{
 		double sumc, dc; 						//Sum of concentration fields, deviation from average composition
 		
 		double [] data = new double[40];
+		int Nstep;								//integer
 
 //---- Various parameter settings ----------------------------------------------------
 		System.out.printf("------------------------------------- \n");
@@ -95,8 +96,9 @@ public class PD2D_001_v2 extends Frame{
 		al       = data[5];
 		L0       = data[6];
 		kappa_c  = data[7];
-		M0       = data[8];
+		Mc       = data[8];
 		c_flu    = data[9];
+		Nstep    = (int)data[10];
 		//
 		nd=ND;		//Number of concentration divisions
 		ndm=ND-1;	//Number of divisions of concentration-1
@@ -122,8 +124,7 @@ public class PD2D_001_v2 extends Frame{
 		kappa_c=kappa_c/b1/b1/RR/temp;	//Concentration gradient energy coefficient, dimensionless with (b1^2*rr*temp)
 
 		//Mc=c0*(1.0-c0);			//Mobility of diffusion
-		Mc=c0*(M0-c0);			//Mobility of diffusion
-		c_flu=0.1;
+		//c_flu=0.1;
 
 //---- Initial concentration field setting at time 0 ----------------------------------------------------
 		prog.ini_comp_field();
@@ -134,11 +135,11 @@ public class PD2D_001_v2 extends Frame{
 
 //---- Display of concentration field ----------------------------------------------------
 			//Concentration field drawing every multiple of 200 counts
-			if((((int)(time1) % 200)==0)){ prog.update_draw(g); }	//To suppress flicker when drawing
+			if((((int)(time1) % Nstep)==0)){ prog.update_draw(g); }	//To suppress flicker when drawing
 			//if((((int)(time1) % 200)==0)){ prog.repaint(); }
 
 //---- Conservation of concentration field ----------------------------------------------------
-			if((((int)(time1) % 500)==0)){ prog.datsave(); }		//Concentration field storage every multiple of 500 counts
+			if((((int)(time1) % Nstep)==0)){ prog.datsave(); }		//Concentration field storage every multiple of 500 counts
 			//if(time1==3000.0){ prog.datsave(); }					//Concentration field storage when the count number is 3000
 
 //---- Calculation of diffusion potential -----------------------------------------------------

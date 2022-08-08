@@ -150,6 +150,7 @@ public class FePt2D_001_v2 extends Frame{
 		ep22_a   = data[29];
 		ep12_a   = data[30];
 		ep21_a   = data[31];
+		Nstep    = (int)data[32];
 		//
 		IG=(int) (Math.log((double) ND) / Math.log(2.0));
 		nd=ND;
@@ -244,6 +245,7 @@ public class FePt2D_001_v2 extends Frame{
 
 //---- External force setting ---------------------------------------------
 		//sig22_a=0.0;					//Here, the external force is set to 0.
+		sig22_a=sig22_a*1.0e+06*vm0/RR/temp; //500MPa
 		//ep11_a=-lam0/4.0/mu0/(lam0+mu0)*sig22_a;	//Assuming plane distortion
 		//ep22_a=(lam0+2.0*mu0)/4.0/mu0/(lam0+mu0)*sig22_a;
 		//ep12_a=ep21_a=0.0;
@@ -256,11 +258,11 @@ public class FePt2D_001_v2 extends Frame{
 		while(time1<=time1max){
 
 //---- Display of phase field ----------------------------------------------------
-			if((((int)(time1) % 50)==0)){ prog.update_draw(g); }	//Draw a field every multiple of 50 counts
+			if((((int)(time1) % Nstep)==0)){ prog.update_draw(g); }	//Draw a field every multiple of 50 counts
 			//if((((int)(time1) % 100)==0)){ prog.repaint(); } 
 
 //---- Save phase field ----------------------------------------------------
-			if(time1<=2000.0){Nstep=100;} else{Nstep=500;}
+			//if(time1<=2000.0){Nstep=100;} else{Nstep=500;}
 			if((((int)(time1) % Nstep)==0)){ prog.datsave(); }	//Save the field every multiple of Nstep
 			//if((((int)(time1) % 200)==0)){ prog.datsave(); }	//Save the field every multiple of 200 counts
 			//if(time1==3000.0){ prog.datsave(); }				//Save the field when the count is 3000

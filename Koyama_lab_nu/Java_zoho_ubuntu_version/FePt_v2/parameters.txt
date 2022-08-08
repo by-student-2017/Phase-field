@@ -25,8 +25,9 @@ el_fac_c= 1.0E+11   ! el_fac=el_fac_c*vm0/RR/temp
 c11c= 1.54          ! c11=c11c*el_fac
 c12c= 1.22          ! c12=c12c*el_fac
 c44c= 0.77          ! c44=c44c*el_fac
-sig22_a= 0.0        ! external force
+sig22_a= 0.0        ! external force [MPa]
 ep11_a= 0.0         ! Assuming plane distortion ep11_a=-lam0/4.0/mu0/(lam0+mu0)*sig22_a
 ep22_a= 0.0         ! ep22_a=(lam0+2.0*mu0)/4.0/mu0/(lam0+mu0)*sig22_a
 ep12_a= 0.0         !
 ep21_a= 0.0         !
+Nstep= 50.0         ! output every "Nstep"
