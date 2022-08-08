@@ -1,5 +1,5 @@
 ND= 128.0           ! Number of divisions, ND=2^n
-delt= 0.1           ! timestep
+delt= 0.1           ! timestep [dimensionless]
 time1max= 1.0e08    ! Max iterations
 Nstep= 10           ! output every "Nstep"
 temp= 298.0         ! Temperature [K]
@@ -8,7 +8,7 @@ vm0= 3.87194E-5     ! Molar volume (1 mol of molecule)
 smob1= 1.0          ! Mobility mobility in structural phase transition (standardized and set to 1)
 smob2= 1.0          ! Mobility mobility in structural phase transition (standardized and set to 1)
 A1e= 4.124e+05      ! Chemical free energy A1=A1e*vm0/RR/temp
-A11e= -2.097e+08    ! 
+A11e= -2.097e+08    !
 A12e= 7.974e+08     !
 A111e= 1.294e+09    !
 A112e= -1.950e+09   !

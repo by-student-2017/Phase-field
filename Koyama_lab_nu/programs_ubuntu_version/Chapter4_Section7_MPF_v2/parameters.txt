@@ -1,16 +1,16 @@
 ND= 100.0          ! Number of divisions
 N= 6.0             ! Number of crystal orientations + 1
-delt= 0.2          ! timestep
+delt= 0.2          ! timestep [dimensionless]
 temp= 1000.0       ! Temperature [K]
 L= 2000.0          ! The length of one side of the calculation area [nm]
 vm0= 7.0e-6        ! Molar volume
-gamma0= 0.5        ! Grain boundary energy density [0.5*J/m2]
+gamma0= 0.5        ! Grain boundary energy density [J/m2]
 delta= 7.0         ! Grain boundary width (expressed by the number of difference blocks)
 K0= 8.0            ! Gradient energy coefficient ( K1=K0*delta*gamma/PI/PI )
 W0= 4.0            ! Coefficient of penalty term ( W1=W0*gamma/delta )
-amobi= 1.0         ! Grain boundary mobility ( M1=amobi*PI*PI/(M1c*delta) )
-M0= 8.0            ! Grain boundary mobility ( M1=amobi*PI*PI/(M1c*delta) )
-E0= 50.0           ! Driving force for grain boundary movement ( E1=E0/RR/temp )
+amobi= 1.0         ! Grain boundary mobility ( M1=amobi*PI*PI/(M0*delta) )
+M0= 8.0            ! Grain boundary mobility ( M1=amobi*PI*PI/(M0*delta) )
+E0= 50.0           ! E0 [J/mol], Driving force for grain boundary movement ( E1=E0/RR/temp )
 time1max= 1.0e08   ! Max iterations
 Nstep= 100.0       ! output every "Nstep"
 nalph= 4           ! Number of alpha-phase crystal orientations (number of alpha-phase crystal grains considered)

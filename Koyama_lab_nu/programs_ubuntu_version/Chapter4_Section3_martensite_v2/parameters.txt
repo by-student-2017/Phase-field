@@ -1,5 +1,5 @@
 ND= 256.0          ! Division number, ND=2^n
-delt= 0.2          ! timestep
+delt= 0.2          ! timestep [dimensionless]
 temp= 500.0        ! Temperature [K]
 al= 500.0          ! Computation area [nm]
 smob= 1.0          ! mobility, Ms (Relaxation coefficient of crystal transformation)
