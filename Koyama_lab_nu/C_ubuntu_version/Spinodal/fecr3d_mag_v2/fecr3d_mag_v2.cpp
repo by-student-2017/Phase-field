@@ -93,7 +93,7 @@ int main(void)
 	printf("---------------------------------\n");
 	printf("read parameters form parameters.txt\n");
 	FILE *fp;
-	char name[40], comment[172];
+	char name[40], comment[72];
 	float param;
 	float data[100];
 	i = 0;
@@ -112,7 +112,7 @@ int main(void)
 	temp    = data[3];	// [K]
 	al      = data[4];	// [nm]
 	amob_c  = data[5];
-	time1max= int(data[6]);
+	time1max= data[6];
 	a0      = data[7];
 	natom   = data[8];
 	L01     = data[9];
@@ -126,35 +126,36 @@ int main(void)
 	c11b0   = data[17];
 	c12b0   = data[18];
 	c44b0   = data[19];
-	Dac     = data[20];
-	Dae     = data[21];
-	Dbc     = data[22];
-	Dbe     = data[23];
-	Tc1     = data[24];
-	Tc2     = data[25];
-	Tc3     = data[26];
-	Tc4     = data[27];
-	beta_c1 = data[28];
-	beta_c2 = data[29];
-	beta_c3 = data[30];
-	c_alp1_c= data[31];
-	c_alp2_c= data[32];
-	d_Tc1   = data[33];
-	d_Tc2   = data[34];
-	d_Tc3   = data[35];
-	d_Tc4   = data[36];
-	d_beta_c1= data[37];
-	d_beta_c2= data[38];
-	d_c_alp_c= data[39];
-	Tn1     = data[40];
-	Tn2     = data[41];
-	beta_n1 = data[42];
-	beta_n2 = data[43];
-	c_alp1_n= data[44];
-	c_alp2_n= data[45];
-	d_Tn1   = data[46];
-	d_beta_n1=data[47];
-	d_c_alp_n=data[48];
+	y100    = data[20];
+	Dac     = data[21];
+	Dae     = data[22];
+	Dbc     = data[23];
+	Dbe     = data[24];
+	Tc1     = data[25];
+	Tc2     = data[26];
+	Tc3     = data[27];
+	Tc4     = data[28];
+	beta_c1 = data[29];
+	beta_c2 = data[30];
+	beta_c3 = data[31];
+	c_alp1_c= data[32];
+	c_alp2_c= data[33];
+	d_Tc1   = data[34];
+	d_Tc2   = data[35];
+	d_Tc3   = data[36];
+	d_Tc4   = data[37];
+	d_beta_c1= data[38];
+	d_beta_c2= data[39];
+	d_c_alp_c= data[40];
+	Tn1     = data[41];
+	Tn2     = data[42];
+	beta_n1 = data[43];
+	beta_n2 = data[44];
+	c_alp1_n= data[45];
+	c_alp2_n= data[46];
+	d_Tn1   = data[47];
+	d_beta_n1=data[48];
+	d_c_alp_n=data[49];
 	printf("---------------------------------\n");
 	//
 	nd=ND;
@@ -208,7 +209,10 @@ int main(void)
 	c12=(1.0-ca)*c12a+ca*c12b;
 	c44=(1.0-ca)*c44a+ca*c44b;
 
-	y100=c11+c12-2.*(c12*c12/c11);
+	if(y100==0.0){
+		y100=c11+c12-2.*(c12*c12/c11);
+		printf("y<100>= %f \n",y100);
+	}
 
 	//Da=1.0e-4*exp(-294000./rr/temp);	//Fe‚Ì©ŒÈŠgUŒW”
 	//Db=2.0e-5*exp(-308000./rr/temp);	//Cr‚Ì©ŒÈŠgUŒW”

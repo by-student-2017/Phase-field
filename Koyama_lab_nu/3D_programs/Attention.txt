@@ -7,3 +7,5 @@ Prof. T. Koyama
 koyama.toshiyuki[at]material.nagoya-u.ac.jp
 Koyama lab (https://www.material.nagoya-u.ac.jp/PFM/index.html)
 -----------------------------------------------------------------------
+Please, see https://github.com/by-student-2017/Phase-field/tree/main/Koyama_lab_nu/C_ubuntu_version/Spinodal/fecr3d_mag_v2 , too.
+-----------------------------------------------------------------------

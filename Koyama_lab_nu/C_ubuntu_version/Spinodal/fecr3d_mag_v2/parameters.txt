@@ -1,15 +1,15 @@
 ND= 30            ! Division number 
 delt= 0.05        ! timestep
-ca= 0.4           ! Concentration, alloy composition (mole fraction)
+ca= 0.4           ! Concentration
 temp= 773.0       ! Temperature [K]
 al= 30.0          ! Computation area [nm]
 amob_c= 1.0       ! Atomic mobility constant 
 time1max= 10001.0 ! Max iteration
 a0= 0.28664       ! Lattice constant [nm]=0.1[Angstrom]
-natom= 2.0        ! number of atoms in unit cell
-L01= 21020.8      ! L0=(L01 + L02*temp)/rr/temp  (interatomic interaction L0 [dimensionless]=[J/mol]/rr/temp)
-L02= -9.31889     ! L0=(L01 + L02*temp)/rr/temp  (interatomic interaction L0 [dimensionless]=[J/mol]/rr/temp)
-kapa_c0= 6.0e-15  ! kapa_c=kapa_c0/b1/b1/RR/temp (Concentration gradient energy constant kapa_c [dimensionless]=[Jm2/mol]/b1/b1/RR/temp
+natom= 2.0        ! number of atoms in unit cell, vm0=6.02E23*a0*a0*a0/natom
+L01= 21020.8      ! L0=(L01 + L02*temp)/rr/temp
+L02= -9.31889     ! L0=(L01 + L02*temp)/rr/temp
+kapa_c0= 6.0e-15  ! Concentration gradient energy constant kapa_c=kapa_c0/b1/b1/RR/temp 
 Nstep= 200        ! output every "Nstep"
 eta= 0.00614      ! Lattice mismatch 
 c11a0= 2.331e11   ! c11a=c11a0*vm0/rr/temp
@@ -18,6 +18,7 @@ c44a0= 1.1783e11  ! c44a=c44a0*vm0/rr/temp
 c11b0= 3.5e11     ! c11b=c11b0*vm0/rr/temp
 c12b0= 0.678e11   ! c12b=c12b0*vm0/rr/temp
 c44b0= 1.008e11   ! c44b=c44b0*vm0/rr/temp
+y100= 0.0         ! 0.0 case, y100=c11+c12-2.*(c12*c12/c11)
 Dac= 1.0e-4       ! Da=Dac*exp(Dae/rr/temp) of A (e.g., Self-diffusivity coefficient Da of Fe)
 Dae= -294000.0    ! Da=Dac*exp(Dae/rr/temp) of A (e.g., Fe)
 Dbc= 2.0e-5       ! Db=Dbc*exp(Dbe/rr/temp) of B (e.g., Self-diffusivity coefficient Db of Cr)
