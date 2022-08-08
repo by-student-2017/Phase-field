@@ -1,7 +1,7 @@
 ND= 100.0          ! Division number 
 c2a= 0.333         ! Concentration, B/(A+B+C)
 c3a= 0.333         ! Concentration, C/(A+B+C)
-delt= 0.005        ! timestep [dimensionless]
+delt= 0.005        ! timestep [dimensionless] (cmob22=cmob33=1.0, cmob23=cmob32=-0.5 [dimensionless])
 temp= 900.0        ! Temperature [K]
 al= 100.0          ! Computation area [nm]
 cmob22= 1.0        ! mobility, Mc(22)

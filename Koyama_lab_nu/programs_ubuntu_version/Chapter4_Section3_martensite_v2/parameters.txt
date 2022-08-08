@@ -1,10 +1,10 @@
 ND= 256.0          ! Division number, ND=2^n
-delt= 0.2          ! timestep [dimensionless]
+delt= 0.2          ! timestep [dimensionless] (Ms=1 [dimensionless])
 temp= 500.0        ! Temperature [K]
 al= 500.0          ! Computation area [nm]
-smob= 1.0          ! mobility, Ms (Relaxation coefficient of crystal transformation)
+smob= 1.0          ! mobility Ms (Relaxation coefficient of crystal transformation)
 ds_fac= 0.01       ! Fluctuation coefficient of crystal transformation
-AA0e= 1000.0       ! Chemical driving force of martensitic transformation
+AA0e= 1000.0       ! Chemical driving force of martensitic transformation [J/mol] (=dGm)
 AA1= 1.0           ! Coefficients in gizb energy
 AA2= 15.0          ! e.g., AA2=3.0*AA1+12.0  (A2=3(A1+4))
 AA3= 14.0          ! e.g., AA3=2.0*AA1+12.0  (A3=2(A1+6))
@@ -16,8 +16,8 @@ Nstep= 10.0        ! output every "Nstep"
 c11c= 2.508        ! c11=c11c*el_fac, el_fac=1.0E+11*vm0/rr/temp
 c12c= 1.500        ! c12=c12c*el_fac
 c44c= 1.235        ! c44=c44c*el_fac
-lam0= 0.0          ! lame constant  (0.0 case: lam0=c12)
-mu0= 0.0           ! lame constant  (0.0 case: mu0=c44)
+lam0= 0.0          ! lame constant  (0.0 case: lam0=c12), lam0 of Ni(fcc)=1.5*10^11 [Pa] = 150.0 [GPa]
+mu0= 0.0           ! lame constant  (0.0 case: mu0=c44), mu0 of Ni(fcc)=1.235*10^11 [Pa] = 123.5 [GPa]
 eta1= 0.05         ! transformation strain, eta_s1[1][1]
 eta2= -0.05        ! transformation strain, eta_s1[2][2]
 sig22_a= 0.0       ! External force

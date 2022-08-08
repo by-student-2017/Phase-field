@@ -1,15 +1,15 @@
-ND= 128.0          ! Division number 
+ND= 128.0          ! Division number, ND=2^n, n=integer
 c2a= 0.45          ! Concentration
-delt= 0.005        ! timestep
+delt= 0.005        ! timestep [dimensionless] (cmob22=1 [dimensionless])
 temp= 900.0        ! Temperature [K]
 al= 100.0          ! Computation area [nm]
 cmob22= 1.0        ! mobility
-om_12e= 25000.0    ! om_12e [J/mol], om_12=om_12e/rr/temp  (interatomic interaction om_12 [dimensionless]=[J/mol]/rr/temp) 
-kapa_c2c= 5.0e-15  ! kapa_c2c [Jm2/mol], kapa_c2=kapa_c2c/b1/b1/rr/temp  (Concentration gradient energy constant kapa_c2 [dimensionless]=[Jm2/mol]/b1/b1/rr/temp)
+om_12e= 25000.0    ! interatomic interaction om_12e [J/mol]
+kapa_c2c= 5.0e-15  ! Concentration gradient energy constant kapa_c2c [Jm2/mol]
 time1max= 1.0e05   ! Max iterations
 Nstep= 1000.0      ! output every "Nstep"
 ep000= 0.05        ! Lattice mismatch
-el_mag= 100.0      !
-c11= 2.33          ! c11=c11*el_mag
-c12= 1.35          ! c12=c12*el_mag
-c44= 1.18          ! c44=c44*el_mag
+el_mag= 100.0      ! el_mag=1.0E+11/1.0E+09
+c11= 2.33          ! elastic constant c11=c11*el_mag, (2.33*10^11 [Pa] = 233.0 [GPa])
+c12= 1.35          ! elastic constant c12=c12*el_mag, (1.35*10^11 [Pa] = 135.0 [GPa])
+c44= 1.18          ! elastic constant c44=c44*el_mag, (1.18*10^11 [Pa] = 118.0 [GPa])

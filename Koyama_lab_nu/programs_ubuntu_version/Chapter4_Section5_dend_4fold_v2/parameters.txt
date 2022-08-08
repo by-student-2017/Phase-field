@@ -11,7 +11,7 @@ speht= 5.42e+06    ! Specific heat [J/Km3]
 rlate= 2.350e+09   ! Latent heat [J/m3]
 Tm= 1728.0         ! Melting point [K]
 Tini= 1511.2       ! Initial temperature [K]
-skine= 2.0         ! Interface Kinetic Coefficient [m/Ks]
+skine= 2.0         ! Kinetic Growth Coefficient [m/Ks]
 th0= 0.0           ! Angle of priority growth direction
 aaac= 3.0          ! Gradient energy coefficient ( aaa=sqrt(aaac*delta*gamma/bbb) )
 wwwc= 6.0          ! Penalty term energy barrier ( www=wwwc*gamma*bbb/delta  )
