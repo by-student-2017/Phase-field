@@ -19,6 +19,6 @@ aniso_mode            = 4.0       ! anisotropic mode number of interfacial aniso
 aniso_stre            = 0.04      ! strength of interfacial anisotropy (must be smaller than 1/((aniso_mode)^2-1)
 magnitude_noise       = 0.05      ! magnitude of noise
 theta_0               = 0.0       ! preferential growth direction [degree]
-initial_concentration = 0.4083    ! initial concentration of element B in liquid []
+initial_concentration = 0.4083    ! initial concentration of element B in liquid
 initial_temperature   = 1574.0    ! initial temperature of the system [K]
 
