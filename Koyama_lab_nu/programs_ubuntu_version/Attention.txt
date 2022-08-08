@@ -19,4 +19,12 @@ The original "programs.zip" (Japanese)
 The codes in this folder is an improved version of the original "program.zip".
 (The parameter input file, Paraview output, dynamic memory allocation, and 
 ubuntu version of g ++ have been rewritten to be available.)
+
+
+----- dimensionless -----
+Energy: 1/RT
+Length: 1/b1 = 1/(L/N) = 1/([m]/(number of mesh))
+Time: 1/(b1*b1/D), diffusion coefficient D [m2/s]
+Time: MsRT, Ms [mol/s/J], (mobility Mc=Ms=1)
+McRT/D [dimensionless]
 -----------------------------------------------------------------------
