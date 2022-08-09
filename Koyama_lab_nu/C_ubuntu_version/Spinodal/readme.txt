@@ -41,7 +41,7 @@ ubuntu 18.04 LTS
   a8. (click "play") |>
 -----------------------------------------------------------------------
 ----- dimensionless -----
-Energy: 1/RT [J/mol]
+Energy: 1/RT [1/(J/mol)]
 Length: 1/b1 = 1/(L/N) = 1/([m]/(number of mesh))
 Time: 1/(b1*b1/D), diffusion coefficient D [m2/s]
 Time: Ms*RT, Ms [mol/s/J]=[(1/s)*1/(J/mol)], (mobility Mc=Ms=1)
