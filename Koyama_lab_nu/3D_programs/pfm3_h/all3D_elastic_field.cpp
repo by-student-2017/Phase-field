@@ -474,7 +474,7 @@ int main(void)
 	//save_screen("u_field.bmp");//save graph
 
 
-//***** 全数値データ保存 ********************************************
+//***** Save all numerical data ********************************************
 	//datsave();			//save data
 	datsave_paraview();	//save
 

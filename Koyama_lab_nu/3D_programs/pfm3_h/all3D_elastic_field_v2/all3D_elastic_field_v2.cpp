@@ -553,7 +553,7 @@ int main(void)
 		}
 	}
 
-//***** 全数値データ保存 ********************************************
+//***** Save all numerical data ********************************************
 	//datsave(ch, Estr, ep11c, ep22c, ep33c, ep12c, ep13c, ep23c, 
 	//		 sig11, sig22, sig33, sig12, sig13, sig23, u1, u2, u3, ND);			//save data
 	datsave_paraview(ch, Estr, ep11c, ep22c, ep33c, ep12c, ep13c, ep23c, 
