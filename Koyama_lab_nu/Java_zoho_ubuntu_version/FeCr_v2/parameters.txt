@@ -6,9 +6,9 @@ time1max= 1.0e08    ! Max iterations
 al= 30.0            ! The length of one side of the calculation area [nm]
 vm0= 7.08886e-6     ! Molar volume vm0=6.02E23*a*b*c/atomNo [m3/mol], atomNo=Number of atoms in a unit cell
 L0_0= 20500.0       ! Interatomic interaction parameter [J/mol]
-L0_1= -9.68         ! L=L0_0+L0_1*temp
-kappa_c= 2.0e-15    ! Concentration gradient energy coefficient, unit is [Jm2/mol]
-eta= 0.00614        ! Lattice mismatch
+L0_1= -9.68         ! L=L0_0+L0_1*temp [J/mol]
+kappa_c= 2.0e-15    ! Concentration gradient energy coefficient [Jm2/mol]
+eta= 0.00614        ! Lattice mismatch (e.g., (a(Cr)-a(Fe))/a(Fe)=6.14*10^-3)
 c11a= 2.3310e+11    ! Elastic modulus of A [Pa]. e.g., bcc Fe [Pa]
 c12a= 1.3544e+11    !
 c44a= 1.1783e+11    !
@@ -18,12 +18,12 @@ c44b= 1.008e+11     !
 y100= 0.0           ! Modulus function Y <100>. 0.0 case, y100=c11+c12-2.0*(c12*c12/c11)
 Tca= 1043.0         ! Curie temperature-related coefficients, e.g., Tc [K] of Fe
 Tcb= -311.5         ! Curie temperature-related coefficients, e.g., Tc [K] of Cr
-Tcab0= 1650.0       ! 
+Tcab0= 1650.0       ! Curie temperature Tc = Tca*(1-c) + Tcb*c + c*(1-c)*(Tcab0 + Tcab1*(1-2*c)) [K]
 Tcab1= 550.0        ! 
 Bca= 2.22           ! Bohr magneton-related coefficients, e.g., Fe
 Bcb= -0.008         ! Bohr magneton-related coefficients, e.g., Cr
-Bcab0= -0.85        !
-p_mag= 0.4          ! bcc structure type
+Bcab0= -0.85        ! Bohr magneton = Bca*(1-c) + Bca*c + Bcab0*c*(1-c)
+p_mag= 0.4          ! bcc structure type (fcc type: p=0.28)
 D_mag= 1.5583       ! D_mag=518.0/1125.0+11692.0/15975.0*(1.0/p_mag-1.0)
 Mc= 0.25            ! Mobility of diffusion Mc=c0*(1.0-c0)
 c_flu= 0.1          !

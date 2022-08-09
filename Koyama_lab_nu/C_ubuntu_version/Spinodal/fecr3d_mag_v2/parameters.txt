@@ -11,7 +11,7 @@ L01= 21020.8      ! L01 [J/mol],   Interatomic interaction L0=(L01 + L02*temp) [
 L02= -9.31889     ! L02 [J/mol/K], Interatomic interaction L0=(L01 + L02*temp) [J/mol]
 kapa_c0= 6.0e-15  ! Concentration gradient energy constant kapa_c0 [Jm2/mol]
 Nstep= 200        ! output every "Nstep"
-eta= 0.00614      ! Lattice mismatch 
+eta= 0.00614      ! Lattice mismatch (e.g., (a(Cr)-a(Fe))/a(Fe)=6.14*10^-3)
 c11a0= 2.331e11   ! elastic constant c11a0 [Pa], (2.3300*10^11 [Pa] = 233.00 [GPa]), c11a=c11a0*vm0/rr/temp
 c12a0= 1.3544e11  ! elastic constant c12a0 [Pa], (1.3500*10^11 [Pa] = 135.00 [GPa]), c12a=c12a0*vm0/rr/temp
 c44a0= 1.1783e11  ! elastic constant c44a0 [Pa], (1.1783*10^11 [Pa] = 117.83 [GPa]), c44a=c44a0*vm0/rr/temp

@@ -13,9 +13,8 @@ kapa_c0= 5.0e-15  ! (Not use) Concentration gradient energy constant kapa_c=kapa
 c_flu= 0.0        ! (Not use) Fluctuation of concentration field
 flg= 1            ! (Not use) 1:Spinodal, 2:Nucleation-Growth Degradation
 Nstep= 200        ! (Not use) output every "Nstep"
-ep000= 0.05       ! Lattice mismatch
+ep000= 0.05       ! Lattice mismatch between matrix and precipitation layer (eta11=eta22=eta33=ep000, eigen strain=eta*ph)
 el_mag= 100.0     ! el_mag=1.0E+11/1.0E+09
-c11= 2.33         ! elastic constant c11=c11*el_mag, (2.33*10^11 [Pa] = 233.0 [GPa])
-c12= 1.35         ! elastic constant c12=c12*el_mag, (1.35*10^11 [Pa] = 135.0 [GPa])
-c44= 1.18         ! elastic constant c44=c44*el_mag, (1.18*10^11 [Pa] = 118.0 [GPa])
-
+c11= 2.33         ! elastic constant c11=c11*el_mag, ( 2.33*10^11 [Pa] = 233.0 [GPa] of alpha Fe (BCC) )
+c12= 1.35         ! elastic constant c12=c12*el_mag, ( 1.35*10^11 [Pa] = 135.0 [GPa] of alpha Fe (BCC) )
+c44= 1.18         ! elastic constant c44=c44*el_mag, ( 1.18*10^11 [Pa] = 118.0 [GPa] of alpha Fe (BCC) )
