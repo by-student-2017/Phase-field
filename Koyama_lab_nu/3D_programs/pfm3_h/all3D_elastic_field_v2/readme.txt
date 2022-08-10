@@ -5,7 +5,7 @@ ubuntu 18.04 LTS
 2. sudo apt -y install g++
 3. sudo apt -y install paraview paraview-dev
 4. mv *.dat data.dat
-  (e.g., *.dat from microstructure3D_v2.cpp, etc)
+  (e.g., *.dat (Only the data of the time you want to calculate.) from microstructure3D_v2.cpp, etc)
 5. g++ all3D_elastic_field_v2.cpp -o el
 6. ./el
 7. paraview
