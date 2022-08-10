@@ -5,7 +5,7 @@ ubuntu 18.04 LTS
 2. sudo apt -y install g++
 3. sudo apt -y install paraview paraview-dev
 4. g++ all_elastic_field_v2.cpp -o all_elastic_field
-  (gedit ph.dat (Only the data (ch) of the time you want to calculate.))
+  (gedit ph.dat (Only the data (ch) of the time you want to calculate.) from output of Chapter5_Section1_two_phase_v2)
 5. ./all_elastic_field
 6. paraview
   a1. File -> Open ... -> sp_result..vtk -> OK
