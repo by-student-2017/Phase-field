@@ -59,7 +59,7 @@ int main(void)
 	int n0p;
 	double time1max;
 	double delt, L, b1, t, s;
-	double dG, M1, M0, W1, K1, E1, E0;
+	double dG, M1, M0, W1, W0, K1, K0, E1, E0;
 	double mu_chem, mu_grad;
 	double temp;
 	double sum1, sum2, sum3, sxs;
@@ -96,7 +96,9 @@ int main(void)
 	temp    = data[8];	// [K]
 	vm0     = data[9];	// gamma=gamma0*vm0/RR/temp/b1;
 	gamma0  = data[10];	// gamma=gamma0*vm0/RR/temp/b1;
-	delta   = data[11];	// Not delt !!! For, aaa, W1, M1
+	delta   = data[11];	// Not delt !!! For, K1, W1, M1
+	K0      = data[13];	// 
+	W0      = data[13];	// 
 	amobi   = data[12];	// M1=amobi*PI*PI/(M0*delta);
 	M0      = data[13];	// M1=amobi*PI*PI/(M0*delta);
 	E0      = data[14];	// E1=E0/RR/temp;
@@ -137,9 +139,11 @@ int main(void)
 	gamma=gamma0*vm0/RR/temp/b1;
 	//delta=3.0;
 
-	aaa=2.0/PI*sqrt(2.0*delta*gamma);
-	K1=aaa*aaa;
-	W1=4.0*gamma/delta;
+	//aaa=2.0/PI*sqrt(2.0*delta*gamma);
+	//K1=aaa*aaa;
+	K1=K0*delta*gamma/PI/PI;
+	//W1=4.0*gamma/delta;
+	W1=W0*gamma/delta;
 	amobi=1.;
 	//M1=amobi*PI*PI/(8.0*delta);
 	M1=amobi*PI*PI/(M0*delta);
