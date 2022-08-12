@@ -7,10 +7,10 @@ time1max= 20001.0 ! Max iteration
 temp= 1000.0      ! Temperature [K]
 vm0= 7.0e-6       ! Molar volume [m3/mol]
 gamma0= 0.5       ! grain boundary energy [J/m2]
-delta= 3.0        ! Grain boundary width (is related with K1, W1 and M1)
-K0= 8.0           ! (Analytical, no changes required) Gradient energy coefficient ( K1=K0*delta*gamma/PI/PI )
-W0= 4.0           ! (Analytical, no changes required) Coefficient of penalty term ( W1=W0*gamma/delta )
+delta= 3.0        ! Grain boundary width (is related with K1=aij^2, W1=Wij and M1=Mij)
+K0= 8.0           ! (Analytical, no changes required) Gradient energy coefficient ( aij^2=K1=K0*delta*gamma/PI/PI )
+W0= 4.0           ! (Analytical, no changes required) Coefficient of penalty term ( Wij=W1=W0*gamma/delta )
 amobi= 1.0        ! Atomic mobility constant 
-M0= 8.0           ! (Analytical, no changes required) mobility M1=amobi*PI*PI/(M0*delta)
+M0= 8.0           ! (Analytical, no changes required) mobility of phase-field Mij=M1=amobi*PI*PI/(M0*delta)
 E0= 500.0         ! interatomic interaction E0 [J/mol]
 Nstep= 10.0       ! output every "Nstep"

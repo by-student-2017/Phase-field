@@ -6,10 +6,10 @@ L= 2000.0          ! The length of one side of the calculation area [nm]
 vm0= 7.0e-6        ! Molar volume [m3/mol]
 gamma0= 0.5        ! Grain boundary energy density [J/m2]
 delta= 7.0         ! Grain boundary width (expressed by the number of difference blocks)
-K0= 8.0            ! (Analytical, no changes required) Gradient energy coefficient ( K1=K0*delta*gamma/PI/PI )
-W0= 4.0            ! (Analytical, no changes required) Coefficient of penalty term ( W1=W0*gamma/delta )
+K0= 8.0            ! (Analytical, no changes required) Gradient energy coefficient ( aij^2=K1=K0*delta*gamma/PI/PI )
+W0= 4.0            ! (Analytical, no changes required) Coefficient of penalty term ( Wij=W1=W0*gamma/delta )
 amobi= 1.0         ! Grain boundary mobility ( M1=amobi*PI*PI/(M0*delta) )
-M0= 8.0            ! (Analytical, no changes required) Grain boundary mobility ( M1=amobi*PI*PI/(M0*delta) )
+M0= 8.0            ! (Analytical, no changes required) Grain boundary mobility ( Mij=M1=amobi*PI*PI/(M0*delta) )
 E0= 50.0           ! Driving force for grain boundary movement E0 [J/mol]
 time1max= 1.0e08   ! Max iterations
 Nstep= 100.0       ! output every "Nstep"
