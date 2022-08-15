@@ -1,0 +1,32 @@
+-----------------------------------------------------------------------------
+- codes of "Programming Phase-Field Modeling" (Octave or Matlab)
+(https://link.springer.com/chapter/10.1007/978-3-319-41196-5_9 (Open Access))
+(The password is listed on the above URL)
+- chapter 4: prog_pf_ch4 (denditic solidification)
+- chapter 5: prog_pf_ch5 (Fe-Cu-Mn-Ni alloy)
+- chapter 6: prog_pf_ch6 (edge-clack)
+- chapter 7: prog_pf_ch7 (PFC 2D and 3D)
+- https://link.springer.com/book/10.1007/978-3-319-41196-5
+-----------------------------------------------------------------------------
+- Installation (Octave)
+1. octave-7.2.0-w64-installer.exe
+  (from https://octave.org/download)
+2. (click) GNU Octave (GUI)
+3. (>>) pkg load statistics
+4. (>>) pkg load image
+
+- Installation (Paravie)
+1. ParaView-5.10.1-MPI-Windows-Python3.9-msvc2017-AMD64.exe
+  (from https://www.paraview.org/download/)
+-----------------------------------------------------------------------------
+- Usage (PFC, defect, 2 dimension)
+1. (Open) Octave
+2. current directory: CHAPTER_7
+3. current directory: case_study_18
+4. (>>) pfc_def_v2
+  (on command windowj
+5. (Open) Paraview
+6. (select time_XXX.vtk in case_study_18 and drag&drop to Paraview)
+7. (click) Apply
+8. (click Play) |>
+-----------------------------------------------------------------------------

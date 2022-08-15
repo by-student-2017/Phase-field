@@ -21,8 +21,7 @@
 2. mkdir output
 3. $HOME/phase-field-crystal-mpi/bin/pfc
 4. cd output
-5. od -v -t fD eta100.bin > output.tx
-6. python3 $HOME/phase-field-crystal-mpi/misc/plot_binary_data.py initial_conf.bin
+5. python3 $HOME/phase-field-crystal-mpi/misc/plot_binary_data.py initial_conf.bin
 
 - Usage (python code)
 1. cd $HOME/phase-field-crystal-mpi
