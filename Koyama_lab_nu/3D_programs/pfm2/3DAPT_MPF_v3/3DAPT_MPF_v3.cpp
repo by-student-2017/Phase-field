@@ -195,10 +195,11 @@ int main(void)
 					printf("\n");
 					for(int i1=1;i1<=GN;i1++){
 						printf("%d: ",i1);
-						for(int j1=1;j1<=GN;j1++){
+						for(int j1=i1;j1<=GN;j1++){
 							data_mat[i1*GNP+j1]=data_mat[i1*GNP+j1]*vm0/RR/temp/b1;
-							printf("%8.5f ",data_mat[i1*GNP+j1]);
+							data_mat[j1*GNP+i1]=data_mat[i1*GNP+j1];
 						}
+						for(int j1=1;j1<=GN;j1++){printf("%8.5f ",data_mat[i1*GNP+j1]);}
 						printf("\n");
 					}
 					printf("! ---------- wij [dimensionless]\n");
@@ -208,11 +209,12 @@ int main(void)
 					printf("\n");
 					for(int i1=1;i1<=GN;i1++){
 						printf("%d: ",i1);
-						for(int j1=1;j1<=GN;j1++){
+						for(int j1=i1;j1<=GN;j1++){
 							W1=W0*data_mat[i1*GNP+j1]/delta;
 							wij[i1*GNP+j1]=W1;
-							printf("%8.5f ",wij[i1*GNP+j1]);
+							wij[j1*GNP+i1]=W1;
 						}
+						for(int j1=1;j1<=GN;j1++){printf("%8.5f ",wij[i1*GNP+j1]);}
 						printf("\n");
 					}
 					printf("! ---------- aij [dimensionless]\n");
@@ -222,11 +224,12 @@ int main(void)
 					printf("\n");
 					for(int i1=1;i1<=GN;i1++){
 						printf("%d: ",i1);
-						for(int j1=1;j1<=GN;j1++){
+						for(int j1=i1;j1<=GN;j1++){
 							K1=K0*delta*data_mat[i1*GNP+j1]/PI/PI;
 							aij[i1*GNP+j1]=K1;
-							printf("%8.5f ",aij[i1*GNP+j1]);
+							aij[j1*GNP+i1]=K1;
 						}
+						for(int j1=1;j1<=GN;j1++){printf("%8.5f ",aij[i1*GNP+j1]);}
 						printf("\n");
 					}
 				}
@@ -238,11 +241,12 @@ int main(void)
 					printf("\n");
 					for(int i1=1;i1<=GN;i1++){
 						printf("%d: ",i1);
-						for(int j1=1;j1<=GN;j1++){
+						for(int j1=i1;j1<=GN;j1++){
 							M1=data_mat[i1*GNP+j1]*PI*PI/(M0*delta);
 							tij[i1*GNP+j1]=M1;
-							printf("%8.5f ",tij[i1*GNP+j1]);
+							tij[j1*GNP+i1]=M1;
 						}
+						for(int j1=1;j1<=GN;j1++){printf("%8.5f ",tij[i1*GNP+j1]);}
 						printf("\n");
 					}
 				}
@@ -254,11 +258,12 @@ int main(void)
 					printf("\n");
 					for(int i1=1;i1<=GN;i1++){
 						printf("%d: ",i1);
-						for(int j1=1;j1<=GN;j1++){
+						for(int j1=i1;j1<=GN;j1++){
 							E1=data_mat[i1*GNP+j1]/RR/temp;
 							eij[i1*GNP+j1]=E1;
-							printf("%8.5f ",eij[i1*GNP+j1]);
+							eij[j1*GNP+i1]=-E1;
 						}
+						for(int j1=1;j1<=GN;j1++){printf("%8.5f ",eij[i1*GNP+j1]);}
 						printf("\n");
 					}
 				}
