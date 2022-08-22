@@ -1,5 +1,3 @@
-//３次元計算
-//粒界エネルギー密度および易動度に方位依存性なし
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,6 +5,8 @@
 #include <math.h>
 
 //#include "wingxa.h"
+
+#include <string.h>
 
 #define DRND(x) ((double)(x)/RAND_MAX*rand())
 
@@ -115,6 +115,8 @@ int main(void)
 	double *tij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));	// tij[i][j]= tij[i*GNP+j]
 	double *eij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));	// eij[i][j]= eij[i*GNP+j]
 	//
+	double *data_mat  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));
+	//
 	//printf("delt(2.0)=  "); scanf(" %lf",&delt);	//	delt=2.0;
 	//L=500.0;	// [nm]
 	b1=L/(double)ND*1.0e-9;	// [m]
@@ -157,6 +159,116 @@ int main(void)
 			if(i>j){eij[i*GNP+j]=-eij[i*GNP+j];}
 			if(i==j){wij[i*GNP+j]=0.0; aij[i*GNP+j]=0.0; tij[i*GNP+j]=0.0; eij[i*GNP+j]=0.0;}
 		}
+	}
+
+	if ( gamma0==0.0 || amobi==0.0 || E0==0.0 ){
+		printf("---------------------------------\n");
+		printf("read parameters from matrix.txt\n");
+		//FILE *fp;
+		char readline[132];
+		char *tok;
+		k = 0;
+		fp = fopen("matrix.txt","r");
+		while(fgets(readline,132,fp) != NULL){
+			if(k % (GN+1) != 0){
+				tok = strtok(readline," ");
+				//printf( "%s ", tok );
+				data_mat[i*GNP+1] = atof(tok);
+				printf("%f ",data_mat[i*GNP+1]);
+				j = 2;
+				while( (tok != NULL) && (j <= GN) ){
+					tok = strtok(NULL," ");
+					//printf( "%s ", tok );
+					data_mat[i*GNP+j] = atof(tok);
+					printf("%f ",data_mat[i*GNP+j]);
+					j = j + 1;
+				}
+				i = i + 1;
+				printf("\n");
+			} else {
+				i = 1;
+				if( float(k/(GN+1))==1.0 && gamma0==0.0 ){
+					printf("! ---------- gamma [dimensionless]\n");
+					for(int j1=1;j1<=GN;j1++){
+						printf("%8d ",j1);
+					}
+					printf("\n");
+					for(int i1=1;i1<=GN;i1++){
+						printf("%d: ",i1);
+						for(int j1=1;j1<=GN;j1++){
+							data_mat[i1*GNP+j1]=data_mat[i1*GNP+j1]*vm0/RR/temp/b1;
+							printf("%8.5f ",data_mat[i1*GNP+j1]);
+						}
+						printf("\n");
+					}
+					printf("! ---------- wij [dimensionless]\n");
+					for(int j1=1;j1<=GN;j1++){
+						printf("%8d ",j1);
+					}
+					printf("\n");
+					for(int i1=1;i1<=GN;i1++){
+						printf("%d: ",i1);
+						for(int j1=1;j1<=GN;j1++){
+							W1=W0*data_mat[i1*GNP+j1]/delta;
+							wij[i1*GNP+j1]=W1;
+							printf("%8.5f ",wij[i1*GNP+j1]);
+						}
+						printf("\n");
+					}
+					printf("! ---------- aij [dimensionless]\n");
+					for(int j1=1;j1<=GN;j1++){
+						printf("%8d ",j1);
+					}
+					printf("\n");
+					for(int i1=1;i1<=GN;i1++){
+						printf("%d: ",i1);
+						for(int j1=1;j1<=GN;j1++){
+							K1=K0*delta*data_mat[i1*GNP+j1]/PI/PI;
+							aij[i1*GNP+j1]=K1;
+							printf("%8.5f ",aij[i1*GNP+j1]);
+						}
+						printf("\n");
+					}
+				}
+				if( float(k/(GN+1))==2 && amobi==0.0 ){
+					printf("! ---------- tij [dimensionless]\n");
+					for(int j1=1;j1<=GN;j1++){
+						printf("%8d ",j1);
+					}
+					printf("\n");
+					for(int i1=1;i1<=GN;i1++){
+						printf("%d: ",i1);
+						for(int j1=1;j1<=GN;j1++){
+							M1=data_mat[i1*GNP+j1]*PI*PI/(M0*delta);
+							tij[i1*GNP+j1]=M1;
+							printf("%8.5f ",tij[i1*GNP+j1]);
+						}
+						printf("\n");
+					}
+				}
+				if( float(k/(GN+1))==3 && E0==0.0 ){
+					printf("! ---------- eij [dimensionless]\n");
+					for(int j1=1;j1<=GN;j1++){
+						printf("%8d ",j1);
+					}
+					printf("\n");
+					for(int i1=1;i1<=GN;i1++){
+						printf("%d: ",i1);
+						for(int j1=1;j1<=GN;j1++){
+							E1=data_mat[i1*GNP+j1]/RR/temp;
+							eij[i1*GNP+j1]=E1;
+							printf("%8.5f ",eij[i1*GNP+j1]);
+						}
+						printf("\n");
+					}
+				}
+				printf("%s",readline);
+
+			}
+			k = k + 1;
+		}
+		fclose(fp);
+		printf("---------------------------------\n");
 	}
 
 //****************************************************

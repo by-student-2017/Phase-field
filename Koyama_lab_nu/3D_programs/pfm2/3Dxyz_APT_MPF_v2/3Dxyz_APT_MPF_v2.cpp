@@ -70,7 +70,7 @@ int main(void)
 
 //****** reg data ****************************************
 	printf("---------------------------------\n");
-	printf("read parameters form parameters.txt\n");
+	printf("read parameters from parameters.txt\n");
 	FILE *fp;
 	char name[40], comment[172];
 	float param;
