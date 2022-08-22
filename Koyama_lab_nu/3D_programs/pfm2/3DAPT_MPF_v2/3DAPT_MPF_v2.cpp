@@ -464,7 +464,8 @@ void ini000(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP)
 	}
 
 	r0=5;//粒番号の異なる半径5の円を書く（円内に粒番号を記述）
-	for(iGN=1;iGN<=GN-1;iGN++){
+	//for(iGN=1;iGN<=GN-1;iGN++){
+	for(iGN=1;iGN<=N;iGN++){
 		x1=nd*DRND(1); y1=nd*DRND(1); z1=nd*DRND(1);
 		//while(is[x1][y1][z1]!=GN){x1=nd*DRND(1); y1=nd*DRND(1); z1=nd*DRND(1);}
 		while(is[x1*ND*ND+y1*ND+z1]!=GN){x1=nd*DRND(1); y1=nd*DRND(1); z1=nd*DRND(1);}
