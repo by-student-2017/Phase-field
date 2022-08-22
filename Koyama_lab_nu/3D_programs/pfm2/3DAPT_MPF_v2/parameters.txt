@@ -1,6 +1,6 @@
 ND= 64.0          ! Division number 
 N= 15.0           ! total number of crystal grains
-GNP= 21.0         ! GNP = N or GNP >= N
+GNP= 21.0         ! GNP >= N+2
 delt= 2.0         ! timestep [dimensionless] (amobi=1 [dimensionless])
 L= 500.0          ! Computation area [nm], b1=L/(double)NDX*1.0e-9
 time1max= 20001.0 ! Max iteration
