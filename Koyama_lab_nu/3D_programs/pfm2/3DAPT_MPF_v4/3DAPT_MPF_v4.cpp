@@ -414,6 +414,7 @@ start: ;
 							//jj=qh[n2][i][j][k];
 							jj=qh[n2*ND*ND*ND+i*ND*ND+j*ND+k];
 							sum1=0.0;
+							ch=0.0;
 							for(n3=1; n3<=n0p; n3++){
 								//kk=qh[n3][i][j][k]; sum2=0.0;
 								//for(l=1;l<=n00[ip][j][k];l++){ if(qh[l][ip][j][k]==kk){sum2+=ph[l][ip][j][k];} }
@@ -434,8 +435,9 @@ start: ;
 								//	+(wij[ii][kk]-wij[jj][kk])*ph[n3][i][j][k];
 								sum1+=0.5*(aij[ii*GNP+kk]-aij[jj*GNP+kk])*(sum2-6.0*ph[n3*ND*ND*ND+i*ND*ND+j*ND+k])
 									+(wij[ii*GNP+kk]-wij[jj*GNP+kk])*ph[n3*ND*ND*ND+i*ND*ND+j*ND+k];
+								//
+								ch+=ph[n3*ND*ND*ND+i*ND*ND+j*ND+k]*cij[kk*GNP+kk];
 							}
-							ch = 0; for(int jj1=1; jj1<GN; jj1++){ch+=ph[n2*ND*ND*ND+i*ND*ND+j*ND+k]*cij[jj1*GNP+jj1]*kij[jj1*GNP+ii];}
 							eij[ii*GNP+jj] = -Sij[ii*GNP+jj]*(temp - (mij[ii*GNP+jj]*(ch - crij[ii*GNP+jj]) + Trij[ii*GNP+jj]));
 							//pddtt+=-2.0*tij[ii][jj]/double(n00p[i][j][k])
 							// *(sum1-8.0/PI*eij[ii][jj]*sqrt(ph[n1][i][j][k]*ph[n2][i][j][k]));
