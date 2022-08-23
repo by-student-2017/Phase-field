@@ -1,0 +1,22 @@
+! ---------- grain boundary energy, gamma [J/m2]
+0.0 0.5 0.5 0.5 0.5 0.5 ! gamma11, gamma12,..., gamma1(GNP-1)
+0.5 0.0 0.5 0.5 0.5 0.5 !   When grain boundary energy or orientation difference dependence of 
+0.5 0.5 0.0 0.5 0.5 0.5 !   grain boundary mobility is required, such as abnormal grain growth, 
+0.5 0.5 0.5 0.0 0.5 0.5 !   each component of the off-diagonal term is changed for each grain boundary.
+0.5 0.5 0.5 0.5 0.0 0.5 ! lower triangular matrix is dummy
+0.5 0.5 0.5 0.5 0.5 0.0 ! gamma(GNP-1)1,
+! ---------- Atomic mobility constant, amobi
+0.0 0.0 0.0 0.0 0.0 1.0 ! amobi11, amobi12,..., amobi1(GNP-1)
+0.0 0.0 0.0 0.0 0.0 1.0 !   By giving values to the off-diagonal terms that are set to 0, 
+0.0 0.0 0.0 0.0 0.0 1.0 !   it is possible to reproduce the grain growth 
+0.0 0.0 0.0 0.0 0.0 1.0 !   due to the grain boundary energy balance after the grains collide.
+0.0 0.0 0.0 0.0 0.0 1.0 ! lower triangular matrix is dummy
+1.0 1.0 1.0 1.0 1.0 0.0 ! amobi(GNP-1)1,
+! ---------- interatomic interaction, E0 [J/mol]
+   0.0    0.0    0.0    0.0    0.0 500.0 ! E011, E012,..., E01(GNP-1)
+   0.0    0.0    0.0    0.0    0.0 500.0 !   The chemical driving force is a value that 
+   0.0    0.0    0.0    0.0    0.0 500.0 !   allows stable simulation without contraction of 
+   0.0    0.0    0.0    0.0    0.0 500.0 !   the initial nucleus.
+   0.0    0.0    0.0    0.0    0.0 500.0 ! lower triangular matrix is dummy
+-500.0 -500.0 -500.0 -500.0 -500.0   0.0 ! E0(GNP-1)1,
+! ---------- end

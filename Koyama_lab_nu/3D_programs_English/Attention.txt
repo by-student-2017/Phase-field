@@ -1,0 +1,21 @@
+-----------------------------------------------------------------------
+Attention !!!
+
+Please consult the author (Porf. T. Koyama) for non-research use.
+
+Prof. T. Koyama
+koyama.toshiyuki[at]material.nagoya-u.ac.jp
+Koyama lab (https://www.material.nagoya-u.ac.jp/PFM/index.html)
+-----------------------------------------------------------------------
+Please, see https://github.com/by-student-2017/Phase-field/tree/main/Koyama_lab_nu/C_ubuntu_version/Spinodal/fecr3d_mag_v2 , too.
+-----------------------------------------------------------------------
+----- dimensionless -----
+Energy: 1/RT [1/(J/mol)]
+Length: 1/b1 = 1/(L/N) = 1/([m]/(number of mesh))
+Time: 1/(b1*b1/D), diffusion coefficient D [m2/s]
+Time: Ms*RT, Ms [mol/s/J]=[(1/s)*1/(J/mol)], (mobility Mc=Ms=1)
+Mc*RT/D [dimensionless]
+Concentration gradient energy, kappa: 1/(b1*b1*RT)
+
+Einstein relations: D = M0*RT, M0 [(m2/s)/(J/mol)]
+-----------------------------------------------------------------------
