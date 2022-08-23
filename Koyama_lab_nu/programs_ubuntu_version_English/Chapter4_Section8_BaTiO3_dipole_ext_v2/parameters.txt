@@ -1,0 +1,25 @@
+ND= 128.0           ! Number of divisions, ND=2^n
+delt= 0.1           ! timestep [dimensionless]
+time1max= 1.0e08    ! Max iterations
+Nstep= 10           ! output every "Nstep"
+temp= 298.0         ! Temperature [K]
+al= 250.0           ! The length of one side of the calculation area [micro meter]
+vm0= 3.87194E-5     ! Molar volume (1 mol of molecule)
+smob1= 1.0          ! Mobility mobility in structural phase transition (standardized and set to 1)
+smob2= 1.0          ! Mobility mobility in structural phase transition (standardized and set to 1)
+A1e= 4.124e+05      ! Chemical free energy [C^-2 * m^2 * N], A1=A1e*vm0/RR/temp
+A11e= -2.097e+08    ! [C^-4 * m^6 * N]
+A12e= 7.974e+08     ! [C^-4 * m^6 * N]
+A111e= 1.294e+09    ! [C^-6 * m^10 * N]
+A112e= -1.950e+09   ! [C^-6 * m^10 * N]
+A123e= -2.500e+09   ! [C^-6 * m^10 * N]
+A1111e= 3.863e+10   ! [C^-8 * m^14 * N]
+A1112e= 2.529e+10   ! [C^-8 * m^14 * N]
+A1122e= 1.637e+10   ! [C^-8 * m^14 * N]
+A1123e= 1.367e+10   ! [C^-8 * m^14 * N]
+Tc0= 388.0          ! Transformation temperature [K]
+kapaPc= 1.0e-15     ! Gradient energy coefficient [Jm2/mol]
+E1_ex_0c= 2.0e+6    ! External electric field [V] (x direction), e.g., (E1_ex_0=E1_ex_0c*vm0/RR/temp)
+ep00= 200.0         ! Relative permittivity
+Add0c= 1.0          ! Dipole-coefficients in dipole interaction calculations
+readff= 1.0         ! 1.0: read test.dat file.  0.0: non read (use ini000 subroutine)
