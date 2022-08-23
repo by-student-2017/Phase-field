@@ -21,10 +21,10 @@
 	double RR=8.3145;
 	int iout, Nstep;
 
-	//double ph[N][ND][ND][ND];		//ph[1][i][j]～ph[n][i][j]:位置[i][j]におけるpf
-	//int qh[N][ND][ND][ND];	 	//qh[1][i][j]～qh[n][i][j]:位置[i][j]においておける粒番号
-	//int n00[ND][ND][ND];			//位置[i][j]においてphが0ではない場合の個数
-	//int n00p[ND][ND][ND];			//位置[i][j]におけるphおよびその周辺のphが0ではない場合の個数
+	//double ph[N][ND][ND][ND];		//ph[1][i][j][k]～ph[n][i][j][k]:位置[i][j][k]におけるpf
+	//int qh[N][ND][ND][ND];	 	//qh[1][i][j][k]～qh[n][i][j][k]:位置[i][j][k]においておける粒番号
+	//int n00[ND][ND][ND];			//位置[i][j][k]においてphが0ではない場合の個数
+	//int n00p[ND][ND][ND];			//位置[i][j][k]におけるphおよびその周辺のphが0ではない場合の個数
 
 	//double ph2[N][ND][ND][ND];
 	//int qh2[N][ND][ND][ND];
@@ -104,10 +104,10 @@ int main(void)
 	//double ch[(nstep+1)*nstep]; // [(nstep+1)*nstep]=[nstep*nstep+nstep], a[i][j]= a[i*n+j] for a[][n]
 	//a[z * ySize * xSize + y * xSize + x], a[i][j][k]=a[i*n*m + j*n + k]
 	//bag fix: change from N*ND*ND*ND to GNP*ND*ND*ND
-	double *ph   = (double *)malloc(sizeof(double)*( GNP*ND*ND*ND + ND*ND*ND + ND*ND + ND ));	//ph[1][i][j]～ph[n][i][j]:位置[i][j]におけるpf
-	int    *qh   =       (int *)malloc(sizeof(int)*( GNP*ND*ND*ND + ND*ND*ND + ND*ND + ND ));	//qh[1][i][j]～qh[n][i][j]:位置[i][j]においておける粒番号
-	int    *n00  =       (int *)malloc(sizeof(int)*( ND*ND*ND + ND*ND + ND ));	//位置[i][j]においてphが0ではない場合の個数
-	int    *n00p =       (int *)malloc(sizeof(int)*( ND*ND*ND + ND*ND + ND ));	//位置[i][j]におけるphおよびその周辺のphが0ではない場合の個数
+	double *ph   = (double *)malloc(sizeof(double)*( GNP*ND*ND*ND + ND*ND*ND + ND*ND + ND ));	//ph[1][i][j][k]～ph[n][i][j][k]:位置[i][j][k]におけるpf
+	int    *qh   =       (int *)malloc(sizeof(int)*( GNP*ND*ND*ND + ND*ND*ND + ND*ND + ND ));	//qh[1][i][j][k]～qh[n][i][j][k][k]:位置[i][j][k]においておける粒番号
+	int    *n00  =       (int *)malloc(sizeof(int)*( ND*ND*ND + ND*ND + ND ));	//位置[i][j][k]においてphが0ではない場合の個数
+	int    *n00p =       (int *)malloc(sizeof(int)*( ND*ND*ND + ND*ND + ND ));	//位置[i][j][k]におけるphおよびその周辺のphが0ではない場合の個数
 	// n00[i*ND*ND+j*ND+k], n00p[i*ND*ND+j*ND+k]
 	//
 	double *ph2  = (double *)malloc(sizeof(double)*( GNP*ND*ND*ND + ND*ND*ND + ND*ND + ND ));	// ph2[kk*ND*ND*ND+i*ND*ND+j*ND+k];
