@@ -3,49 +3,49 @@
 0.5 0.0 0.5 0.5 0.5 0.5 !   When grain boundary energy or orientation difference dependence of 
 0.5 0.5 0.0 0.5 0.5 0.5 !   grain boundary mobility is required, such as abnormal grain growth, 
 0.5 0.5 0.5 0.0 0.5 0.5 !   each component of the off-diagonal term is changed for each grain boundary.
-0.5 0.5 0.5 0.5 0.0 0.5 ! lower triangular matrix is dummy
+0.5 0.5 0.5 0.5 0.0 0.5 ! lower triangular matrix is dummy (gamma51=gamma15)
 0.5 0.5 0.5 0.5 0.5 0.0 ! gamma(GNP-1)1,..., gamma(GNP-1)(GNP-1)
 ! ---------- Atomic mobility constant, amobi
 0.0 0.0 0.0 0.0 0.0 1.0 ! amobi11, amobi12,..., amobi1(GNP-1)
 0.0 0.0 0.0 0.0 0.0 1.0 !   By giving values to the off-diagonal terms that are set to 0, 
 0.0 0.0 0.0 0.0 0.0 1.0 !   it is possible to reproduce the grain growth 
 0.0 0.0 0.0 0.0 0.0 1.0 !   due to the grain boundary energy balance after the grains collide.
-0.0 0.0 0.0 0.0 0.0 1.0 ! lower triangular matrix is dummy
+0.0 0.0 0.0 0.0 0.0 1.0 ! lower triangular matrix is dummy (amobi51=amobi15)
 1.0 1.0 1.0 1.0 1.0 0.0 ! amobi(GNP-1)1,..., amobi(GNP-1)(GNP-1)
 ! ---------- interatomic interaction, E0 [J/mol]
    0.0    0.0    0.0    0.0    0.0 500.0 ! E011, E012,..., E01(GNP-1)
    0.0    0.0    0.0    0.0    0.0 500.0 !   The chemical driving force is a value that 
    0.0    0.0    0.0    0.0    0.0 500.0 !   allows stable simulation without contraction of 
    0.0    0.0    0.0    0.0    0.0 500.0 !   the initial nucleus.
-   0.0    0.0    0.0    0.0    0.0 500.0 ! lower triangular matrix is dummy
+   0.0    0.0    0.0    0.0    0.0 500.0 ! lower triangular matrix is dummy (E051=-E015)
 -500.0 -500.0 -500.0 -500.0 -500.0   0.0 ! E0(GNP-1)1,..., E0(GNP-1)(GNP-1)
 ! ---------- latent entropy Sij=Lij/Trij [J/mol/K], latent heat Lij, E0ij=-Sij*(temp-(mij*(c-crij)+Trij))
  0.0  1.0  1.0  1.0  1.0  5.0 ! L011, L012,..., L01(GNP-1)
 -1.0  0.0  1.0  1.0  1.0  5.0 ! L021,
 -1.0 -1.0  0.0  1.0  1.0  5.0 ! L031,
 -1.0 -1.0 -1.0  0.0  1.0  5.0 ! L041,
--1.0 -1.0 -1.0 -1.0  0.0  5.0 ! lower triangular matrix is dummy
+-1.0 -1.0 -1.0 -1.0  0.0  5.0 ! lower triangular matrix is dummy (L051=-L015)
 -5.0 -5.0 -5.0 -5.0 -5.0  0.0 ! L0(GNP-1)1,..., L0(GNP-1)(GNP-1)
 ! ---------- The slope of each line (linear approximation) in the phase diagram, mij
   0.0  -1.0  -1.0  -1.0  -1.0 -10.0 ! m11, m12,..., m1(GNP-1), lower triangular matrix is dummy
  -1.0   0.0  -1.0  -1.0  -1.0 -10.0 ! m21,
  -1.0  -1.0   0.0  -1.0  -1.0 -10.0 ! m31,
  -1.0  -1.0  -1.0   0.0  -1.0 -10.0 ! m41,
- -1.0  -1.0  -1.0  -1.0   0.0 -10.0 ! lower triangular matrix is dummy
+ -1.0  -1.0  -1.0  -1.0   0.0 -10.0 ! lower triangular matrix is dummy (m51=m15)
 -10.0 -10.0 -10.0 -10.0 -10.0   0.0 ! m(GNP-1)1,..., m(GNP-1)(GNP-1)
 ! ---------- Reference concentration, crij (chemical driving force, E0ij=-Sij*(temp-(mij*(c-crij)+Trij)))
 0.0 0.8 0.8 0.8 0.8 0.8 ! cr11, cr12,..., cr1(GNP-1)
 0.2 0.0 0.8 0.8 0.8 0.8 ! cr21, cr22,..., cr2(GNP-1)
 0.2 0.2 0.0 0.8 0.8 0.8 ! cr31,
 0.2 0.2 0.2 0.0 0.8 0.8 ! cr41.
-0.2 0.2 0.2 0.2 0.0 0.8 ! lower triangular matrix is dummy
+0.2 0.2 0.2 0.2 0.0 0.8 ! lower triangular matrix is dummy (cr51=1-cr15)
 0.2 0.2 0.2 0.2 0.2 0.0 ! cr(GNP-1)1,..., cr(GNP-1)(GNP-1)
 ! ---------- Reference temperature, Trij (chemical driving force, E0ij=-Sij*(temp-(mij*(c-crij)+Trij)))
   0.0 950.0 950.0 950.0 950.0 950.0 ! Tr11, Tr12,..., Tr1(GNP-1)
 950.0   0.0 950.0 950.0 950.0 950.0 ! Tr21, 
 950.0 950.0   0.0 950.0 950.0 950.0 ! Tr31,
 950.0 950.0 950.0   0.0 950.0 950.0 ! Tr41,
-950.0 950.0 950.0 950.0   0.0 950.0 ! lower triangular matrix is dummy
+950.0 950.0 950.0 950.0   0.0 950.0 ! lower triangular matrix is dummy (Tr51=Tr15)
 950.0 950.0 950.0 950.0 950.0   0.0 ! Tr(GNP-1)1,..., Tr(GNP-1)(GNP-1)
 ! ---------- concentration, cij. cii=concentration of No.ph
 0.8 0.0 0.0 0.0 0.0 0.0 ! diagonal terms only
