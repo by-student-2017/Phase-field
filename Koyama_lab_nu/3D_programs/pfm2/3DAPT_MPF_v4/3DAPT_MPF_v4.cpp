@@ -302,7 +302,7 @@ int main(void)
 						printf("%d: ",i1);
 						for(int j1=i1;j1<=GN;j1++){
 							mij[i1*GNP+j1]=data_mat[i1*GNP+j1];
-							mij[j1*GNP+i1]=-mij[i1*GNP+j1];
+							mij[j1*GNP+i1]=mij[i1*GNP+j1];
 						}
 						for(int j1=1;j1<=GN;j1++){printf("%8.5f ",mij[i1*GNP+j1]);}
 						printf("\n");
