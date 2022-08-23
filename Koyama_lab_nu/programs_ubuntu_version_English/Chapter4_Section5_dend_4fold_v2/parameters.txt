@@ -1,0 +1,21 @@
+NDP= 351.0         ! Number of divisions + 1
+delt= 1.0          ! timestep
+dx= 30.0e-9        ! Difference grid size dx [m] Interface width delta=3.0*dx 
+dy= 30.0e-9        ! Difference grid size dy [m] Computation area al=dx*(double)nd
+gamma= 0.37        ! Interface energy [J/m2]
+ram= 0.1           ! lambda, interface width ( 2.0*log((1.0+(1.0-2.0*ram))/(1.0-(1.0-2.0*ram)))/2.0 )
+j_fold= 4.0        ! Anisotropy mode
+astre= 0.03        ! Anisotropic strength
+cndct= 84.01       ! Thermal conductivity [W/mK]
+speht= 5.42e+06    ! Specific heat [J/Km3]
+rlate= 2.350e+09   ! Latent heat [J/m3]
+Tm= 1728.0         ! Melting point [K]
+Tini= 1511.2       ! Initial temperature [K]
+skine= 2.0         ! Kinetic Growth Coefficient [m/Ks]
+th0= 0.0           ! Angle of priority growth direction
+aaac= 3.0          ! Gradient energy coefficient ( aaa=sqrt(aaac*delta*gamma/bbb) )
+wwwc= 6.0          ! Penalty term energy barrier ( www=wwwc*gamma*bbb/delta )
+pmobic= 3.0        ! Phase field mobility ( pmobi=bbb*Tm*skine/(pmobi*delta*rlate) )
+anois= 0.1         ! Noise amplitude
+time1max= 1.0e08   ! Max iterations
+Nstep= 100.0       ! output every "Nstep"

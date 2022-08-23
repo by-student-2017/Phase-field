@@ -1,5 +1,5 @@
 ND= 64.0          ! Division number 
-N= 5.0            ! total number of crystal grains
+N= 5.0            ! total number of crystal grains (Number of crystal orientations to consider)
 GNP= 7.0          ! GNP >= N+2, GN=GNP-1=mother phase
 delt= 2.0         ! timestep [dimensionless] (amobi=1 [dimensionless])
 L= 500.0          ! Computation area [nm], b1=L/(double)NDX*1.0e-9
