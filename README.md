@@ -9,4 +9,4 @@
 3. bash
 
 ## paraview on ubuntu 20.04 LTS 
-- (move red line to origin (>1 >1 >1))
+- move red line to origin (>1.0 >1.0 >1.0)
