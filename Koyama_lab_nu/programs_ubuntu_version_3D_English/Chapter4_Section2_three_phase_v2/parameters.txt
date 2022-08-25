@@ -1,0 +1,16 @@
+ND= 100.0          ! Division number 
+c2a= 0.333         ! Concentration, B/(A+B+C)
+c3a= 0.333         ! Concentration, C/(A+B+C)
+delt= 0.005        ! timestep [dimensionless] (cmob22=cmob33=1.0, cmob23=cmob32=-0.5 [dimensionless])
+temp= 900.0        ! Temperature [K]
+al= 100.0          ! Computation area [nm]
+cmob22= 1.0        ! mobility, Mc(22)
+cmob33= 1.0        ! mobility, Mc(23)
+cmob23= -0.5       ! mobility, cmob23=como32=Mc(23)=Mc(32)
+om_12e= 25000.0    ! om_12e [J/mol] = LaA,B
+om_13e= 25000.0    ! om_13e [J/mol] = LaA,C
+om_23e= 25000.0    ! om_23e [J/mol] = LaB,C
+kapa_c2c= 5.0e-15  ! Concentration gradient energy constant kapa_c2c [Jm2/mol]
+kapa_c3c= 5.0e-15  ! Concentration gradient energy constant kapa_c3c [Jm2/mol]
+time1max= 1.0e05   ! Max iterations
+Nstep= 200.0       ! output every "Nstep"
