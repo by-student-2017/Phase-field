@@ -242,7 +242,7 @@ start: ;
 //*** Concentration field balance correction ***********************************************
 	//sumc2=0.; for(i=0;i<=ndm;i++){  for(j=0;j<=ndm;j++){ sumc2+=c2h2[i][j][k]; } }
 	//dc2a=sumc2/ND/ND/ND-c2a;
-	//for(i=0;i<=ndm;i++){  for(j=0;j<=ndm;j++){ c2h[i][j][k]=c2h2[i][j][k]-dc2a; } }
+	//for(i=0;i<=ndm;i++){ for(j=0;j<=ndm;j++){ for(k=0;k<=ndm;k++){ c2h[i][j][k]=c2h2[i][j][k]-dc2a; } } }
 	sumc2=0.;
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
@@ -260,9 +260,9 @@ start: ;
 		}
 	}
 
-	//sumc3=0.; for(i=0;i<=ndm;i++){  for(j=0;j<=ndm;j++){ sumc3+=c3h2[i][j][k]; } }
+	//sumc3=0.; for(i=0;i<=ndm;i++){  for(j=0;j<=ndm;j++){ for(k=0;k<=ndm;k++){ sumc3+=c3h2[i][j][k]; } } }
 	//dc3a=sumc3/ND/ND/ND-c3a;
-	//for(i=0;i<=ndm;i++){  for(j=0;j<=ndm;j++){ c3h[i][j][k]=c3h2[i][j][k]-dc3a; } }
+	//for(i=0;i<=ndm;i++){ for(j=0;j<=ndm;j++){ for(k=0;k<=ndm;k++){ c3h[i][j][k]=c3h2[i][j][k]-dc3a; } } }
 	sumc3=0.;
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
