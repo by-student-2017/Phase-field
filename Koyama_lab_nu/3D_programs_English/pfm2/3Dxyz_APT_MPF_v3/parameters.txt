@@ -1,0 +1,18 @@
+NDX= 64.0         ! Division number, x direction
+NDY= 128.0        ! Division number, y direction
+NDZ= 64.0         ! Division number, z direction
+N= 15.0           ! total number of crystal grains
+GNP= 17.0         ! GNP >= N+2, GN=GNP-1=mother phase
+delt= 2.0         ! timestep [dimensionless] (amobi=1 [dimensionless])
+L= 500.0          ! Computation area [nm], b1=L/(double)NDX*1.0e-9
+time1max= 20001.0 ! Max iteration
+temp= 1000.0      ! Temperature [K]
+vm0= 7.0e-6       ! Molar volume [m3/mol]
+gamma0= 0.0       ! grain boundary energy [J/m2]  For 0.0 case, read matrix.txt file.
+delta= 3.0        ! Grain boundary width (is related with K1, W1 and M1)
+K0= 8.0           ! (Analytical, no changes required) Gradient energy coefficient ( K1=K0*delta*gamma/PI/PI )
+W0= 4.0           ! (Analytical, no changes required) Coefficient of penalty term ( W1=W0*gamma/delta )
+amobi= 0.0        ! Atomic mobility constant.  For 0.0 case, read matrix.txt file.
+M0= 8.0           ! (Analytical, no changes required) mobility M1=amobi*PI*PI/(M0*delta)
+E0= 0.0           ! interatomic interaction, E0 [J/mol]  For 0.0 case, read matrix.txt file.
+Nstep= 10.0       ! output every "Nstep"
