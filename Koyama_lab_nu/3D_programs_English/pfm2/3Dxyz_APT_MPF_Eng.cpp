@@ -14,8 +14,8 @@
 #define NDY 128
 #define NDZ 64
 #define N 15
-//#define GNP 21
-#define GNP 1001
+#define GNP 21
+//#define GNP 1001
 #define INX 400						//Pixel size of drawing window 1 side x
 #define INY 800						//Pixel size of drawing window 1 side y
 #define INZ 400						//Pixel size of drawing window 1 side z
@@ -298,7 +298,8 @@ void ini000()
 	}
 
 	r0=5;//Draw a circle with a radius of 5 with different grain numbers (describe the grain number inside the circle)
-	for(iGN=1;iGN<=GN-1;iGN++){
+	//for(iGN=1;iGN<=GN-1;iGN++){
+	for(iGN=1;iGN<=N;iGN++){
 		x1=ndx*DRND(1); y1=ndy*DRND(1); z1=ndz*DRND(1);
 		while(is[x1][y1][z1]!=GN){x1=ndx*DRND(1); y1=ndy*DRND(1); z1=ndz*DRND(1);}
 		for(i=-r0;i<=(ndxm+r0);i++){
@@ -475,7 +476,9 @@ void datsave_paraview()
 {
 	FILE	*fp;
 	char	fName[256];
-	int 	i, j, k, kk;
+	int 	i, j, k, kk, kk2;
+	int 	flag;
+	double  tph;
 	
 	iout = iout + 1;
 	for(kk=1;kk<=N;kk++){
@@ -489,21 +492,45 @@ void datsave_paraview()
 		fprintf(fp,"ORIGIN 0.0 0.0 0.0 \n");
 		fprintf(fp,"ASPECT_RATIO %f %f %f \n",float(ndxm/ndxm),float(ndym/ndxm),float(ndzm/ndxm));
 		fprintf(fp,"POINT_DATA %16d \n",((ndxm+1)*(ndym+1)*(ndzm+1)));
-		fprintf(fp,"SCALARS grain int \n");
-		fprintf(fp,"LOOKUP_TABLE default \n");
-		for(k=0;k<=ndzm;k++){
-			for(j=0;j<=ndym;j++){
-				for(i=0;i<=ndxm;i++){
-					fprintf(fp,"%3d\n", qh[kk][i][j][k]);
-				}
-			}
-		}
 		fprintf(fp,"SCALARS phase_field float \n");
 		fprintf(fp,"LOOKUP_TABLE default \n");
 		for(k=0;k<=ndzm;k++){
 			for(j=0;j<=ndym;j++){
 				for(i=0;i<=ndxm;i++){
-					fprintf(fp,"%10.6f\n", ph[kk][i][j][k]);
+					flag=0;
+					for(kk2=1;kk2<=n00[i][j][k];kk2++){
+						if(qh[kk2][i][j][k]==kk){
+							fprintf(fp,"%10.6f\n", ph[kk2][i][j][k]);
+							flag=1;
+						}
+					}
+					if(flag==0){fprintf(fp,"%10.6f\n", (0.0));}
+				}
+			}
+		}
+		fclose(fp);
+	}
+	for(kk=0;kk<=0;kk++){
+		sprintf(fName,"3Dxyz_APT_MPF_N%03d_result%06d.vtk",kk,iout);
+		fp = fopen(fName, "w");
+		fprintf(fp,"# vtk DataFile Version 3.0 \n");
+		fprintf(fp,"output.vtk \n");
+		fprintf(fp,"ASCII \n");
+		fprintf(fp,"DATASET STRUCTURED_POINTS \n");
+		fprintf(fp,"DIMENSIONS %5d %5d %5d \n",(ndxm+1),(ndym+1),(ndzm+1));
+		fprintf(fp,"ORIGIN 0.0 0.0 0.0 \n");
+		fprintf(fp,"ASPECT_RATIO %f %f %f \n",float(ndxm/ndxm),float(ndym/ndxm),float(ndzm/ndxm));
+		fprintf(fp,"POINT_DATA %16d \n",((ndxm+1)*(ndym+1)*(ndzm+1)));
+		fprintf(fp,"SCALARS phase_field float \n");
+		fprintf(fp,"LOOKUP_TABLE default \n");
+		for(k=0;k<=ndzm;k++){
+			for(j=0;j<=ndym;j++){
+				for(i=0;i<=ndxm;i++){
+					tph=0.0;
+					for(kk2=1;kk2<=n00[i][j][k];kk2++){
+						tph += ph[kk2][i][j][k]*qh[kk2][i][j][k];
+					}
+					fprintf(fp,"%10.6f\n", tph);
 				}
 			}
 		}
