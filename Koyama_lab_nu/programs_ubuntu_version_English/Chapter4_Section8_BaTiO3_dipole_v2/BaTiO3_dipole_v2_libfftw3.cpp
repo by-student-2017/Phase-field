@@ -10,13 +10,13 @@
 
 #define DRND(x) ((double)(x)/RAND_MAX*rand())//Random number function setting
 
-//#define ND 128	//The number of divisions per side of the computational domain in difference computation
-					// (a power of 2 due to the use of fast Fourier transform)
-//#define IG 7		// 2^IG=ND
+//#define ND 128					//The number of divisions per side of the computational domain in difference computation
+									// (a power of 2 due to the use of fast Fourier transform)
+//#define IG 7						// 2^IG=ND
 
 	//int nd=ND, ndm=ND-1; 			//Define the number of difference divisions
 									// (number of difference blocks) on one side of the calculation area, ND-1
-	//int nd2=ND/2;				 	/Define /ND/2: used in Fast Fourier Transform
+	//int nd2=ND/2;				 	//Define ND/2: used in Fast Fourier Transform
 	//int ig=IG;					//2^ig=ND
 	double PI=3.14159;				//Pi
 	double RR=8.3145;				//gas constant
@@ -24,18 +24,18 @@
 	double ep0=8.8541878e-12; 		//Vacuum permittivity (F/m)
 	double Peq;						//equilibrium value of the moment of polarization
 	int iout;
-
+	
 	//double s1h[ND][ND], s2h[ND][ND];//polarization moment in x direction, polarization moment in y direction
 
-	void ini000_s12(double *s1h, double *s2h, int ND);	//initial profile of the polarization moment at time 0	void datsave(double *s1h, double *s2h, int ND);	//data save subroutine
+	void ini000_s12(double *s1h, double *s2h, int ND);			//initial profile of the polarization moment at time 0
 	void datsave(double *s1h, double *s2h, int ND);	//data save subroutine
-	void datsave_paraview(double *s1h, double *s2h, int ND);	//data save subroutine
+	void datsave_paraview(double *s1h, double *s2h, int ND);//data save subroutine
 	void datin(double *s1h, double *s2h, int ND);	//Initial data loading
 
 //******* main program ******************************************
 int main(void)
 {
-	int ND;
+    int ND;
 	int nd, ndm, nd2, ig;
 	
 	int   i, j, k, l, ii, jj, Nstep;		//integer
@@ -43,10 +43,10 @@ int main(void)
 
 	//double s1qrh[ND][ND], s1qih[ND][ND];	//Fourier transform of s1 (real part, imaginary part)
 	//double s2qrh[ND][ND], s2qih[ND][ND];	//Fourier transform of s2 (real part, imaginary part)
-	//double s1h2[ND][ND], s2h2[ND][ND];	//Auxiliary arrays for s1 and s2
+	//double s1h2[ND][ND], s2h2[ND][ND];		//Auxiliary arrays for s1 and s2
 
-	//double ss1qrh[ND][ND], ss1qih[ND][ND];//Fourier transform of s1*s1 (real part, imaginary part)
-	//double ss2qrh[ND][ND], ss2qih[ND][ND];//Fourier transform of s2*s2 (real part, imaginary part)
+	//double ss1qrh[ND][ND], ss1qih[ND][ND];	//Fourier transform of s1*s1 (real part, imaginary part)
+	//double ss2qrh[ND][ND], ss2qih[ND][ND];	//Fourier transform of s2*s2 (real part, imaginary part)
 	//double s1s2qrh[ND][ND], s1s2qih[ND][ND];//Fourier transform of s1*s2 (real part, imaginary part)
 	double ss1ss2;							//Work variables for correction of numerical errors in domain
 
@@ -60,9 +60,9 @@ int main(void)
 	double s2ip, s2im, s2jp, s2jm;			//left, right, top, bottom values of s2
 
 	double s1k, s1k_chem, s1k_surf, s1k_str, s1k_ddi;	//potential for s1
-	//double s1k_dd[ND][ND];				//dipole-dipole interaction potential
+	//double s1k_dd[ND][ND];					//dipole-dipole interaction potential
 	double s2k, s2k_chem, s2k_surf, s2k_str, s2k_ddi;	//potential for s2
-	//double s2k_dd[ND][ND];				//dipole-dipole interaction potential
+	//double s2k_dd[ND][ND];					//dipole-dipole interaction potential
 	double smob1, smob2;					//Domain interface mobility
 	double s1ddtt, s2ddtt;					//left-hand side of the evolution equation
 
@@ -77,12 +77,11 @@ int main(void)
 	double nx, ny, alnn;					//Unit vector components of reciprocal space and reciprocal lattice vector length
 	double kapaP, kapaPc;					//gradient energy factor
 
-	double E1_ex, E1_ex_0, E1_ex_0c; 		//external electric field
+	double E1_ex, E1_ex_0; 					//external electric field
 	double ep00;							//dielectric constant
 	double Add0, Add0c;						//Coefficients in dipole-dipole interaction calculations
 
 	double t1, t2, t3, tQ, tR, tS, tT;		//Working variables for calculation of equilibrium moment of polarization
-	int readff;
 
 //****** Setting calculation conditions and material constants ****************************************
 	printf("---------------------------------\n");
@@ -122,10 +121,9 @@ int main(void)
 	A1123e  = data[18];
 	Tc0     = data[19];
 	kapaPc  = data[20];
-	E1_ex_0c= data[21];
+	E1_ex_0 = data[21];
 	ep00    = data[22];
 	Add0c   = data[23];
-	readff  = int(data[24]);
 	printf("---------------------------------\n");
 	//
 	ig = int(log2(ND));
@@ -138,6 +136,9 @@ int main(void)
 	//
 	double *xi      = (double *)malloc(sizeof(double)*( ND*ND + ND ));//array of real and imaginary parts of the Fourier transform
 	double *xr      = (double *)malloc(sizeof(double)*( ND*ND + ND ));//array of real and imaginary parts of the Fourier transform
+	//
+	double *xif     = (double *)malloc(sizeof(double)*( ND ));//array of real and imaginary parts of the Fourier transform
+	double *xrf     = (double *)malloc(sizeof(double)*( ND ));//array of real and imaginary parts of the Fourier transform
 	//
 	const int fftsize = ND;
 	fftw_complex *in, *out; // in[i][0] for real, in[i][1] for imag.
@@ -173,17 +174,17 @@ int main(void)
 	//time1max=1.0+1.0e+07;					//Setting the maximum calculation count
 	//Note that all time is dimensionless.
 
-	//temp=298.0;							//temperature (K)
+	//temp=298.0;								//temperature (K)
 
 	//al=250.;								//Length of one side of calculation area (micro meter)
 	b1=al*1.0E-06/nd;						//Length of one side of difference block (m)
 
-	//a0_aa=0.4;  a0_a=0.3992;  a0_c=0.4036;//Lattice constant (nm)
+	//a0_aa=0.4;  a0_a=0.3992;  a0_c=0.4036;	//Lattice constant (nm)
 	//vm0=a0_a*a0_a*a0_c*1.0e-27*6.02e+23;	//molar volume (molecule 1 mole)
 
-	//smob1=1.; smob2=1.;					//Mobility at structural phase transitions (normalized and set to 1Åj
+	//smob1=1.; smob2=1.;						//Mobility in structural phase transitions (normalized and set to 1)
 
-//--- Parameter value in chemical free energy [see Table 4.7]----------------------
+//--- parameter value in chemical free energy [see Table 4.7]----------------------
 	//A1=4.124e+05*vm0/RR/temp;
 	A1=A1e*vm0/RR/temp;
 	//A11=-2.097e+08*vm0/RR/temp;
@@ -205,38 +206,34 @@ int main(void)
 	//A1123=1.367e+10*vm0/RR/temp;
 	A1123=A1123e*vm0/RR/temp;
 
-	//Tc0=115.0+273.0;  // [K]
+	//Tc0=115.0+273.0;  //K
 
 //--- Calculation of equilibrium moment of polarization ----------------------
-	t1=3.*A111/4./A1111;
-	t2=A11/2./A1111;
-	t3=A1*(temp-Tc0)/4./A1111;
-	tQ=(3.*t2-t1*t1)/9.;
-	tR=(9.*t1*t2-27.*t3-2.*t1*t1*t1)/54.;
-	tS=pow((tR+sqrt(tQ*tQ*tQ+tR*tR)),(1./3.));
-	tT=pow((tR-sqrt(tQ*tQ*tQ+tR*tR)),(1./3.));
+	t1=3.0*A111/4.0/A1111;
+	t2=A11/2.0/A1111;
+	t3=A1*(temp-Tc0)/4.0/A1111;
+	tQ=(3.0*t2-t1*t1)/9.0;
+	tR=(9.0*t1*t2-27.0*t3-2.0*t1*t1*t1)/54.0;
+	tS=pow((tR+sqrt(tQ*tQ*tQ+tR*tR)),(1.0/3.0));
+	tT=pow((tR-sqrt(tQ*tQ*tQ+tR*tR)),(1.0/3.0));
 	Peq=sqrt(fabs(tS+tR-t1/3.));//equilibrium moment of polarization
 	printf("Peq=  %f  \n", Peq);//Display of equilibrium moment of polarization
 
 	//kapaP=1.0e-15/ep0*vm0/RR/temp/b1/b1;//gradient energy factor
 	kapaP=kapaPc/ep0*vm0/RR/temp/b1/b1;//gradient energy factor
-	
-	//E1_ex_0=0.;//External electric field (x direction)
+
+	//E1_ex_0=0.0;//External electric field (x direction)
 	//E1_ex_0=2.0e+6*vm0/RR/temp;//External electric field (x direction)
-	E1_ex_0=E1_ex_0c*vm0/RR/temp;//External electric field (x direction)
 
-	//ep00=200.;//dielectric constant
+	//ep00=200.0;//dielectric constant
 
-	//Add0=1.0/ep0/ep00*vm0/RR/temp;//Coefficient in dipole-dipole interaction calculation [see formula (4.7.8)]
+	//Add0=1.0/ep0/ep00*vm0/RR/temp;//Coefficient in dipole-dipole interaction calculation [see formula (4.52)]
 	Add0=Add0c/ep0/ep00*vm0/RR/temp;//Coefficients in dipole-dipole interaction calculations
 
 //*** Setting up sin and cos tables, bit reversal tables, and initial fields ***************
-	
-	if(readff == 0){
-		ini000_s12(s1h, s2h, ND);	//initial profile of the polarization moment at time 0
-	} else {
-		datin(s1h, s2h, ND);		//Input initial tissue field
-	}
+
+	ini000_s12(s1h, s2h, ND);		//Initial profile of the polarization moment at time 0s
+	//datin(s1h, s2h, ND);			//Input initial tissue field
 
 //**** Simulation start ******************************
 //Nstep = 10;
@@ -247,7 +244,7 @@ start: ;
 	//if(time1<=100.){Nstep=10;} else{Nstep=100;}//Changing the time interval for saving data
 	if((((int)(time1) % Nstep)==0)){datsave(s1h, s2h, ND);} //Save tissue data every fixed repeat count
 	if((((int)(time1) % Nstep)==0)){datsave_paraview(s1h, s2h, ND);} //Save tissue data every fixed repeat count
-	//if((int)(time1)==2000){datsave();} //Saving data at specific calculation counts
+	//if((int)(time1)==2000){datsave(s1h, s2h, ND);} //Saving data at specific calculation counts
 
 //**** Fourier transform of s1 [equation (3.37)] ********************************
 	for(i=0;i<=ndm;i++){
@@ -357,7 +354,7 @@ start: ;
 		}
 	}
 
-//****** Numerical calculation of nonlinear evolution equations ********************************
+//****** Numerical calculation of nonlinear evolution equations  ********************************
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			ip=i+1;  im=i-1;  jp=j+1;  jm=j-1;
@@ -427,9 +424,6 @@ start: ;
 	if(time1<time1max){goto start;}	//Determining if the maximum count has been reached
 
 	end:;
-  if(plan) fftw_destroy_plan(plan);		//For FFT
-  if(iplan) fftw_destroy_plan(iplan);	//For IFFT
-  fftw_free(in); fftw_free(out);		// For FFT and IFFT
   return 0;
 }
 
@@ -437,7 +431,7 @@ start: ;
 void ini000_s12(double *s1h, double *s2h, int ND)
 {
 	int i, j;	//integer
-	//srand(time(NULL)); // random number initialization
+ 	//srand(time(NULL)); // random number initialization
 	int nd=ND, ndm=ND-1, nd2=ND/2;
 
 	for(i=0;i<=ndm;i++){
@@ -457,7 +451,7 @@ void datsave(double *s1h, double *s2h, int ND)
 	int 		i, j;			//integer
 	int nd=ND, ndm=ND-1, nd2=ND/2;
 
-	stream = fopen("test_ext.dat", "a");	//Open the write destination file for appending
+	stream = fopen("test.dat", "a");	//Open the write destination file for appending
 	fprintf(stream, "%e \n", time1);	//Saving calculation counts
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
@@ -469,7 +463,6 @@ void datsave(double *s1h, double *s2h, int ND)
 	fclose(stream);					//close file
 }
 
-
 void datsave_paraview(double *s1h, double *s2h, int ND)
 {
 	FILE	*fp;
@@ -478,8 +471,8 @@ void datsave_paraview(double *s1h, double *s2h, int ND)
 	int nd=ND, ndm=ND-1, nd2=ND/2;
 	
 	iout = iout + 1;
-	printf("dip_ext_result%06d.vtk \n",iout);
-	sprintf(fName,"dip_ext_result%06d.vtk",iout);
+	printf("dip_result%06d.vtk \n",iout);
+	sprintf(fName,"dip_result%06d.vtk",iout);
 	fp = fopen(fName, "w");
 	fprintf(fp,"# vtk DataFile Version 3.0 \n");
 	fprintf(fp,"output.vtk \n");
@@ -509,7 +502,6 @@ void datsave_paraview(double *s1h, double *s2h, int ND)
 	}
 	fclose(fp);
 }
-
 //************ data loading subroutine *******************************
 void datin(double *s1h, double *s2h, int ND)
 {
@@ -519,7 +511,7 @@ void datin(double *s1h, double *s2h, int ND)
 	int nd=ND, ndm=ND-1, nd2=ND/2;
 
 	datin0 = fopen("test.dat", "r");	//open source file
-	fscanf(datin0, "%lf", &time_ext);	//Read calculation count
+	fscanf(datin0, "%lf", &time_ext);		//Read calculation count
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			//fscanf(datin0, "%lf  %lf  ", &s1h[i][j], &s2h[i][j]);	//Field data read
@@ -528,4 +520,3 @@ void datin(double *s1h, double *s2h, int ND)
 	}
 	fclose(datin0);//close file
 }
-
