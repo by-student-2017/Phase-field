@@ -24,11 +24,6 @@
 
 	//double s1h[ND][ND], s2h[ND][ND];	//Phase field of martensite
 
-	double qs;					//Distinction between Fourier transform (qs:-1) and inverse Fourier transform (qs:1)
-	//double xi[ND][ND], xr[ND][ND], xif[ND], xrf[ND];//array of real and imaginary parts of the Fourier transform
-	//double s[ND],c[ND];			//sin and cos table
-	//int ik[ND];					//bit reversal table
-
 	void ini000(double *s1h, double *s2h, int ND);	//Initial field setup subroutine
 	void datsave(double *s1h, double *s2h, int ND);			//data save subroutine
 	void datsave_paraview(double *s1h, double *s2h, int ND);//data save subroutine
@@ -144,14 +139,6 @@ int main(void)
 	//
 	double *xi       = (double *)malloc(sizeof(double)*( ND*ND + ND ));//array of real and imaginary parts of the Fourier transform
 	double *xr       = (double *)malloc(sizeof(double)*( ND*ND + ND ));//array of real and imaginary parts of the Fourier transform
-	//
-	double *xif      = (double *)malloc(sizeof(double)*( ND ));//array of real and imaginary parts of the Fourier transform
-	double *xrf      = (double *)malloc(sizeof(double)*( ND ));//array of real and imaginary parts of the Fourier transform
-	//
-	double *s        = (double *)malloc(sizeof(double)*( ND ));//sin table
-	double *c        = (double *)malloc(sizeof(double)*( ND ));//cos table
-	//
-	int *ik       = (int *)malloc(sizeof(int)*( ND ));//bit reversal table
 	//
 	const int fftsize = ND;
 	fftw_complex *in, *out; // in[i][0] for real, in[i][1] for imag.
