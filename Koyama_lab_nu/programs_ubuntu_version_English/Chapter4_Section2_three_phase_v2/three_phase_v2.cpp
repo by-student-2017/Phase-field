@@ -21,7 +21,7 @@
 	void datsave(double *c2h, double *c3h, int ND);	//data save subroutine
 	void datsave_paraview(double *c2h, double *c3h, int ND);//data save subroutine
 
-//******* ƒƒCƒ“ƒvƒƒOƒ‰ƒ€ ******************************************
+//******* main program ******************************************
 int main(void)
 {
 	int ND, nd, ndm;
