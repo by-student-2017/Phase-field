@@ -8,7 +8,20 @@ ubuntu 18.04 LTS
   (gedit ph.dat (Only the data (ch) of the time you want to calculate.) from output of Chapter5_Section1_two_phase_v2)
 5. ./all_elastic_field
 6. paraview
-  a1. File -> Open ... -> sp_result..vtk -> OK
+  a1. File -> Open ... -> pf_result000000.vtk -> OK
+  a2. (click) [Apply] 
+  a3. (click "play") |>
+-----------------------------------------------------------------------
+ubuntu 18.04 LTS
+
+1. sudo apt update
+2. sudo apt -y install g++
+3. sudo apt -y install paraview paraview-dev
+4. g++ all_elastic_field_v2_libfftw3.cpp -lfftw3 -o all_elastic_field
+  (gedit ph.dat (Only the data (ch) of the time you want to calculate.) from output of Chapter5_Section1_two_phase_v2)
+5. ./all_elastic_field
+6. paraview
+  a1. File -> Open ... -> pf_result000000.vtk -> OK
   a2. (click) [Apply] 
   a3. (click "play") |>
 -----------------------------------------------------------------------
