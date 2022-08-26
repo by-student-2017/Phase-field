@@ -97,12 +97,12 @@ int main(void)
 	vm0     = data[9];	// gamma=gamma0*vm0/RR/temp/b1;
 	gamma0  = data[10];	// gamma=gamma0*vm0/RR/temp/b1;
 	delta   = data[11];	// Not delt !!! For, K1, W1, M1
-	K0      = data[13];	// 
+	K0      = data[12];	// 
 	W0      = data[13];	// 
-	amobi   = data[12];	// M1=amobi*PI*PI/(M0*delta);
-	M0      = data[13];	// M1=amobi*PI*PI/(M0*delta);
-	E0      = data[14];	// E1=E0/RR/temp;
-	Nstep   = int(data[15]);
+	amobi   = data[14];	// M1=amobi*PI*PI/(M0*delta);
+	M0      = data[15];	// M1=amobi*PI*PI/(M0*delta);
+	E0      = data[16];	// E1=E0/RR/temp;
+	Nstep   = int(data[17]);
 	printf("---------------------------------\n");
 	//
 	ndx=NDX, ndxm=NDX-1;
@@ -112,14 +112,14 @@ int main(void)
 	//
 	//double ch[(nstep+1)*nstep]; // [(nstep+1)*nstep]=[nstep*nstep+nstep], a[i][j]= a[i*n+j] for a[][n]
 	//a[z * ySize * xSize + y * xSize + x], a[i][j][k]=a[i*n*m + j*n + k]
-	double *ph   = (double *)malloc(sizeof(double)*( N*NDX*NDY*NDZ + NDX*NDY*NDZ + NDY*NDZ + NDZ ));	//ph[1][i][j][K] to ph[n][i][j][K]: pf at position [i][j][K]
-	int    *qh   =       (int *)malloc(sizeof(int)*( N*NDX*NDY*NDZ + NDX*NDY*NDZ + NDY*NDZ + NDZ ));	//qh[1][i][j][K] to qh[n][i][j][K]: grain number at position [i][j][K]
+	double *ph   = (double *)malloc(sizeof(double)*( GNP*NDX*NDY*NDZ + NDX*NDY*NDZ + NDY*NDZ + NDZ ));	//ph[1][i][j][K] to ph[n][i][j][K]: pf at position [i][j][K]
+	int    *qh   =       (int *)malloc(sizeof(int)*( GNP*NDX*NDY*NDZ + NDX*NDY*NDZ + NDY*NDZ + NDZ ));	//qh[1][i][j][K] to qh[n][i][j][K]: grain number at position [i][j][K]
 	int    *n00  =       (int *)malloc(sizeof(int)*( NDX*NDY*NDZ + NDY*NDZ + NDZ ));	//number of cases where ph is not 0 at position [i][j][K]
 	int    *n00p =       (int *)malloc(sizeof(int)*( NDX*NDY*NDZ + NDY*NDZ + NDZ ));	//Number of cases where ph at position [i][j][K] and surrounding ph is not 0
 	// n00[i*ND*ND+j*ND+k], n00p[i*ND*ND+j*ND+k]
 	//
-	double *ph2  = (double *)malloc(sizeof(double)*( N*NDX*NDY*NDZ + NDX*NDY*NDZ + NDY*NDZ + NDZ ));	// ph2[kk*ND*ND*ND+i*ND*ND+j*ND+k];
-	int    *qh2  =       (int *)malloc(sizeof(int)*( N*NDX*NDY*NDZ + NDX*NDY*NDZ + NDY*NDZ + NDZ ));	// qh2[kk*ND*ND*ND+i*ND*ND+j*ND+k];
+	double *ph2  = (double *)malloc(sizeof(double)*( GNP*NDX*NDY*NDZ + NDX*NDY*NDZ + NDY*NDZ + NDZ ));	// ph2[kk*ND*ND*ND+i*ND*ND+j*ND+k];
+	int    *qh2  =       (int *)malloc(sizeof(int)*( GNP*NDX*NDY*NDZ + NDX*NDY*NDZ + NDY*NDZ + NDZ ));	// qh2[kk*ND*ND*ND+i*ND*ND+j*ND+k];
 	//
 	double *aij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));	// aij[i][j]= aij[i*GNP+j]
 	double *wij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));	// wij[i][j]= wij[i*GNP+j]
@@ -684,7 +684,9 @@ void datsave_paraview(double *ph, int *qh, int *n00, int N, int NDX, int NDY, in
 {
 	FILE	*fp;
 	char	fName[256];
-	int 	i, j, k, kk;
+	int 	i, j, k, kk, kk2;
+	int 	flag;
+	double  tph;
 	int ndx=NDX, ndxm=NDX-1;
 	int ndy=NDY, ndym=NDY-1;
 	int ndz=NDZ, ndzm=NDZ-1;
@@ -702,23 +704,45 @@ void datsave_paraview(double *ph, int *qh, int *n00, int N, int NDX, int NDY, in
 		fprintf(fp,"ORIGIN 0.0 0.0 0.0 \n");
 		fprintf(fp,"ASPECT_RATIO %f %f %f \n",float(ndxm/ndxm),float(ndym/ndxm),float(ndzm/ndxm));
 		fprintf(fp,"POINT_DATA %16d \n",((ndxm+1)*(ndym+1)*(ndzm+1)));
-		fprintf(fp,"SCALARS grain int \n");
-		fprintf(fp,"LOOKUP_TABLE default \n");
-		for(k=0;k<=ndzm;k++){
-			for(j=0;j<=ndym;j++){
-				for(i=0;i<=ndxm;i++){
-					//fprintf(fp,"%3d\n", qh[kk][i][j][k]);
-					fprintf(fp,"%3d\n", qh[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k]);
-				}
-			}
-		}
 		fprintf(fp,"SCALARS phase_field float \n");
 		fprintf(fp,"LOOKUP_TABLE default \n");
 		for(k=0;k<=ndzm;k++){
 			for(j=0;j<=ndym;j++){
 				for(i=0;i<=ndxm;i++){
-					//fprintf(fp,"%10.6f\n", ph[kk][i][j][k]);
-					fprintf(fp,"%10.6f\n", ph[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k]);
+					flag=0;
+					for(kk2=1;kk2<=n00[i*NDY*NDZ+j*NDZ+k];kk2++){
+						if(qh[kk2*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k]==kk){
+							fprintf(fp,"%10.6f\n", ph[kk2*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k]);
+							flag=1;
+						}
+					}
+					if(flag==0){fprintf(fp,"%10.6f\n", (0.0));}
+				}
+			}
+		}
+		fclose(fp);
+	}
+	for(kk=0;kk<=0;kk++){
+		sprintf(fName,"3Dxyz_APT_MPF_N%03d_result%06d.vtk",kk,iout);
+		fp = fopen(fName, "w");
+		fprintf(fp,"# vtk DataFile Version 3.0 \n");
+		fprintf(fp,"output.vtk \n");
+		fprintf(fp,"ASCII \n");
+		fprintf(fp,"DATASET STRUCTURED_POINTS \n");
+		fprintf(fp,"DIMENSIONS %5d %5d %5d \n",(ndxm+1),(ndym+1),(ndzm+1));
+		fprintf(fp,"ORIGIN 0.0 0.0 0.0 \n");
+		fprintf(fp,"ASPECT_RATIO %f %f %f \n",float(ndxm/ndxm),float(ndym/ndxm),float(ndzm/ndxm));
+		fprintf(fp,"POINT_DATA %16d \n",((ndxm+1)*(ndym+1)*(ndzm+1)));
+		fprintf(fp,"SCALARS phase_field float \n");
+		fprintf(fp,"LOOKUP_TABLE default \n");
+		for(k=0;k<=ndzm;k++){
+			for(j=0;j<=ndym;j++){
+				for(i=0;i<=ndxm;i++){
+					tph=0.0;
+					for(kk2=1;kk2<=n00[i*NDY*NDZ+j*NDZ+k];kk2++){
+						tph += ph[kk2*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k]*qh[kk2*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k];
+					}
+					fprintf(fp,"%10.6f\n", tph);
 				}
 			}
 		}
