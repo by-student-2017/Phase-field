@@ -284,9 +284,10 @@ int main(void)
 					printf("\n");
 					for(int i1=1;i1<=GN;i1++){
 						printf("%d: ",i1);
-						for(int j1=i1;j1<=GN;j1++){
+						for(int j1=1;j1<=GN;j1++){
+						//for(int j1=i1;j1<=GN;j1++){
 							Sij[i1*GNP+j1]=data_mat[i1*GNP+j1]/RR/temp;
-							Sij[j1*GNP+i1]=-Sij[i1*GNP+j1];
+							//Sij[j1*GNP+i1]=-Sij[i1*GNP+j1];
 						}
 						for(int j1=1;j1<=GN;j1++){printf("%8.5f ",Sij[i1*GNP+j1]);}
 						printf("\n");
@@ -300,9 +301,10 @@ int main(void)
 					printf("\n");
 					for(int i1=1;i1<=GN;i1++){
 						printf("%d: ",i1);
-						for(int j1=i1;j1<=GN;j1++){
+						for(int j1=1;j1<=GN;j1++){
+						//for(int j1=i1;j1<=GN;j1++){
 							mij[i1*GNP+j1]=data_mat[i1*GNP+j1];
-							mij[j1*GNP+i1]=mij[i1*GNP+j1];
+							//mij[j1*GNP+i1]=mij[i1*GNP+j1];
 						}
 						for(int j1=1;j1<=GN;j1++){printf("%8.5f ",mij[i1*GNP+j1]);}
 						printf("\n");
@@ -316,9 +318,10 @@ int main(void)
 					printf("\n");
 					for(int i1=1;i1<=GN;i1++){
 						printf("%d: ",i1);
-						for(int j1=i1;j1<=GN;j1++){
+						for(int j1=1;j1<=GN;j1++){
+						//for(int j1=i1;j1<=GN;j1++){
 							crij[i1*GNP+j1]=data_mat[i1*GNP+j1];
-							crij[j1*GNP+i1]=(1.0 - crij[i1*GNP+j1]);
+							//crij[j1*GNP+i1]=(1.0 - crij[i1*GNP+j1]);
 						}
 						for(int j1=1;j1<=GN;j1++){printf("%8.5f ",crij[i1*GNP+j1]);}
 						printf("\n");
@@ -332,9 +335,10 @@ int main(void)
 					printf("\n");
 					for(int i1=1;i1<=GN;i1++){
 						printf("%d: ",i1);
-						for(int j1=i1;j1<=GN;j1++){
+						for(int j1=1;j1<=GN;j1++){
+						//for(int j1=i1;j1<=GN;j1++){
 							Trij[i1*GNP+j1]=data_mat[i1*GNP+j1];
-							Trij[j1*GNP+i1]=Trij[i1*GNP+j1];
+							//Trij[j1*GNP+i1]=Trij[i1*GNP+j1];
 						}
 						for(int j1=1;j1<=GN;j1++){printf("%9.4f ",Trij[i1*GNP+j1]);}
 						printf("\n");
@@ -348,6 +352,7 @@ int main(void)
 					printf("\n");
 					for(int i1=1;i1<=GN;i1++){
 						printf("%d: ",i1);
+						//for(int j1=1;j1<=GN;j1++){
 						for(int j1=i1;j1<=GN;j1++){
 							cij[i1*GNP+j1]=data_mat[i1*GNP+j1];
 							cij[i1*GNP+j1]=cij[i1*GNP+j1];
@@ -362,6 +367,7 @@ int main(void)
 					printf("\n");
 					for(int i1=1;i1<=GN;i1++){
 						printf("%d: ",i1);
+						//for(int j1=1;j1<=GN;j1++){
 						for(int j1=i1;j1<=GN;j1++){
 							kij[i1*GNP+j1]=cij[i1*GNP+i1]/cij[j1*GNP+j1];
 							kij[j1*GNP+i1]=1.0/kij[i1*GNP+j1];
