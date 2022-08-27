@@ -102,9 +102,10 @@ int main(void)
 	al=al*1.0E-09;			//Side length of calculation area (m)
 	b1=al/(double)ND;			//Length of one side of difference block
 
-	cmob22=1.0;					//mobility
-	cmob33=1.0;					//mobility
-	cmob23=cmob32=-0.5;			//mobility
+	//cmob22=1.0;					//mobility
+	//cmob33=1.0;					//mobility
+	//cmob23=cmob32=-0.5;			//mobility
+	cmob32=cmob23;
 
 	//om_12=25000./rtemp; 		//Interaction parameters (in J/mol, non-dimensionalized at RT)
 	//om_13=25000./rtemp;
