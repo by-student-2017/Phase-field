@@ -33,7 +33,7 @@
 
 	void ini000(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP);	//初期濃度波設定サブル－チン
 	//void graph_a();					//グラフ表示サブル－チン
-			 void datsave(double *ph, int *qh, int *n00, int N, int ND);	//濃度デ－タ保存サブル－チン
+			 void datsave(double *ph, int *qh, int *n00, int N, int ND, double *cxx);	//濃度デ－タ保存サブル－チン
 	void datsave_paraview(double *ph, int *qh, int *n00, int N, int ND);	//濃度デ－タ保存サブル－チン
 	//void datin();					//初期濃度波読み込みサブル－チン
 
@@ -125,6 +125,7 @@ int main(void)
 	double *Trij = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));
 	double *kij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));
 	double *cij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));
+	double *cxx  = (double *)malloc(sizeof(double)*( GNP ));
 	//
 	//printf("delt(2.0)=  "); scanf(" %lf",&delt);	//	delt=2.0;
 	//L=500.0;	// [nm]
@@ -356,6 +357,7 @@ int main(void)
 						for(int j1=i1;j1<=GN;j1++){
 							cij[i1*GNP+j1]=data_mat[i1*GNP+j1];
 							cij[i1*GNP+j1]=cij[i1*GNP+j1];
+							if(i1==j1){cxx[i1]=cij[i1*GNP+j1];}
 						}
 						for(int j1=1;j1<=GN;j1++){printf("%9.4f ",cij[i1*GNP+j1]);}
 						printf("\n");
@@ -396,7 +398,7 @@ iout = -1;
 start: ;
 	printf("time: %f \n", time1);
 	//if(time1>=200.){delt=5.0;
-	if((((int)(time1) % Nstep)==0)) {datsave(ph, qh, n00, N, ND);}
+	if((((int)(time1) % Nstep)==0)) {datsave(ph, qh, n00, N, ND, cxx);}
 	if((((int)(time1) % Nstep)==0)) {datsave_paraview(ph, qh, n00, N, ND);}
 	//if((((int)(time1) % 2)==0)) {graph_a();} 
 
@@ -863,14 +865,31 @@ void ini000(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP)
 }
 
 //************ Data Save *******************************
-void datsave(double *ph, int *qh, int *n00, int N, int ND)
+void datsave(double *ph, int *qh, int *n00, int N, int ND, double *cxx)
 {
 	FILE		*stream;
+	char	fName[256];
 	int 		i, j, k, kk;
 	double 	col;
 	int nd=ND, ndm=ND-1;
 
-	stream = fopen("test.dat", "a");
+	sprintf(fName,"data_%06d.dat",iout);
+	//stream = fopen("test.dat", "w");
+	stream = fopen(fName, "w");
+	fprintf(stream, "%d %d %d \n", ndm, ndm, ndm);
+	fprintf(stream, "%e  \n", time1);
+	for(i=0;i<=ndm;i++){
+		for(j=0;j<=ndm;j++){
+			for(k=0;k<=ndm;k++){
+				col=0.0;
+				for(kk=1;kk<=n00[i*ND*ND+j*ND+k];kk++){
+					col+=ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]*cxx[qh[kk*ND*ND*ND+i*ND*ND+j*ND+k]];
+				}
+				fprintf(stream, "%e  ", col);
+			}
+		}
+	}
+	//
 	fprintf(stream, "%e  \n", time1);
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
@@ -884,15 +903,13 @@ void datsave(double *ph, int *qh, int *n00, int N, int ND)
 					fprintf(stream, "%d  %e  ", qh[kk*ND*ND*ND+i*ND*ND+j*ND+k], ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]);
 				}
 				//
-				fprintf(stream, "\n");
+				//fprintf(stream, "\n");
 				//col=0.; for(kk=1;kk<=n00[i][j][k];kk++){ col+=ph[kk][i][j][k]*ph[kk][i][j][k]; }
 				//fprintf(stream, "%e  ", col);
 				//
-				fprintf(stream, "%d  \n", n00[i*ND*ND+j*ND+k]);
-				for(kk=1;kk<=n00[i*ND*ND+j*ND+k];kk++){
-					fprintf(stream, "%d  %e  ", qh[kk*ND*ND*ND+i*ND*ND+j*ND+k], ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]);
-				}
 				fprintf(stream, "\n");
+				col=0.; for(kk=1;kk<=n00[i*ND*ND+j*ND+k];kk++){ col+=ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]*ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]; }
+				fprintf(stream, "%e  ", col);
 			}
 		}
 	}

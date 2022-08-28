@@ -98,8 +98,9 @@ Nstep = 200;
 iout = -1;
 start: ;
 	printf("time: %f \n", time1);
-	//if((((int)(time1) % 200)==0)) {datsave();}
-	if((((int)(time1) % 200)==0)) {datsave_paraview();}
+	if((((int)(time1) % Nstep)==0)) {iout = iout + 1;}
+	if((((int)(time1) % Nstep)==0)) {datsave();}
+	if((((int)(time1) % Nstep)==0)) {datsave_paraview();}
 	//if(time1==2000.){datsave();}
 	//if((((int)(time1) % 50)==0)) {graph_c();} 
 
@@ -323,10 +324,13 @@ void ini_field()
 void datsave()
 {
 	FILE		*stream;
+	char	fName[256];
 	int 		i, j, k;
 
-	//stream = fopen("test3D.dat", "w");
-	stream = fopen("test3D.dat", "a");
+	sprintf(fName,"data_%06d.dat",iout);
+	//stream = fopen("test3D.dat", "a");
+	stream = fopen(fName, "w");
+	fprintf(stream, "%d %d %d \n", ndm, ndm, ndm);
 	fprintf(stream, "%e\n", time1);
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
@@ -345,7 +349,6 @@ void datsave_paraview()
 	char	fName[256];
 	int 	i, j, k;
 	
-	iout = iout + 1;
 	sprintf(fName,"ms_3D_result%06d.vtk",iout);
 	fp = fopen(fName, "w");
 	fprintf(fp,"# vtk DataFile Version 3.0 \n");

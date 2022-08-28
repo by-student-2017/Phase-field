@@ -138,6 +138,7 @@ int main(void)
 iout = -1;
 start: ;
 	printf("time: %f \n", time1);
+	if((((int)(time1) % Nstep)==0)) {iout = iout + 1;}
 	if((((int)(time1) % Nstep)==0)) {datsave(ch, ND);}
 	if((((int)(time1) % Nstep)==0)) {datsave_paraview(ch, ND);}
 
@@ -348,11 +349,14 @@ void ini_field(double *ch, int ND)
 void datsave(double *ch, int ND)
 {
 	FILE		*stream;
+	char	fName[256];
 	int 		i, j, k;
 	int ndm=ND-1;
 
-	//stream = fopen("test3D_rod.dat", "w");
-	stream = fopen("test3D_rod.dat", "a");
+	sprintf(fName,"data_%06d.dat",iout);
+	//stream = fopen("test3D_rod.dat", "a");
+	stream = fopen(fName, "w");
+	fprintf(stream, "%d %d %d \n", ndm, ndm, ndm);
 	fprintf(stream, "%e\n", time1);
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
@@ -373,7 +377,6 @@ void datsave_paraview(double *ch, int ND)
 	int 	i, j, k;
 	int ndm=ND-1;
 	
-	iout = iout + 1;
 	sprintf(fName,"rodms_3D_result%06d.vtk",iout);
 	fp = fopen(fName, "w");
 	fprintf(fp,"# vtk DataFile Version 3.0 \n");

@@ -1000,9 +1000,16 @@ void datin(double *ch, int ND)
 	int  i, j, k;//integer
 	double c00;//Average value of the field
 	int nd=ND, ndm=ND-1, nd2=ND/2;
+	int rndxm, rndym, rndzm;
 
 	datin0 = fopen("data.dat", "r");//Open the source file
 
+	fscanf(datin0, "%d %d %d", &rndxm, &rndym, &rndzm);
+	if (ndm != rndxm){
+		printf("data size is mismatch \n");
+		printf("Please, change ND in parameters.txt \n");
+	}
+	
 	fscanf(datin0, "%lf", &time1);
 
 	c00=0.0;//Initial value of field mean

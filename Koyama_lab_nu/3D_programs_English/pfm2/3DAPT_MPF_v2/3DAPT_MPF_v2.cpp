@@ -171,6 +171,7 @@ iout = -1;
 start: ;
 	printf("time: %f \n", time1);
 	//if(time1>=200.){delt=5.0;
+	if((((int)(time1) % Nstep)==0)) {iout = iout + 1;}
 	if((((int)(time1) % Nstep)==0)) {datsave(ph, qh, n00, N, ND);}
 	if((((int)(time1) % Nstep)==0)) {datsave_paraview(ph, qh, n00, N, ND);}
 	//if((((int)(time1) % 2)==0)) {graph_a();} 
@@ -637,11 +638,30 @@ void ini000(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP)
 void datsave(double *ph, int *qh, int *n00, int N, int ND)
 {
 	FILE		*stream;
+	char	fName[256];
 	int 		i, j, k, kk;
 	double 	col;
 	int nd=ND, ndm=ND-1;
 
-	stream = fopen("test.dat", "a");
+	sprintf(fName,"data_%06d.dat",iout);
+	//stream = fopen("test.dat", "w");
+	stream = fopen(fName, "w");
+	fprintf(stream, "%d %d %d \n", ndm, ndm, ndm);
+	fprintf(stream, "%e  \n", time1);
+	for(i=0;i<=ndm;i++){
+		for(j=0;j<=ndm;j++){
+			for(k=0;k<=ndm;k++){
+				col=0.0;
+				for(kk=1;kk<=n00[i*ND*ND+j*ND+k];kk++){
+					if(qh[kk*ND*ND*ND+i*ND*ND+j*ND+k]<=N){
+						col+=ph[kk*ND*ND*ND+i*ND*ND+j*ND+k];
+					}
+				}
+				fprintf(stream, "%e  ", col);
+			}
+		}
+	}
+	//
 	fprintf(stream, "%e  \n", time1);
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
@@ -655,15 +675,13 @@ void datsave(double *ph, int *qh, int *n00, int N, int ND)
 					fprintf(stream, "%d  %e  ", qh[kk*ND*ND*ND+i*ND*ND+j*ND+k], ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]);
 				}
 				//
-				fprintf(stream, "\n");
+				//fprintf(stream, "\n");
 				//col=0.; for(kk=1;kk<=n00[i][j][k];kk++){ col+=ph[kk][i][j][k]*ph[kk][i][j][k]; }
 				//fprintf(stream, "%e  ", col);
 				//
-				fprintf(stream, "%d  \n", n00[i*ND*ND+j*ND+k]);
-				for(kk=1;kk<=n00[i*ND*ND+j*ND+k];kk++){
-					fprintf(stream, "%d  %e  ", qh[kk*ND*ND*ND+i*ND*ND+j*ND+k], ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]);
-				}
 				fprintf(stream, "\n");
+				col=0.; for(kk=1;kk<=n00[i*ND*ND+j*ND+k];kk++){ col+=ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]*ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]; }
+				fprintf(stream, "%e  ", col);
 			}
 		}
 	}
@@ -680,7 +698,6 @@ void datsave_paraview(double *ph, int *qh, int *n00, int N, int ND)
 	double  tph;
 	int nd=ND, ndm=ND-1;
 	
-	iout = iout + 1;
 	for(kk=1;kk<=N;kk++){
 		sprintf(fName,"3DAPT_MPF_N%03d_result%06d.vtk",kk,iout);
 		fp = fopen(fName, "w");
