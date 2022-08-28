@@ -43,8 +43,8 @@
 	//double ec11[ND][ND][ND], ec22[ND][ND][ND], ec33[ND][ND][ND];	//Constrained strain array
 	//double ec12[ND][ND][ND], ec13[ND][ND][ND], ec23[ND][ND][ND];
 
-	double zcij(int i0, int ij0, int k0, int iii, int jjj, int ND);//Coefficient calculation of elastic function (Fourier space)
-	double zuij(int i0, int ij0, int k0, int iii, int ND);//Displacement field coefficient calculation (Fourier space)
+	double zcij(int i0, int j0, int k0, int iii, int jjj, int ND);//Coefficient calculation of elastic function (Fourier space)
+	double zuij(int i0, int j0, int k0, int iii, int ND);//Displacement field coefficient calculation (Fourier space)
 
 	void datin(double *ch, int ND);	//Subroutine for initial field reading
 	void datsave(double *ch, double *Estr, 
@@ -632,7 +632,7 @@ iplan = fftw_plan_dft_3d(fftsize, fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW
 }
 
 //*** Zcij [eq.(5.26)] ****************************************
-double zcij(int i0, int ij0, int k0, int iii, int jjj, int ND)
+double zcij(int i0, int j0, int k0, int iii, int jjj, int ND)
 {
 	//int i, j, k, m, n, p, q;
 	int m, n;
@@ -646,7 +646,7 @@ double zcij(int i0, int ij0, int k0, int iii, int jjj, int ND)
 	int nd=ND, ndm=ND-1, nd2=ND/2;
 
 	if(i0<=nd2-1){ii=i0;}  if(i0>=nd2){ii=i0-nd;}
-	if(ij0<=nd2-1){jj=ij0;}  if(ij0>=nd2){jj=ij0-nd;}
+	if(j0<=nd2-1){jj=j0;}  if(j0>=nd2){jj=j0-nd;}
 	if(k0<=nd2-1){kk=k0;}  if(k0>=nd2){kk=k0-nd;}
 	alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj+(double)kk*(double)kk);
 	if(alnn==0.){alnn=1.;}
@@ -697,7 +697,7 @@ double zcij(int i0, int ij0, int k0, int iii, int jjj, int ND)
 }
 
 //*** Zuij  [eq.(5.30)] ****************************************
-double zuij(int i0, int ij0, int k0, int iii, int ND)
+double zuij(int i0, int j0, int k0, int iii, int ND)
 {
 	//int i, j, k, m, n, p, q;
 	int m, n;
@@ -711,9 +711,10 @@ double zuij(int i0, int ij0, int k0, int iii, int ND)
 	int nd=ND, ndm=ND-1, nd2=ND/2;
 
 	if(i0<=nd2-1){ii=i0;}  if(i0>=nd2){ii=i0-nd;}
-	if(ij0<=nd2-1){jj=ij0;}  if(ij0>=nd2){jj=ij0-nd;}
+	if(j0<=nd2-1){jj=j0;}  if(j0>=nd2){jj=j0-nd;}
 	if(k0<=nd2-1){kk=k0;}  if(k0>=nd2){kk=k0-nd;}
-	alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj);
+	//alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj); // miss ?
+	alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj+(double)kk*(double)kk);
 	if(alnn==0.){alnn=1.;}
 	nec[1]=nx=(double)ii/alnn;
 	nec[2]=ny=(double)jj/alnn;

@@ -46,8 +46,8 @@
 	void table();				//Creating sin and cos tables and bit inversion tables Subrutin
 	void fft();					//FFT1D
 	void xyzfft();				//FFT3D
-	double zcij(int i0, int ij0, int k0, int iii, int jjj);//Coefficient calculation of elastic function (Fourier space)
-	double zuij(int i0, int ij0, int k0, int iii);//Displacement field coefficient calculation (Fourier space)
+	double zcij(int i0, int j0, int k0, int iii, int jjj);//Coefficient calculation of elastic function (Fourier space)
+	double zuij(int i0, int j0, int k0, int iii);//Displacement field coefficient calculation (Fourier space)
 
 	//void ini000();				//Initial concentration wave setting subroutine
 	void datin();				//Subroutine for initial field reading
@@ -591,7 +591,7 @@ void xyzfft()
 }
 
 //*** Zcij [eq.(5.26)] ****************************************
-double zcij(int i0, int ij0, int k0, int iii, int jjj)
+double zcij(int i0, int j0, int k0, int iii, int jjj)
 {
 	//int i, j, k, m, n, p, q;
 	int m, n;
@@ -604,7 +604,7 @@ double zcij(int i0, int ij0, int k0, int iii, int jjj)
 	double om[4][4];
 
 	if(i0<=nd2-1){ii=i0;}  if(i0>=nd2){ii=i0-nd;}
-	if(ij0<=nd2-1){jj=ij0;}  if(ij0>=nd2){jj=ij0-nd;}
+	if(j0<=nd2-1){jj=j0;}  if(j0>=nd2){jj=j0-nd;}
 	if(k0<=nd2-1){kk=k0;}  if(k0>=nd2){kk=k0-nd;}
 	alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj+(double)kk*(double)kk);
 	if(alnn==0.){alnn=1.;}
@@ -655,7 +655,7 @@ double zcij(int i0, int ij0, int k0, int iii, int jjj)
 }
 
 //*** Zuij  [eq.(5.30)] ****************************************
-double zuij(int i0, int ij0, int k0, int iii)
+double zuij(int i0, int j0, int k0, int iii)
 {
 	//int i, j, k, m, n, p, q;
 	int m, n;
@@ -668,9 +668,10 @@ double zuij(int i0, int ij0, int k0, int iii)
 	double om[4][4];
 
 	if(i0<=nd2-1){ii=i0;}  if(i0>=nd2){ii=i0-nd;}
-	if(ij0<=nd2-1){jj=ij0;}  if(ij0>=nd2){jj=ij0-nd;}
+	if(j0<=nd2-1){jj=j0;}  if(j0>=nd2){jj=j0-nd;}
 	if(k0<=nd2-1){kk=k0;}  if(k0>=nd2){kk=k0-nd;}
-	alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj);
+	//alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj); // miss ?
+	alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj+(double)kk*(double)kk);
 	if(alnn==0.){alnn=1.;}
 	nec[1]=nx=(double)ii/alnn;
 	nec[2]=ny=(double)jj/alnn;
