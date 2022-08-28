@@ -109,7 +109,8 @@ iout = -1;
 start: ;
 	printf("time: %f \n", time1);
 	//if(time1>=200.){delt=5.0;}
-	//if((((int)(time1) % Nstep)==0)) {datsave();}
+	if((((int)(time1) % Nstep)==0)) {iout = iout + 1;}
+	if((((int)(time1) % Nstep)==0)) {datsave();}
 	if((((int)(time1) % Nstep)==0)) {datsave_paraview();}
 	//if(time1==200.) {datsave();}
 	//if((((int)(time1) % 2)==0)) {graph_a();} 
@@ -447,24 +448,53 @@ void ini000()
 //}
 
 //************ Data Save *******************************
-void datsave()
+void datsave(double *ph, int *qh, int *n00, int N, int NDX, int NDY, int NDZ)
 {
 	FILE		*stream;
+	char	fName[256];
 	int 		i, j, k, kk;
 	double 	col;
+	int ndx=NDX, ndxm=NDX-1;
+	int ndy=NDY, ndym=NDY-1;
+	int ndz=NDZ, ndzm=NDZ-1;
+	int nm=N-1, nmm=N-2;
 
-	stream = fopen("test.dat", "a");
+	sprintf(fName,"data_%06d.dat",iout);
+	//stream = fopen("test.dat", "a");
+	stream = fopen(fName, "w");
+	fprintf(stream, "%d %d %d \n", ndxm, ndym, ndzm);
 	fprintf(stream, "%e  \n", time1);
 	for(i=0;i<=ndxm;i++){
 		for(j=0;j<=ndym;j++){
 			for(k=0;k<=ndzm;k++){
-				fprintf(stream, "%d  \n", n00[i][j][k]);
-				for(kk=1;kk<=n00[i][j][k];kk++){
-					fprintf(stream, "%d  %e  ", qh[kk][i][j][k], ph[kk][i][j][k]);
+				col=0.0;
+				for(kk=1;kk<=n00[i*NDY*NDZ+j*NDZ+k];kk++){
+					if(qh[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k]<=N){
+						col+=ph[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k];
+					}
+				}
+				fprintf(stream, "%e  ", col);
+			}
+		}
+	}
+	//
+	fprintf(stream, "%e  \n", time1);
+	for(i=0;i<=ndxm;i++){
+		for(j=0;j<=ndym;j++){
+			for(k=0;k<=ndzm;k++){
+				//fprintf(stream, "%d  \n", n00[i][j][k]);
+				//for(kk=1;kk<=n00[i][j][k];kk++){
+				//	fprintf(stream, "%d  %e  ", qh[kk][i][j][k], ph[kk][i][j][k]);
+				//}
+				fprintf(stream, "%d  \n", n00[i*NDY*NDZ+j*NDZ+k]);
+				for(kk=1;kk<=n00[i*NDY*NDZ+j*NDZ+k];kk++){
+					fprintf(stream, "%d  %e  ", qh[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k], ph[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k]);
 				}
 				fprintf(stream, "\n");
 				//col=0.; for(kk=1;kk<=n00[i][j][k];kk++){ col+=ph[kk][i][j][k]*ph[kk][i][j][k]; }
 				//fprintf(stream, "%e  ", col);
+				col=0.; for(kk=1;kk<=n00[i*NDY*NDZ+j*NDZ+k];kk++){ col+=ph[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k]*ph[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k]; }
+				fprintf(stream, "%e  ", col);
 			}
 		}
 	}

@@ -42,7 +42,7 @@
 
 	void ini000(double *ph, int *qh, int *n00, int *n00p, int N, int NDX, int NDY, int NDZ, int GNP);	//Initial concentration wave setting subroutine
 	//void graph_a();					//graph display subroutine
-			 void datsave(double *ph, int *qh, int *n00, int N, int NDX, int NDY, int NDZ);	//Concentration data save subroutine
+			 void datsave(double *ph, int *qh, int *n00, int N, int NDX, int NDY, int NDZ, double *cxx);	//Concentration data save subroutine
 	void datsave_paraview(double *ph, int *qh, int *n00, int N, int NDX, int NDY, int NDZ);	//Concentration data save subroutine
 	//void datin();					//Initial concentration wave reading subroutine
 
@@ -138,6 +138,7 @@ int main(void)
 	double *Trij = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));
 	double *kij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));
 	double *cij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));
+	double *cxx  = (double *)malloc(sizeof(double)*( GNP ));
 	//
 
 	//printf("delt(2.0)=  "); scanf(" %lf",&delt);	//	delt=2.0;
@@ -371,6 +372,7 @@ int main(void)
 						for(int j1=i1;j1<=GN;j1++){
 							cij[i1*GNP+j1]=data_mat[i1*GNP+j1];
 							cij[i1*GNP+j1]=cij[i1*GNP+j1];
+							if(i1==j1){cxx[i1]=cij[i1*GNP+j1];}
 						}
 						for(int j1=1;j1<=GN;j1++){printf("%9.4f ",cij[i1*GNP+j1]);}
 						printf("\n");
@@ -411,8 +413,9 @@ iout = -1;
 start: ;
 	printf("time: %f \n", time1);
 	//if(time1>=200.){delt=5.0;}
-	if((((int)(time1) % Nstep)==0)) {datsave(ph, qh, n00, N, NDX, NDY, NDZ);;}
-	if((((int)(time1) % Nstep)==0)) {datsave_paraview(ph, qh, n00, N, NDX, NDY, NDZ);;}
+	if((((int)(time1) % Nstep)==0)) {iout = iout + 1;}
+	if((((int)(time1) % Nstep)==0)) {datsave(ph, qh, n00, N, NDX, NDY, NDZ, cxx);}
+	if((((int)(time1) % Nstep)==0)) {datsave_paraview(ph, qh, n00, N, NDX, NDY, NDZ);}
 	//if((((int)(time1) % 2)==0)) {graph_a();} 
 
 //******  main  ********************************
@@ -875,9 +878,10 @@ void ini000(double *ph, int *qh, int *n00, int *n00p, int N, int NDX, int NDY, i
 }
 
 //************ Data Save *******************************
-void datsave(double *ph, int *qh, int *n00, int N, int NDX, int NDY, int NDZ)
+void datsave(double *ph, int *qh, int *n00, int N, int NDX, int NDY, int NDZ, double *cxx)
 {
 	FILE		*stream;
+	char	fName[256];
 	int 		i, j, k, kk;
 	double 	col;
 	int ndx=NDX, ndxm=NDX-1;
@@ -885,7 +889,23 @@ void datsave(double *ph, int *qh, int *n00, int N, int NDX, int NDY, int NDZ)
 	int ndz=NDZ, ndzm=NDZ-1;
 	int nm=N-1, nmm=N-2;
 
-	stream = fopen("test.dat", "a");
+	sprintf(fName,"data_%06d.dat",iout);
+	//stream = fopen("test.dat", "a");
+	stream = fopen(fName, "w");
+	fprintf(stream, "%d %d %d \n", ndxm, ndym, ndzm);
+	fprintf(stream, "%e  \n", time1);
+	for(i=0;i<=ndxm;i++){
+		for(j=0;j<=ndym;j++){
+			for(k=0;k<=ndzm;k++){
+				col=0.0;
+				for(kk=1;kk<=n00[i*NDY*NDZ+j*NDZ+k];kk++){
+					col+=ph[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k]*cxx[qh[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k]];
+				}
+				fprintf(stream, "%e  ", col);
+			}
+		}
+	}
+	//
 	fprintf(stream, "%e  \n", time1);
 	for(i=0;i<=ndxm;i++){
 		for(j=0;j<=ndym;j++){
@@ -922,7 +942,6 @@ void datsave_paraview(double *ph, int *qh, int *n00, int N, int NDX, int NDY, in
 	int ndz=NDZ, ndzm=NDZ-1;
 	int nm=N-1, nmm=N-2;
 	
-	iout = iout + 1;
 	for(kk=1;kk<=N;kk++){
 		sprintf(fName,"3Dxyz_APT_MPF_N%03d_result%06d.vtk",kk,iout);
 		fp = fopen(fName, "w");
