@@ -3,7 +3,7 @@
 #include <time.h> 
 #include <math.h>
 
-#include <complex> // For semi-implicit Euler scheme
+//#include <complex> // For semi-implicit Euler scheme
 
 #include <fftw3.h>
 //g++ martensite_v2_libfftw3.cpp -lfftw3
@@ -99,15 +99,22 @@ int main(void)
 	double *c2k  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//local potential
 	double *c3k  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//local potential
 	//
+	double *k1  = (double *)malloc(sizeof(double)*( ND ));
 	double *k2  = (double *)malloc(sizeof(double)*( ND*ND + ND ));
 	double *k4  = (double *)malloc(sizeof(double)*( ND*ND + ND ));
 	//
-	std::complex<double> *c2h_k = (std::complex<double>*)malloc(sizeof(std::complex<double>)*( ND*ND + ND ));// concentration (t=n) in k space (FFT)
-	std::complex<double> *c3h_k = (std::complex<double>*)malloc(sizeof(std::complex<double>)*( ND*ND + ND ));// concentration (t=n) in k space (FFT)
-	std::complex<double> *c2k_k = (std::complex<double>*)malloc(sizeof(std::complex<double>)*( ND*ND + ND ));// dG/dc2 in k space (FFT)
-	std::complex<double> *c3k_k = (std::complex<double>*)malloc(sizeof(std::complex<double>)*( ND*ND + ND ));// dG/dc3 in k space (FFT)
-	std::complex<double> *c2h2_k= (std::complex<double>*)malloc(sizeof(std::complex<double>)*( ND*ND + ND ));// concentration (t=n+1) in k space (FFT)
-	std::complex<double> *c3h2_k= (std::complex<double>*)malloc(sizeof(std::complex<double>)*( ND*ND + ND ));// concentration (t=n+1) in k space (FFT)
+	double *c2h_k_r = (double*)malloc(sizeof(double)*( ND*ND + ND ));// concentration (t=n) in k space (FFT)
+	double *c2h_k_i = (double*)malloc(sizeof(double)*( ND*ND + ND ));
+	double *c3h_k_r = (double*)malloc(sizeof(double)*( ND*ND + ND ));// concentration (t=n) in k space (FFT)
+	double *c3h_k_i = (double*)malloc(sizeof(double)*( ND*ND + ND ));
+	double *c2k_k_r = (double*)malloc(sizeof(double)*( ND*ND + ND ));// dG/dc2 in k space (FFT)
+	double *c2k_k_i = (double*)malloc(sizeof(double)*( ND*ND + ND ));
+	double *c3k_k_r = (double*)malloc(sizeof(double)*( ND*ND + ND ));// dG/dc3 in k space (FFT)
+	double *c3k_k_i = (double*)malloc(sizeof(double)*( ND*ND + ND ));
+	double *c2h2_k_r= (double*)malloc(sizeof(double)*( ND*ND + ND ));// concentration (t=n+1) in k space (FFT)
+	double *c2h2_k_i= (double*)malloc(sizeof(double)*( ND*ND + ND ));
+	double *c3h2_k_r= (double*)malloc(sizeof(double)*( ND*ND + ND ));// concentration (t=n+1) in k space (FFT)
+	double *c3h2_k_i= (double*)malloc(sizeof(double)*( ND*ND + ND ));
 	//
 	const int fftsize = ND;
 	fftw_complex *in, *out; // in[i][0] for real, in[i][1] for imag.
@@ -151,11 +158,15 @@ int main(void)
 	//time1max=1.0e05+1.0;		//Maximum calculation count
 	
 	//for(i=0;i<=ndm/2;i++){
-	//	for(j=0;j<=ndm/2;j++){
+	//	k1[i] = (2.0*PI/double(ND))*double(i);
+	//	k1[(ndm-i)] = -k1[i];
+	//}
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			k2[i*ND+j] = (2.0*PI)*(2.0*PI)*double(i*i + j*j)/double(ND*ND);
 			k4[i*ND+j] = (2.0*PI)*(2.0*PI)*(2.0*PI)*(2.0*PI)*double(i*i*i*i + j*j*j*j)/double(ND*ND*ND*ND);
+			//k2[i*ND+j] = k1[i]*k1[i] + k1[j]*k1[j];
+			//k4[i*ND+j] = k1[i]*k1[i]*k1[i]*k1[i] + k1[j]*k1[j]*k1[j]*k1[j];
 			//k2[i*ND+j] = double(i*i + j*j)/double(ND*ND);
 			//k4[i*ND+j] = double(i*i*i*i + j*j*j*j)/double(ND*ND*ND*ND);
 			//k2[(ndm-i)*ND+(ndm-j)] = k2[i*ND+j];
@@ -192,14 +203,16 @@ start: ;
 			c2k_chem=om_12*(c1-c2)-om_13*c3+om_23*c3+(log(c2)-log(c1));//chemical diffusion potential, dG/dc2
 			//c2k_su=-2.*kapa_c2*(c2h[ip][j]+c2h[im][j]+c2h[i][jp]+c2h[i][jm]-4.0*c2)
 			//				  -kapa_c3*(c3h[ip][j]+c3h[im][j]+c3h[i][jp]+c3h[i][jm]-4.0*c3);//gradient potential
-			c2k_su=-2.*kapa_c2*(c2h[ip*ND+j]+c2h[im*ND+j]+c2h[i*ND+jp]+c2h[i*ND+jm]-4.0*c2)
-					  -kapa_c3*(c3h[ip*ND+j]+c3h[im*ND+j]+c3h[i*ND+jp]+c3h[i*ND+jm]-4.0*c3);//gradient potential
+			//
+			//c2k_su=-2.*kapa_c2*(c2h[ip*ND+j]+c2h[im*ND+j]+c2h[i*ND+jp]+c2h[i*ND+jm]-4.0*c2)
+			//		  -kapa_c3*(c3h[ip*ND+j]+c3h[im*ND+j]+c3h[i*ND+jp]+c3h[i*ND+jm]-4.0*c3);//gradient potential
 
 			c3k_chem=om_13*(c1-c3)-om_12*c2+om_23*c2+(log(c3)-log(c1));///chemical diffusion potential, dG/dc3
 			//c3k_su=-2.*kapa_c3*(c3h[ip][j]+c3h[im][j]+c3h[i][jp]+c3h[i][jm]-4.0*c3)
 			//				  -kapa_c2*(c2h[ip][j]+c2h[im][j]+c2h[i][jp]+c2h[i][jm]-4.0*c2);//gradient potential
-			c3k_su=-2.*kapa_c3*(c3h[ip*ND+j]+c3h[im*ND+j]+c3h[i*ND+jp]+c3h[i*ND+jm]-4.0*c3)
-					  -kapa_c2*(c2h[ip*ND+j]+c2h[im*ND+j]+c2h[i*ND+jp]+c2h[i*ND+jm]-4.0*c2);//gradient potential
+			//
+			//c3k_su=-2.*kapa_c3*(c3h[ip*ND+j]+c3h[im*ND+j]+c3h[i*ND+jp]+c3h[i*ND+jm]-4.0*c3)
+			//		  -kapa_c2*(c2h[ip*ND+j]+c2h[im*ND+j]+c2h[i*ND+jp]+c2h[i*ND+jm]-4.0*c2);//gradient potential
 
 			//c2k[i][j]=c2k_chem+c2k_su;//Diffusion potential (equation (4.1))
 			//c3k[i][j]=c3k_chem+c3k_su;
@@ -224,7 +237,9 @@ start: ;
 	fftw_execute(plan); //For FFT
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
-			c2h_k[i*ND+j] = std::complex<double>(out[i*ND+j][0],out[i*ND+j][1]);
+			//c2h_k[i*ND+j] = std::complex<double>(out[i*ND+j][0],out[i*ND+j][1]);
+			c2h_k_r[i*ND+j] = out[i*ND+j][0];
+			c2h_k_i[i*ND+j] = out[i*ND+j][1];
 		}
 	}
 	//
@@ -238,7 +253,9 @@ start: ;
 	fftw_execute(plan); //For FFT
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
-			c2k_k[i*ND+j] = std::complex<double>(out[i*ND+j][0],out[i*ND+j][1]);
+			//c2k_k[i*ND+j] = std::complex<double>(out[i*ND+j][0],out[i*ND+j][1]);
+			c2k_k_r[i*ND+j] = out[i*ND+j][0];
+			c2k_k_i[i*ND+j] = out[i*ND+j][1];
 		}
 	}
 	//
@@ -252,7 +269,9 @@ start: ;
 	fftw_execute(plan); //For FFT
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
-			c3h_k[i*ND+j] = std::complex<double>(out[i*ND+j][0],out[i*ND+j][1]);
+			//c3h_k[i*ND+j] = std::complex<double>(out[i*ND+j][0],out[i*ND+j][1]);
+			c3h_k_r[i*ND+j] = out[i*ND+j][0];
+			c3h_k_i[i*ND+j] = out[i*ND+j][1];
 		}
 	}
 	//
@@ -266,7 +285,9 @@ start: ;
 	fftw_execute(plan); //For FFT
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
-			c3k_k[i*ND+j] = std::complex<double>(out[i*ND+j][0],out[i*ND+j][1]);
+			//c3k_k[i*ND+j] = std::complex<double>(out[i*ND+j][0],out[i*ND+j][1]);
+			c3k_k_r[i*ND+j] = out[i*ND+j][0];
+			c3k_k_i[i*ND+j] = out[i*ND+j][1];
 		}
 	}
 	// main
@@ -278,20 +299,46 @@ start: ;
 			//c3h2_k[i*ND+j] = ( c3h_k[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k[i*ND+j]+cmob23*c3k_k[i*ND+j])
 			//				  - delt*k4[i*ND+j]*(cmob32*kapa_c2*c2h_k[i*ND+j]+cmob33*kapa_c3*2.0*c3h_k[i*ND+j]) );
 			//
+			// read
+			//c2h2_k_r[i*ND+j] = ( c2h_k_r[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
+			//				  - delt*k4[i*ND+j]*(cmob22*kapa_c2*2.0*c2h_k_r[i*ND+j]+cmob23*kapa_c3*c3h_k_r[i*ND+j]) );
+			//c3h2_k_r[i*ND+j] = ( c3h_k_r[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
+			//				  - delt*k4[i*ND+j]*(cmob32*kapa_c2*c2h_k_r[i*ND+j]+cmob33*kapa_c3*2.0*c3h_k_r[i*ND+j]) );
+			// image
+			//c2h2_k_i[i*ND+j] = ( c2h_k_i[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
+			//				  - delt*k4[i*ND+j]*(cmob22*kapa_c2*2.0*c2h_k_i[i*ND+j]+cmob23*kapa_c3*c3h_k_i[i*ND+j]) );
+			//c3h2_k_i[i*ND+j] = ( c3h_k_i[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
+			//				  - delt*k4[i*ND+j]*(cmob32*kapa_c2*c2h_k_i[i*ND+j]+cmob33*kapa_c3*2.0*c3h_k_i[i*ND+j]) );
+			//				 	/(1.0 + delt*k4[i*ND+j]*cmob22*kapa_c2*2.0);
+			//c3h2_k[i*ND+j] = ( c3h_k[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k[i*ND+j]+cmob23*c3k_k[i*ND+j])
+			//									   - k4[i*ND+j]*cmob32*kapa_c2*c2h_k[i*ND+j]) )
+			//				 	/(1.0 + delt*k4[i*ND+j]*cmob33*kapa_c3*2.0);
 			// semi-implicit Euler scheme
-			c2h2_k[i*ND+j] = ( c2h_k[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k[i*ND+j]+cmob23*c3k_k[i*ND+j])
-												   - k4[i*ND+j]*cmob23*kapa_c3*c3h_k[i*ND+j]) )
+			//c2h2_k[i*ND+j] = ( c2h_k[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k[i*ND+j]+cmob23*c3k_k[i*ND+j])
+			//									   - k4[i*ND+j]*cmob23*kapa_c3*c3h_k[i*ND+j]) )
+			//
+			//
+			// real
+			c2h2_k_r[i*ND+j] = ( c2h_k_r[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
+												   - k4[i*ND+j]*cmob23*kapa_c3*c3h_k_r[i*ND+j]) )
 							 	/(1.0 + delt*k4[i*ND+j]*cmob22*kapa_c2*2.0);
-			c3h2_k[i*ND+j] = ( c3h_k[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k[i*ND+j]+cmob23*c3k_k[i*ND+j])
-												   - k4[i*ND+j]*cmob32*kapa_c2*c2h_k[i*ND+j]) )
+			c3h2_k_r[i*ND+j] = ( c3h_k_r[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
+												   - k4[i*ND+j]*cmob32*kapa_c2*c2h_k_r[i*ND+j]) )
+							 	/(1.0 + delt*k4[i*ND+j]*cmob33*kapa_c3*2.0);
+			// image
+			c2h2_k_i[i*ND+j] = ( c2h_k_i[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
+												   - k4[i*ND+j]*cmob23*kapa_c3*c3h_k_i[i*ND+j]) )
+							 	/(1.0 + delt*k4[i*ND+j]*cmob22*kapa_c2*2.0);
+			c3h2_k_i[i*ND+j] = ( c3h_k_i[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
+												   - k4[i*ND+j]*cmob32*kapa_c2*c2h_k_i[i*ND+j]) )
 							 	/(1.0 + delt*k4[i*ND+j]*cmob33*kapa_c3*2.0);
 		}
 	}
 	// IFFT of c2h2_k
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
-			in[i*ND+j][0] = c2h2_k[i*ND+j].real(); //For FFT (real)
-			in[i*ND+j][1] = c2h2_k[i*ND+j].imag(); //For FFT (imag.)
+			in[i*ND+j][0] = c2h2_k_r[i*ND+j]; //For FFT (real)
+			in[i*ND+j][1] = c2h2_k_i[i*ND+j]; //For FFT (imag.)
 		}
 	}
 	fftw_execute(iplan); //For IFFT
@@ -307,8 +354,8 @@ start: ;
 	// IFFT of c3h2_k
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
-			in[i*ND+j][0] = c3h2_k[i*ND+j].real(); //For FFT (real)
-			in[i*ND+j][1] = c3h2_k[i*ND+j].imag(); //For FFT (imag.)
+			in[i*ND+j][0] = c3h2_k_r[i*ND+j]; //For FFT (real)
+			in[i*ND+j][1] = c3h2_k_i[i*ND+j]; //For FFT (imag.)
 		}
 	}
 	fftw_execute(iplan); //For IFFT
