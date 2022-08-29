@@ -687,15 +687,15 @@ double zcij(int i0, int j0, int k0, int iii, int jjj, int NDX, int NDY, int NDZ)
 	zij=0.0;
 	for(m=1;m<=3;m++) {
 		for(n=1;n<=3;n++) {
-    		//zij=zij+0.5*(sigma[m][n]*nec[jjj]*nec[n]*om[m][iii]
-			//	  		+sigma[m][n]*nec[iii]*nec[n]*om[m][jjj]);
-			zij=zij+0.5*( om[m][iii]*nec[n]*nec[jjj] + om[m][jjj]*nec[n]*nec[iii] )*sigma[m][n]; // eq.(5.26) or eq.(II 3.5)
+			//zij=zij+0.5*( om[m][iii]*nec[n]*nec[jjj] + om[m][jjj]*nec[n]*nec[iii] )*sigma[m][n]; // eq.(5.26) or eq.(II 3.5)
+    		zij=zij+0.5*(sigma[m][n]*nec[jjj]*nec[n]*om[m][iii]
+				  		+sigma[m][n]*nec[iii]*nec[n]*om[m][jjj]);
 		}
 	}
 	return(zij);
 }
 
-//*** Zuij  [eq.(5.30) or eq.(II 3.9)] ****************************************
+//*** Zuij [eq.(5.30) or eq.(II 3.9)] ****************************************
 double zuij(int i0, int j0, int k0, int iii, int NDX, int NDY, int NDZ)
 {
 	//int i, j, k, m, n, p, q;
@@ -763,11 +763,11 @@ double zuij(int i0, int j0, int k0, int iii, int NDX, int NDY, int NDZ)
 	zij=0.;
 	for(m=1;m<=3;m++) {
 		for(n=1;n<=3;n++) {
-    		//zij=zij+sigma[m][n]*nec[n]*om[m][iii];
-			zij=zij-(om[m][iii]/alnn)*sigma[m][n]*nec[n]; // eq.(5.30) or eq.(II 3.9), alnn=|k}
+			//zij=zij-(om[m][iii]/alnn)*sigma[m][n]*nec[n]; // eq.(5.30) or eq.(II 3.9)
+    		zij=zij+sigma[m][n]*nec[n]*om[m][iii];
 		}
 	}
-	//zij=-zij/alnn;
+	zij=-zij/alnn; // alnn=|k}
 	return(zij);
 }
 
