@@ -620,7 +620,7 @@ iplan = fftw_plan_dft_3d(fftsizex, fftsizey, fftsizez, in, out, FFTW_BACKWARD, F
 
 }
 
-//*** Zcij [eq.(5.26)] ****************************************
+//*** Zcij [eq.(5.26) or eq.(II 3.5)] ****************************************
 double zcij(int i0, int j0, int k0, int iii, int jjj, int NDX, int NDY, int NDZ)
 {
 	//int i, j, k, m, n, p, q;
@@ -641,12 +641,14 @@ double zcij(int i0, int j0, int k0, int iii, int jjj, int NDX, int NDY, int NDZ)
 	if(k0<=ndz2-1){kk=k0;}  if(k0>=ndz2){kk=k0-ndz;}
 	alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj+(double)kk*(double)kk);
 	if(alnn==0.){alnn=1.;}
-	nec[1]=nx=(double)ii/alnn;
-	nec[2]=ny=(double)jj/alnn;
-	nec[3]=nz=(double)kk/alnn;
+	nec[1]=nx=(double)ii/alnn;	// n is the unit vector in the k direction, n=k/|k|
+	nec[2]=ny=(double)jj/alnn;	// n is the unit vector in the k direction, n=k/|k|
+	nec[3]=nz=(double)kk/alnn;	// n is the unit vector in the k direction, n=k/|k|
 
 	//for(i=1;i<=3;i++){ for(j=1;j<=3;j++){ om[i][j]=0.; } }
 
+	// C[i][k][j][l]*n[j]*n[l], C: elastic modulus, n: unit vector
+	// C = cec
 	a11=cec[1][1][1][1]*nx*nx+cec[1][2][1][2]*ny*ny+cec[1][3][1][3]*nz*nz;
 	a22=cec[1][2][1][2]*nx*nx+cec[2][2][2][2]*ny*ny+cec[2][3][2][3]*nz*nz;
 	a33=cec[3][1][3][1]*nx*nx+cec[2][3][2][3]*ny*ny+cec[3][3][3][3]*nz*nz;
@@ -657,6 +659,7 @@ double zcij(int i0, int j0, int k0, int iii, int jjj, int NDX, int NDY, int NDZ)
 	a32=a23;
 	a13=a31;
 
+	// cofactor
 	b11=a22*a33-a23*a32;
 	b22=a11*a33-a13*a31;
 	b33=a11*a22-a12*a21;
@@ -667,9 +670,11 @@ double zcij(int i0, int j0, int k0, int iii, int jjj, int NDX, int NDY, int NDZ)
 	b32=b23;
 	b13=b31;
 
+	// det (C[i][k][j][l]*n[j]*n[l])
 	det1=a11*a22*a33+a12*a23*a31+a13*a32*a21-a13*a31*a22-a11*a23*a32-a33*a12*a21;
 	if(det1==0.){det1=1.;}
 
+	// inverse matrix
 	om[1][1]=b11/det1;
 	om[2][2]=b22/det1;
 	om[3][3]=b33/det1;
@@ -677,17 +682,20 @@ double zcij(int i0, int j0, int k0, int iii, int jjj, int NDX, int NDY, int NDZ)
 	om[2][3]=om[3][2]=b23/det1;
 	om[3][1]=om[1][3]=b31/det1;
 
+	// sigma[i][j] = cec[i][j][k][l]*eta_c[k][l]*(Kronecker delta[k][l])
+	// sigma: Eigen stress
 	zij=0.0;
 	for(m=1;m<=3;m++) {
 		for(n=1;n<=3;n++) {
-    		zij=zij+0.5*(sigma[m][n]*nec[jjj]*nec[n]*om[m][iii]
-				  		+sigma[m][n]*nec[iii]*nec[n]*om[m][jjj]);
+    		//zij=zij+0.5*(sigma[m][n]*nec[jjj]*nec[n]*om[m][iii]
+			//	  		+sigma[m][n]*nec[iii]*nec[n]*om[m][jjj]);
+			zij=zij+0.5*( om[m][iii]*nec[n]*nec[jjj] + om[m][jjj]*nec[n]*nec[iii] )*sigma[m][n]; // eq.(5.26) or eq.(II 3.5)
 		}
 	}
 	return(zij);
 }
 
-//*** Zuij  [eq.(5.30)] ****************************************
+//*** Zuij  [eq.(5.30) or eq.(II 3.9)] ****************************************
 double zuij(int i0, int j0, int k0, int iii, int NDX, int NDY, int NDZ)
 {
 	//int i, j, k, m, n, p, q;
@@ -709,12 +717,14 @@ double zuij(int i0, int j0, int k0, int iii, int NDX, int NDY, int NDZ)
 	//alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj); // miss ?
 	alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj+(double)kk*(double)kk);
 	if(alnn==0.){alnn=1.;}
-	nec[1]=nx=(double)ii/alnn;
-	nec[2]=ny=(double)jj/alnn;
-	nec[3]=nz=(double)kk/alnn;
+	nec[1]=nx=(double)ii/alnn;	// n is the unit vector in the k direction, n=k/|k|
+	nec[2]=ny=(double)jj/alnn;	// n is the unit vector in the k direction, n=k/|k|
+	nec[3]=nz=(double)kk/alnn;	// n is the unit vector in the k direction, n=k/|k|
 
 	//for(i=1;i<=3;i++){ for(j=1;j<=3;j++){ om[i][j]=0.; } }
 
+	// C[i][k][j][l]*n[j]*n[l], C: elastic modulus, n: unit vector
+	// C = cec
 	a11=cec[1][1][1][1]*nx*nx+cec[1][2][1][2]*ny*ny+cec[1][3][1][3]*nz*nz;
 	a22=cec[1][2][1][2]*nx*nx+cec[2][2][2][2]*ny*ny+cec[2][3][2][3]*nz*nz;
 	a33=cec[3][1][3][1]*nx*nx+cec[2][3][2][3]*ny*ny+cec[3][3][3][3]*nz*nz;
@@ -725,6 +735,7 @@ double zuij(int i0, int j0, int k0, int iii, int NDX, int NDY, int NDZ)
 	a32=a23;
 	a13=a31;
 
+	// cofactor
 	b11=a22*a33-a23*a32;
 	b22=a11*a33-a13*a31;
 	b33=a11*a22-a12*a21;
@@ -735,9 +746,11 @@ double zuij(int i0, int j0, int k0, int iii, int NDX, int NDY, int NDZ)
 	b32=b23;
 	b13=b31;
 
+	// det (C[i][k][j][l]*n[j]*n[l])
 	det1=a11*a22*a33+a12*a23*a31+a13*a32*a21-a13*a31*a22-a11*a23*a32-a33*a12*a21;
 	if(det1==0.){det1=1.;}
 
+	// inverse matrix
 	om[1][1]=b11/det1;
 	om[2][2]=b22/det1;
 	om[3][3]=b33/det1;
@@ -745,13 +758,16 @@ double zuij(int i0, int j0, int k0, int iii, int NDX, int NDY, int NDZ)
 	om[2][3]=om[3][2]=b23/det1;
 	om[3][1]=om[1][3]=b31/det1;
 
+	// sigma[i][j] = cec[i][j][k][l]*eta_c[k][l]*(Kronecker delta[k][l])
+	// sigma: Eigen stress
 	zij=0.;
 	for(m=1;m<=3;m++) {
 		for(n=1;n<=3;n++) {
-    		zij=zij+sigma[m][n]*nec[n]*om[m][iii];
+    		//zij=zij+sigma[m][n]*nec[n]*om[m][iii];
+			zij=zij-(om[m][iii]/alnn)*sigma[m][n]*nec[n]; // eq.(5.30) or eq.(II 3.9), alnn=|k}
 		}
 	}
-	zij=-zij/alnn;
+	//zij=-zij/alnn;
 	return(zij);
 }
 
