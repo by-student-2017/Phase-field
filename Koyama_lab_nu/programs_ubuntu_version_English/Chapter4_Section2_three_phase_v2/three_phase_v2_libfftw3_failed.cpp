@@ -157,20 +157,23 @@ int main(void)
 	time1=0.0;					//Initial value of calculation count
 	//time1max=1.0e05+1.0;		//Maximum calculation count
 	
-	//for(i=0;i<=ndm/2;i++){
-	//	k1[i] = (2.0*PI/double(ND))*double(i);
-	//	k1[(ndm-i)] = -k1[i];
+	//for(i=0;i<=(ndm-1)/2;i++){
+	//	k1[i] = double(i)/double(ND);
+	//	k1[(ndm-i)] = -(k1[i]+1.0);
+	//	k1[(ndm-1)/2+i] = k1[i];
+	//}
+	//check
+	//for(i=0;i<=ndm;i++){
+	//	printf("%d: %f, ", i, k1[i]);
 	//}
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
-			k2[i*ND+j] = (2.0*PI)*(2.0*PI)*double(i*i + j*j)/double(ND*ND);
-			k4[i*ND+j] = (2.0*PI)*(2.0*PI)*(2.0*PI)*(2.0*PI)*double(i*i*i*i + j*j*j*j)/double(ND*ND*ND*ND);
 			//k2[i*ND+j] = k1[i]*k1[i] + k1[j]*k1[j];
 			//k4[i*ND+j] = k1[i]*k1[i]*k1[i]*k1[i] + k1[j]*k1[j]*k1[j]*k1[j];
-			//k2[i*ND+j] = double(i*i + j*j)/double(ND*ND);
-			//k4[i*ND+j] = double(i*i*i*i + j*j*j*j)/double(ND*ND*ND*ND);
-			//k2[(ndm-i)*ND+(ndm-j)] = k2[i*ND+j];
-			//k4[(ndm-i)*ND+(ndm-j)] = k4[i*ND+j];
+			//k2[i*ND+j] = (2.0*PI)*(2.0*PI)*double(i*i + j*j)/double(ND*ND);
+			//k4[i*ND+j] = (2.0*PI)*(2.0*PI)*(2.0*PI)*(2.0*PI)*double(i*i*i*i + j*j*j*j)/double(ND*ND*ND*ND);
+			k2[i*ND+j] = double(i*i + j*j)/double(ND*ND);
+			k4[i*ND+j] = double(i*i*i*i + j*j*j*j)/double(ND*ND*ND*ND);
 			//printf("%d, %d: %f, %f \n",i,j,k2[i*ND+j],k4[i*ND+j]);
 		}
 	}
@@ -294,44 +297,45 @@ start: ;
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			// explicit Euler scheme
+			// complex
 			//c2h2_k[i*ND+j] = ( c2h_k[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k[i*ND+j]+cmob23*c3k_k[i*ND+j])
 			//				  - delt*k4[i*ND+j]*(cmob22*kapa_c2*2.0*c2h_k[i*ND+j]+cmob23*kapa_c3*c3h_k[i*ND+j]) );
 			//c3h2_k[i*ND+j] = ( c3h_k[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k[i*ND+j]+cmob23*c3k_k[i*ND+j])
 			//				  - delt*k4[i*ND+j]*(cmob32*kapa_c2*c2h_k[i*ND+j]+cmob33*kapa_c3*2.0*c3h_k[i*ND+j]) );
 			//
 			// read
-			//c2h2_k_r[i*ND+j] = ( c2h_k_r[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
-			//				  - delt*k4[i*ND+j]*(cmob22*kapa_c2*2.0*c2h_k_r[i*ND+j]+cmob23*kapa_c3*c3h_k_r[i*ND+j]) );
-			//c3h2_k_r[i*ND+j] = ( c3h_k_r[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
-			//				  - delt*k4[i*ND+j]*(cmob32*kapa_c2*c2h_k_r[i*ND+j]+cmob33*kapa_c3*2.0*c3h_k_r[i*ND+j]) );
+			c2h2_k_r[i*ND+j] = ( c2h_k_r[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
+							  - delt*k4[i*ND+j]*(cmob22*kapa_c2*2.0*c2h_k_r[i*ND+j]+cmob23*kapa_c3*c3h_k_r[i*ND+j]) );
+			c3h2_k_r[i*ND+j] = ( c3h_k_r[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
+							  - delt*k4[i*ND+j]*(cmob32*kapa_c2*c2h_k_r[i*ND+j]+cmob33*kapa_c3*2.0*c3h_k_r[i*ND+j]) );
 			// image
-			//c2h2_k_i[i*ND+j] = ( c2h_k_i[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
-			//				  - delt*k4[i*ND+j]*(cmob22*kapa_c2*2.0*c2h_k_i[i*ND+j]+cmob23*kapa_c3*c3h_k_i[i*ND+j]) );
-			//c3h2_k_i[i*ND+j] = ( c3h_k_i[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
-			//				  - delt*k4[i*ND+j]*(cmob32*kapa_c2*c2h_k_i[i*ND+j]+cmob33*kapa_c3*2.0*c3h_k_i[i*ND+j]) );
+			c2h2_k_i[i*ND+j] = ( c2h_k_i[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
+							  - delt*k4[i*ND+j]*(cmob22*kapa_c2*2.0*c2h_k_i[i*ND+j]+cmob23*kapa_c3*c3h_k_i[i*ND+j]) );
+			c3h2_k_i[i*ND+j] = ( c3h_k_i[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
+							  - delt*k4[i*ND+j]*(cmob32*kapa_c2*c2h_k_i[i*ND+j]+cmob33*kapa_c3*2.0*c3h_k_i[i*ND+j]) );
+			//
+			// semi-implicit Euler scheme
+			// complex
+			//c2h2_k[i*ND+j] = ( c2h_k[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k[i*ND+j]+cmob23*c3k_k[i*ND+j])
+			//									   - k4[i*ND+j]*cmob23*kapa_c3*c3h_k[i*ND+j]) )
 			//				 	/(1.0 + delt*k4[i*ND+j]*cmob22*kapa_c2*2.0);
 			//c3h2_k[i*ND+j] = ( c3h_k[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k[i*ND+j]+cmob23*c3k_k[i*ND+j])
 			//									   - k4[i*ND+j]*cmob32*kapa_c2*c2h_k[i*ND+j]) )
 			//				 	/(1.0 + delt*k4[i*ND+j]*cmob33*kapa_c3*2.0);
-			// semi-implicit Euler scheme
-			//c2h2_k[i*ND+j] = ( c2h_k[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k[i*ND+j]+cmob23*c3k_k[i*ND+j])
-			//									   - k4[i*ND+j]*cmob23*kapa_c3*c3h_k[i*ND+j]) )
-			//
-			//
 			// real
-			c2h2_k_r[i*ND+j] = ( c2h_k_r[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
-												   - k4[i*ND+j]*cmob23*kapa_c3*c3h_k_r[i*ND+j]) )
-							 	/(1.0 + delt*k4[i*ND+j]*cmob22*kapa_c2*2.0);
-			c3h2_k_r[i*ND+j] = ( c3h_k_r[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
-												   - k4[i*ND+j]*cmob32*kapa_c2*c2h_k_r[i*ND+j]) )
-							 	/(1.0 + delt*k4[i*ND+j]*cmob33*kapa_c3*2.0);
+			//c2h2_k_r[i*ND+j] = ( c2h_k_r[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
+			//									   - k4[i*ND+j]*cmob23*kapa_c3*c3h_k_r[i*ND+j]) )
+			//				 	/(1.0 + delt*k4[i*ND+j]*cmob22*kapa_c2*2.0);
+			//c3h2_k_r[i*ND+j] = ( c3h_k_r[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
+			//									   - k4[i*ND+j]*cmob32*kapa_c2*c2h_k_r[i*ND+j]) )
+			//				 	/(1.0 + delt*k4[i*ND+j]*cmob33*kapa_c3*2.0);
 			// image
-			c2h2_k_i[i*ND+j] = ( c2h_k_i[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
-												   - k4[i*ND+j]*cmob23*kapa_c3*c3h_k_i[i*ND+j]) )
-							 	/(1.0 + delt*k4[i*ND+j]*cmob22*kapa_c2*2.0);
-			c3h2_k_i[i*ND+j] = ( c3h_k_i[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
-												   - k4[i*ND+j]*cmob32*kapa_c2*c2h_k_i[i*ND+j]) )
-							 	/(1.0 + delt*k4[i*ND+j]*cmob33*kapa_c3*2.0);
+			//c2h2_k_i[i*ND+j] = ( c2h_k_i[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
+			//									   - k4[i*ND+j]*cmob23*kapa_c3*c3h_k_i[i*ND+j]) )
+			//				 	/(1.0 + delt*k4[i*ND+j]*cmob22*kapa_c2*2.0);
+			//c3h2_k_i[i*ND+j] = ( c3h_k_i[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
+			//									   - k4[i*ND+j]*cmob32*kapa_c2*c2h_k_i[i*ND+j]) )
+			//				 	/(1.0 + delt*k4[i*ND+j]*cmob33*kapa_c3*2.0);
 		}
 	}
 	// IFFT of c2h2_k
