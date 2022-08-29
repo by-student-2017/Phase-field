@@ -562,7 +562,7 @@ void datsave_paraview(double *ph, double *ch, int ND, int N)
 	
 	iout = iout + 1;
 	printf("paraview output no.%06d \n",iout);
-	for(k=0;k<=nm;k++){
+	for(k=1;k<=nm;k++){
 		sprintf(fName,"mpf_N%03d_result%06d.vtk",k,iout);
 		fp = fopen(fName, "w");
 		fprintf(fp,"# vtk DataFile Version 3.0 \n");
@@ -577,7 +577,7 @@ void datsave_paraview(double *ph, double *ch, int ND, int N)
 		fprintf(fp,"LOOKUP_TABLE default \n");
 		for(j=0;j<=ndm;j++){
 			for(i=0;i<=ndm;i++){
-				//fprintf(stream, "%e   ", ph[k][i][j]);//フェーズフィールドの保存
+				//fprintf(stream, "%e   ", ph[k][i][j]);//Save phase field
 				//fprintf(fp,"%10.6f\n", ph[k][i][j]);
 				fprintf(fp,"%10.6f\n", ph[k*ND*ND+i*ND+j]);
 				pht[i*ND+j]+=ph[k*ND*ND+i*ND+j]*float(k+1.0);
@@ -586,33 +586,35 @@ void datsave_paraview(double *ph, double *ch, int ND, int N)
 		fclose(fp);
 	}
 	
-	sprintf(fName,"mpf_N%03d_result%06d.vtk",(nm+1),iout);
-	fp = fopen(fName, "w");
-	fprintf(fp,"# vtk DataFile Version 3.0 \n");
-	fprintf(fp,"output.vtk \n");
-	fprintf(fp,"ASCII \n");
-	fprintf(fp,"DATASET STRUCTURED_POINTS \n");
-	fprintf(fp,"DIMENSIONS %5d %5d %5d \n",(ndm+1),(ndm+1),1);
-	fprintf(fp,"ORIGIN 0.0 0.0 0.0 \n");
-	fprintf(fp,"ASPECT_RATIO 1 1 1 \n");
-	fprintf(fp,"POINT_DATA %16d \n",((ndm+1)*(ndm+1)*1));
-	fprintf(fp,"SCALARS phase_field float \n");
-	fprintf(fp,"LOOKUP_TABLE default \n");
-	for(j=0;j<=ndm;j++){
-		for(i=0;i<=ndm;i++){
-			fprintf(fp,"%10.6f\n", pht[i*ND+j]);
+	for(k=0;k<=0;k++){
+		sprintf(fName,"mpf_N%03d_result%06d.vtk",k,iout);
+		fp = fopen(fName, "w");
+		fprintf(fp,"# vtk DataFile Version 3.0 \n");
+		fprintf(fp,"output.vtk \n");
+		fprintf(fp,"ASCII \n");
+		fprintf(fp,"DATASET STRUCTURED_POINTS \n");
+		fprintf(fp,"DIMENSIONS %5d %5d %5d \n",(ndm+1),(ndm+1),1);
+		fprintf(fp,"ORIGIN 0.0 0.0 0.0 \n");
+		fprintf(fp,"ASPECT_RATIO 1 1 1 \n");
+		fprintf(fp,"POINT_DATA %16d \n",((ndm+1)*(ndm+1)*1));
+		fprintf(fp,"SCALARS phase_field float \n");
+		fprintf(fp,"LOOKUP_TABLE default \n");
+		for(j=0;j<=ndm;j++){
+			for(i=0;i<=ndm;i++){
+				fprintf(fp,"%10.6f\n", pht[i*ND+j]);
+			}
 		}
-	}
-	fprintf(fp,"SCALARS concentration float \n");
-	fprintf(fp,"LOOKUP_TABLE default \n");
-	for(j=0;j<=ndm;j++){
-		for(i=0;i<=ndm;i++){
-			//fprintf(stream, "%e   ", ch[i][j]);//濃度場の保存
-			//fprintf(fp,"%10.6f\n", ch[i][j]);
-			fprintf(fp,"%10.6f\n", ch[i*ND+j]);
+		fprintf(fp,"SCALARS concentration float \n");
+		fprintf(fp,"LOOKUP_TABLE default \n");
+		for(j=0;j<=ndm;j++){
+			for(i=0;i<=ndm;i++){
+				//fprintf(stream, "%e   ", ch[i][j]);//Concentration field storage
+				//fprintf(fp,"%10.6f\n", ch[i][j]);
+				fprintf(fp,"%10.6f\n", ch[i*ND+j]);
+			}
 		}
+		fclose(fp);
 	}
-	fclose(fp);
 	free(pht);
 }
 //*********** データ入力サブルーチン **************************
