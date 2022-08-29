@@ -582,7 +582,7 @@ void datsave_paraview(double *ph, double *ch, int ND, int N)
 				//fprintf(stream, "%e   ", ph[k][i][j]);//Save phase field
 				//fprintf(fp,"%10.6f\n", ph[k][i][j]);
 				fprintf(fp,"%10.6f\n", ph[k*ND*ND+i*ND+j]);
-				pht[i*ND+j]+=ph[k*ND*ND+i*ND+j]*float(k+1.0);
+				pht[i*ND+j]+=ph[k*ND*ND+i*ND+j]*float(k);
 			}
 		}
 		fclose(fp);
