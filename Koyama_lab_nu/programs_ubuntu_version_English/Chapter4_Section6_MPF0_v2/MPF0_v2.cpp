@@ -128,7 +128,7 @@ int main(void)
 	E1=E0/RR/temp;				//Driving force of grain boundary migration
 
 	time1=0.;					//Initial value of calculation count
-	time1max=10000001.0;		//Maximum calculation count
+	//time1max=10000001.0;		//Maximum calculation count
 
 //*** Equation (4.32) - set array (K,W,M,E) in equation (4.35) *****************************
 	for(i=1;i<=nm;i++){
