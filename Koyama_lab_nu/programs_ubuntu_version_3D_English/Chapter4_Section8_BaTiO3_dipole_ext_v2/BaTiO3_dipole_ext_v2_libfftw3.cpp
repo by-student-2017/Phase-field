@@ -41,13 +41,13 @@ int main(void)
 	int   i, j, k, l, ii, jj, kk, Nstep;	//integer
 	int   ip, im, jp, jm, kp, km;			//integer
 
-	//double s1qrh[ND][ND], s1qih[ND][ND];	//Fourier transform of s1 (real part, imaginary part)
-	//double s2qrh[ND][ND], s2qih[ND][ND];	//Fourier transform of s2 (real part, imaginary part)
-	//double s1h2[ND][ND], s2h2[ND][ND];	//Auxiliary arrays for s1 and s2
+	//double s1qrh[ND][ND][ND], s1qih[ND][ND][ND];	//Fourier transform of s1 (real part, imaginary part)
+	//double s2qrh[ND][ND][ND], s2qih[ND][ND][ND];	//Fourier transform of s2 (real part, imaginary part)
+	//double s1h2[ND][ND][ND], s2h2[ND][ND][ND];	//Auxiliary arrays for s1 and s2
 
-	//double ss1qrh[ND][ND], ss1qih[ND][ND];//Fourier transform of s1*s1 (real part, imaginary part)
-	//double ss2qrh[ND][ND], ss2qih[ND][ND];//Fourier transform of s2*s2 (real part, imaginary part)
-	//double s1s2qrh[ND][ND], s1s2qih[ND][ND];//Fourier transform of s1*s2 (real part, imaginary part)
+	//double ss1qrh[ND][ND][ND], ss1qih[ND][ND][ND];//Fourier transform of s1*s1 (real part, imaginary part)
+	//double ss2qrh[ND][ND][ND], ss2qih[ND][ND][ND];//Fourier transform of s2*s2 (real part, imaginary part)
+	//double s1s2qrh[ND][ND][ND], s1s2qih[ND][ND];//Fourier transform of s1*s2 (real part, imaginary part)
 	double ss1ss2, ss1ss3, ss2ss3;			//Work variables for correction of numerical errors in domain
 
 	double a0_aa, a0_a, a0_c;				//Lattice constant of BaTiO3 (tetragonal)
@@ -229,28 +229,28 @@ int main(void)
 	//Tc0=115.0+273.0;  // [K]
 
 //--- Calculation of equilibrium moment of polarization ----------------------
-	t1=3.*A111/4./A1111;
-	t2=A11/2./A1111;
-	t3=A1*(temp-Tc0)/4./A1111;
-	tQ=(3.*t2-t1*t1)/9.;
-	tR=(9.*t1*t2-27.*t3-2.*t1*t1*t1)/54.;
-	tS=pow((tR+sqrt(tQ*tQ*tQ+tR*tR)),(1./3.));
-	tT=pow((tR-sqrt(tQ*tQ*tQ+tR*tR)),(1./3.));
-	Peq=sqrt(fabs(tS+tR-t1/3.));//equilibrium moment of polarization
+	t1=3.0*A111/4.0/A1111;
+	t2=A11/2.0/A1111;
+	t3=A1*(temp-Tc0)/4.0/A1111;
+	tQ=(3.0*t2-t1*t1)/9.0;
+	tR=(9.0*t1*t2-27.0*t3-2.0*t1*t1*t1)/54.0;
+	tS=pow((tR+sqrt(tQ*tQ*tQ+tR*tR)),(1.0/3.0));
+	tT=pow((tR-sqrt(tQ*tQ*tQ+tR*tR)),(1.0/3.0));
+	Peq=sqrt(fabs(tS+tR-t1/3.0));//equilibrium moment of polarization
 	printf("Peq=  %f  \n", Peq);//Display of equilibrium moment of polarization
 
 	//kapaP=1.0e-15/ep0*vm0/RR/temp/b1/b1;//gradient energy factor
 	kapaP=kapaPc/ep0*vm0/RR/temp/b1/b1;//gradient energy factor
 	
-	//E1_ex_0=0.;//External electric field (x direction)
+	//E1_ex_0=0.0;//External electric field (x direction)
 	//E1_ex_0=2.0e+6*vm0/RR/temp;//External electric field (x direction)
 	E1_ex_0x=E1_ex_x*vm0/RR/temp;//External electric field (x direction)
 	E1_ex_0y=E1_ex_y*vm0/RR/temp;//External electric field (y direction)
 	E1_ex_0z=E1_ex_z*vm0/RR/temp;//External electric field (z direction)
 
-	//ep00=200.;//dielectric constant
+	//ep00=200.0;//dielectric constant
 
-	//Add0=1.0/ep0/ep00*vm0/RR/temp;//Coefficient in dipole-dipole interaction calculation [see formula (4.7.8)]
+	//Add0=1.0/ep0/ep00*vm0/RR/temp;//Coefficient in dipole-dipole interaction calculation [see formula (4.52)]
 	Add0=Add0c/ep0/ep00*vm0/RR/temp;//Coefficients in dipole-dipole interaction calculations
 
 //*** Setting up sin and cos tables, bit reversal tables, and initial fields ***************
@@ -267,16 +267,14 @@ int main(void)
 iplan = fftw_plan_dft_3d(fftsize, fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW_ESTIMATE);	//For IFFT
 start: ;
 
-	//if(time1<=100.){Nstep=10;} else{Nstep=100;}//Changing the time interval for saving data
 	if((((int)(time1) % Nstep)==0)){datsave(s1h, s2h, s3h, ND);} //Save tissue data every fixed repeat count
 	if((((int)(time1) % Nstep)==0)){datsave_paraview(s1h, s2h, s3h, ND);} //Save tissue data every fixed repeat count
-	//if((int)(time1)==2000){datsave();} //Saving data at specific calculation counts
 
 //**** Fourier transform of s1 [equation (3.27)] ********************************
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
-				//xr[i][j]=s1h[i][j][k]; xi[i][j][k]=0.;
+				//xr[i][j][k]=s1h[i][j][k]; xi[i][j][k]=0.;
 				xr[i*ND*ND+j*ND+k]=s1h[i*ND*ND+j*ND+k];
 				xi[i*ND*ND+j*ND+k]=0.;
 				//
@@ -306,7 +304,7 @@ start: ;
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
-				//xr[i][j][k]=s2h[i][j][k]; xi[i][j][j]=0.;
+				//xr[i][j][k]=s2h[i][j][k]; xi[i][j][k]=0.;
 				xr[i*ND*ND+j*ND+k]=s2h[i*ND*ND+j*ND+k];
 				xi[i*ND*ND+j*ND+k]=0.0;
 				//
@@ -335,7 +333,7 @@ start: ;
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
-				//xr[i][j][k]=s3h[i][j][k]; xi[i][j][j]=0.;
+				//xr[i][j][k]=s3h[i][j][k]; xi[i][j][k]=0.;
 				xr[i*ND*ND+j*ND+k]=s3h[i*ND*ND+j*ND+k];
 				xi[i*ND*ND+j*ND+k]=0.0;
 				//
@@ -372,9 +370,9 @@ start: ;
 				if(alnn==0.){alnn=1.;}
 				nx=(double)ii/alnn;  ny=(double)jj/alnn;  nz=(double)kk/alnn;
 				//xr[i][j][k]=s1qrh[i][j][k]*nx*nx+s2qrh[i][j][k]*nx*ny+s3qrh[i][j][k]*nx*nz;
-				//xi[i][j][k]=s1qih[i][j][k]*nx*nx+s2qih[i][j][k]*nx*ny+s3qrh[i][j][k]*nx*nz;
+				//xi[i][j][k]=s1qih[i][j][k]*nx*nx+s2qih[i][j][k]*nx*ny+s3qih[i][j][k]*nx*nz;
 				xr[i*ND*ND+j*ND+k]=s1qrh[i*ND*ND+j*ND+k]*nx*nx+s2qrh[i*ND*ND+j*ND+k]*nx*ny+s3qrh[i*ND*ND+j*ND+k]*nx*nz;
-				xi[i*ND*ND+j*ND+k]=s1qih[i*ND*ND+j*ND+k]*nx*nx+s2qih[i*ND*ND+j*ND+k]*nx*ny+s3qrh[i*ND*ND+j*ND+k]*nx*nz;
+				xi[i*ND*ND+j*ND+k]=s1qih[i*ND*ND+j*ND+k]*nx*nx+s2qih[i*ND*ND+j*ND+k]*nx*ny+s3qih[i*ND*ND+j*ND+k]*nx*nz;
 				//
 				in[i*ND*ND+j*ND+k][0] = xr[i*ND*ND+j*ND+k]; //For IFFT (real)
 				in[i*ND*ND+j*ND+k][1] = xi[i*ND*ND+j*ND+k]; //For IFFT (imag.)
@@ -405,9 +403,9 @@ start: ;
 				if(alnn==0.){alnn=1.;}
 				nx=(double)ii/alnn;  ny=(double)jj/alnn;  nz=(double)kk/alnn;
 				//xr[i][j][k]=s1qrh[i][j][k]*ny*nx+s2qrh[i][j][k]*ny*ny+s3qrh[i][j][k]*ny*nz;
-				//xi[i][j][k]=s1qih[i][j][k]*ny*nx+s2qih[i][j][k]*ny*ny+s3qrh[i][j][k]*ny*nz;
+				//xi[i][j][k]=s1qih[i][j][k]*ny*nx+s2qih[i][j][k]*ny*ny+s3qih[i][j][k]*ny*nz;
 				xr[i*ND*ND+j*ND+k]=s1qrh[i*ND*ND+j*ND+k]*ny*nx+s2qrh[i*ND*ND+j*ND+k]*ny*ny+s3qrh[i*ND*ND+j*ND+k]*ny*nz;
-				xi[i*ND*ND+j*ND+k]=s1qih[i*ND*ND+j*ND+k]*ny*nx+s2qih[i*ND*ND+j*ND+k]*ny*ny+s3qrh[i*ND*ND+j*ND+k]*ny*nz;
+				xi[i*ND*ND+j*ND+k]=s1qih[i*ND*ND+j*ND+k]*ny*nx+s2qih[i*ND*ND+j*ND+k]*ny*ny+s3qih[i*ND*ND+j*ND+k]*ny*nz;
 				//
 				in[i*ND*ND+j*ND+k][0] = xr[i*ND*ND+j*ND+k]; //For IFFT (real)
 				in[i*ND*ND+j*ND+k][1] = xi[i*ND*ND+j*ND+k]; //For IFFT (imag.)
@@ -438,9 +436,9 @@ start: ;
 				if(alnn==0.){alnn=1.;}
 				nx=(double)ii/alnn;  ny=(double)jj/alnn;  nz=(double)kk/alnn;
 				//xr[i][j][k]=s1qrh[i][j][k]*nz*nx+s2qrh[i][j][k]*nz*ny+s3qrh[i][j][k]*nz*nz;
-				//xi[i][j][k]=s1qih[i][j][k]*nz*nx+s2qih[i][j][k]*nz*ny+s3qrh[i][j][k]*nz*nz;
+				//xi[i][j][k]=s1qih[i][j][k]*nz*nx+s2qih[i][j][k]*nz*ny+s3qih[i][j][k]*nz*nz;
 				xr[i*ND*ND+j*ND+k]=s1qrh[i*ND*ND+j*ND+k]*nz*nx+s2qrh[i*ND*ND+j*ND+k]*nz*ny+s3qrh[i*ND*ND+j*ND+k]*nz*nz;
-				xi[i*ND*ND+j*ND+k]=s1qih[i*ND*ND+j*ND+k]*nz*nx+s2qih[i*ND*ND+j*ND+k]*nz*ny+s3qrh[i*ND*ND+j*ND+k]*nz*nz;
+				xi[i*ND*ND+j*ND+k]=s1qih[i*ND*ND+j*ND+k]*nz*nx+s2qih[i*ND*ND+j*ND+k]*nz*ny+s3qih[i*ND*ND+j*ND+k]*nz*nz;
 				//
 				in[i*ND*ND+j*ND+k][0] = xr[i*ND*ND+j*ND+k]; //For IFFT (real)
 				in[i*ND*ND+j*ND+k][1] = xi[i*ND*ND+j*ND+k]; //For IFFT (imag.)
@@ -448,7 +446,7 @@ start: ;
 		}
 	}
 	fftw_execute(iplan); //For IFFT
-	//for(i=0;i<=ndm;i++){ for(j=0;j<=ndm;j++){ s3k_dd[i][j]=xr[i][j]; } }
+	//for(i=0;i<=ndm;i++){ for(j=0;j<=ndm;j++){ s3k_dd[i][j][k]=xr[i][j][k]; } }
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
