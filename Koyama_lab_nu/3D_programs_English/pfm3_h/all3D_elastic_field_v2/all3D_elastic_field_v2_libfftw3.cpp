@@ -293,7 +293,7 @@ iplan = fftw_plan_dft_3d(fftsize, fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW
 
 //***** Calculation of total strain fluctuation *************************************
 //--- ec11 ---
-	iii=1; jjj=1;
+	iii=1; jjj=1; // ec11 = ec iii jjj
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
@@ -321,7 +321,7 @@ iplan = fftw_plan_dft_3d(fftsize, fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW
 	}
 
 //--- ec22 ---
-	iii=2; jjj=2;
+	iii=2; jjj=2; // ec22 = ec iii jjj
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
@@ -349,7 +349,7 @@ iplan = fftw_plan_dft_3d(fftsize, fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW
 	}
 
 //--- ec33 ---
-	iii=3; jjj=3;
+	iii=3; jjj=3; // ec33 = ec iii jjj
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
@@ -377,7 +377,7 @@ iplan = fftw_plan_dft_3d(fftsize, fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW
 	}
 
 //--- ec12 ---
-	iii=1; jjj=2;
+	iii=1; jjj=2; // ec12 = ec iii jjj
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
@@ -405,7 +405,7 @@ iplan = fftw_plan_dft_3d(fftsize, fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW
 	}
 
 //--- ec13 ---
-	iii=1; jjj=3;
+	iii=1; jjj=3; // ec13 = ec iii jjj
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
@@ -433,7 +433,7 @@ iplan = fftw_plan_dft_3d(fftsize, fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW
 	}
 
 //--- ec23 ---
-	iii=2; jjj=3;
+	iii=2; jjj=3; // ec23 = ec iii jjj
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
@@ -534,7 +534,7 @@ iplan = fftw_plan_dft_3d(fftsize, fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW
 
 //***** Displacement field calculation *************************************
 //--- u1 ---
-	iii=1;
+	iii=1; // u1 = u iii
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
@@ -562,7 +562,7 @@ iplan = fftw_plan_dft_3d(fftsize, fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW
 	}
 
 //--- u2 ---
-	iii=2;
+	iii=2; // u2 = u iii
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
@@ -590,7 +590,7 @@ iplan = fftw_plan_dft_3d(fftsize, fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW
 	}
 
 //--- u3 ---
-	iii=3;
+	iii=3; // u3 = u iii
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
