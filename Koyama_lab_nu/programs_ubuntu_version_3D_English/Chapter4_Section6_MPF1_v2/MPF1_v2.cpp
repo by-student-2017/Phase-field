@@ -105,7 +105,7 @@ int main(void)
 	double *tij  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Grain boundary mobility
 	double *eij  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Driving force of grain boundary migration
 	double *m00h = (double *)malloc(sizeof(double)*( N*ND*ND*ND + ND*ND*ND + ND*ND + ND ));	//number of orientations where p is not 0 at location (i,j) and its surroundings (iÅ}1,jÅ}1)
-	double *n00h = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//The number of orientations where p is not 0 at location (i,j) and its surroundings (iÅ}1,jÅ}1)
+	int    *n00h =       (int *)malloc(sizeof(int)*( ND*ND*ND + ND*ND + ND ));	//The number of orientations where p is not 0 at location (i,j) and its surroundings (iÅ}1,jÅ}1)
 	//
 	//printf("delt(5.0)=  "); scanf(" %lf",&delt);//Enter time step	//	delt=5.0;
 
