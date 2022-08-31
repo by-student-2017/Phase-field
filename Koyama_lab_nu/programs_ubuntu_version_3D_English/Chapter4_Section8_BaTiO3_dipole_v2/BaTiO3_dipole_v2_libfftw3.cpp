@@ -169,12 +169,11 @@ int main(void)
 	double *s1h2    = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//auxiliary array of s1
 	double *s2h2    = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//auxiliary array of s2
 	double *s3h2    = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//auxiliary array of s3
-	double *ss1qrh  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s1*s1 (real part)
-	double *ss1qih  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s1*s1 (imaginary part)
-	double *ss2qrh  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s2*s2 (real part)
-	double *ss2qih  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s2*s2 (imaginary part)
-	double *ss3qrh  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s2*s2 (real part)
-	double *ss3qih  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s2*s2 (imaginary part)
+	//double *ss1qrh  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s1*s1 (real part)
+	//double *ss1qih  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s1*s1 (imaginary part)
+	//double *ss2qrh  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s2*s2 (real part)
+	//double *ss2qih  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s2*s2 (imaginary part)
+	//double *ss3qrh  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s2*s2 (real part)
 	//double *s1s2qrh = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s1*s2 (real part)
 	//double *s1s2qih = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s1*s2 (imaginary part)
 	//
