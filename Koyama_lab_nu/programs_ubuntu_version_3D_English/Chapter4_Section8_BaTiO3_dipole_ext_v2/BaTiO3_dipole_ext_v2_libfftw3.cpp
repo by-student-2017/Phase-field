@@ -401,9 +401,9 @@ start: ;
 			for(k=0;k<=ndm;k++){
 				if(k<=nd2-1){kk=k;}  if(k>=nd2){kk=k-nd;}
 			
-				alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj);
+				alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj+(double)kk*(double)kk);
 				if(alnn==0.){alnn=1.;}
-				nx=(double)ii/alnn;  ny=(double)jj/alnn;
+				nx=(double)ii/alnn;  ny=(double)jj/alnn;  nz=(double)kk/alnn;
 				//xr[i][j][k]=s1qrh[i][j][k]*ny*nx+s2qrh[i][j][k]*ny*ny+s3qrh[i][j][k]*ny*nz;
 				//xi[i][j][k]=s1qih[i][j][k]*ny*nx+s2qih[i][j][k]*ny*ny+s3qrh[i][j][k]*ny*nz;
 				xr[i*ND*ND+j*ND+k]=s1qrh[i*ND*ND+j*ND+k]*ny*nx+s2qrh[i*ND*ND+j*ND+k]*ny*ny+s3qrh[i*ND*ND+j*ND+k]*ny*nz;
@@ -434,9 +434,9 @@ start: ;
 			for(k=0;k<=ndm;k++){
 				if(k<=nd2-1){kk=k;}  if(k>=nd2){kk=k-nd;}
 			
-				alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj);
+				alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj+(double)kk*(double)kk);
 				if(alnn==0.){alnn=1.;}
-				nx=(double)ii/alnn;  ny=(double)jj/alnn;
+				nx=(double)ii/alnn;  ny=(double)jj/alnn;  nz=(double)kk/alnn;
 				//xr[i][j][k]=s1qrh[i][j][k]*nz*nx+s2qrh[i][j][k]*nz*ny+s3qrh[i][j][k]*nz*nz;
 				//xi[i][j][k]=s1qih[i][j][k]*nz*nx+s2qih[i][j][k]*nz*ny+s3qrh[i][j][k]*nz*nz;
 				xr[i*ND*ND+j*ND+k]=s1qrh[i*ND*ND+j*ND+k]*nz*nx+s2qrh[i*ND*ND+j*ND+k]*nz*ny+s3qrh[i*ND*ND+j*ND+k]*nz*nz;
