@@ -5,8 +5,8 @@ ubuntu 18.04 LTS
 2. sudo apt -y install g++ libfftw3-dev
 3. sudo apt -y install paraview paraview-dev
 4. mv *.dat data.dat
-  (e.g., *.dat (Only the data of the time you want to calculate.) from 3Dxyz_APT_MPF_v2.cpp, etc)
-5. g++ all3D_elastic_field_v2_libfftw3.cpp -lfftw3 -o el
+  (e.g., *.dat (Only the data of the time you want to calculate.) from microstructure3D_v2.cpp, etc)
+5. g++ all3Dxyz_elastic_field_v2_libfftw3.cpp -lfftw3 -o el
 6. ./el
 7. paraview
   a1. File -> Open ... -> el_result..vtk -> OK

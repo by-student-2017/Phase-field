@@ -232,6 +232,37 @@ int main(void)
 	cec[1][1][2][2]=cec[2][2][1][1]=c12;
 	cec[1][1][3][3]=cec[3][3][1][1]=c12;
 	cec[2][2][3][3]=cec[3][3][2][2]=c12;
+	//
+	// Memo 1 (cec[i][j][k][l]=cec[i][j][l][k]=cec[j][i][k][l]=cec[k][l][i][j])
+	// cec[1][1][1][1]=c11;  cec[1][1][2][2]=c12;  cec[1][1][3][3]=c13;  c1123=c1131=c1112=0, c2311=c3111=c1211=0
+	// cec[2][2][1][1]=c21;  cec[2][2][2][2]=c22;  cec[2][2][3][3]=c23;  c2223=c2231=c2212=0, c2322=c3122=c1222=0
+	// cec[3][3][1][1]=c31;  cec[3][3][2][2]=c32;  cec[3][3][3][3]=c33;  c3323=c2231=c2212=0, c2333=c3133=c1232=0
+	// cec[2][3][2][3]=c44;  c2331=c2312=0
+	// cec[3][1][3][1]=c55;  c3123=c3112=0
+	// cec[1][2][1][2]=c66;  c1223=c1231=0
+	//
+	// Memo 2
+	// isotropic : c11=c22=c33 = lambda + 2*mu
+	//             c12=c21=c13=c31=c23=c32 = lambda
+	//             c44=c55=c66 = mu
+	//             other=0
+	//             (relation: c11-c12=2*c44)
+	// cubic     : c11=c22=c33, c12=c21=c13=c31=c23=c32, c44=c55=c66, other=0
+	//             (2*c44-c11+c12)>0 -> soft <100> and min Y<100>
+	//             (2*c44-c11+c12)<0 -> soft <111> and min Y<111>
+	//             Y<100>=(c11+2*c12)*(c11-c12)/c11
+	//             Y<111>=6*c44*(c11+2*c12)/(c11+2*c12+4*c44)
+	//             elastic anisotropy parameter, A = 2*c44/(c11-c12)
+	// Tetragonal: c11=c22=c33, c12=c21, c13=c31=c23=c32, c44=c55, c66, other=0
+	// hexagonal : c11=c22=c33, c12=c21, c13=c31=c23=c32, c44=c55, c66=(c11-c12)/2, other=0
+	//
+	// Memo 3 (sigma ij = C ijkl * epsilon k l)
+	// sigma11 = c1111*epsilon11 + c1122*epsilon22 + c1133*epsilon33
+	// sigma22 = c1122*epsilon11 + c2222*epsilon22 + c2233*epsilon33
+	// sigma33 = c1133*epsilon11 + c2233*epsilon33 + c3333*epsilon33
+	// sigma23 = c2323*2.0*epsilon23
+	// sigma31 = c3131*2.0*epsilon31
+	// sigma12 = c1212*2.0*epsilon12
 
 //--- Eigen stress (stress when elastically deformed by the amount of Eigen strain) --------------
 	sigma[1][1]=cec[1][1][1][1]*eta_c[1][1]
