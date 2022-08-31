@@ -1,0 +1,28 @@
+ND= 128.0           ! Number of divisions, ND=2^n
+delt= 0.1           ! timestep [dimensionless]
+time1max= 1.0e08    ! Max iterations
+Nstep= 1            ! output every "Nstep"
+temp= 298.0         ! Temperature [K]
+al= 250.0           ! The length of one side of the calculation area [micro meter]
+vm0= 3.87194E-5     ! Molar volume (1 mol of molecule)
+smob1= 1.0          ! Mobility mobility in structural phase transition (standardized and set to 1) (x)
+smob2= 1.0          ! Mobility mobility in structural phase transition (standardized and set to 1) (y)
+smob3= 1.0          ! Mobility mobility in structural phase transition (standardized and set to 1) (z)
+A1e= 4.124e+05      ! Chemical free energy [C^-2 * m^2 * N], A1=A1e*vm0/RR/temp, Ref.[100]
+A11e= -2.097e+08    ! [C^-4 * m^6 * N], Ref.[100] Y. L. Li et al., J. App. Phys., 98 (2005) 064101.
+A12e= 7.974e+08     ! [C^-4 * m^6 * N], Ref.[100]
+A111e= 1.294e+09    ! [C^-6 * m^10 * N], Ref.[100]
+A112e= -1.950e+09   ! [C^-6 * m^10 * N], Ref.[100]
+A123e= -2.500e+09   ! [C^-6 * m^10 * N], Ref.[100]
+A1111e= 3.863e+10   ! [C^-8 * m^14 * N], Ref.[100]
+A1112e= 2.529e+10   ! [C^-8 * m^14 * N], Ref.[100]
+A1122e= 1.637e+10   ! [C^-8 * m^14 * N], Ref.[100]
+A1123e= 1.367e+10   ! [C^-8 * m^14 * N], Ref.[100]
+Tc0= 388.0          ! Transformation temperature [K]
+kapaPc= 1.0e-15     ! Gradient energy coefficient [Jm2/mol]
+E1_ex_0x= 2.0e+6    ! External electric field [V] (x direction), e.g., (E1_ex_0x=E1_ex_x*vm0/RR/temp)
+E1_ex_0y= 0.0       ! External electric field [V] (y direction), e.g., (E1_ex_0y=E1_ex_y*vm0/RR/temp)
+E1_ex_0z= 0.0       ! External electric field [V] (z direction), e.g., (E1_ex_0z=E1_ex_z*vm0/RR/temp)
+ep00= 200.0         ! Relative permittivity
+Add0c= 1.0          ! Dipole-coefficients in dipole interaction calculations
+readff= 0.0         ! 0.0: non read (use ini000 subroutine), 1.0: read test.dat file.  
