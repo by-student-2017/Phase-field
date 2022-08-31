@@ -357,7 +357,7 @@ start: ;
 			}
 		}
 	}
-	//s2qrh[0][0]=s2qih[0][0]=0.;
+	//s3qrh[0][0]=s3qih[0][0]=0.;
 	s3qrh[0]=s3qih[0]=0.0;
 
 //***** Computation of the dipole-dipole interaction of s1 [convolution integral in Eq. (3.33)] ***********************
