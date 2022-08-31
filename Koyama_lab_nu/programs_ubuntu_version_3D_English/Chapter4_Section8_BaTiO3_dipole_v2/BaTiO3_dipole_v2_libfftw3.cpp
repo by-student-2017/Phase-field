@@ -233,7 +233,7 @@ int main(void)
 	tR=(9.0*t1*t2-27.0*t3-2.0*t1*t1*t1)/54.0;
 	tS=pow((tR+sqrt(tQ*tQ*tQ+tR*tR)),(1.0/3.0));
 	tT=pow((tR-sqrt(tQ*tQ*tQ+tR*tR)),(1.0/3.0));
-	Peq=sqrt(fabs(tS+tR-t1/3.));//equilibrium moment of polarization
+	Peq=sqrt(fabs(tS+tR-t1/3.0));//equilibrium moment of polarization
 	printf("Peq=  %f  \n", Peq);//Display of equilibrium moment of polarization
 
 	//kapaP=1.0e-15/ep0*vm0/RR/temp/b1/b1;//gradient energy factor
