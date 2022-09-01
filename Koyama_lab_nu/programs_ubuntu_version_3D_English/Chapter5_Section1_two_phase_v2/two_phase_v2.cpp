@@ -110,6 +110,7 @@ int main(void)
 iout = -1;
 start: ;
 
+	if((((int)(time1) % Nstep)==0)) {iout = iout + 1;}
 	if((((int)(time1) % Nstep)==0)) {datsave(ph, c2h, ND);} //Save the concentration field every fixed repetition count
 	if((((int)(time1) % Nstep)==0)) {datsave_paraview(ph, c2h, ND);} //Save the concentration field every fixed repetition count
 
@@ -247,10 +248,14 @@ void ini000(double *c2h, int ND)
 void datsave(double *ph, double *c2h, int ND)
 {
 	FILE *stream;	//Stream pointer setting
+	char	fName[256];
 	int i, j, k;			//integer
 	int ndm=ND-1;
 
-	stream = fopen("ph.dat", "a");	//Open the file to write to in append mode
+	sprintf(fName,"data_%06d.dat",iout);
+	//stream = fopen("test.dat", "w");
+	stream = fopen(fName, "w");
+	fprintf(stream, "%d %d %d \n", ndm, ndm, ndm);
 	fprintf(stream, "%f\n", time1);		//Save repeat count
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
@@ -272,7 +277,6 @@ void datsave_paraview(double *ph, double *c2h, int ND)
 	int 	i, j, k;
 	int ndm=ND-1;
 	
-	iout = iout + 1;
 	printf("pf_result%06d.vtk \n",iout);
 	sprintf(fName,"pf_result%06d.vtk",iout);
 	fp = fopen(fName, "w");
