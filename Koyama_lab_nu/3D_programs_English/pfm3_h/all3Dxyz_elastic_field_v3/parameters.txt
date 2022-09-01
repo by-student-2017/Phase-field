@@ -1,0 +1,34 @@
+NDX= 64.0         ! Division number, x direction
+NDY= 128.0        ! Division number, y direction
+NDZ= 64.0         ! Division number, z direction
+N= 15.0           ! (Not use) total number of crystal grains
+GNP= 21.0         ! (Not use) GNP >= N+2, GN=GNP-1=mother phase
+delt= 2.0         ! (Not use) timestep [dimensionless] (amobi=1 [dimensionless])
+L= 500.0          ! (Not use) Computation area [nm], b1=L/(double)NDX*1.0e-9
+time1max= 20001.0 ! (Not use) Max iteration
+temp= 1000.0      ! (Not use) Temperature [K]
+vm0= 7.0e-6       ! (Not use) Molar volume [m3/mol]
+gamma0= 0.5       ! (Not use) Grain boundary energy [J/m2]
+delta= 3.0        ! (Not use) Grain boundary width (is related with K1=aij^2, W1=Wij and M1=Mij)
+K0= 8.0           ! (Not use) (Analytical, no changes required) Gradient energy coefficient ( aij^2=K1=K0*delta*gamma/PI/PI )
+W0= 4.0           ! (Not use) (Analytical, no changes required) Coefficient of penalty term ( Wij=W1=W0*gamma/delta )
+amobi= 1.0        ! (Not use) Atomic mobility constant 
+M0= 8.0           ! (Not use) (Analytical, no changes required) mobility of phase-field Mij=M1=amobi*PI*PI/(M0*delta) 
+E0= 500.0         ! (Not use) Interatomic interaction E0 [J/mol]
+Nstep= 10.0       ! (Not use) output every "Nstep"
+eta11= 0.05       ! Lattice mismatch between matrix and precipitation layer (eigen strain=eta*ph)
+eta22= 0.05       ! (bA - bB)/bA, bA or bB are lattice constant
+eta33= 0.05       !
+eta12= 0.0        !
+eta13= 0.0        !
+eta23= 0.0        !
+el_mag= 1.0       ! (Usually, no need to change), (old el_mag=1.0E+11/1.0E+09/100 [GPa])
+c11= 233.0        ! elastic constant c11=c11*el_mag, ( 233.0 [GPa] of alpha Fe (BCC) )
+c22= 233.0        !
+c33= 233.0        !
+c12= 135.0        ! elastic constant c12=c12*el_mag, ( 135.0 [GPa] of alpha Fe (BCC) )
+c13= 135.0        !
+c23= 135.0        !
+c44= 118.0        ! elastic constant c44=c44*el_mag, ( 118.0 [GPa] of alpha Fe (BCC) )
+c55= 118.0        !
+c66= 118.0        !
