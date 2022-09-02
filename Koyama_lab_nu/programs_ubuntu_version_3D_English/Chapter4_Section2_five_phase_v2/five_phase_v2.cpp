@@ -13,8 +13,8 @@
 	int Nstep, iout;
 
 	void ini000(double *c2h, double *c3h, double *c4h, double *c5h, int ND);	//Initial concentration profile setting subroutine
-	void datsave(double *c2h, double *c3h, double *c4h, double *c5h,  int ND);	//data save subroutine
-	void datsave_paraview(double *c2h, double *c3h, double *c4h, double *c5h,  int ND);//data save subroutine
+	void datsave(double *c2h, double *c3h, double *c4h, double *c5h, int ND);	//data save subroutine
+	void datsave_paraview(double *c2h, double *c3h, double *c4h, double *c5h, int ND);//data save subroutine
 
 //******* main program ******************************************
 int main(void)
