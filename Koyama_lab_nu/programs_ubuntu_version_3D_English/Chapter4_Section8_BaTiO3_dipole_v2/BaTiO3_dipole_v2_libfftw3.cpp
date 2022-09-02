@@ -119,16 +119,16 @@ int main(void)
 	smob1   = data[7];
 	smob2   = data[8];
 	smob3   = data[9];
-	A1e     = data[10];
-	A11e    = data[11];
-	A12e    = data[12];
-	A111e   = data[13];
-	A112e   = data[14];
-	A123e   = data[15];
-	A1111e  = data[16];
-	A1112e  = data[17];
-	A1122e  = data[18];
-	A1123e  = data[19];
+	A1e     = data[10]; //Landau expansion form
+	A11e    = data[11]; //Landau expansion form
+	A12e    = data[12]; //Landau expansion form
+	A111e   = data[13]; //Landau expansion form
+	A112e   = data[14]; //Landau expansion form
+	A123e   = data[15]; //Landau expansion form
+	A1111e  = data[16]; //Landau expansion form
+	A1112e  = data[17]; //Landau expansion form
+	A1122e  = data[18]; //Landau expansion form
+	A1123e  = data[19]; //Landau expansion form
 	Tc0     = data[20];
 	kapaPc  = data[21];
 	E1_ex_x = data[22];
@@ -482,7 +482,7 @@ start: ;
 				s3k_surf=-kapaP*(s3ip+s3im + s3jp+s3jm + s3kp+s3km -6.0*s3);
 
 				//Calculation of chemical potential [equation (4.55)]
-					//Landau expansion (BaTiO3) (structure phase transition) (cubic-tetragonal transition)
+					//Landau expansion form (BaTiO3) (structure phase transition) (cubic-tetragonal transition)
 					//Gc = a1*(P1^2 + P2^2 + P3^2) + a11*(P1^4 + P2^4 + P3^4)
 					//+ a12*( (P1^2 * P2^2) + (P2^2 * P3^2) + (P3^2 * P1^2) ) + a111*(P1^6 + P2^6 + P3^6)
 					//+ a112*( (P1^2 * (P2^4 * P3^4)) + (P2^2 * (P1^4 * P3^4)) + (P3^2 * (P1^4 * P2^4))  )

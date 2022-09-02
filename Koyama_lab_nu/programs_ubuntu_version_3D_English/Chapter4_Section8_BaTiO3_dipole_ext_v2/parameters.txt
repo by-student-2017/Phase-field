@@ -10,7 +10,7 @@ smob2= 1.0          ! Mobility mobility in structural phase transition (standard
 smob3= 1.0          ! Mobility mobility in structural phase transition (standardized and set to 1) (z)
 A1e= 4.124e+05      ! Chemical free energy [C^-2 * m^2 * N], A1=A1e*vm0/RR/temp, Ref.[102]
 A11e= -2.097e+08    ! [C^-4 * m^6 * N], Ref.[102] Y. L. Li et al., J. App. Phys., 98 (2005) 064101.
-A12e= 7.974e+08     ! [C^-4 * m^6 * N], Ref.[102]
+A12e= 7.974e+08     ! [C^-4 * m^6 * N], Ref.[102] Landau expansion form
 A111e= 1.294e+09    ! [C^-6 * m^10 * N], Ref.[102]
 A112e= -1.950e+09   ! [C^-6 * m^10 * N], Ref.[102]
 A123e= -2.500e+09   ! [C^-6 * m^10 * N], Ref.[102]
