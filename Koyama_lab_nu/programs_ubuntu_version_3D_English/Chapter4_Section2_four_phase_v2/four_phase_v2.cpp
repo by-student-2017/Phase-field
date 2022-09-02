@@ -42,13 +42,13 @@ int main(void)
 	double cmob34, cmob43;
 
 	double om_12, om_13, om_14;					//interaction parameter
-	double om_23, om_24;
-	double om_34;
+	double om_23, om_24, om_34;
 	double om_12e, om_13e, om_14e;				//interaction parameter
-	double om_23e, om_24e;
-	double om_34e;
+	double om_23e, om_24e, om_34e;
 	double kapa_c1, kapa_c2, kapa_c3, kapa_c4;		//concentration gradient energy coefficient
 	double kapa_c1c, kapa_c2c, kapa_c3c, kapa_c4c;	//concentration gradient energy coefficient
+	
+	double div2_c2h, div2_c3h, div2_c4h;		//div(div(ch))=d^2(ch)/dx^2 + d^2(ch)/dy^2 + d^2(ch)/dz^2
 
 //****** Setting calculation conditions and material constants ****************************************
 	printf("---------------------------------\n");
@@ -164,6 +164,21 @@ start: ;
 				//  + RT*( c1*log(c1) + c2*log(c2) + c3*log(c3) + ...) }  dr
 				c2k_chem=om_12*c1-om_12*c2-om_13*c3-om_14*c4+om_23*c3+om_24*c4+(log(c2)-log(c1));//chemical diffusion potential
 
+				div2_c2h = (c2h[ip*ND*ND+j*ND+k]+c2h[im*ND*ND+j*ND+k]
+						   +c2h[i*ND*ND+jp*ND+k]+c2h[i*ND*ND+jm*ND+k]
+      					   +c2h[i*ND*ND+j*ND+kp]+c2h[i*ND*ND+j*ND+km]
+						   -6.0*c2);
+				
+				div2_c3h = (c3h[ip*ND*ND+j*ND+k]+c3h[im*ND*ND+j*ND+k]
+						   +c3h[i*ND*ND+jp*ND+k]+c3h[i*ND*ND+jm*ND+k]
+      					   +c3h[i*ND*ND+j*ND+kp]+c3h[i*ND*ND+j*ND+km]
+						   -6.0*c3);
+								
+				div2_c4h = (c4h[ip*ND*ND+j*ND+k]+c4h[im*ND*ND+j*ND+k]
+						   +c4h[i*ND*ND+jp*ND+k]+c4h[i*ND*ND+jm*ND+k]
+      					   +c4h[i*ND*ND+j*ND+kp]+c4h[i*ND*ND+j*ND+km]
+						   -6.0*c4);
+				
 				//0.5*(c2+c3+c4)*(c2+c3+c4)+0.5*c2*c2+c3*c3+c4*c4
 				//						 =0.5*c2*c2+c2*c3+c2*c4
 				//						 +0.5*c3*c2+c3*c3+c3+c4
@@ -172,46 +187,21 @@ start: ;
 				//						 =c2*c2+c3*c3+c4*c4
 				//						 +c2*c3+c2*c4+c3*c4
 				//Ggrad = integral {0.5*kappa1*div(div c1) + 0.5*kappa2*div(div c2) + 0.5*kappa3*div(div c3) + ... } dr
-				c2k_su=-2.0*(0.5*kapa_c1+0.5*kapa_c2)*(c2h[ip*ND*ND+j*ND+k]+c2h[im*ND*ND+j*ND+k]
-													  +c2h[i*ND*ND+jp*ND+k]+c2h[i*ND*ND+jm*ND+k]
-      												  +c2h[i*ND*ND+j*ND+kp]+c2h[i*ND*ND+j*ND+km]
-													  -6.0*c2)
-						   -(0.5*kapa_c1+0.5*kapa_c3)*(c3h[ip*ND*ND+j*ND+k]+c3h[im*ND*ND+j*ND+k]
-													  +c3h[i*ND*ND+jp*ND+k]+c3h[i*ND*ND+jm*ND+k]
-      												  +c3h[i*ND*ND+j*ND+kp]+c3h[i*ND*ND+j*ND+km]
-													  -6.0*c3);	//gradient potential
-						   -(0.5*kapa_c1+0.5*kapa_c4)*(c4h[ip*ND*ND+j*ND+k]+c4h[im*ND*ND+j*ND+k]
-													  +c4h[i*ND*ND+jp*ND+k]+c4h[i*ND*ND+jm*ND+k]
-      												  +c4h[i*ND*ND+j*ND+kp]+c4h[i*ND*ND+j*ND+km]
-													  -6.0*c4);	//gradient potential
+				
+				//gradient potential
+				c2k_su=-2.0*(0.5*kapa_c1+0.5*kapa_c2)*div2_c2h
+						   -(0.5*kapa_c1+0.5*kapa_c3)*div2_c3h
+						   -(0.5*kapa_c1+0.5*kapa_c4)*div2_c4h;
 
 				c3k_chem=om_13*c1-om_12*c2-om_13*c3-om_14*c4+om_23*c2+om_34*c4+(log(c3)-log(c1));///chemical diffusion potential
-				c3k_su=-2.0*(0.5*kapa_c1+0.5*kapa_c3)*(c3h[ip*ND*ND+j*ND+k]+c3h[im*ND*ND+j*ND+k]
-													  +c3h[i*ND*ND+jp*ND+k]+c3h[i*ND*ND+jm*ND+k]
-      												  +c3h[i*ND*ND+j*ND+kp]+c3h[i*ND*ND+j*ND+km]
-													  -6.0*c3)
-						   -(0.5*kapa_c1+0.5*kapa_c2)*(c2h[ip*ND*ND+j*ND+k]+c2h[im*ND*ND+j*ND+k]
-													  +c2h[i*ND*ND+jp*ND+k]+c2h[i*ND*ND+jm*ND+k]
-      												  +c2h[i*ND*ND+j*ND+kp]+c2h[i*ND*ND+j*ND+km]
-													  -6.0*c2);	//gradient potential
-						   -(0.5*kapa_c1+0.5*kapa_c4)*(c4h[ip*ND*ND+j*ND+k]+c4h[im*ND*ND+j*ND+k]
-													  +c4h[i*ND*ND+jp*ND+k]+c4h[i*ND*ND+jm*ND+k]
-      												  +c4h[i*ND*ND+j*ND+kp]+c4h[i*ND*ND+j*ND+km]
-													  -6.0*c4);	//gradient potential
+				c3k_su=-2.0*(0.5*kapa_c1+0.5*kapa_c3)*div2_c3h
+						   -(0.5*kapa_c1+0.5*kapa_c2)*div2_c2h
+						   -(0.5*kapa_c1+0.5*kapa_c4)*div2_c4h;
 				
 				c4k_chem=om_14*c1-om_12*c2-om_13*c3-om_14*c4+om_24*c2+om_34*c3+(log(c4)-log(c1));///chemical diffusion potential
-				c4k_su=-2.0*(0.5*kapa_c1+0.5*kapa_c4)*(c4h[ip*ND*ND+j*ND+k]+c4h[im*ND*ND+j*ND+k]
-													  +c4h[i*ND*ND+jp*ND+k]+c4h[i*ND*ND+jm*ND+k]
-      												  +c4h[i*ND*ND+j*ND+kp]+c4h[i*ND*ND+j*ND+km]
-													  -6.0*c4)
-						   -(0.5*kapa_c1+0.5*kapa_c2)*(c2h[ip*ND*ND+j*ND+k]+c2h[im*ND*ND+j*ND+k]
-													  +c2h[i*ND*ND+jp*ND+k]+c2h[i*ND*ND+jm*ND+k]
-      												  +c2h[i*ND*ND+j*ND+kp]+c2h[i*ND*ND+j*ND+km]
-													  -6.0*c2);	//gradient potential
-						   -(0.5*kapa_c1+0.5*kapa_c3)*(c3h[ip*ND*ND+j*ND+k]+c3h[im*ND*ND+j*ND+k]
-													  +c3h[i*ND*ND+jp*ND+k]+c3h[i*ND*ND+jm*ND+k]
-      												  +c3h[i*ND*ND+j*ND+kp]+c3h[i*ND*ND+j*ND+km]
-													  -6.0*c3);	//gradient potential
+				c4k_su=-2.0*(0.5*kapa_c1+0.5*kapa_c4)*div2_c4h
+						   -(0.5*kapa_c1+0.5*kapa_c2)*div2_c2h
+						   -(0.5*kapa_c1+0.5*kapa_c3)*div2_c3h;
 				
 				c2k[i*ND*ND+j*ND+k]=c2k_chem+c2k_su;//Diffusion potential (equation (4.1))
 				c3k[i*ND*ND+j*ND+k]=c3k_chem+c3k_su;
