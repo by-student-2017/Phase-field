@@ -75,7 +75,7 @@ program martensite
 	double precision:: chem_pot2,elast_pot2,grad_pot2
 	double precision:: dpdt1,dpdt2						!! right hand side of Allen-Chan equation for p1 and p2
 	double precision, allocatable:: eigen11_r(:,:), eigen22_r(:,:)	!! eigen strain in real space
-	double precision, allocatable:: eigen12_r(:,:) ,eigen21_r(:,:)
+	double precision, allocatable:: eigen12_r(:,:), eigen21_r(:,:)
 	double precision, allocatable:: eigen11_f_real(:,:), eigen11_f_imag(:,:)	!! real and imagenary part of eigen strain in fourier space
 	double precision, allocatable:: eigen22_f_real(:,:), eigen22_f_imag(:,:)
 	double precision, allocatable:: eigen12_f_real(:,:), eigen12_f_imag(:,:)
