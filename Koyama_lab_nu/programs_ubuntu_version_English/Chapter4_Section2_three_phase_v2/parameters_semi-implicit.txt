@@ -5,7 +5,7 @@ delt= 0.995        ! timestep [dimensionless] (cmob22=cmob33=1.0, cmob23=cmob32=
 temp= 900.0        ! Temperature [K]
 al= 100.0          ! Computation area [nm]
 cmob22= 1.0        ! mobility, Mc(22)
-cmob33= 1.0        ! mobility, Mc(23)
+cmob33= 1.0        ! mobility, Mc(33)
 cmob23= -0.5       ! mobility, cmob23=como32=Mc(23)=Mc(32)
 om_12e= 25000.0    ! om_12e [J/mol] = LaA,B
 om_13e= 25000.0    ! om_13e [J/mol] = LaA,C
