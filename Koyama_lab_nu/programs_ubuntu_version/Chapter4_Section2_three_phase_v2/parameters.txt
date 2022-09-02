@@ -10,7 +10,7 @@ cmob23= -0.5       ! mobility, cmob23=como32=Mc(23)=Mc(32)
 om_12e= 25000.0    ! om_12e [J/mol] = LaA,B
 om_13e= 25000.0    ! om_13e [J/mol] = LaA,C
 om_23e= 25000.0    ! om_23e [J/mol] = LaB,C
-kapa_c2c= 5.0e-15  ! Concentration gradient energy constant kapa_c2c [Jm2/mol]
-kapa_c3c= 5.0e-15  ! Concentration gradient energy constant kapa_c3c [Jm2/mol]
+kapa_c2c= 5.0e-15  ! Concentration gradient energy constant kapa_c2c [Jm2/mol] (need to be kapa_c2c = kapa_c1c)
+kapa_c3c= 5.0e-15  ! Concentration gradient energy constant kapa_c3c [Jm2/mol] (need to be kapa_c3c = kapa_c1c)
 time1max= 1.0e05   ! Max iterations
 Nstep= 2000.0      ! output every "Nstep"
