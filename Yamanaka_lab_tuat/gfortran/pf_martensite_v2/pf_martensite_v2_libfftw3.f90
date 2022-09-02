@@ -224,7 +224,6 @@ program martensite
 		enddo
 
 		call dfftw_execute_dft(plan, in, out) !! forward FFT
-		!call fft(-1,ig,grid,half_grid,ndm,c,s,ik,xr,xi)   !! forward FFT
 
 		do i=0,ndm
 			do j=0,ndm
@@ -248,7 +247,6 @@ program martensite
 		enddo
 
 		call dfftw_execute_dft(plan, in, out) !! forward FFT
-		!call fft(-1,ig,grid,half_grid,ndm,c,s,ik,xr,xi)
 
 		do i=0,ndm
 			do j=0,ndm
@@ -272,7 +270,6 @@ program martensite
 		enddo
 
 		call dfftw_execute_dft(plan, in, out) !! forward FFT
-		!call fft(-1,ig,grid,half_grid,ndm,c,s,ik,xr,xi)
 
 		do i=0,ndm
 			do j=0,ndm
@@ -421,13 +418,13 @@ program martensite
 		do i=0,ndm
 			do j=0,ndm
 				stress11(i,j)=(ram0+2.*mu0)*(homo_strain11+inhomo_strain11(i,j)-eigen11_r(i,j)) &   !! Cauchy stress 11
-							  +ram0*(homo_strain22+inhomo_strain22(i,j)-eigen22_r(i,j))
+									  +ram0*(homo_strain22+inhomo_strain22(i,j)-eigen22_r(i,j))
 				stress22(i,j)=ram0*(homo_strain11+inhomo_strain11(i,j)-eigen11_r(i,j)) &
-							+(ram0+2.*mu0)*(homo_strain22+inhomo_strain22(i,j)-eigen22_r(i,j))
+				    +(ram0+2.*mu0)*(homo_strain22+inhomo_strain22(i,j)-eigen22_r(i,j))
 				stress33(i,j)=ram0*((homo_strain11+inhomo_strain11(i,j)-eigen11_r(i,j)) &
-							+(homo_strain22+inhomo_strain22(i,j)-eigen22_r(i,j)))
+								   +(homo_strain22+inhomo_strain22(i,j)-eigen22_r(i,j)))
 				stress12(i,j)=mu0*((homo_strain12+inhomo_strain12(i,j)-eigen12_r(i,j)) &
-							+(homo_strain21+inhomo_strain21(i,j)-eigen21_r(i,j)))
+								  +(homo_strain21+inhomo_strain21(i,j)-eigen21_r(i,j)))
 
 				elastic_strain11(i,j)=homo_strain11+inhomo_strain11(i,j)+ep11_a-eigen11_r(i,j)     !! elastic strain 11
 				elastic_strain22(i,j)=homo_strain22+inhomo_strain22(i,j)+ep22_a-eigen22_r(i,j)
