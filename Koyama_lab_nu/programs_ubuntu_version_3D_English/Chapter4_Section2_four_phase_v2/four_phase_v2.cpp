@@ -42,9 +42,11 @@ int main(void)
 	double cmob34, cmob43;
 
 	double om_12, om_13, om_14;					//interaction parameter
-	double om_23, om_24, om_34;
+	double om_23, om_24;
+	double om_34;
 	double om_12e, om_13e, om_14e;				//interaction parameter
-	double om_23e, om_24e, om_34e;
+	double om_23e, om_24e;
+	double om_34e;
 	double kapa_c1, kapa_c2, kapa_c3, kapa_c4;		//concentration gradient energy coefficient
 	double kapa_c1c, kapa_c2c, kapa_c3c, kapa_c4c;	//concentration gradient energy coefficient
 
