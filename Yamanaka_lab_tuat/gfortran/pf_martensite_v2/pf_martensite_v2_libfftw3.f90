@@ -182,11 +182,6 @@ program martensite
 	allocate (elastic_strain21(0:grid,0:grid))
 	allocate (xi(0:grid,0:grid))
 	allocate (xr(0:grid,0:grid))
-	!allocate (xif(0:grid,0:grid))
-	!allocate (xrf(0:grid,0:grid))
-	!allocate (s(0:grid))
-	!allocate (c(0:grid))
-	!allocate (ik(0:grid))
 	
 ! settings for FFT and IFFT
 	allocate ( in(0:ndm,0:ndm)) !! ndm = grid-1
