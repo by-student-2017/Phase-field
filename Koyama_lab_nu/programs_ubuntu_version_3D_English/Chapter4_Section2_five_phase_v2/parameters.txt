@@ -29,7 +29,7 @@ om_45e= 25000.0    ! om_45e [J/mol] = LaD,E
 kapa_c1c= 5.0e-15  ! Concentration gradient energy constant kapa_c1c [Jm2/mol]
 kapa_c2c= 5.0e-15  ! Concentration gradient energy constant kapa_c2c [Jm2/mol]
 kapa_c3c= 5.0e-15  ! Concentration gradient energy constant kapa_c3c [Jm2/mol]
-kapa_c4c= 5.0e-15  ! Concentration gradient energy constant kapa_c3c [Jm2/mol]
-kapa_c5c= 5.0e-15  ! Concentration gradient energy constant kapa_c3c [Jm2/mol]
+kapa_c4c= 5.0e-15  ! Concentration gradient energy constant kapa_c4c [Jm2/mol]
+kapa_c5c= 5.0e-15  ! Concentration gradient energy constant kapa_c5c [Jm2/mol]
 time1max= 1.0e05   ! Max iterations
 Nstep= 200.0       ! output every "Nstep"
