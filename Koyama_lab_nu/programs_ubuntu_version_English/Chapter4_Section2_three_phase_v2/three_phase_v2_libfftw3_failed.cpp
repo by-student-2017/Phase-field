@@ -51,8 +51,8 @@ int main(void)
 
 	double om_12, om_23, om_13;					//interaction parameter
 	double om_12e, om_23e, om_13e;				//interaction parameter
-	double kapa_c2, kapa_c3;					//concentration gradient energy coefficient
-	double kapa_c2c, kapa_c3c;					//concentration gradient energy coefficient
+	double kapa_c1, kapa_c2, kapa_c3;					//concentration gradient energy coefficient
+	double kapa_c1c, kapa_c2c, kapa_c3c;					//concentration gradient energy coefficient
 
 //****** Setting calculation conditions and material constants ****************************************
 	printf("---------------------------------\n");
@@ -83,10 +83,11 @@ int main(void)
 	om_12e  = data[9];
 	om_13e  = data[10];
 	om_23e  = data[11];
-	kapa_c2c= data[12];
-	kapa_c3c= data[13];
-	time1max= int(data[14]);
-	Nstep   = int(data[15]);
+	kapa_c1c= data[12];
+	kapa_c2c= data[13];
+	kapa_c3c= data[14];
+	time1max= int(data[15]);
+	Nstep   = int(data[16]);
 	printf("---------------------------------\n");
 	//
 	nd=ND;					//Number of difference divisions on one side of the computational domain (number of difference blocks)
@@ -151,6 +152,7 @@ int main(void)
 
 	//kapa_c2=5.0e-15/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
 	//kapa_c3=5.0e-15/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
+	kapa_c1=kapa_c1c/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
 	kapa_c2=kapa_c2c/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
 	kapa_c3=kapa_c3c/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
 
@@ -299,43 +301,43 @@ start: ;
 			// explicit Euler scheme
 			// complex
 			//c2h2_k[i*ND+j] = ( c2h_k[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k[i*ND+j]+cmob23*c3k_k[i*ND+j])
-			//				  - delt*k4[i*ND+j]*(cmob22*kapa_c2*2.0*c2h_k[i*ND+j]+cmob23*kapa_c3*c3h_k[i*ND+j]) );
+			//				  - delt*k4[i*ND+j]*(cmob22*(0.5*kapa_c1+0.5*kapa_c2)*2.0*c2h_k[i*ND+j]+cmob23*(0.5*kapa_c1+0.5*kapa_c3)*c3h_k[i*ND+j]) );
 			//c3h2_k[i*ND+j] = ( c3h_k[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k[i*ND+j]+cmob23*c3k_k[i*ND+j])
-			//				  - delt*k4[i*ND+j]*(cmob32*kapa_c2*c2h_k[i*ND+j]+cmob33*kapa_c3*2.0*c3h_k[i*ND+j]) );
+			//				  - delt*k4[i*ND+j]*(cmob32*(0.5*kapa_c1+0.5*kapa_c2)*c2h_k[i*ND+j]+cmob33*(0.5*kapa_c1+0.5*kapa_c3)*2.0*c3h_k[i*ND+j]) );
 			//
 			// read
 			c2h2_k_r[i*ND+j] = ( c2h_k_r[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
-							  - delt*k4[i*ND+j]*(cmob22*kapa_c2*2.0*c2h_k_r[i*ND+j]+cmob23*kapa_c3*c3h_k_r[i*ND+j]) );
+							  - delt*k4[i*ND+j]*(cmob22*(0.5*kapa_c1+0.5*kapa_c2)*2.0*c2h_k_r[i*ND+j]+cmob23*(0.5*kapa_c1+0.5*kapa_c3)*c3h_k_r[i*ND+j]) );
 			c3h2_k_r[i*ND+j] = ( c3h_k_r[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
-							  - delt*k4[i*ND+j]*(cmob32*kapa_c2*c2h_k_r[i*ND+j]+cmob33*kapa_c3*2.0*c3h_k_r[i*ND+j]) );
+							  - delt*k4[i*ND+j]*(cmob32*(0.5*kapa_c1+0.5*kapa_c2)*c2h_k_r[i*ND+j]+cmob33*(0.5*kapa_c1+0.5*kapa_c3)*2.0*c3h_k_r[i*ND+j]) );
 			// image
 			c2h2_k_i[i*ND+j] = ( c2h_k_i[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
-							  - delt*k4[i*ND+j]*(cmob22*kapa_c2*2.0*c2h_k_i[i*ND+j]+cmob23*kapa_c3*c3h_k_i[i*ND+j]) );
+							  - delt*k4[i*ND+j]*(cmob22*(0.5*kapa_c1+0.5*kapa_c2)*2.0*c2h_k_i[i*ND+j]+cmob23*(0.5*kapa_c1+0.5*kapa_c3)*c3h_k_i[i*ND+j]) );
 			c3h2_k_i[i*ND+j] = ( c3h_k_i[i*ND+j] - delt*k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
-							  - delt*k4[i*ND+j]*(cmob32*kapa_c2*c2h_k_i[i*ND+j]+cmob33*kapa_c3*2.0*c3h_k_i[i*ND+j]) );
+							  - delt*k4[i*ND+j]*(cmob32*(0.5*kapa_c1+0.5*kapa_c2)*c2h_k_i[i*ND+j]+cmob33*(0.5*kapa_c1+0.5*kapa_c3)*2.0*c3h_k_i[i*ND+j]) );
 			//
 			// semi-implicit Euler scheme
 			// complex
 			//c2h2_k[i*ND+j] = ( c2h_k[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k[i*ND+j]+cmob23*c3k_k[i*ND+j])
-			//									   - k4[i*ND+j]*cmob23*kapa_c3*c3h_k[i*ND+j]) )
-			//				 	/(1.0 + delt*k4[i*ND+j]*cmob22*kapa_c2*2.0);
+			//									   - k4[i*ND+j]*cmob23*(0.5*kapa_c1+0.5*kapa_c3)*c3h_k[i*ND+j]) )
+			//				 	/(1.0 + delt*k4[i*ND+j]*cmob22*(0.5*kapa_c1+0.5*kapa_c2)*2.0);
 			//c3h2_k[i*ND+j] = ( c3h_k[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k[i*ND+j]+cmob23*c3k_k[i*ND+j])
-			//									   - k4[i*ND+j]*cmob32*kapa_c2*c2h_k[i*ND+j]) )
-			//				 	/(1.0 + delt*k4[i*ND+j]*cmob33*kapa_c3*2.0);
+			//									   - k4[i*ND+j]*cmob32*(0.5*kapa_c1+0.5*kapa_c2)*c2h_k[i*ND+j]) )
+			//				 	/(1.0 + delt*k4[i*ND+j]*cmob33*(0.5*kapa_c1+0.5*kapa_c3)*2.0);
 			// real
 			//c2h2_k_r[i*ND+j] = ( c2h_k_r[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
-			//									   - k4[i*ND+j]*cmob23*kapa_c3*c3h_k_r[i*ND+j]) )
-			//				 	/(1.0 + delt*k4[i*ND+j]*cmob22*kapa_c2*2.0);
+			//									   - k4[i*ND+j]*cmob23*(0.5*kapa_c1+0.5*kapa_c3)*c3h_k_r[i*ND+j]) )
+			//				 	/(1.0 + delt*k4[i*ND+j]*cmob22*(0.5*kapa_c1+0.5*kapa_c2)*2.0);
 			//c3h2_k_r[i*ND+j] = ( c3h_k_r[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_r[i*ND+j]+cmob23*c3k_k_r[i*ND+j])
-			//									   - k4[i*ND+j]*cmob32*kapa_c2*c2h_k_r[i*ND+j]) )
-			//				 	/(1.0 + delt*k4[i*ND+j]*cmob33*kapa_c3*2.0);
+			//									   - k4[i*ND+j]*cmob32*(0.5*kapa_c1+0.5*kapa_c2)*c2h_k_r[i*ND+j]) )
+			//				 	/(1.0 + delt*k4[i*ND+j]*cmob33*(0.5*kapa_c1+0.5*kapa_c3)*2.0);
 			// image
 			//c2h2_k_i[i*ND+j] = ( c2h_k_i[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
-			//									   - k4[i*ND+j]*cmob23*kapa_c3*c3h_k_i[i*ND+j]) )
-			//				 	/(1.0 + delt*k4[i*ND+j]*cmob22*kapa_c2*2.0);
+			//									   - k4[i*ND+j]*cmob23*(0.5*kapa_c1+0.5*kapa_c3)*c3h_k_i[i*ND+j]) )
+			//				 	/(1.0 + delt*k4[i*ND+j]*cmob22*(0.5*kapa_c1+0.5*kapa_c2)*2.0);
 			//c3h2_k_i[i*ND+j] = ( c3h_k_i[i*ND+j] - delt*(k2[i*ND+j]*(cmob22*c2k_k_i[i*ND+j]+cmob23*c3k_k_i[i*ND+j])
-			//									   - k4[i*ND+j]*cmob32*kapa_c2*c2h_k_i[i*ND+j]) )
-			//				 	/(1.0 + delt*k4[i*ND+j]*cmob33*kapa_c3*2.0);
+			//									   - k4[i*ND+j]*cmob32*(0.5*kapa_c1+0.5*kapa_c2)*c2h_k_i[i*ND+j]) )
+			//				 	/(1.0 + delt*k4[i*ND+j]*cmob33*(0.5*kapa_c1+0.5*kapa_c3)*2.0);
 		}
 	}
 	// IFFT of c2h2_k
@@ -404,13 +406,16 @@ start: ;
 //*********************************************************************
 
 	//if(keypress()){return 0;}	//Waiting for key
-	time1=time1+1.0;  if(time1<time1max){goto start;}//Determining if the maximum count has been reached
+	time1=time1+1.0;
+	
+	if(time1<time1max){goto start;}//Determining if the maximum count has been reached
 
 	end:;
-  if(plan) fftw_destroy_plan(plan);		//For FFT
-  if(iplan) fftw_destroy_plan(iplan);	//For IFFT
-  fftw_free(in); fftw_free(out);		// For FFT and IFFT
-  return 0;
+	if(plan) fftw_destroy_plan(plan);		//For FFT
+	if(iplan) fftw_destroy_plan(iplan);	//For IFFT
+	fftw_free(in); fftw_free(out);		// For FFT and IFFT
+	std::exit(0);
+  //return 0;
 }
 
 

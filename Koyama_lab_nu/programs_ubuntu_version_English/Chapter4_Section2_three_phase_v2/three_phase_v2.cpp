@@ -44,8 +44,8 @@ int main(void)
 
 	double om_12, om_23, om_13;					//interaction parameter
 	double om_12e, om_23e, om_13e;				//interaction parameter
-	double kapa_c2, kapa_c3;					//concentration gradient energy coefficient
-	double kapa_c2c, kapa_c3c;					//concentration gradient energy coefficient
+	double kapa_c1, kapa_c2, kapa_c3;					//concentration gradient energy coefficient
+	double kapa_c1c, kapa_c2c, kapa_c3c;					//concentration gradient energy coefficient
 
 //****** Setting calculation conditions and material constants ****************************************
 	printf("---------------------------------\n");
@@ -76,10 +76,11 @@ int main(void)
 	om_12e  = data[9];
 	om_13e  = data[10];
 	om_23e  = data[11];
-	kapa_c2c= data[12];
-	kapa_c3c= data[13];
-	time1max= int(data[14]);
-	Nstep   = int(data[15]);
+	kapa_c1c= data[12];
+	kapa_c2c= data[13];
+	kapa_c3c= data[14];
+	time1max= int(data[15]);
+	Nstep   = int(data[16]);
 	printf("---------------------------------\n");
 	//
 	nd=ND;					//Number of difference divisions on one side of the computational domain (number of difference blocks)
@@ -116,6 +117,7 @@ int main(void)
 
 	//kapa_c2=5.0e-15/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
 	//kapa_c3=5.0e-15/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
+	kapa_c1=kapa_c1c/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
 	kapa_c2=kapa_c2c/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
 	kapa_c3=kapa_c3c/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
 
@@ -144,17 +146,22 @@ start: ;
 			//c2=c2h[i][j]; c3=c3h[i][j]; c1=1.0-c2-c3;//local concentration field
 			c2=c2h[i*ND+j]; c3=c3h[i*ND+j]; c1=1.0-c2-c3;//local concentration field
 
+			//Gsys = Gc + Ggrad
+			//Gc = integral { (L_AB * c1 * c2) + (L_AC * c1 * c3) + (L_BC * c2 * c3) + ...
+			//  + RT*( c1*log(c1) + c2*log(c2) + c3*log(c3) + ...) }  dr
 			c2k_chem=om_12*(c1-c2)-om_13*c3+om_23*c3+(log(c2)-log(c1));//chemical diffusion potential
+			
+			//Ggrad = integral {0.5*kappa1*div(div c1) + 0.5*kappa2*div(div c2) + 0.5*kappa3*div(div c3) + ... } dr
 			//c2k_su=-2.*kapa_c2*(c2h[ip][j]+c2h[im][j]+c2h[i][jp]+c2h[i][jm]-4.0*c2)
 			//				  -kapa_c3*(c3h[ip][j]+c3h[im][j]+c3h[i][jp]+c3h[i][jm]-4.0*c3);//gradient potential
-			c2k_su=-2.*kapa_c2*(c2h[ip*ND+j]+c2h[im*ND+j]+c2h[i*ND+jp]+c2h[i*ND+jm]-4.0*c2)
-					  -kapa_c3*(c3h[ip*ND+j]+c3h[im*ND+j]+c3h[i*ND+jp]+c3h[i*ND+jm]-4.0*c3);//gradient potential
+			c2k_su=-2.0*(0.5*kapa_c1+0.5*kapa_c2)*(c2h[ip*ND+j]+c2h[im*ND+j]+c2h[i*ND+jp]+c2h[i*ND+jm]-4.0*c2)
+					   -(0.5*kapa_c1+0.5*kapa_c3)*(c3h[ip*ND+j]+c3h[im*ND+j]+c3h[i*ND+jp]+c3h[i*ND+jm]-4.0*c3);//gradient potential
 
 			c3k_chem=om_13*(c1-c3)-om_12*c2+om_23*c2+(log(c3)-log(c1));//chemical diffusion potential
 			//c3k_su=-2.*kapa_c3*(c3h[ip][j]+c3h[im][j]+c3h[i][jp]+c3h[i][jm]-4.0*c3)
 			//				  -kapa_c2*(c2h[ip][j]+c2h[im][j]+c2h[i][jp]+c2h[i][jm]-4.0*c2);//gradient potential
-			c3k_su=-2.*kapa_c3*(c3h[ip*ND+j]+c3h[im*ND+j]+c3h[i*ND+jp]+c3h[i*ND+jm]-4.0*c3)
-					  -kapa_c2*(c2h[ip*ND+j]+c2h[im*ND+j]+c2h[i*ND+jp]+c2h[i*ND+jm]-4.0*c2);//gradient potential
+			c3k_su=-2.0*(0.5*kapa_c1+0.5*kapa_c3)*(c3h[ip*ND+j]+c3h[im*ND+j]+c3h[i*ND+jp]+c3h[i*ND+jm]-4.0*c3)
+					   -(0.5*kapa_c1+0.5*kapa_c2)*(c2h[ip*ND+j]+c2h[im*ND+j]+c2h[i*ND+jp]+c2h[i*ND+jm]-4.0*c2);//gradient potential
 
 			//c2k[i][j]=c2k_chem+c2k_su;//Diffusion potential (equation (4.1))
 			//c3k[i][j]=c3k_chem+c3k_su;
@@ -226,10 +233,14 @@ start: ;
 //*********************************************************************
 
 	//if(keypress()){return 0;}	//Waiting for key
-	time1=time1+1.0;  if(time1<time1max){goto start;}//Determining if the maximum count has been reached
+	time1=time1+1.0;
+	
+	if(time1<time1max){goto start;}//Determining if the maximum count has been reached
+	printf("Finished \n");
 
 	end:;
-  return 0;
+	std::exit(0);
+  //return 0;
 }
 
 
