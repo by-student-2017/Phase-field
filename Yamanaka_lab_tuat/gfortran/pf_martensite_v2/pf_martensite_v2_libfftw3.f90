@@ -98,10 +98,7 @@ program martensite
 ! Declaration of arrays and variables for Fourier transform
 !==========================================================
 	double precision, allocatable:: xi(:,:), xr(:,:)	!! imagenary and real part of variable to be transformed
-	double precision, allocatable:: xif(:,:), xrf(:,:)	!! imagenary and real part of variable to be inverse transformed
-	double precision, allocatable:: s(:), c(:)			!! sin and cos
 	double precision:: kxx,kyy,kxy,nnn,k_mag			!! wave vectors in Fourier space
-	integer, allocatable:: ik(:)
 
 	integer:: i,j,k,l,ii,jj,kk,iii,jjj,m,n,ip,im,jp,jm
 	integer:: nstep,iout
@@ -185,19 +182,17 @@ program martensite
 	allocate (elastic_strain21(0:grid,0:grid))
 	allocate (xi(0:grid,0:grid))
 	allocate (xr(0:grid,0:grid))
-	allocate (xif(0:grid,0:grid))
-	allocate (xrf(0:grid,0:grid))
-	allocate (s(0:grid))
-	allocate (c(0:grid))
-	allocate (ik(0:grid))
+	!allocate (xif(0:grid,0:grid))
+	!allocate (xrf(0:grid,0:grid))
+	!allocate (s(0:grid))
+	!allocate (c(0:grid))
+	!allocate (ik(0:grid))
 	
+! settings for FFT and IFFT
 	allocate ( in(0:ndm,0:ndm)) !! ndm = grid-1
 	allocate (out(0:ndm,0:ndm)) !! ndm = grid-1
-	call dfftw_plan_dft_2d( plan,grid,grid,in,out,FFTW_FORWARD, FFTW_ESTIMATE) !!  FFT
-	call dfftw_plan_dft_2d(iplan,grid,grid,in,out,FFTW_BACKWARD,FFTW_ESTIMATE) !! IFFT
-
-! make sin and cos table for FFT
-!	call sincos(pi,ig,grid,half_grid,c,s,ik)  !! pi, grid, half_grid,s,ik
+	call dfftw_plan_dft_2d( plan,grid,grid,in,out,FFTW_FORWARD, FFTW_ESTIMATE) !! forward FFT (FFT)
+	call dfftw_plan_dft_2d(iplan,grid,grid,in,out,FFTW_BACKWARD,FFTW_ESTIMATE) !! inverse FFT (IFFT)
 
 ! input eigen strain for each variant
 	eigen0_1 = 0
@@ -346,7 +341,6 @@ program martensite
 		enddo
 
 		call dfftw_execute_dft(iplan, in, out) !! inverse FFT (IFFT)
-		!call fft(1,ig,grid,half_grid,ndm,c,s,ik,xr,xi)  !! inverse FFT
 
 		!inhomo_strain11 = xr    !! inhomogeneous strain in real space
 		do i=0,ndm
@@ -383,7 +377,6 @@ program martensite
 		enddo
 
 		call dfftw_execute_dft(iplan, in, out) !! inverse FFT (IFFT)
-		!call fft(1,ig,grid,half_grid,ndm,c,s,ik,xr,xi)
 
 		!inhomo_strain22 =xr
 		do i=0,ndm
@@ -420,10 +413,8 @@ program martensite
 		enddo
 
 		call dfftw_execute_dft(iplan, in, out) !! inverse FFT (IFFT)
-		!call fft(1,ig,grid,half_grid,ndm,c,s,ik,xr,xi)
 
 		!inhomo_strain12 = xr
-		!inhomo_strain21 = inhomo_strain12
 		do i=0,ndm
 			do j=0,ndm
 				inhomo_strain12(i,j)=dble( out(i,j) )/dble(grid*grid)
@@ -539,11 +530,6 @@ program martensite
 	deallocate (elastic_strain21)
 	deallocate (xi)
 	deallocate (xr)
-	deallocate (xif)
-	deallocate (xrf)
-	deallocate (s)
-	deallocate (c)
-	deallocate (ik)
 
 	call dfftw_destroy_plan( plan)
 	call dfftw_destroy_plan(iplan)
