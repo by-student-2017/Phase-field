@@ -289,8 +289,8 @@ void datsave_paraview(double *c2h, double *c3h, int ND)
 	int ndm=ND-1;
 	
 	iout = iout + 1;
-	printf("pf_result%06d.vtk \n",iout);
-	sprintf(fName,"pf_result%06d.vtk",iout);
+	printf("sp_result%06d.vtk \n",iout);
+	sprintf(fName,"sp_result%06d.vtk",iout);
 	fp = fopen(fName, "w");
 	fprintf(fp,"# vtk DataFile Version 3.0 \n");
 	fprintf(fp,"output.vtk \n");
