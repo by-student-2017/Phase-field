@@ -1,5 +1,6 @@
 -----------------------------------------------------------------------
 ubuntu 18.04 LTS
+Spinodal decomposition (diffusive phase separation in A-B-C ternary alloys)
 
 1. sudo apt update
 2. sudo apt -y install g++
@@ -12,6 +13,7 @@ ubuntu 18.04 LTS
   a3. (click "play") |>
 -----------------------------------------------------------------------
 ubuntu 18.04 LTS (semi-implicit Euler scheme: test version)
+Spinodal decomposition (diffusive phase separation in A-B-C ternary alloys)
 
 1. sudo apt update
 2. sudo apt -y install g++ libfftw3-dev

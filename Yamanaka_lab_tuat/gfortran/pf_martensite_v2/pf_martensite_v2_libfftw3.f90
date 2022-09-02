@@ -86,7 +86,8 @@ program martensite
 	double precision, allocatable:: stress33(:,:), stress12(:,:)
 	double precision, allocatable:: elastic_strain11(:,:), elastic_strain22(:,:)!! elastic strain
 	double precision, allocatable:: elastic_strain12(:,:), elastic_strain21(:,:)
-	double precision, dimension(4,4):: eigen0_1,eigen0_2						!! eigen strain for each variants (p1),(p2)
+	double precision, dimension(4,4):: eigen0_1		!! eigen strain for variant 1 (phase field 1)
+	double precision, dimension(4,4):: eigen0_2		!! eigen strain for variant 2 (phase field 2)
 	double precision:: homo_strain11,homo_strain22,homo_strain12,homo_strain21	!! homogeneous strain
 	double precision:: el_strain11,el_strain22
 	double precision:: eigen11_p1,eigen22_p1,eigen11_p2,eigen22_p2
