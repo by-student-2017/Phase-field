@@ -309,7 +309,7 @@ start: ;
 	}
 
 //*** Concentration field balance correction ***********************************************
-	sumc2=0.0; sumc3=0.0; sumc4=0.0;
+	sumc2=0.0; sumc3=0.0; sumc4=0.0; sumc5=0.0;
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
