@@ -429,7 +429,8 @@ void datsave_paraview(double *c2h, double *c3h, double *c4h, double *c5h, int ND
 	for(k=0;k<=ndm;k++){
 		for(j=0;j<=ndm;j++){
 			for(i=0;i<=ndm;i++){
-				fprintf(fp,"%10.6f\n", (1.0-c2h[i*ND*ND+j*ND+k]-c3h[i*ND*ND+j*ND+k]-c4h[i*ND*ND+j*ND+k]));
+				fprintf(fp,"%10.6f\n", (1.0-c2h[i*ND*ND+j*ND+k]-c3h[i*ND*ND+j*ND+k]
+					-c4h[i*ND*ND+j*ND+k]-c5h[i*ND*ND+j*ND+k]));
 			}
 		}
 	}
@@ -474,7 +475,8 @@ void datsave_paraview(double *c2h, double *c3h, double *c4h, double *c5h, int ND
 	for(k=0;k<=ndm;k++){
 		for(j=0;j<=ndm;j++){
 			for(i=0;i<=ndm;i++){
-				fprintf(fp,"%10.6f\n", (1.0-c2h[i*ND*ND+j*ND+k]-c3h[i*ND*ND+j*ND+k]-c4h[i*ND*ND+j*ND+k])*1.0*5.0
+				fprintf(fp,"%10.6f\n", (1.0-c2h[i*ND*ND+j*ND+k]-c3h[i*ND*ND+j*ND+k]
+					-c4h[i*ND*ND+j*ND+k]-c5h[i*ND*ND+j*ND+k])*1.0*5.0
 									  +c2h[i*ND*ND+j*ND+k]*2.0*5.0
 									  +c3h[i*ND*ND+j*ND+k]*3.0*5.0
 									  +c4h[i*ND*ND+j*ND+k]*4.0*5.0
