@@ -696,10 +696,12 @@ iplan = fftw_plan_dft_3d(fftsizex, fftsizey, fftsizez, in, out, FFTW_BACKWARD, F
 			 sig11, sig22, sig33, sig12, sig13, sig23, u1, u2, u3, NDX, NDY, NDZ);	//save
 
 	//if(keypress()){return 0;}//wait key input
+	printf("Finished \n");
 	if(plan) fftw_destroy_plan(plan);		//For FFT
 	if(iplan) fftw_destroy_plan(iplan);	//For IFFT
 	fftw_free(in); fftw_free(out);		// For FFT and IFFT
-	return 0;
+	std::exit(0);
+	//return 0;
 
 }
 

@@ -446,10 +446,13 @@ iplan = fftw_plan_dft_2d(fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW_ESTIMATE
 	datsave_paraview(ch, Estr, ep11c, ep22c, ep12c,
 					sig11, sig22, sig33, sig12, u1, u2, ND);	//save
 	//if(keypress()){return 0;}//ÉLÅ[ë“ÇøèÛë‘
+	printf("Finished \n");
 	if(plan) fftw_destroy_plan(plan);		//For FFT
 	if(iplan) fftw_destroy_plan(iplan);	//For IFFT
 	fftw_free(in); fftw_free(out);		// For FFT and IFFT
-	return 0;
+
+	std::exit(0);
+	//return 0;
 }
 
 //*** Zcij [computation of formula (5.26)] ****************************************

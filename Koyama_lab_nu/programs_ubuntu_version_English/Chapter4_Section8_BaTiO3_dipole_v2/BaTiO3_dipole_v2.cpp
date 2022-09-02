@@ -383,9 +383,11 @@ start: ;
 	//if(keypress()){return 0;}//Waiting for key
 	time1=time1+1.0;								//Add calculation count
 	if(time1<time1max){goto start;}	//Determining if the maximum count has been reached
+	printf("Finished \n");
 
-	end:;
-  return 0;
+end:;
+	std::exit(0);
+	//return 0;
 }
 
 //************ Initial field setup subroutine *************

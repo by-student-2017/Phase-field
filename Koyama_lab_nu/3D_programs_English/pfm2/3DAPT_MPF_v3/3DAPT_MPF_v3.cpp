@@ -547,9 +547,11 @@ start: ;
 	//if(keypress()){return 0;}
 	time1=time1+1.;
 	if (time1<time1max) {goto start;}
+	printf("Finished \n");
 
-	end:;
-  return 0;
+end:;
+	std::exit(0);
+	//return 0;
 }
 
 //************ Initial field *************

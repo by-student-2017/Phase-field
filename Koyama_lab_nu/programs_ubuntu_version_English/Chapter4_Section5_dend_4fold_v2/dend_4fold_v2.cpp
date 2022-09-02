@@ -254,10 +254,14 @@ start: ;
 //*********************************************************************
 
 	//if(keypress()){return 0;}//Waiting for key
-	time1=time1+1.;  if(time1<time1max){goto start;}//Time Increment and Determining Whether Maximum Time Has Been Reached
+	time1=time1+1.;
+	
+	if(time1<time1max){goto start;}//Time Increment and Determining Whether Maximum Time Has Been Reached
+	printf("Finished \n");
 
-	end:;
-  return 0;
+end:;
+	std::exit(0);
+	//return 0;
 
 }
 

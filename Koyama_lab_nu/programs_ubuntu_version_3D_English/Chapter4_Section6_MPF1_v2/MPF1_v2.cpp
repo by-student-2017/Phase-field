@@ -296,10 +296,15 @@ start: ;
 
 //*********************************************************************
 	//if(keypress()){return 0;}//Waiting for key
-	time1=time1+1.;  if(time1<time1max){goto start;}//Determining if the maximum count has been reached
+	time1=time1+1.;
+	
+	if(time1<time1max){goto start;}//Determining if the maximum count has been reached
 
-	end:;
-  return 0;
+	printf("Finished \n");
+
+end:;
+	std::exit(0);
+	//return 0;
 }
 
 //************ Initial field (phase field) setting subroutine *************

@@ -591,7 +591,9 @@ int main(void)
 			 sig11, sig22, sig33, sig12, sig13, sig23, u1, u2, u3, ND);	//save
 
 	//if(keypress()){return 0;}//wait key input
-	return 0;
+	printf("Finished \n");
+	std::exit(0);
+	//return 0;
 
 }
 

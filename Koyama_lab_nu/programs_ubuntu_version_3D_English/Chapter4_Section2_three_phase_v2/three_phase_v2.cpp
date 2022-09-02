@@ -311,7 +311,7 @@ start: ;
 	if(time1<time1max){goto start;}//Determining if the maximum count has been reached
 	printf("Finished \n");
 
-	end:;
+end:;
 	std::exit(0);
 	//return 0;
 }

@@ -407,7 +407,10 @@ int main(void)
 	datsave_paraview(ch, Estr, ep11c, ep22c, ep12c,
 					sig11, sig22, sig33, sig12, u1, u2, ND);	//save
 	//if(keypress()){return 0;}//ƒL[‘Ò‚¿ó‘Ô
-	return 0;
+	printf("Finished \n");
+
+	std::exit(0);
+	//return 0;
 }
 
 
