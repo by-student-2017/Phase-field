@@ -231,8 +231,8 @@ start: ;
 				Tkp=Th[i*NDP*NDP+j*NDP+kp];  Tkm=Th[i*NDP*NDP+j*NDP+km];
 
 //----- Deciding When to Skip Calculations ----------------------------------------------
-				dami1=fabs(s1+s1ip+s1im+s1jp+s1jm);
-				dami2=fabs(TT+Tip+Tim+Tjp+Tjm-5.0*Tini);
+				dami1=fabs(s1+s1ip+s1im+s1jp+s1jm+s1kp+s1km);
+				dami2=fabs(TT+Tip+Tim+Tjp+Tjm+Tkp+Tkm-7.0*Tini);
 				if( (dami1<=1.0e-20)&&(dami2<=1.0e-20) ){
 					//s1h2[i][j][K]=s1h[i][j][K];  Th2[i][j][K]=Th[i][j][K];
 					s1h2[i*NDP*NDP+j*NDP+k]=s1h[i*NDP*NDP+j*NDP+k];
@@ -275,15 +275,15 @@ start: ;
 					1.0 + (4.0*zeta)/(1.0-3.0*zeta)*(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))/(pow(div_s1,4.0))
 				);
 				dx_ep = aaa*4.0*zeta*(
-					-4.0*pow(div_s1,-5.0)*(dxx_s1+dxy_s1+dxz_s1)*(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))
+					-4.0*pow(div_s1,-5.0)*(dx_s1*dxx_s1+dy_s1*dxy_s1+dz_s1*dxz_s1)*(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))
 						+pow(div_s1,-4.0)*(4.0*pow(dx_s1,3.0)*dxx_s1+4.0*pow(dy_s1,3.0)*dxy_s1+4.0*pow(dz_s1,3.0)*dxz_s1)
 				);
 				dy_ep = aaa*4.0*zeta*(
-					-4.0*pow(div_s1,-5.0)*(dxy_s1+dyy_s1+dyz_s1)*(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))
+					-4.0*pow(div_s1,-5.0)*(dx_s1*dxy_s1+dy_s1*dyy_s1+dz_s1*dyz_s1)*(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))
 						+pow(div_s1,-4.0)*(4.0*pow(dx_s1,3.0)*dxy_s1+4.0*pow(dy_s1,3.0)*dyy_s1+4.0*pow(dz_s1,3.0)*dyz_s1)
 				);
 				dz_ep = aaa*4.0*zeta*(
-					-4.0*pow(div_s1,-5.0)*(dxz_s1+dyz_s1+dzz_s1)*(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))
+					-4.0*pow(div_s1,-5.0)*(dx_s1*dxz_s1+dy_s1*dyz_s1+dz_s1*dzz_s1)*(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))
 						+pow(div_s1,-4.0)*(4.0*pow(dx_s1,3.0)*dxz_s1+4.0*pow(dy_s1,3.0)*dyz_s1+4.0*pow(dz_s1,3.0)*dzz_s1)
 				);
 				term1 = 2.0*ep*(dx_ep + dy_ep + dz_ep) + ep*ep*(dxx_s1 + dyy_s1 + dzz_s1);
@@ -308,13 +308,13 @@ start: ;
 				//
 				term2x = dx_ep*ddphdx_ep*(div_s1*div_s1)
 					   + ep*dx_ddphdx_ep*(div_s1*div_s1)
-					   + ep*ddphdx_ep*2.0*div_s1*(dxx_s1 + dxy_s1 + dxz_s1);
+					   + ep*ddphdx_ep*2.0*div_s1*(dx_s1*dxx_s1+dy_s1*dxy_s1+dz_s1*dxz_s1);
 				term2y = dy_ep*ddphdy_ep*(div_s1*div_s1)
 					   + ep*dy_ddphdy_ep*(div_s1*div_s1)
-					   + ep*ddphdy_ep*2.0*div_s1*(dxy_s1 + dyy_s1 + dyz_s1);
+					   + ep*ddphdy_ep*2.0*div_s1*(dx_s1*dxy_s1+dy_s1*dyy_s1+dz_s1*dyz_s1);
 				term2z = dz_ep*ddphdz_ep*(div_s1*div_s1)
 					   + ep*dz_ddphdz_ep*(div_s1*div_s1)
-					   + ep*ddphdz_ep*2.0*div_s1*(dxz_s1 + dyz_s1 + dzz_s1);
+					   + ep*ddphdz_ep*2.0*div_s1*(dx_s1*dxz_s1+dy_s1*dyz_s1+dz_s1*dzz_s1);
 
 				//gradient potential [part of equation (4.29)]
 				//s1kais=-ep*ep*(dxx_s1+dyy_s1)
@@ -396,7 +396,7 @@ void ini000(double *s1h, double *Th, int NDP)
 				//if((i<10.)&&(j<10.)){s1h[i][j][k]=0.9;}
 				//if((i*i+j*j)<20.){s1h[i][j][k]=0.9;}
 				s1h[i*NDP*NDP+j*NDP+k]=0.0;
-				if((i*i+j*j)<20.0){
+				if((i*i+j*j+k*k)<20.0){
 					s1h[i*NDP*NDP+j*NDP+k]=0.9;
 				}
 			}
