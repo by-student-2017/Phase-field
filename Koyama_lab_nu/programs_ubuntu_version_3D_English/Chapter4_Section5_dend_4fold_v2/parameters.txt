@@ -1,4 +1,4 @@
-NDP= 351.0         ! Number of divisions + 1
+NDP= 65.0          ! Number of divisions + 1
 delt= 1.0          ! timestep
 dx= 30.0e-9        ! Difference grid size dx [m] Interface width delta=3.0*dx 
 dy= 30.0e-9        ! Difference grid size dy [m] Computation area al=dx*(double)nd

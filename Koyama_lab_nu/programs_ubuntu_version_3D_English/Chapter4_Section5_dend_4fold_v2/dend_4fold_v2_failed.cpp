@@ -84,6 +84,7 @@ int main(void)
 	double ddphdx_ep, ddphdy_ep, ddphdz_ep;	// ddphdx_ep = d(ep)/d(d(s1)/dx)
 	double dx_ddphdx_ep, dy_ddphdy_ep, dz_ddphdz_ep;	// ddphdx_ep = d(ep)/d(d(s1)/dx)
 	double term1, term2x, term2y, term2z, term3;
+	double dx_abs_div_ph, dy_abs_div_ph, dz_abs_div_ph;	// d|div(ph)|/dx, d|div(ph)|/dy, d|div(ph)|/dz
 
 //****** Setting calculation conditions and material constants ****************************************
 	printf("---------------------------------\n");
@@ -279,48 +280,106 @@ start: ;
 				}
 				ep = aaa*(1.0-3.0*zeta)*(
 					1.0 + (4.0*zeta)/(1.0-3.0*zeta)*(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))/(pow(div_s1,4.0))
+					//1.0 + (4.0*zeta)/(1.0-3.0*zeta)*(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))*(pow(div_s1,-4.0))
 				);
+				//
+				//dx_abs_div_ph = (dx_s1*dx_s1 + dy_s1*dy_s1 + dz_s1*dz_s1)*(dx_s1*dxx_s1 + dy_s1*dxy_s1 + dz_s1*dxz_s1);
+				//dy_abs_div_ph = (dx_s1*dx_s1 + dy_s1*dy_s1 + dz_s1*dz_s1)*(dx_s1*dxy_s1 + dy_s1*dyy_s1 + dz_s1*dyz_s1);
+				//dz_abs_div_ph = (dx_s1*dx_s1 + dy_s1*dy_s1 + dz_s1*dz_s1)*(dx_s1*dxz_s1 + dy_s1*dyz_s1 + dz_s1*dzz_s1);
+				dx_abs_div_ph = div_s1*div_s1*(dx_s1*dxx_s1 + dy_s1*dxy_s1 + dz_s1*dxz_s1);
+				dy_abs_div_ph = div_s1*div_s1*(dx_s1*dxy_s1 + dy_s1*dyy_s1 + dz_s1*dyz_s1);
+				dz_abs_div_ph = div_s1*div_s1*(dx_s1*dxz_s1 + dy_s1*dyz_s1 + dz_s1*dzz_s1);
+				//
 				dx_ep = aaa*4.0*zeta*(
-					-4.0*pow(div_s1,-5.0)*(dx_s1*dxx_s1+dy_s1*dxy_s1+dz_s1*dxz_s1)*(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))
-						+pow(div_s1,-4.0)*(4.0*pow(dx_s1,3.0)*dxx_s1+4.0*pow(dy_s1,3.0)*dxy_s1+4.0*pow(dz_s1,3.0)*dxz_s1)
+					 (4.0*pow(dx_s1,3.0)*dxx_s1+4.0*pow(dy_s1,3.0)*dxy_s1+4.0*pow(dz_s1,3.0)*dxz_s1)*pow(div_s1,-4.0)
+					//+(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))*-4.0*pow(div_s1,-5.0)*dx_abs_div_ph
+					+(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))*
+						-4.0*pow(div_s1,-3.0)*(dx_s1*dxx_s1 + dy_s1*dxy_s1 + dz_s1*dxz_s1)
 				);
 				dy_ep = aaa*4.0*zeta*(
-					-4.0*pow(div_s1,-5.0)*(dx_s1*dxy_s1+dy_s1*dyy_s1+dz_s1*dyz_s1)*(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))
-						+pow(div_s1,-4.0)*(4.0*pow(dx_s1,3.0)*dxy_s1+4.0*pow(dy_s1,3.0)*dyy_s1+4.0*pow(dz_s1,3.0)*dyz_s1)
+					 (4.0*pow(dx_s1,3.0)*dxy_s1+4.0*pow(dy_s1,3.0)*dyy_s1+4.0*pow(dz_s1,3.0)*dyz_s1)*pow(div_s1,-4.0)
+					//+(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))*-4.0*pow(div_s1,-5.0)*dy_abs_div_ph
+					+(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))*
+						-4.0*pow(div_s1,-3.0)*(dx_s1*dxy_s1 + dy_s1*dyy_s1 + dz_s1*dyz_s1)
 				);
 				dz_ep = aaa*4.0*zeta*(
-					-4.0*pow(div_s1,-5.0)*(dx_s1*dxz_s1+dy_s1*dyz_s1+dz_s1*dzz_s1)*(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))
-						+pow(div_s1,-4.0)*(4.0*pow(dx_s1,3.0)*dxz_s1+4.0*pow(dy_s1,3.0)*dyz_s1+4.0*pow(dz_s1,3.0)*dzz_s1)
+					 (4.0*pow(dx_s1,3.0)*dxz_s1+4.0*pow(dy_s1,3.0)*dyz_s1+4.0*pow(dz_s1,3.0)*dzz_s1)*pow(div_s1,-4.0)
+					//+(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))*-4.0*pow(div_s1,-5.0)*dz_abs_div_ph
+					+(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))*
+						-4.0*pow(div_s1,-3.0)*(dx_s1*dxz_s1 + dy_s1*dyz_s1 + dz_s1*dzz_s1)
 				);
-				term1 = 2.0*ep*(dx_ep + dy_ep + dz_ep) + ep*ep*(dxx_s1 + dyy_s1 + dzz_s1);
+				term1 = 2.0*ep*(dx_ep*dx_s1 + dy_ep*dy_s1 + dz_ep*dz_s1) 
+					  + ep*ep*(dxx_s1 + dyy_s1 + dzz_s1);
 				
 				// ddphdx_ep = d(ep)/d(d(s1)/dx)
-				ddphdx_ep = aaa*4.0*zeta*4.0*pow(dx_s1,3.0)/pow(div_s1,4.0);
-				ddphdy_ep = aaa*4.0*zeta*4.0*pow(dy_s1,3.0)/pow(div_s1,4.0);
-				ddphdz_ep = aaa*4.0*zeta*4.0*pow(dz_s1,3.0)/pow(div_s1,4.0);
+				ddphdx_ep = aaa*4.0*zeta*(
+							4.0*pow(dx_s1,3.0)*pow(div_s1,-4.0)
+							+(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))*
+								//-4.0*pow(div_s1,-5.0)*0.5*(div_s1*div_s1)*2.0*dx_s1
+								-4.0*pow(div_s1,-3.0)*dx_s1
+				);
+				ddphdy_ep = aaa*4.0*zeta*(
+							4.0*pow(dy_s1,3.0)*pow(div_s1,-4.0)
+							+(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))*
+								//-4.0*pow(div_s1,-5.0)*0.5*(div_s1*div_s1)*2.0*dy_s1
+								-4.0*pow(div_s1,-3.0)*dy_s1
+				);
+				ddphdz_ep = aaa*4.0*zeta*(
+							4.0*pow(dz_s1,3.0)*pow(div_s1,-4.0)
+							+(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))*
+								//-4.0*pow(div_s1,-5.0)*0.5*(div_s1*div_s1)*2.0*dz_s1
+								-4.0*pow(div_s1,-3.0)*dz_s1
+				);
 				//
-				dx_ddphdx_ep = aaa*4.0*zeta*4.0*(
-					3.0*pow(dx_s1,2.0)*dxx_s1*pow(div_s1,-4.0)
-					+pow(dx_s1,3.0)*-4.0*pow(div_s1,-5.0)*(dxx_s1 + dxy_s1 + dxz_s1)
+				dx_ddphdx_ep = aaa*4.0*zeta*(
+					12.0*pow(dx_s1,2.0)*dxx_s1*pow(div_s1,-4.0)
+					//+4.0*pow(dx_s1,3.0)*-4.0*pow(div_s1,-5.0)*dx_abs_div_ph
+					+4.0*pow(dx_s1,3.0)*-4.0*pow(div_s1,-3.0)*(dx_s1*dxx_s1 + dy_s1*dxy_s1 + dz_s1*dxz_s1)
+					//
+					+(4.0*pow(dx_s1,3.0)*dxx_s1+4.0*pow(dy_s1,3.0)*dxy_s1+4.0*pow(dz_s1,3.0)*dxz_s1)*
+						-4.0*pow(div_s1,-3.0)*dx_s1
+					+(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))*(
+						//12.0*pow(div_s1,-4.0)*dx_abs_div_ph*dx_s1
+						12.0*pow(div_s1,-2.0)*(dx_s1*dxx_s1 + dy_s1*dxy_s1 + dz_s1*dxz_s1)*dx_s1
+						-4.0*pow(div_s1,-3.0)*dxx_s1
+						)
 				);
-				dy_ddphdy_ep = aaa*4.0*zeta*4.0*(
-					3.0*pow(dy_s1,2.0)*dyy_s1*pow(div_s1,-4.0)
-					+pow(dy_s1,3.0)*-4.0*pow(div_s1,-5.0)*(dxy_s1 + dyy_s1 + dyz_s1)
+				dy_ddphdy_ep = aaa*4.0*zeta*(
+					12.0*pow(dy_s1,2.0)*dyy_s1*pow(div_s1,-4.0)
+					//+4.0*pow(dy_s1,3.0)*-4.0*pow(div_s1,-5.0)*dy_abs_div_ph
+					+4.0*pow(dy_s1,3.0)*-4.0*pow(div_s1,-3.0)*(dx_s1*dxy_s1 + dy_s1*dyy_s1 + dz_s1*dyz_s1)
+					//
+					+(4.0*pow(dx_s1,3.0)*dxy_s1+4.0*pow(dy_s1,3.0)*dyy_s1+4.0*pow(dz_s1,3.0)*dyz_s1)*
+						-4.0*pow(div_s1,-3.0)*dy_s1
+					+(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))*(
+						//12.0*pow(div_s1,-4.0)*dy_abs_div_ph*dy_s1
+						12.0*pow(div_s1,-2.0)*(dx_s1*dxy_s1 + dy_s1*dyy_s1 + dz_s1*dyz_s1)*dy_s1
+						-4.0*pow(div_s1,-3.0)*dyy_s1
+						)
 				);
-				dz_ddphdz_ep = aaa*4.0*zeta*4.0*(
-					3.0*pow(dz_s1,2.0)*dzz_s1*pow(div_s1,-4.0)
-					+pow(dz_s1,3.0)*-4.0*pow(div_s1,-5.0)*(dxz_s1 + dyz_s1 + dzz_s1)
+				dz_ddphdz_ep = aaa*4.0*zeta*(
+					12.0*pow(dz_s1,2.0)*dzz_s1*pow(div_s1,-4.0)
+					//+4.0*pow(dz_s1,3.0)*-4.0*pow(div_s1,-5.0)*dz_abs_div_ph
+					+4.0*pow(dz_s1,3.0)*-4.0*pow(div_s1,-3.0)*(dx_s1*dxz_s1 + dy_s1*dyz_s1 + dz_s1*dzz_s1)
+					//
+					+(4.0*pow(dx_s1,3.0)*dxz_s1+4.0*pow(dy_s1,3.0)*dyz_s1+4.0*pow(dz_s1,3.0)*dzz_s1)*
+						-4.0*pow(div_s1,-3.0)*dz_s1
+					+(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))*(
+						//12.0*pow(div_s1,-4.0)*dz_abs_div_ph*dz_s1
+						12.0*pow(div_s1,-2.0)*(dx_s1*dxz_s1 + dy_s1*dyz_s1 + dz_s1*dzz_s1)*dz_s1
+						-4.0*pow(div_s1,-3.0)*dzz_s1
+						)
 				);
 				//
 				term2x = dx_ep*ddphdx_ep*(div_s1*div_s1)
 					   + ep*dx_ddphdx_ep*(div_s1*div_s1)
-					   + ep*ddphdx_ep*2.0*div_s1*(dx_s1*dxx_s1+dy_s1*dxy_s1+dz_s1*dxz_s1);
+					   + ep*ddphdx_ep*2.0*div_s1*dx_abs_div_ph;
 				term2y = dy_ep*ddphdy_ep*(div_s1*div_s1)
 					   + ep*dy_ddphdy_ep*(div_s1*div_s1)
-					   + ep*ddphdy_ep*2.0*div_s1*(dx_s1*dxy_s1+dy_s1*dyy_s1+dz_s1*dyz_s1);
+					   + ep*ddphdy_ep*2.0*div_s1*dy_abs_div_ph;
 				term2z = dz_ep*ddphdz_ep*(div_s1*div_s1)
 					   + ep*dz_ddphdz_ep*(div_s1*div_s1)
-					   + ep*ddphdz_ep*2.0*div_s1*(dx_s1*dxz_s1+dy_s1*dyz_s1+dz_s1*dzz_s1);
+					   + ep*ddphdz_ep*2.0*div_s1*dz_abs_div_ph;
 
 				//gradient potential [part of equation (4.29)]
 				//s1kais=-ep*ep*(dxx_s1+dyy_s1)
@@ -353,7 +412,7 @@ start: ;
 				//Thermal diffusion equation [equation (4.30)]
 				Tddtt=( cndct*( 
 						(Tip+Tim-2.0*TT)/dx/dx
-					   +(Tjp+Tjm-2.0*TT)/dy/dy 
+					   +(Tjp+Tjm-2.0*TT)/dy/dy
 					   +(Tkp+Tkm-2.0*TT)/dz/dz
 					  ) +30.0*s1*(1.0-s1)*s1*(1.0-s1)*rlate*s1ddtt )/speht;
 
@@ -456,24 +515,24 @@ void datsave_paraview(double *s1h, double *Th, int NDP)
 	fprintf(fp,"output.vtk \n");
 	fprintf(fp,"ASCII \n");
 	fprintf(fp,"DATASET STRUCTURED_POINTS \n");
-	fprintf(fp,"DIMENSIONS %5d %5d %5d \n",(ndm+1),(ndm+1),(ndm+1));
+	fprintf(fp,"DIMENSIONS %5d %5d %5d \n",(nd+1),(nd+1),(nd+1));
 	fprintf(fp,"ORIGIN 0.0 0.0 0.0 \n");
 	fprintf(fp,"ASPECT_RATIO 1 1 1 \n");
-	fprintf(fp,"POINT_DATA %16d \n",((ndm+1)*(ndm+1)*(ndm+1)));
+	fprintf(fp,"POINT_DATA %16d \n",((nd+1)*(nd+1)*(nd+1)));
 	fprintf(fp,"SCALARS Phase_field float \n");
 	fprintf(fp,"LOOKUP_TABLE default \n");
-	for(k=0;k<=ndm;k++){
-		for(j=0;j<=ndm;j++){
-			for(i=0;i<=ndm;i++){
+	for(k=0;k<=nd;k++){
+		for(j=0;j<=nd;j++){
+			for(i=0;i<=nd;i++){
 				fprintf(fp,"%10.6f\n", s1h[i*NDP*NDP+j*NDP+k]);
 			}
 		}
 	}
 	fprintf(fp,"SCALARS Temperature float \n");
 	fprintf(fp,"LOOKUP_TABLE default \n");
-	for(k=0;k<=ndm;k++){
-		for(j=0;j<=ndm;j++){
-			for(i=0;i<=ndm;i++){
+	for(k=0;k<=nd;k++){
+		for(j=0;j<=nd;j++){
+			for(i=0;i<=nd;i++){
 				fprintf(fp,"%10.6f\n", Th[i*NDP*NDP+j*NDP+k]);
 			}
 		}
