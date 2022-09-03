@@ -270,7 +270,7 @@ start: ;
 				
 				//other test: Eq.(4.18): a = ep
 				//zeta = astre;
-				div_s1 = (dx_s1 + dy_s1 + dz_s1);
+				div_s1 = sqrt(dx_s1*dx_s1 + dy_s1*dy_s1 + dz_s1*dz_s1);
 				ep = aaa*(1.0-3.0*zeta)*(
 					1.0 + (4.0*zeta)/(1.0-3.0*zeta)*(pow(dx_s1,4.0)+pow(dy_s1,4.0)+pow(dz_s1,4.0))/(pow(div_s1,4.0))
 				);
