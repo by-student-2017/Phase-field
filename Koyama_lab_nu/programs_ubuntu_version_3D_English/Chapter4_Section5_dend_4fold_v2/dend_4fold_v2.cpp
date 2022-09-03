@@ -46,7 +46,7 @@ int main(void)
 	double s1ddtt;					//Time variation of s1 (left side of evolution equation)
 
 	double TT;						//temperature field
-	double Tip, Tim, Tjp, Tjm;		//Left, right, top, bottom temperature of TT
+	double Tip, Tim, Tjp, Tjm, Tkp, Tkm;	//Left, right, top, bottom temperature of TT
 	double Tddtt;					//Temporal change in temperature (left side of thermal diffusion equation)
 
 	double ep, ep1p, ep2p;			//Gradient energy coefficient related variables
@@ -221,12 +221,14 @@ start: ;
 				s1jpkp=s1h[i*NDP*NDP+ip*NDP+kp]; s1jpkm=s1h[i*NDP*NDP+ip*NDP+km];
 				s1jmkp=s1h[i*NDP*NDP+jm*NDP+kp]; s1jmkm=s1h[i*NDP*NDP+jm*NDP+km];
 
-				//TT=Th[i][j];//temperature field
-				//Tip=Th[ip][j];  Tim=Th[im][j];  Tjp=Th[i][jp];  Tjm=Th[i][jm];
+				//TT=Th[i][j][k];//temperature field
+				//Tip=Th[ip][j][k];  Tim=Th[im][j][k];
+				//Tjp=Th[i][jp][k];  Tjm=Th[i][jm][k];
+				//Tkp=Th[i][j][kp];  Tkm=Th[i][j][km];
 				TT=Th[i*NDP*NDP+j*NDP+k];//temperature field
 				Tip=Th[ip*NDP*NDP+j*NDP+k];  Tim=Th[im*NDP*NDP+j*NDP+k];
 				Tjp=Th[i*NDP*NDP+jp*NDP+k];  Tjm=Th[i*NDP*NDP+jm*NDP+k];
-				Tjp=Th[i*NDP*NDP+j*NDP+kp];  Tjm=Th[i*NDP*NDP+j*NDP+km];
+				Tkp=Th[i*NDP*NDP+j*NDP+kp];  Tkm=Th[i*NDP*NDP+j*NDP+km];
 
 //----- Deciding When to Skip Calculations ----------------------------------------------
 				dami1=fabs(s1+s1ip+s1im+s1jp+s1jm);
@@ -343,7 +345,11 @@ start: ;
 				if(s1h2[i*NDP*NDP+j*NDP+k]<=0.0){s1h2[i*NDP*NDP+j*NDP+k]=0.0;}
 
 				//Thermal diffusion equation [equation (4.30)]
-				Tddtt=( cndct*( (Tip+Tim-2.0*TT)/dx/dx+(Tjp+Tjm-2.0*TT)/dy/dy )
+				Tddtt=( cndct*( 
+						(Tip+Tim-2.0*TT)/dx/dx
+					   +(Tjp+Tjm-2.0*TT)/dy/dy 
+					   +(Tkp+Tkm-2.0*TT)/dz/dz
+					  )
 						+30.0*s1*(1.0-s1)*s1*(1.0-s1)*rlate*s1ddtt )/speht;
 
 				//Th2[i][j][k]=Th[i][j][k]+Tddtt*delt;		//Time evolution of temperature field (explicit method)
