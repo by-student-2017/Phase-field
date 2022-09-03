@@ -1,0 +1,47 @@
+ND= 100.0          ! Division number 
+c2a= 0.1333        ! Concentration, B/(A+B+C+D+E+F)
+c3a= 0.1333        ! Concentration, C/(A+B+C+D+E+F)
+c4a= 0.1333        ! Concentration, D/(A+B+C+D+E+F)
+c5a= 0.1333        ! Concentration, E/(A+B+C+D+E+F)
+c6a= 0.1333        ! Concentration, F/(A+B+C+D+E+F)
+delt= 0.005        ! timestep [dimensionless] (cmob22=cmob33=1.0, cmob23=cmob32=-0.5 [dimensionless])
+temp= 900.0        ! Temperature [K]
+al= 100.0          ! Computation area [nm]
+cmob22= 1.0        ! mobility, Mc(22)
+cmob33= 1.0        ! mobility, Mc(33)
+cmob44= 1.0        ! mobility, Mc(44)
+cmob55= 1.0        ! mobility, Mc(55)
+cmob66= 1.0        ! mobility, Mc(66)
+cmob23= -0.5       ! mobility, cmob23=como32=Mc(23)=Mc(32)
+cmob24= -0.5       ! mobility, cmob24=como42=Mc(24)=Mc(42)
+cmob25= -0.5       ! mobility, cmob25=como52=Mc(25)=Mc(52)
+cmob26= -0.5       ! mobility, cmob26=como62=Mc(26)=Mc(62)
+cmob34= -0.5       ! mobility, cmob34=como43=Mc(34)=Mc(43)
+cmob35= -0.5       ! mobility, cmob35=como53=Mc(35)=Mc(53)
+cmob36= -0.5       ! mobility, cmob36=como63=Mc(36)=Mc(63)
+cmob45= -0.5       ! mobility, cmob45=como54=Mc(45)=Mc(54)
+cmob46= -0.5       ! mobility, cmob45=como54=Mc(46)=Mc(64)
+cmob56= -0.5       ! mobility, cmob56=como65=Mc(56)=Mc(65)
+om_12e= 25000.0    ! om_12e [J/mol] = LaA,B
+om_13e= 25000.0    ! om_13e [J/mol] = LaA,C
+om_14e= 25000.0    ! om_14e [J/mol] = LaA,D
+om_15e= 25000.0    ! om_15e [J/mol] = LaA,E
+om_16e= 25000.0    ! om_16e [J/mol] = LaA,F
+om_23e= 25000.0    ! om_23e [J/mol] = LaB,C
+om_24e= 25000.0    ! om_24e [J/mol] = LaB,D
+om_25e= 25000.0    ! om_25e [J/mol] = LaB,E
+om_26e= 25000.0    ! om_26e [J/mol] = LaB,F
+om_34e= 25000.0    ! om_34e [J/mol] = LaC,D
+om_35e= 25000.0    ! om_35e [J/mol] = LaC,E
+om_36e= 25000.0    ! om_36e [J/mol] = LaC,F
+om_45e= 25000.0    ! om_45e [J/mol] = LaD,E
+om_46e= 25000.0    ! om_46e [J/mol] = LaD,F
+om_56e= 25000.0    ! om_56e [J/mol] = LaE,F
+kapa_c1c= 5.0e-15  ! Concentration gradient energy constant kapa_c1c [Jm2/mol]
+kapa_c2c= 5.0e-15  ! Concentration gradient energy constant kapa_c2c [Jm2/mol]
+kapa_c3c= 5.0e-15  ! Concentration gradient energy constant kapa_c3c [Jm2/mol]
+kapa_c4c= 5.0e-15  ! Concentration gradient energy constant kapa_c4c [Jm2/mol]
+kapa_c5c= 5.0e-15  ! Concentration gradient energy constant kapa_c5c [Jm2/mol]
+kapa_c6c= 5.0e-15  ! Concentration gradient energy constant kapa_c6c [Jm2/mol]
+time1max= 1.0e05   ! Max iterations
+Nstep= 200.0       ! output every "Nstep"

@@ -1,0 +1,565 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h> 
+#include <math.h>
+
+#define DRND(x) ((double)(x)/RAND_MAX*rand())  //Random number setting
+
+	double PI=3.141592654;		//Pi
+	double rr=8.3145;			//gas constant
+	double temp;				//absolute temperature
+	double time1;				//Number of calculation counts (proportional to time)
+	double c2a, c3a, c4a, c5a, c6a;		//Average composition (1: A component, 2: B component, 3: C component)
+	int Nstep, iout;
+
+	void ini000(double *c2h, double *c3h, double *c4h, double *c5h, double *c6h, int ND);	//Initial concentration profile setting subroutine
+	void datsave(double *c2h, double *c3h, double *c4h, double *c5h, double *c6h, int ND);	//data save subroutine
+	void datsave_paraview(double *c2h, double *c3h, double *c4h, double *c5h, double *c6h, int ND);//data save subroutine
+
+//******* main program ******************************************
+int main(void)
+{
+	int ND, nd, ndm;
+	
+	double c1, c2, c3, c4, c5, c6;				//local concentration
+	double c2k_chem, c2k_su;					//local potential
+	double c3k_chem, c3k_su;					//local potential
+	double c4k_chem, c4k_su;					//local potential
+	double c5k_chem, c5k_su;					//local potential
+	double c6k_chem, c6k_su;					//local potential
+	double dc2a, sumc2;	//Variables used for concentration field balance calculation
+	double dc3a, sumc3;
+	double dc4a, sumc4;
+	double dc5a, sumc5;
+	double dc6a, sumc6;
+	double sumct;
+	double dakd2, dakd3, dakd4, dakd5, dakd6;		//Second derivative of the diffusion potential
+	double c2ddtt, c3ddtt, c4ddtt, c5ddtt, c6ddtt;	//Time variation of concentration field
+
+	int   i, j, k;								//integer
+	int   ip, im, jp, jm, kp, km;				//(i+1),(i-1),(j+1),(j-1),(k+1),(k-1)
+	double al, b1, rtemp, delt;					//Length of one side of computational domain, length of one side of difference block, RT, time step
+	double time1max;							//Maximum calculation count (calculation end count)
+	double cmob22, cmob33, cmob44, cmob55, cmob66;	//mobility
+	double cmob23, cmob32;
+	double cmob24, cmob42;
+	double cmob25, cmob52;
+	double cmob26, cmob62;
+	double cmob34, cmob43;
+	double cmob35, cmob53;
+	double cmob36, cmob63;
+	double cmob45, cmob54;
+	double cmob46, cmob64;
+	double cmob56, cmob65;
+
+	double om_12, om_13, om_14, om_15, om_16;			//interaction parameter
+	double om_23, om_24, om_25, om_26;
+	double om_34, om_35, om_36;
+	double om_45, om_46;
+	double om_56;
+	double om_12e, om_13e, om_14e, om_15e, om_16e;		//interaction parameter
+	double om_23e, om_24e, om_25e, om_26e;
+	double om_34e, om_35e, om_36e;
+	double om_45e, om_46e;
+	double om_56e;
+	double kapa_c1, kapa_c2, kapa_c3, kapa_c4, kapa_c5, kapa_c6;		//concentration gradient energy coefficient
+	double kapa_c1c, kapa_c2c, kapa_c3c, kapa_c4c, kapa_c5c, kapa_c6c;	//concentration gradient energy coefficient
+	
+	double div2_c2h, div2_c3h, div2_c4h, div2_c5h, div2_c6h;		//div(div(ch))=d^2(ch)/dx^2 + d^2(ch)/dy^2 + d^2(ch)/dz^2
+
+//****** Setting calculation conditions and material constants ****************************************
+	printf("---------------------------------\n");
+	printf("read parameters from parameters.txt\n");
+	FILE *fp;
+	char name[40], comment[72];
+	float param;
+	float data[80];
+	i = 0;
+	fp = fopen("parameters.txt","r");
+	while(fscanf(fp,"%s %e %[^\n] ",name, &param, comment) != EOF)
+	{
+		data[i] = param;
+		printf("%d, %s %e \n",i,name,data[i]);
+		i = i + 1;
+	}
+	fclose(fp);
+	//
+	ND      = int(data[0]);
+	c2a     = data[1];
+	c3a     = data[2];
+	c4a     = data[3];
+	c5a     = data[4];
+	c6a     = data[5];
+	delt    = data[6];
+	temp    = data[7];
+	al      = data[8];	// [nm]
+	cmob22  = data[9];
+	cmob33  = data[10];
+	cmob44  = data[11];
+	cmob55  = data[12];
+	cmob66  = data[13];
+	cmob23  = data[14];
+	cmob24  = data[15];
+	cmob25  = data[16];
+	cmob26  = data[17];
+	cmob34  = data[18];
+	cmob35  = data[19];
+	cmob36  = data[20];
+	cmob45  = data[21];
+	cmob46  = data[22];
+	cmob56  = data[23];
+	om_12e  = data[24];	//L_AB
+	om_13e  = data[25];	//L_AC
+	om_14e  = data[26];	//L_AD
+	om_15e  = data[27];	//L_AE
+	om_16e  = data[28];	//L_AF
+	om_23e  = data[29];	//L_BC
+	om_24e  = data[30];	//L_BD
+	om_25e  = data[31];	//L_BE
+	om_26e  = data[32];	//L_BF
+	om_34e  = data[33];	//L_CD
+	om_35e  = data[34];	//L_CE
+	om_36e  = data[35];	//L_CF
+	om_45e  = data[36];	//L_DE
+	om_46e  = data[37];	//L_DF
+	om_56e  = data[38];	//L_EE
+	kapa_c1c= data[39];
+	kapa_c2c= data[40];
+	kapa_c3c= data[41];
+	kapa_c4c= data[42];
+	kapa_c5c= data[43];
+	kapa_c6c= data[44];
+	time1max= int(data[45]);
+	Nstep   = int(data[46]);
+	printf("---------------------------------\n");
+	//
+	nd=ND;					//Number of difference divisions on one side of the computational domain (number of difference blocks)
+	ndm=ND-1;				//Define ND-1
+	//
+	//double ch[(nstep+1)*nstep]; // [(nstep+1)*nstep]=[nstep*nstep+nstep], a[i][j]= a[i*n+j] for a[][n]
+	//a[z * ySize * xSize + y * xSize + x], a[i][j][k]=a[i*n*m + j*n + k]
+	double *c2h  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//topical composition
+	double *c3h  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//topical composition
+	double *c4h  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//topical composition
+	double *c5h  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//topical composition
+	double *c6h  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//topical composition
+	double *c2h2 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//auxiliary matrix for the local concentration field
+	double *c3h2 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//auxiliary matrix for the local concentration field
+	double *c4h2 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//auxiliary matrix for the local concentration field
+	double *c5h2 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//auxiliary matrix for the local concentration field
+	double *c6h2 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//auxiliary matrix for the local concentration field
+	double *c2k  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//local potential
+	double *c3k  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//local potential
+	double *c4k  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//local potential
+	double *c5k  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//local potential
+	double *c6k  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//local potential
+	//
+	rtemp=rr*temp;				//RT
+	
+	al=al*1.0E-09;				//Side length of calculation area (m)
+	b1=al/(double)ND;			//Length of one side of difference block
+
+	cmob32=cmob23;				//mobility
+	cmob42=cmob24;
+	cmob52=cmob25;
+	cmob62=cmob26;
+	cmob34=cmob43;
+	cmob35=cmob53;
+	cmob36=cmob63;
+	cmob45=cmob54;
+	cmob46=cmob64;
+	cmob56=cmob65;
+
+	om_12=om_12e/rtemp; 		//Interaction parameters (in J/mol, non-dimensionalized at RT)
+	om_13=om_13e/rtemp;
+	om_14=om_14e/rtemp;
+	om_15=om_15e/rtemp;
+	om_16=om_16e/rtemp;
+	om_23=om_23e/rtemp;
+	om_24=om_24e/rtemp;
+	om_25=om_25e/rtemp;
+	om_26=om_26e/rtemp;
+	om_34=om_34e/rtemp;
+	om_35=om_35e/rtemp;
+	om_36=om_36e/rtemp;
+	om_45=om_45e/rtemp;
+	om_46=om_46e/rtemp;
+	om_56=om_56e/rtemp;
+
+	kapa_c1=kapa_c1c/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
+	kapa_c2=kapa_c2c/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
+	kapa_c3=kapa_c3c/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
+	kapa_c4=kapa_c4c/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
+	kapa_c5=kapa_c5c/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
+	kapa_c6=kapa_c6c/b1/b1/rtemp;//gradient energy coefficient (in Jm^2/mol, non-dimensionalized by RT and b1^2)
+
+	time1=0.0;					//Initial value of calculation count
+
+//*** Initial concentration field setting and drawing window display *****************************************
+
+	ini000(c2h, c3h, c4h, c5h, c6h, ND);//Setting the initial concentration field
+
+//**** Simulation start ******************************
+//Nstep = 2000;
+iout = -1;
+start: ;
+
+	//printf("Time: %f \n", time1);
+	//if((((int)(time1) % Nstep)==0)) {datsave(c2h, c3h, c4h, c5h, c6h, ND);} //Save the concentration field every fixed repetition count
+	if((((int)(time1) % Nstep)==0)) {datsave_paraview(c2h, c3h, c4h, c5h, c6h, ND);} //Save the concentration field every fixed repetition count
+
+//***** Potential field calculation ***********************************
+	for(i=0;i<=ndm;i++){
+		for(j=0;j<=ndm;j++){
+			for(k=0;k<=ndm;k++){
+				
+				ip=i+1; im=i-1; jp=j+1; jm=j-1; kp=k+1; km=k-1;
+				if(i==ndm){ip=0;} if(i==0){im=ndm;}	//periodic boundary conditions
+				if(j==ndm){jp=0;} if(j==0){jm=ndm;}	//periodic boundary conditions
+				if(k==ndm){kp=0;} if(k==0){km=ndm;}	//periodic boundary conditions
+
+				//c2=c2h[i][j]; c3=c3h[i][j]; c1=1.0-c2-c3;//local concentration field
+				c2=c2h[i*ND*ND+j*ND+k]; c3=c3h[i*ND*ND+j*ND+k]; c4=c4h[i*ND*ND+j*ND+k]; c5=c5h[i*ND*ND+j*ND+k]; c6=c6h[i*ND*ND+j*ND+k];
+				c1=1.0-c2-c3-c4-c5-c6;//local concentration field
+
+				//Gsys = Gc + Ggrad
+				//Gc = integral { (L_AB * c1 * c2) + (L_AC * c1 * c3) + (L_BC * c2 * c3) + ...
+				//  + RT*( c1*log(c1) + c2*log(c2) + c3*log(c3) + ...) }  dr
+				c2k_chem=om_12*c1-om_12*c2-om_13*c3-om_14*c4-om_15*c5-om_16*c6
+						+om_23*c3+om_24*c4+om_25*c5+om_26*c6+(log(c2)-log(c1));//chemical diffusion potential
+
+				div2_c2h = (c2h[ip*ND*ND+j*ND+k]+c2h[im*ND*ND+j*ND+k]
+						   +c2h[i*ND*ND+jp*ND+k]+c2h[i*ND*ND+jm*ND+k]
+      					   +c2h[i*ND*ND+j*ND+kp]+c2h[i*ND*ND+j*ND+km]
+						   -6.0*c2);
+				
+				div2_c3h = (c3h[ip*ND*ND+j*ND+k]+c3h[im*ND*ND+j*ND+k]
+						   +c3h[i*ND*ND+jp*ND+k]+c3h[i*ND*ND+jm*ND+k]
+      					   +c3h[i*ND*ND+j*ND+kp]+c3h[i*ND*ND+j*ND+km]
+						   -6.0*c3);
+				
+				div2_c4h = (c4h[ip*ND*ND+j*ND+k]+c4h[im*ND*ND+j*ND+k]
+						   +c4h[i*ND*ND+jp*ND+k]+c4h[i*ND*ND+jm*ND+k]
+      					   +c4h[i*ND*ND+j*ND+kp]+c4h[i*ND*ND+j*ND+km]
+						   -6.0*c4);
+				
+				div2_c5h = (c5h[ip*ND*ND+j*ND+k]+c5h[im*ND*ND+j*ND+k]
+						   +c5h[i*ND*ND+jp*ND+k]+c5h[i*ND*ND+jm*ND+k]
+      					   +c5h[i*ND*ND+j*ND+kp]+c5h[i*ND*ND+j*ND+km]
+						   -6.0*c5);
+				
+				div2_c6h = (c6h[ip*ND*ND+j*ND+k]+c6h[im*ND*ND+j*ND+k]
+						   +c6h[i*ND*ND+jp*ND+k]+c6h[i*ND*ND+jm*ND+k]
+      					   +c6h[i*ND*ND+j*ND+kp]+c6h[i*ND*ND+j*ND+km]
+						   -6.0*c6);
+				
+				//0.5*(c2+c3+c4+c5+c6)*(c2+c3+c4+c5+c6)+0.5*c2*c2+c3*c3+c4*c4+c5*c5+c6*c6
+				//						 =0.5*c2*c2+c2*c3+c2*c4+c2*c5+c2*c6
+				//						 +0.5*c3*c2+c3*c3+c3+c4+c3*c5+c3*c6
+				//						 +0.5*c4*c2+c4*c3+c4+c4+c4*c5+c4*c6
+				//						 +0.5*c5*c2+c5*c3+c5+c4+c5*c5+c5*c6
+				//						 +0.5*c6*c2+c6*c3+c6+c4+c6*c5+c6*c6
+				//						 +0.5*c2*c2+c3*c3+c4*c4+c5*c5+c6*c6
+				//						 =c2*c2+c3*c3+c4*c4+c5*c5+c6*c6
+				//						 +c2*c3+c2*c4+c2*c5+c2*c6+c3*c4+c3*c5+c3*c6+c4*c5+c4*c6+c5*c6
+				//Ggrad = integral {0.5*kappa1*div(div c1) + 0.5*kappa2*div(div c2) + 0.5*kappa3*div(div c3) + ... } dr
+				
+				//gradient potential
+				c2k_su=-2.0*(0.5*kapa_c1+0.5*kapa_c2)*div2_c2h
+						   -(0.5*kapa_c1+0.5*kapa_c3)*div2_c3h
+						   -(0.5*kapa_c1+0.5*kapa_c4)*div2_c4h
+						   -(0.5*kapa_c1+0.5*kapa_c5)*div2_c5h
+						   -(0.5*kapa_c1+0.5*kapa_c6)*div2_c6h;
+
+				c3k_chem=om_13*c1-om_12*c2-om_13*c3-om_14*c4-om_15*c5-om_16*c6
+						+om_23*c2+om_34*c4+om_35*c5+om_36*c6+(log(c3)-log(c1));///chemical diffusion potential
+				c3k_su=-2.0*(0.5*kapa_c1+0.5*kapa_c3)*div2_c3h
+						   -(0.5*kapa_c1+0.5*kapa_c2)*div2_c2h
+						   -(0.5*kapa_c1+0.5*kapa_c4)*div2_c4h
+						   -(0.5*kapa_c1+0.5*kapa_c5)*div2_c5h
+						   -(0.5*kapa_c1+0.5*kapa_c6)*div2_c6h;
+				
+				c4k_chem=om_14*c1-om_12*c2-om_13*c3-om_14*c4-om_15*c5-om_16*c6
+						+om_24*c2+om_34*c3+om_45*c5+om_46*c6+(log(c4)-log(c1));///chemical diffusion potential
+				c4k_su=-2.0*(0.5*kapa_c1+0.5*kapa_c4)*div2_c4h
+						   -(0.5*kapa_c1+0.5*kapa_c2)*div2_c2h
+						   -(0.5*kapa_c1+0.5*kapa_c3)*div2_c3h
+						   -(0.5*kapa_c1+0.5*kapa_c5)*div2_c5h
+						   -(0.5*kapa_c1+0.5*kapa_c6)*div2_c6h;
+				
+				c5k_chem=om_15*c1-om_12*c2-om_13*c3-om_14*c4-om_15*c5-om_16*c6
+						+om_25*c2+om_35*c3+om_45*c4+om_56*c6+(log(c5)-log(c1));///chemical diffusion potential
+				c5k_su=-2.0*(0.5*kapa_c1+0.5*kapa_c5)*div2_c5h
+						   -(0.5*kapa_c1+0.5*kapa_c2)*div2_c2h
+						   -(0.5*kapa_c1+0.5*kapa_c3)*div2_c3h
+						   -(0.5*kapa_c1+0.5*kapa_c4)*div2_c4h
+						   -(0.5*kapa_c1+0.5*kapa_c6)*div2_c6h;
+				
+				c6k_chem=om_15*c1-om_12*c2-om_13*c3-om_14*c4-om_15*c5-om_16*c6
+						+om_26*c2+om_36*c3+om_46*c4+om_56*c6+(log(c6)-log(c1));///chemical diffusion potential
+				c6k_su=-2.0*(0.5*kapa_c1+0.5*kapa_c6)*div2_c6h
+						   -(0.5*kapa_c1+0.5*kapa_c2)*div2_c2h
+						   -(0.5*kapa_c1+0.5*kapa_c3)*div2_c3h
+						   -(0.5*kapa_c1+0.5*kapa_c4)*div2_c4h
+						   -(0.5*kapa_c1+0.5*kapa_c5)*div2_c5h;
+				
+				c2k[i*ND*ND+j*ND+k]=c2k_chem+c2k_su;//Diffusion potential (equation (4.1))
+				c3k[i*ND*ND+j*ND+k]=c3k_chem+c3k_su;
+				c4k[i*ND*ND+j*ND+k]=c4k_chem+c4k_su;
+				c5k[i*ND*ND+j*ND+k]=c5k_chem+c5k_su;
+				c6k[i*ND*ND+j*ND+k]=c6k_chem+c6k_su;
+			}
+		}
+	}
+
+//***** Evolution equation calculation **********************************
+	for(i=0;i<=ndm;i++){
+		for(j=0;j<=ndm;j++){
+			for(k=0;k<=ndm;k++){
+
+				ip=i+1; im=i-1; jp=j+1; jm=j-1; kp=k+1; km=k-1;
+				if(i==ndm){ip=0;} if(i==0){im=ndm;}	//periodic boundary conditions
+				if(j==ndm){jp=0;} if(j==0){jm=ndm;}	//periodic boundary conditions
+				if(k==ndm){kp=0;} if(k==0){km=ndm;}	//periodic boundary conditions
+
+				dakd2=c2k[ip*ND*ND+j*ND+k]+c2k[im*ND*ND+j*ND+k]
+					 +c2k[i*ND*ND+jp*ND+k]+c2k[i*ND*ND+jm*ND+k]
+      				 +c2k[i*ND*ND+j*ND+kp]+c2k[i*ND*ND+j*ND+km]
+					 -6.0*c2k[i*ND*ND+j*ND+k];	//Second derivative of the diffusion potential
+				dakd3=c3k[ip*ND*ND+j*ND+k]+c3k[im*ND*ND+j*ND+k]
+					 +c3k[i*ND*ND+jp*ND+k]+c3k[i*ND*ND+jm*ND+k]
+      				 +c3k[i*ND*ND+j*ND+kp]+c3k[i*ND*ND+j*ND+km]
+					 -6.0*c3k[i*ND*ND+j*ND+k];	//Second derivative of the diffusion potential
+				dakd4=c4k[ip*ND*ND+j*ND+k]+c4k[im*ND*ND+j*ND+k]
+					 +c4k[i*ND*ND+jp*ND+k]+c4k[i*ND*ND+jm*ND+k]
+      				 +c4k[i*ND*ND+j*ND+kp]+c4k[i*ND*ND+j*ND+km]
+					 -6.0*c4k[i*ND*ND+j*ND+k];	//Second derivative of the diffusion potential
+				dakd5=c5k[ip*ND*ND+j*ND+k]+c5k[im*ND*ND+j*ND+k]
+					 +c5k[i*ND*ND+jp*ND+k]+c5k[i*ND*ND+jm*ND+k]
+      				 +c5k[i*ND*ND+j*ND+kp]+c5k[i*ND*ND+j*ND+km]
+					 -6.0*c5k[i*ND*ND+j*ND+k];	//Second derivative of the diffusion potential
+				dakd6=c6k[ip*ND*ND+j*ND+k]+c6k[im*ND*ND+j*ND+k]
+					 +c6k[i*ND*ND+jp*ND+k]+c6k[i*ND*ND+jm*ND+k]
+      				 +c6k[i*ND*ND+j*ND+kp]+c6k[i*ND*ND+j*ND+km]
+					 -6.0*c6k[i*ND*ND+j*ND+k];	//Second derivative of the diffusion potential
+
+				c2ddtt=cmob22*dakd2+cmob23*dakd3+cmob24*dakd4+cmob25*dakd5+cmob26*dakd6;//Diffusion equation (equation (4.2))
+				c3ddtt=cmob32*dakd2+cmob33*dakd3+cmob34*dakd4+cmob35*dakd5+cmob36*dakd6;
+				c4ddtt=cmob42*dakd2+cmob43*dakd3+cmob44*dakd4+cmob45*dakd5+cmob46*dakd6;
+				c5ddtt=cmob52*dakd2+cmob53*dakd3+cmob54*dakd4+cmob55*dakd5+cmob56*dakd6;
+				c6ddtt=cmob62*dakd2+cmob63*dakd3+cmob64*dakd4+cmob65*dakd5+cmob66*dakd6;
+
+				c2h2[i*ND*ND+j*ND+k]=c2h[i*ND*ND+j*ND+k]+c2ddtt*delt;//Time evolution of the concentration field
+				c3h2[i*ND*ND+j*ND+k]=c3h[i*ND*ND+j*ND+k]+c3ddtt*delt;
+				c4h2[i*ND*ND+j*ND+k]=c4h[i*ND*ND+j*ND+k]+c4ddtt*delt;
+				c5h2[i*ND*ND+j*ND+k]=c5h[i*ND*ND+j*ND+k]+c5ddtt*delt;
+				c6h2[i*ND*ND+j*ND+k]=c6h[i*ND*ND+j*ND+k]+c6ddtt*delt;
+
+				if(c2h[i*ND*ND+j*ND+k]>=1.0){c2h[i*ND*ND+j*ND+k]=1.0-1.0e-06;}//Domain correction of the concentration field
+				if(c2h[i*ND*ND+j*ND+k]<=0.0){c2h[i*ND*ND+j*ND+k]=1.0e-06;}
+				if(c3h[i*ND*ND+j*ND+k]>=1.0){c3h[i*ND*ND+j*ND+k]=1.0-1.0e-06;}
+				if(c3h[i*ND*ND+j*ND+k]<=0.0){c3h[i*ND*ND+j*ND+k]=1.0e-06;}
+				if(c4h[i*ND*ND+j*ND+k]>=1.0){c4h[i*ND*ND+j*ND+k]=1.0-1.0e-06;}
+				if(c4h[i*ND*ND+j*ND+k]<=0.0){c4h[i*ND*ND+j*ND+k]=1.0e-06;}
+				if(c5h[i*ND*ND+j*ND+k]>=1.0){c5h[i*ND*ND+j*ND+k]=1.0-1.0e-06;}
+				if(c5h[i*ND*ND+j*ND+k]<=0.0){c5h[i*ND*ND+j*ND+k]=1.0e-06;}
+				if(c6h[i*ND*ND+j*ND+k]>=1.0){c6h[i*ND*ND+j*ND+k]=1.0-1.0e-06;}
+				if(c6h[i*ND*ND+j*ND+k]<=0.0){c6h[i*ND*ND+j*ND+k]=1.0e-06;}
+			}
+		}
+	}
+
+//*** Concentration field balance correction ***********************************************
+	sumc2=0.0; sumc3=0.0; sumc4=0.0; sumc5=0.0; sumc6=0.0;
+	for(i=0;i<=ndm;i++){
+		for(j=0;j<=ndm;j++){
+			for(k=0;k<=ndm;k++){
+				sumc2+=c2h2[i*ND*ND+j*ND+k];
+				sumc3+=c3h2[i*ND*ND+j*ND+k];
+				sumc4+=c4h2[i*ND*ND+j*ND+k];
+				sumc5+=c5h2[i*ND*ND+j*ND+k];
+				sumc6+=c6h2[i*ND*ND+j*ND+k];
+			}
+		}
+	}
+	dc2a=sumc2/ND/ND/ND-c2a;
+	dc3a=sumc3/ND/ND/ND-c3a;
+	dc4a=sumc4/ND/ND/ND-c4a;
+	dc5a=sumc5/ND/ND/ND-c5a;
+	dc6a=sumc6/ND/ND/ND-c6a;
+	for(i=0;i<=ndm;i++){
+		for(j=0;j<=ndm;j++){
+			for(k=0;k<=ndm;k++){
+				c2h[i*ND*ND+j*ND+k]=c2h2[i*ND*ND+j*ND+k]-dc2a;
+				c3h[i*ND*ND+j*ND+k]=c3h2[i*ND*ND+j*ND+k]-dc3a;
+				c4h[i*ND*ND+j*ND+k]=c4h2[i*ND*ND+j*ND+k]-dc4a;
+				c5h[i*ND*ND+j*ND+k]=c5h2[i*ND*ND+j*ND+k]-dc5a;
+				c6h[i*ND*ND+j*ND+k]=c6h2[i*ND*ND+j*ND+k]-dc6a;
+			}
+		}
+	}
+
+	sumct=0.0;
+	for(i=0;i<=ndm;i++){
+		for(j=0;j<=ndm;j++){
+			for(k=0;k<=ndm;k++){
+				sumct=c2h[i*ND*ND+j*ND+k]+c3h[i*ND*ND+j*ND+k]+c4h[i*ND*ND+j*ND+k]+c5h[i*ND*ND+j*ND+k]+c6h[i*ND*ND+j*ND+k];
+				if(sumct>=1.0){
+					c2h[i*ND*ND+j*ND+k]=c2h[i*ND*ND+j*ND+k]/sumct-1.0e-06;
+					c3h[i*ND*ND+j*ND+k]=c3h[i*ND*ND+j*ND+k]/sumct-1.0e-06;
+					c4h[i*ND*ND+j*ND+k]=c4h[i*ND*ND+j*ND+k]/sumct-1.0e-06;
+					c5h[i*ND*ND+j*ND+k]=c5h[i*ND*ND+j*ND+k]/sumct-1.0e-06;
+					c6h[i*ND*ND+j*ND+k]=c6h[i*ND*ND+j*ND+k]/sumct-1.0e-06;
+				}
+			}
+		}
+	}
+//*********************************************************************
+
+	//if(keypress()){return 0;}	//Waiting for key
+	time1=time1+1.0;
+	
+	if(time1<time1max){goto start;}//Determining if the maximum count has been reached
+	printf("Finished \n");
+
+	end:;
+	std::exit(0);
+	//return 0;
+}
+
+
+//************ Initial concentration field setting subroutine *************
+void ini000(double *c2h, double *c3h, double *c4h, double *c5h, double *c6h, int ND)
+{
+	int i, j, k, id;
+ 	//srand(time(NULL));//random number seeding
+	int ndm=ND-1;
+
+	for(i=0;i<=ndm;i++){
+		for(j=0;j<=ndm;j++){
+			for(k=0;k<=ndm;k++){
+				c2h[i*ND*ND+j*ND+k]=c2a+0.01*(2.0*DRND(1)-1.0);//Set the concentration field with random numbers up to }1%
+				c3h[i*ND*ND+j*ND+k]=c3a+0.01*(2.0*DRND(1)-1.0);
+				c4h[i*ND*ND+j*ND+k]=c4a+0.01*(2.0*DRND(1)-1.0);
+				c5h[i*ND*ND+j*ND+k]=c5a+0.01*(2.0*DRND(1)-1.0);
+				c6h[i*ND*ND+j*ND+k]=c6a+0.01*(2.0*DRND(1)-1.0);
+			}
+		}
+	}
+
+}
+
+//************ data save subroutine *******************************
+void datsave(double *c2h, double *c3h, double *c4h, double *c5h, double *c6h, int ND)
+{
+	FILE *stream;	//Stream pointer setting
+	int i, j, k;	//integer
+	int ndm=ND-1;
+
+	stream = fopen("test.dat", "a");	//Open the file to write to in append mode
+	fprintf(stream, "%f\n", time1);		//Saving calculation counts
+	for(i=0;i<=ndm;i++){
+		for(j=0;j<=ndm;j++){
+			for(k=0;k<=ndm;k++){
+				//fprintf(stream, "%e  %e  ", c2h[i][j][k], c3h[i][j][k]);//Conservation of local concentration fields
+				fprintf(stream, "%e  %e  %e  %e  %e  ", c2h[i*ND*ND+j*ND+k], 
+					c3h[i*ND*ND+j*ND+k], c4h[i*ND*ND+j*ND+k], 
+					c5h[i*ND*ND+j*ND+k], c6h[i*ND*ND+j*ND+k]);//Conservation of local concentration fields
+			}
+		}
+	}
+	fprintf(stream, "\n");	//writing a newline
+	fclose(stream);					//close file
+}
+
+void datsave_paraview(double *c2h, double *c3h, double *c4h, double *c5h, double *c6h, int ND)
+{
+	FILE	*fp;
+	char	fName[256];
+	int 	i, j, k;
+	int ndm=ND-1;
+	
+	iout = iout + 1;
+	printf("sp_result%06d.vtk \n",iout);
+	sprintf(fName,"sp_result%06d.vtk",iout);
+	fp = fopen(fName, "w");
+	fprintf(fp,"# vtk DataFile Version 3.0 \n");
+	fprintf(fp,"output.vtk \n");
+	fprintf(fp,"ASCII \n");
+	fprintf(fp,"DATASET STRUCTURED_POINTS \n");
+	fprintf(fp,"DIMENSIONS %5d %5d %5d \n",(ndm+1),(ndm+1),(ndm+1));
+	fprintf(fp,"ORIGIN 0.0 0.0 0.0 \n");
+	fprintf(fp,"ASPECT_RATIO 1 1 1 \n");
+	fprintf(fp,"POINT_DATA %16d \n",((ndm+1)*(ndm+1)*(ndm+1)));
+	fprintf(fp,"SCALARS concentration_A float \n");
+	fprintf(fp,"LOOKUP_TABLE default \n");
+	for(k=0;k<=ndm;k++){
+		for(j=0;j<=ndm;j++){
+			for(i=0;i<=ndm;i++){
+				fprintf(fp,"%10.6f\n", (1.0-c2h[i*ND*ND+j*ND+k]-c3h[i*ND*ND+j*ND+k]
+					-c4h[i*ND*ND+j*ND+k]-c5h[i*ND*ND+j*ND+k]-c6h[i*ND*ND+j*ND+k]));
+			}
+		}
+	}
+	fprintf(fp,"SCALARS concentration_B float \n");
+	fprintf(fp,"LOOKUP_TABLE default \n");
+	for(k=0;k<=ndm;k++){
+		for(j=0;j<=ndm;j++){
+			for(i=0;i<=ndm;i++){
+				fprintf(fp,"%10.6f\n", c2h[i*ND*ND+j*ND+k]);
+			}
+		}
+	}
+	fprintf(fp,"SCALARS concentration_C float \n");
+	fprintf(fp,"LOOKUP_TABLE default \n");
+	for(k=0;k<=ndm;k++){
+		for(j=0;j<=ndm;j++){
+			for(i=0;i<=ndm;i++){
+				fprintf(fp,"%10.6f\n", c3h[i*ND*ND+j*ND+k]);
+			}
+		}
+	}
+	fprintf(fp,"SCALARS concentration_D float \n");
+	fprintf(fp,"LOOKUP_TABLE default \n");
+	for(k=0;k<=ndm;k++){
+		for(j=0;j<=ndm;j++){
+			for(i=0;i<=ndm;i++){
+				fprintf(fp,"%10.6f\n", c4h[i*ND*ND+j*ND+k]);
+			}
+		}
+	}
+	fprintf(fp,"SCALARS concentration_E float \n");
+	fprintf(fp,"LOOKUP_TABLE default \n");
+	for(k=0;k<=ndm;k++){
+		for(j=0;j<=ndm;j++){
+			for(i=0;i<=ndm;i++){
+				fprintf(fp,"%10.6f\n", c5h[i*ND*ND+j*ND+k]);
+			}
+		}
+	}
+	fprintf(fp,"SCALARS concentration_F float \n");
+	fprintf(fp,"LOOKUP_TABLE default \n");
+	for(k=0;k<=ndm;k++){
+		for(j=0;j<=ndm;j++){
+			for(i=0;i<=ndm;i++){
+				fprintf(fp,"%10.6f\n", c6h[i*ND*ND+j*ND+k]);
+			}
+		}
+	}
+	fprintf(fp,"SCALARS concentration_Total float \n");
+	fprintf(fp,"LOOKUP_TABLE default \n");
+	for(k=0;k<=ndm;k++){
+		for(j=0;j<=ndm;j++){
+			for(i=0;i<=ndm;i++){
+				fprintf(fp,"%10.6f\n", (1.0-c2h[i*ND*ND+j*ND+k]-c3h[i*ND*ND+j*ND+k]
+					-c4h[i*ND*ND+j*ND+k]-c5h[i*ND*ND+j*ND+k]-c6h[i*ND*ND+j*ND+k])*1.0*6.0
+									  +c2h[i*ND*ND+j*ND+k]*2.0*6.0
+									  +c3h[i*ND*ND+j*ND+k]*3.0*6.0
+									  +c4h[i*ND*ND+j*ND+k]*4.0*6.0
+									  +c5h[i*ND*ND+j*ND+k]*5.0*6.0
+									  +c6h[i*ND*ND+j*ND+k]*6.0*6.0);
+			}
+		}
+	}
+	fclose(fp);
+}
