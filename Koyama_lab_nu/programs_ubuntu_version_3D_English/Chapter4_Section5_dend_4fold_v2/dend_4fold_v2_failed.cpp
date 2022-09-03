@@ -349,8 +349,7 @@ start: ;
 						(Tip+Tim-2.0*TT)/dx/dx
 					   +(Tjp+Tjm-2.0*TT)/dy/dy 
 					   +(Tkp+Tkm-2.0*TT)/dz/dz
-					  )
-						+30.0*s1*(1.0-s1)*s1*(1.0-s1)*rlate*s1ddtt )/speht;
+					  ) +30.0*s1*(1.0-s1)*s1*(1.0-s1)*rlate*s1ddtt )/speht;
 
 				//Th2[i][j][k]=Th[i][j][k]+Tddtt*delt;		//Time evolution of temperature field (explicit method)
 				Th2[i*NDP*NDP+j*NDP+k]=Th[i*NDP*NDP+j*NDP+k]+Tddtt*delt;	//Time evolution of temperature field (explicit method)
