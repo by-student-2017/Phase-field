@@ -13,6 +13,7 @@
 	int Nstep, iout;
 
 	void ini000(double *c2h, double *c3h, double *c4h, double *c5h, int ND);	//Initial concentration profile setting subroutine
+	void datin(double *c2h, double *c3h, double *c4h, double *c5h, int ND);	//Subroutine for initial field reading
 	void datsave(double *c2h, double *c3h, double *c4h, double *c5h, int ND);	//data save subroutine
 	void datsave_paraview(double *c2h, double *c3h, double *c4h, double *c5h, int ND);//data save subroutine
 
@@ -58,6 +59,8 @@ int main(void)
 	double kapa_c1c, kapa_c2c, kapa_c3c, kapa_c4c, kapa_c5c;	//concentration gradient energy coefficient
 	
 	double div2_c2h, div2_c3h, div2_c4h, div2_c5h;		//div(div(ch))=d^2(ch)/dx^2 + d^2(ch)/dy^2 + d^2(ch)/dz^2
+	
+	int    readff;
 
 //****** Setting calculation conditions and material constants ****************************************
 	printf("---------------------------------\n");
@@ -111,6 +114,7 @@ int main(void)
 	kapa_c5c= data[32];
 	time1max= int(data[33]);
 	Nstep   = int(data[34]);
+	readff  = int(data[35]);
 	printf("---------------------------------\n");
 	//
 	nd=ND;					//Number of difference divisions on one side of the computational domain (number of difference blocks)
@@ -163,16 +167,21 @@ int main(void)
 	time1=0.0;					//Initial value of calculation count
 
 //*** Initial concentration field setting and drawing window display *****************************************
-
-	ini000(c2h, c3h, c4h, c5h, ND);//Setting the initial concentration field
-
+	if(readff==0){
+		printf("make initial concentration (random) \n");
+		ini000(c2h, c3h, c4h, c5h, ND);//Setting the initial concentration field
+	} else {
+		printf("read data.dat file \n");
+		datin(c2h, c3h, c4h, c5h, ND);
+	}
 //**** Simulation start ******************************
 //Nstep = 2000;
 iout = -1;
 start: ;
 
 	//printf("Time: %f \n", time1);
-	//if((((int)(time1) % Nstep)==0)) {datsave(c2h, c3h, c4h, c5h, ND);} //Save the concentration field every fixed repetition count
+	if((((int)(time1) % Nstep)==0)) {iout = iout + 1;}
+	if((((int)(time1) % Nstep)==0)) {datsave(c2h, c3h, c4h, c5h, ND);} //Save the concentration field every fixed repetition count
 	if((((int)(time1) % Nstep)==0)) {datsave_paraview(c2h, c3h, c4h, c5h, ND);} //Save the concentration field every fixed repetition count
 
 //***** Potential field calculation ***********************************
@@ -387,10 +396,14 @@ void ini000(double *c2h, double *c3h, double *c4h, double *c5h, int ND)
 void datsave(double *c2h, double *c3h, double *c4h, double *c5h, int ND)
 {
 	FILE *stream;	//Stream pointer setting
+	char	fName[256];
 	int i, j, k;	//integer
 	int ndm=ND-1;
 
-	stream = fopen("test.dat", "a");	//Open the file to write to in append mode
+	sprintf(fName,"data_%06d.dat",iout);
+	//stream = fopen("test.dat", "a");	//Open the file to write to in append mode
+	stream = fopen(fName, "w");
+	fprintf(stream, "%d %d %d \n", ndm, ndm, ndm);
 	fprintf(stream, "%f\n", time1);		//Saving calculation counts
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
@@ -412,7 +425,6 @@ void datsave_paraview(double *c2h, double *c3h, double *c4h, double *c5h, int ND
 	int 	i, j, k;
 	int ndm=ND-1;
 	
-	iout = iout + 1;
 	printf("sp_result%06d.vtk \n",iout);
 	sprintf(fName,"sp_result%06d.vtk",iout);
 	fp = fopen(fName, "w");
@@ -485,4 +497,34 @@ void datsave_paraview(double *c2h, double *c3h, double *c4h, double *c5h, int ND
 		}
 	}
 	fclose(fp);
+}
+//************ Reading field data *******************************
+void datin(double *c2h, double *c3h, double *c4h, double *c5h, int ND)
+{
+	FILE *datin0;//Stream pointer setting
+	char	fName[256];
+	int i, j, k;	//integer
+	int ndm=ND-1;
+	int rndxm, rndym, rndzm;
+
+	datin0 = fopen("data.dat", "r");//Open the source file
+
+	fscanf(datin0, "%d %d %d", &rndxm, &rndym, &rndzm);
+	if (ndm != rndxm){
+		printf("data size is mismatch \n");
+		printf("Please, change ND= %d in parameters.txt \n", rndxm);
+	}
+	
+	fscanf(datin0, "%lf", &time1);
+	
+	for(i=0;i<=ndm;i++){
+		for(j=0;j<=ndm;j++){
+			for(k=0;k<=ndm;k++){
+				fscanf(datin0, "%e  %e  %e  %e  ", &c2h[i*ND*ND+j*ND+k], 
+					&c3h[i*ND*ND+j*ND+k], &c4h[i*ND*ND+j*ND+k], &c5h[i*ND*ND+j*ND+k]);//Conservation of local concentration fields
+			}
+		}
+	}
+	printf("time=  %f  \n", time1);
+	fclose(datin0);					//close file
 }
