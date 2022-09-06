@@ -281,7 +281,7 @@ void datin(double *s1h, int ND)
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
-				fscanf(datin0, "%e  ", &s1h[i*ND*ND+j*ND+k]);//Field data storage
+				fscanf(datin0, "%le  ", &s1h[i*ND*ND+j*ND+k]);//Field data storage
 			}
 		}
 	}

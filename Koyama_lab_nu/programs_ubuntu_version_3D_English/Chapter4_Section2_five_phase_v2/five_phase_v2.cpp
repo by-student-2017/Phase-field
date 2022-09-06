@@ -520,7 +520,7 @@ void datin(double *c2h, double *c3h, double *c4h, double *c5h, int ND)
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
-				fscanf(datin0, "%e  %e  %e  %e  ", &c2h[i*ND*ND+j*ND+k], 
+				fscanf(datin0, "%le  %le  %le  %le  ", &c2h[i*ND*ND+j*ND+k], 
 					&c3h[i*ND*ND+j*ND+k], &c4h[i*ND*ND+j*ND+k], &c5h[i*ND*ND+j*ND+k]);//Conservation of local concentration fields
 			}
 		}
