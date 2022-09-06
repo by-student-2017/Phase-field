@@ -358,9 +358,9 @@ void ini_field(double *ch, int ND)
 //************[Saving concentration wave data]************************************
 void datsave(double *ch, int ND)
 {
-	FILE		*stream;
+	FILE	*stream;
 	char	fName[256];
-	int 		i, j, k;
+	int 	i, j, k;
 	int ndm=ND-1;
 
 	sprintf(fName,"data_%06d.dat",iout);

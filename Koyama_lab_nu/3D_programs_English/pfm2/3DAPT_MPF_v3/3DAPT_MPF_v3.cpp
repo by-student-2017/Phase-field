@@ -897,11 +897,11 @@ void datsave2(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP)
 	//stream = fopen("test.dat", "w");
 	stream = fopen(fName, "w");
 	fprintf(stream, "%d %d %d \n", ndm, ndm, ndm);
-	fprintf(stream, "%e  \n", time1);
+	fprintf(stream, "%e  ", time1);
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
-				fprintf(stream, "%d  %d  \n", n00[i*ND*ND+j*ND+k], n00p[i*ND*ND+j*ND+k]);
+				fprintf(stream, "\n  %d  %d  \n", n00[i*ND*ND+j*ND+k], n00p[i*ND*ND+j*ND+k]);
 				for(kk=1;kk<=n00[i*ND*ND+j*ND+k];kk++){
 					fprintf(stream, "%d  %e  ", qh[kk*ND*ND*ND+i*ND*ND+j*ND+k], ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]);
 				}
@@ -935,7 +935,7 @@ void datin(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP)
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
-				fscanf(datin0, "%d  %d  \n", &n00[i*ND*ND+j*ND+k], &n00p[i*ND*ND+j*ND+k]);
+				fscanf(datin0, "%d  %d", &n00[i*ND*ND+j*ND+k], &n00p[i*ND*ND+j*ND+k]);
 				for(kk=1;kk<=n00[i*ND*ND+j*ND+k];kk++){
 					fscanf(datin0, "%d  %e  ", &qh[kk*ND*ND*ND+i*ND*ND+j*ND+k], &ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]);
 				}
