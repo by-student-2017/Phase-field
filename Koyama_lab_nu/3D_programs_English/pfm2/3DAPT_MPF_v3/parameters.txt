@@ -14,3 +14,4 @@ amobi= 0.0        ! Atomic mobility constant.  For 0.0 case, read matrix.txt fil
 M0= 8.0           ! (Analytical, no changes required) mobility M1=amobi*PI*PI/(M0*delta)
 E0= 0.0           ! interatomic interaction, E0 [J/mol]  For 0.0 case, read matrix.txt file.
 Nstep= 10.0       ! output every "Nstep"
+readff= 0.0       ! 0.0: no read. 1.0: read previous "data.dat" file (ch). 

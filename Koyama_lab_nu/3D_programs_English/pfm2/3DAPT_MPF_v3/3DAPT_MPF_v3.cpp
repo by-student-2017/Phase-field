@@ -35,7 +35,8 @@
 	//void graph_a();					//graph display subroutine
 			 void datsave(double *ph, int *qh, int *n00, int N, int ND);	//Concentration data save subroutine
 	void datsave_paraview(double *ph, int *qh, int *n00, int N, int ND);	//Concentration data save subroutine
-	//void datin();					//Initial concentration wave reading subroutine
+	void datin(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP);	//Initial concentration wave reading subroutine
+	void datsave2(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP);
 
 //******* Main program ******************************************
 int main(void)
@@ -57,6 +58,8 @@ int main(void)
 
 	double gamma, gamma0, delta, amobi;
 	double aaa, vm0;
+	
+	int    readff;
 
 //****** reg data ****************************************
 	printf("---------------------------------\n");
@@ -91,6 +94,7 @@ int main(void)
 	M0      = data[13];	// M1=amobi*PI*PI/(M0*delta);
 	E0      = data[14];	// E1=E0/RR/temp;
 	Nstep   = int(data[15]);
+	readff  = int(data[16]);
 	printf("---------------------------------\n");
 	//
 	nd=ND;
@@ -278,8 +282,13 @@ int main(void)
 	}
 
 //****************************************************
-
-	ini000(ph, qh, n00, n00p, N, ND, GNP);
+	if(readff==0){
+		printf("make initial concentration (random) \n");
+		ini000(ph, qh, n00, n00p, N, ND, GNP);
+	} else {
+		printf("read data.dat file \n");
+		datin(ph, qh, n00, n00p, N, ND, GNP);
+	}
 	//datin();
 	//gwinsize(INXY,INXY); ginit(2); gsetorg(0,0);//Drawing window display
 
@@ -290,6 +299,7 @@ start: ;
 	printf("time: %f \n", time1);
 	//if(time1>=200.){delt=5.0;
 	if((((int)(time1) % Nstep)==0)) {iout = iout + 1;}
+	if((((int)(time1) % Nstep)==0)) {datsave2(ph, qh, n00, n00p, N, ND, GNP);}
 	if((((int)(time1) % Nstep)==0)) {datsave(ph, qh, n00, N, ND);}
 	if((((int)(time1) % Nstep)==0)) {datsave_paraview(ph, qh, n00, N, ND);}
 	//if((((int)(time1) % 2)==0)) {graph_a();} 
@@ -874,23 +884,64 @@ void datsave_paraview(double *ph, int *qh, int *n00, int N, int ND)
 		fclose(fp);
 	}
 }
-//*********** Initial Data in **************************
-//void datin()
-//{
-//	FILE		*datin0;
-//	int 		i, j, k, kk;
 
-//	datin0 = fopen("test.ini", "r");
+//************ Data Save *******************************
+void datsave2(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP)
+{
+	FILE	*stream;
+	char	fName[256];
+	int 	i, j, k, kk;
+	int nd=ND, ndm=ND-1;
 
-//	for(i=0;i<=ndm;i++){
-//		for(j=0;j<=ndm;j++){
-//			for(k=0;k<=ndm;k++){
-//				for(kk=1;kk<=nm;kk++){
-//					fscanf(datin0, "%d  %lf  ", &qh[kk][i][j][k], &ph[kk][i][j][k]);
-//				}
-//			}
-//		}
-//	}
-//	fclose(datin0);
-//}
+	sprintf(fName,"data_%06d.dat",iout);
+	//stream = fopen("test.dat", "w");
+	stream = fopen(fName, "w");
+	fprintf(stream, "%d %d %d \n", ndm, ndm, ndm);
+	fprintf(stream, "%e  \n", time1);
+	for(i=0;i<=ndm;i++){
+		for(j=0;j<=ndm;j++){
+			for(k=0;k<=ndm;k++){
+				fprintf(stream, "%d  %d  \n", n00[i*ND*ND+j*ND+k], n00p[i*ND*ND+j*ND+k]);
+				for(kk=1;kk<=n00[i*ND*ND+j*ND+k];kk++){
+					fprintf(stream, "%d  %e  ", qh[kk*ND*ND*ND+i*ND*ND+j*ND+k], ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]);
+				}
+			}
+		}
+	}
+	fprintf(stream, "\n");
+	fclose(stream);
+}
 
+//************ Reading field data *****************************************
+void datin(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP)
+{
+	FILE *datin0;//Stream pointer setting
+	int  i, j, k;//integer
+	double c00;//Average value of the field
+	int nd=ND, ndm=ND-1, nd2=ND/2;
+	int rndxm, rndym, rndzm;
+
+	datin0 = fopen("data.dat", "r");//Open the source file
+
+	fscanf(datin0, "%d %d %d", &rndxm, &rndym, &rndzm);
+	if (ndm != rndxm){
+		printf("data size is mismatch \n");
+		printf("Please, change ND= %d in parameters.txt \n", rndxm);
+	}
+	
+	fscanf(datin0, "%lf", &time1);
+
+	c00=0.0;//Initial value of field mean
+	for(i=0;i<=ndm;i++){
+		for(j=0;j<=ndm;j++){
+			for(k=0;k<=ndm;k++){
+				fscanf(datin0, "%d  %d  \n", &n00[i*ND*ND+j*ND+k], &n00p[i*ND*ND+j*ND+k]);
+				for(kk=1;kk<=n00[i*ND*ND+j*ND+k];kk++){
+					fscanf(datin0, "%d  %e  ", &qh[kk*ND*ND*ND+i*ND*ND+j*ND+k], &ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]);
+				}
+			}
+		}
+	}
+	printf("%lf", time1);
+	fclose(datin0);
+}

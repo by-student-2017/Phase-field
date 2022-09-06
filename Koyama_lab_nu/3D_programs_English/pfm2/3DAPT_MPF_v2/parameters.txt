@@ -14,3 +14,4 @@ amobi= 1.0        ! Atomic mobility constant
 M0= 8.0           ! (Analytical, no changes required) mobility of phase-field Mij=M1=amobi*PI*PI/(M0*delta)
 E0= 500.0         ! interatomic interaction E0 [J/mol]
 Nstep= 10.0       ! output every "Nstep"
+readff= 0.0       ! 0.0: no read. 1.0: read previous "data.dat" file (ch). 
