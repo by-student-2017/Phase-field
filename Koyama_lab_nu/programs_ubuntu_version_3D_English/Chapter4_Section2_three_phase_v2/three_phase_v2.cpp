@@ -450,5 +450,5 @@ void datin(double *c2h, double *c3h, int ND)
 		}
 	}
 	printf("time=  %f  \n", time1);
-	fclose(datin0);					//close file
+	fclose(datin0);			//close file
 }

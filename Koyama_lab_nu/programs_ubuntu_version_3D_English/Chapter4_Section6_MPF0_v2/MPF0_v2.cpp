@@ -29,6 +29,7 @@
 	int Nstep, iout;
 
 	void ini000(double *ph, int ND, int N);	//Initial field setup subroutine
+	void datin(double *ph, int ND, int N);	//Subroutine for initial field reading
 	void datsave(double *ph, int ND, int N);	//data save subroutine
 	void datsave_paraview(double *ph, int ND, int N);	//data save subroutine
 
@@ -57,6 +58,8 @@ int main(void)
 	double delta;			//Grain boundary width (expressed by the number of differential blocks)
 	double amobi;			//Grain boundary mobility
 	double vm0;				//molar volume
+
+	int    readff;
 
 //****** Setting calculation conditions and material constants ****************************************
 	printf("---------------------------------\n");
@@ -90,6 +93,7 @@ int main(void)
 	E0      = data[12];
 	time1max= int(data[13]);
 	Nstep   = int(data[14]);
+	readff  = int(data[15]);
 	printf("---------------------------------\n");
 	//
 	nd=ND;
@@ -156,13 +160,20 @@ int main(void)
 			}
 		}
 	}
-	ini000(ph, ND, N);	//Initial field setting
-
+	
+	if(readff==0){
+		printf("make initial concentration (random) \n");
+		ini000(ph, ND, N);	//Initial field setting
+	} else {
+		printf("read data.dat file \n");
+		datin(ph, ND, N);
+	}
 //**** Simulation start ******************************
 //Nstep = 20;
 iout = -1;
 start: ;
 
+	if((((int)(time1) % Nstep)==0)) {iout = iout + 1;}
 	if((((int)(time1) % Nstep)==0)) {datsave(ph, ND, N);}	//Save the field every fixed repetition count
 	if((((int)(time1) % Nstep)==0)) {datsave_paraview(ph, ND, N);}	//Save the field every fixed repetition count
 	//if(time1==200.) {datsave();}					//save the field for a specific time
@@ -350,12 +361,16 @@ void ini000(double *ph, int ND, int N)
 //************ data save subroutine *******************************
 void datsave(double *ph, int ND, int N)
 {
-	FILE		*stream;		//Stream pointer setting
-	int 		i, j, k, kk;		//integer
+	FILE	*stream;		//Stream pointer setting
+	char	fName[256];
+	int 	i, j, k, kk;		//integer
 	int nd=ND, ndm=ND-1, nm=N-1, nmm=N-2;
 	int ndxm=ndm, ndym=ndm, ndzm=ndm;
 
-	stream = fopen("test.dat", "a");	//Open the file to write to in append mode
+	sprintf(fName,"data_%06d.dat",iout);
+	//stream = fopen("test.dat", "a");	//Open the file to write to in append mode
+	stream = fopen(fName, "w");
+	fprintf(stream, "%d %d %d \n", ndm, ndm, ndm);
 	fprintf(stream, "%e  \n", time1);	//Saving calculation counts
 	for(i=0;i<=ndxm;i++){
 		for(j=0;j<=ndym;j++){
@@ -388,7 +403,6 @@ void datsave_paraview(double *ph, int ND, int N)
 		}
 	}
 	
-	iout = iout + 1;
 	printf("paraview output no.%06d \n",iout);
 	for(kk=1;kk<=nm;kk++){
 		sprintf(fName,"mpf0_N%03d_result%06d.vtk",kk,iout);
@@ -443,23 +457,31 @@ void datsave_paraview(double *ph, int ND, int N)
 //*********** data entry subroutine **************************
 void datin(double *ph, int ND, int N)
 {
-	FILE		*datin0;//Stream pointer setting
-	int 		i, j, k, kk;//integer
+	FILE	*datin0;//Stream pointer setting
+	int 	i, j, k, kk;//integer
 	int nd=ND, ndm=ND-1, nm=N-1, nmm=N-2;
 	int ndxm=ndm, ndym=ndm, ndzm=ndm;
 
-	datin0 = fopen("test.dat", "r");//open source file
-	fscanf(datin0, "%lf", &time1);	//Read calculation count
+	datin0 = fopen("data.dat", "r");//Open the source file
+
+	fscanf(datin0, "%d %d %d", &rndxm, &rndym, &rndzm);
+	if (ndm != rndxm){
+		printf("data size is mismatch \n");
+		printf("Please, change ND= %d in parameters.txt \n", rndxm);
+	}
+	
+	fscanf(datin0, "%lf", &time1);
+	
 	for(i=0;i<=ndxm;i++){
 		for(j=0;j<=ndym;j++){
 			for(k=0;k<=ndzm;k++){
 				for(kk=0;kk<=nm;kk++){
-					//fscanf(datin0, "%lf  ", &ph[kk][i][j][k]);//Load phase field
 					fscanf(datin0, "%lf  ", &ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]);//Load phase field
 				}
 			}
 		}
 	}
+	printf("time=  %f  \n", time1);
 	fclose(datin0);//close file
 
 }
