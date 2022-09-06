@@ -1026,7 +1026,7 @@ void datsave2(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP)
 void datin(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP)
 {
 	FILE *datin0;//Stream pointer setting
-	int  i, j, k;//integer
+	int  i, j, k, kk;//integer
 	double c00;//Average value of the field
 	int nd=ND, ndm=ND-1, nd2=ND/2;
 	int rndxm, rndym, rndzm;
@@ -1047,7 +1047,7 @@ void datin(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP)
 			for(k=0;k<=ndm;k++){
 				fscanf(datin0, "%d  %d", &n00[i*ND*ND+j*ND+k], &n00p[i*ND*ND+j*ND+k]);
 				for(kk=1;kk<=n00[i*ND*ND+j*ND+k];kk++){
-					fscanf(datin0, "%d  %e  ", &qh[kk*ND*ND*ND+i*ND*ND+j*ND+k], &ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]);
+					fscanf(datin0, "%d  %lf  ", &qh[kk*ND*ND*ND+i*ND*ND+j*ND+k], &ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]);
 				}
 			}
 		}
