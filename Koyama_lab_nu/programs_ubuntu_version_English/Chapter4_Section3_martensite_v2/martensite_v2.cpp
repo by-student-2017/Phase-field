@@ -232,9 +232,9 @@ start: ;
 			ip=i+1; im=i-1; jp=j+1; jm=j-1;
 			if(i==ndm){ip=0;}  if(i==0){im=ndm;}	//periodic boundary conditions
 			if(j==ndm){jp=0;}  if(j==0){jm=ndm;}
-			//s1k_su[i][j]=-kappa_s1*(s1h[ip][j]+s1h[im][j]+s1h[i][jp]+s1h[i][jm]-4.0*s1h[i][j]);//Ž®(4.2.4)
+			//s1k_su[i][j]=-kappa_s1*(s1h[ip][j]+s1h[im][j]+s1h[i][jp]+s1h[i][jm]-4.0*s1h[i][j]);//eq.(4.2.4)
 			//s2k_su[i][j]=-kappa_s2*(s2h[ip][j]+s2h[im][j]+s2h[i][jp]+s2h[i][jm]-4.0*s2h[i][j]);
-			s1k_su[i*ND+j]=-kappa_s1*(s1h[ip*ND+j]+s1h[im*ND+j]+s1h[i*ND+jp]+s1h[i*ND+jm]-4.0*s1h[i*ND+j]);//Ž®(4.2.4)
+			s1k_su[i*ND+j]=-kappa_s1*(s1h[ip*ND+j]+s1h[im*ND+j]+s1h[i*ND+jp]+s1h[i*ND+jm]-4.0*s1h[i*ND+j]);//eq.(4.2.4)
 			s2k_su[i*ND+j]=-kappa_s2*(s2h[ip*ND+j]+s2h[im*ND+j]+s2h[i*ND+jp]+s2h[i*ND+jm]-4.0*s2h[i*ND+j]);
 		}
 	}
