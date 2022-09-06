@@ -787,19 +787,21 @@ void datsave2(double *ph, int *qh, int *n00, int *n00p, int N, int NDX, int NDY,
 	FILE	*stream;
 	char	fName[256];
 	int 	i, j, k, kk;
-	int nd=ND, ndm=ND-1;
+	int ndx=NDX, ndxm=NDX-1, ndx2=NDX/2;
+	int ndy=NDY, ndym=NDY-1, ndy2=NDY/2;
+	int ndz=NDZ, ndzm=NDZ-1, ndz2=NDZ/2;
 
 	sprintf(fName,"data_%06d.dat",iout);
 	//stream = fopen("test.dat", "w");
 	stream = fopen(fName, "w");
-	fprintf(stream, "%d %d %d \n", ndm, ndm, ndm);
+	fprintf(stream, "%d %d %d \n", ndxm, ndym, ndzm);
 	fprintf(stream, "%e  ", time1);
 	for(i=0;i<=ndxm;i++){
 		for(j=0;j<=ndym;j++){
 			for(k=0;k<=ndzm;k++){
-				fprintf(stream, "\n %d  %d  \n", n00[i*ND*ND+j*ND+k], n00p[i*ND*ND+j*ND+k]);
-				for(kk=1;kk<=n00[i*ND*ND+j*ND+k];kk++){
-					fprintf(stream, "%d  %e  ", qh[kk*ND*ND*ND+i*ND*ND+j*ND+k], ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]);
+				fprintf(stream, "\n %d  %d  \n", n00[i*NDY*NDZ+j*NDZ+k], n00p[i*NDY*NDZ+j*NDZ+k]);
+				for(kk=1;kk<=n00[i*NDY*NDZ+j*NDZ+k];kk++){
+					fprintf(stream, "%d  %e  ", qh[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k], ph[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k]);
 				}
 			}
 		}
@@ -812,7 +814,7 @@ void datsave2(double *ph, int *qh, int *n00, int *n00p, int N, int NDX, int NDY,
 void datin(double *ph, int *qh, int *n00, int *n00p, int N, int NDX, int NDY, int NDZ, int GNP)
 {
 	FILE *datin0;//Stream pointer setting
-	int  i, j, k;//integer
+	int  i, j, k, kk;//integer
 	int ndx=NDX, ndxm=NDX-1, ndx2=NDX/2;
 	int ndy=NDY, ndym=NDY-1, ndy2=NDY/2;
 	int ndz=NDZ, ndzm=NDZ-1, ndz2=NDZ/2;
@@ -831,9 +833,10 @@ void datin(double *ph, int *qh, int *n00, int *n00p, int N, int NDX, int NDY, in
 	for(i=0;i<=ndxm;i++){
 		for(j=0;j<=ndym;j++){
 			for(k=0;k<=ndzm;k++){
-				fscanf(datin0, "  %d  %d  ", n00[i*ND*ND+j*ND+k], n00p[i*ND*ND+j*ND+k]);
-				for(kk=1;kk<=n00[i*ND*ND+j*ND+k];kk++){
-					fscanf(datin0, "%d  %e  ", qh[kk*ND*ND*ND+i*ND*ND+j*ND+k], ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]);
+				fscanf(datin0, "  %d  %d  ", &n00[i*NDY*NDZ+j*NDZ+k], &n00p[i*NDY*NDZ+j*NDZ+k]);
+				for(kk=1;kk<=n00[i*NDY*NDZ+j*NDZ+k];kk++){
+					fscanf(datin0, "%d  %lf  ", &qh[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k], &ph[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k]);
+				}
 			}
 		}
 	}

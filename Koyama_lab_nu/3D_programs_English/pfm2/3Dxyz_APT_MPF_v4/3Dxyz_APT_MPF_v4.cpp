@@ -1010,26 +1010,27 @@ void datsave_paraview(double *ph, int *qh, int *n00, int N, int NDX, int NDY, in
 	}
 }
 
-
 //************ Data Save *******************************
-void datsave2(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP)
+void datsave2(double *ph, int *qh, int *n00, int *n00p, int N, int NDX, int NDY, int NDZ, int GNP)
 {
 	FILE	*stream;
 	char	fName[256];
 	int 	i, j, k, kk;
-	int nd=ND, ndm=ND-1;
+	int ndx=NDX, ndxm=NDX-1, ndx2=NDX/2;
+	int ndy=NDY, ndym=NDY-1, ndy2=NDY/2;
+	int ndz=NDZ, ndzm=NDZ-1, ndz2=NDZ/2;
 
 	sprintf(fName,"data_%06d.dat",iout);
 	//stream = fopen("test.dat", "w");
 	stream = fopen(fName, "w");
-	fprintf(stream, "%d %d %d \n", ndm, ndm, ndm);
+	fprintf(stream, "%d %d %d \n", ndxm, ndym, ndzm);
 	fprintf(stream, "%e  ", time1);
-	for(i=0;i<=ndm;i++){
-		for(j=0;j<=ndm;j++){
-			for(k=0;k<=ndm;k++){
-				fprintf(stream, "\n  %d  %d  \n", n00[i*ND*ND+j*ND+k], n00p[i*ND*ND+j*ND+k]);
-				for(kk=1;kk<=n00[i*ND*ND+j*ND+k];kk++){
-					fprintf(stream, "%d  %e  ", qh[kk*ND*ND*ND+i*ND*ND+j*ND+k], ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]);
+	for(i=0;i<=ndxm;i++){
+		for(j=0;j<=ndym;j++){
+			for(k=0;k<=ndzm;k++){
+				fprintf(stream, "\n %d  %d  \n", n00[i*NDY*NDZ+j*NDZ+k], n00p[i*NDY*NDZ+j*NDZ+k]);
+				for(kk=1;kk<=n00[i*NDY*NDZ+j*NDZ+k];kk++){
+					fprintf(stream, "%d  %e  ", qh[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k], ph[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k]);
 				}
 			}
 		}
@@ -1039,31 +1040,31 @@ void datsave2(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP)
 }
 
 //************ Reading field data *****************************************
-void datin(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP)
+void datin(double *ph, int *qh, int *n00, int *n00p, int N, int NDX, int NDY, int NDZ, int GNP)
 {
 	FILE *datin0;//Stream pointer setting
-	int  i, j, k;//integer
-	double c00;//Average value of the field
-	int nd=ND, ndm=ND-1, nd2=ND/2;
+	int  i, j, k, kk;//integer
+	int ndx=NDX, ndxm=NDX-1, ndx2=NDX/2;
+	int ndy=NDY, ndym=NDY-1, ndy2=NDY/2;
+	int ndz=NDZ, ndzm=NDZ-1, ndz2=NDZ/2;
 	int rndxm, rndym, rndzm;
 
 	datin0 = fopen("data.dat", "r");//Open the source file
 
 	fscanf(datin0, "%d %d %d", &rndxm, &rndym, &rndzm);
-	if (ndm != rndxm){
+	if (ndxm != rndxm || ndym != rndym || ndzm != rndzm){
 		printf("data size is mismatch \n");
-		printf("Please, change ND= %d in parameters.txt \n", rndxm);
+		printf("Please, change NDX, NDY or NDZ in parameters.txt \n");
 	}
-	
+
 	fscanf(datin0, "%lf", &time1);
 
-	c00=0.0;//Initial value of field mean
-	for(i=0;i<=ndm;i++){
-		for(j=0;j<=ndm;j++){
-			for(k=0;k<=ndm;k++){
-				fscanf(datin0, "%d  %d", &n00[i*ND*ND+j*ND+k], &n00p[i*ND*ND+j*ND+k]);
-				for(kk=1;kk<=n00[i*ND*ND+j*ND+k];kk++){
-					fscanf(datin0, "%d  %e  ", &qh[kk*ND*ND*ND+i*ND*ND+j*ND+k], &ph[kk*ND*ND*ND+i*ND*ND+j*ND+k]);
+	for(i=0;i<=ndxm;i++){
+		for(j=0;j<=ndym;j++){
+			for(k=0;k<=ndzm;k++){
+				fscanf(datin0, "  %d  %d  ", &n00[i*NDY*NDZ+j*NDZ+k], &n00p[i*NDY*NDZ+j*NDZ+k]);
+				for(kk=1;kk<=n00[i*NDY*NDZ+j*NDZ+k];kk++){
+					fscanf(datin0, "%d  %lf  ", &qh[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k], &ph[kk*NDX*NDY*NDZ+i*NDY*NDZ+j*NDZ+k]);
 				}
 			}
 		}
