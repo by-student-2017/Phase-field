@@ -19,6 +19,7 @@
 	int flg;
 
 	void ini_field(double *ch, int ND);	//Initial concentration wave setting subroutine
+	void datin(double *ch, int ND);	//Subroutine for initial field reading
 	//void graph_c();					//graph display subroutine
 	void datsave(double *ch, int ND);	//Concentration data save subroutine
 	void datsave_paraview(double *ch, int ND);	//Concentration data save subroutine
@@ -53,6 +54,8 @@ int main(void)
 	int    ip, im, jp, jm, kp, km;
 	double sumc, dc0;
 	double c_flu, c_flu0;			//Magnitude of concentration field fluctuations
+	
+	int    readff;
 
 //********************************************************************************
 	printf("---------------------------------\n");
@@ -86,6 +89,7 @@ int main(void)
 	c_flu   = data[12];
 	flg     = int(data[13]);
 	Nstep   = int(data[14]);
+	readff  = int(data[15]);
 	printf("---------------------------------\n");
 	//
 	nd=ND;
@@ -131,7 +135,13 @@ int main(void)
 	c_flu0 = c_flu;
 
 //*************************************************************************
-	ini_field(ch, ND);
+	if(readff==0){
+		printf("make initial concentration (random) \n");
+		ini_field(ch, ND);
+	} else {
+		printf("read data.dat file \n");
+		datin(ch, ND);
+	}
 	//gwinsize(INXY,INXY); ginit(2); gsetorg(0,0);//Drawing window display
 
 //**** start **************************************************************
@@ -226,11 +236,9 @@ start: ;
 	//if(keypress()){return 0;}
 	time1=time1+1.;
 	if (time1<time1max) {goto start;}
-	printf("Finished \n");
 
 end:;
-	std::exit(0);
-	//return 0;
+  return 0;
 }
 
 //************[initial concentration wave]*****************************************
@@ -401,18 +409,36 @@ void datsave_paraview(double *ch, int ND)
 	}
 	fclose(fp);
 }
-//***********[Initial concentration wave input from file]****************************
-//void datin()
-//{
-//	FILE		*datin0;
-//	int 		i, j;
+//************ Reading field data *****************************************
+void datin(double *ch, int ND)
+{
+	FILE *datin0;//Stream pointer setting
+	int  i, j, k;//integer
+	double c00;//Average value of the field
+	int nd=ND, ndm=ND-1, nd2=ND/2;
+	int rndxm, rndym, rndzm;
 
-//	datin0 = fopen("test.dat", "r");
-//	fscanf(datin0, "%lf", &time1);
-//	for(i=0;i<=ndm;i++){
-//		for(j=0;j<=ndm;j++){
-//			fscanf(datin0, "%lf", &ch[i][j]);
-//		}
-//	}
-//	fclose(datin0);
-//}
+	datin0 = fopen("data.dat", "r");//Open the source file
+
+	fscanf(datin0, "%d %d %d", &rndxm, &rndym, &rndzm);
+	if (ndm != rndxm){
+		printf("data size is mismatch \n");
+		printf("Please, change ND= %d in parameters.txt \n", rndxm);
+	}
+	
+	fscanf(datin0, "%lf", &time1);
+
+	c00=0.0;//Initial value of field mean
+	for(i=0;i<=ndm;i++){
+		for(j=0;j<=ndm;j++){
+			for(k=0;k<=ndm;k++){
+				fscanf(datin0, "%lf", &ch[i*ND*ND+j*ND+k]);//Read field data
+				c00+=ch[i*ND*ND+j*ND+k];
+			}
+		}
+	}
+	c0=c00/nd/nd/nd;//Average value of the field
+	printf("c0=  %f  \n", c0);
+
+	fclose(datin0);
+}
