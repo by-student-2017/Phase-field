@@ -45,4 +45,4 @@ kapa_c5c= 5.0e-15  ! Concentration gradient energy constant kapa_c5c [Jm2/mol]
 kapa_c6c= 5.0e-15  ! Concentration gradient energy constant kapa_c6c [Jm2/mol]
 time1max= 1.0e05   ! Max iterations
 Nstep= 200.0       ! output every "Nstep"
-readff= 0.0        ! 0.0: no read. 1.0: read previous "data.dat" file (ch). 
+readff= 0.0        ! 0.0: no read. 1.0: read previous "data.dat" file. 

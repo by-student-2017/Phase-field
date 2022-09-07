@@ -13,4 +13,4 @@ M0= 8.0            ! (Analytical, no changes required) Grain boundary mobility (
 E0= 50.0           ! Driving force for grain boundary movement E0 [J/mol]
 time1max= 1.0e08   ! Max iterations
 Nstep= 100.0       ! output every "Nstep"
-readff= 0.0        ! 0.0: no read. 1.0: read previous "data.dat" file (ch). 
+readff= 0.0        ! 0.0: no read. 1.0: read previous "data.dat" file. 
