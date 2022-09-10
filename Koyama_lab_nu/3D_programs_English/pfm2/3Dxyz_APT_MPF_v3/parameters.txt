@@ -7,6 +7,7 @@ delt= 2.0         ! timestep [dimensionless] (amobi=1 [dimensionless])
 L= 500.0          ! Computation area [nm], b1=L/(double)NDX*1.0e-9
 time1max= 20001.0 ! Max iteration
 temp= 1000.0      ! Temperature [K]
+dtemp= 0.01       ! T = temp + dtemp * delt * temp1 [K]
 vm0= 7.0e-6       ! Molar volume [m3/mol]
 gamma0= 0.0       ! grain boundary energy [J/m2]  For 0.0 case, read matrix.txt file.
 delta= 3.0        ! Grain boundary width (is related with K1, W1 and M1)

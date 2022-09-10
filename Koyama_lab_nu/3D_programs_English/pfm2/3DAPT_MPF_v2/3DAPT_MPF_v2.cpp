@@ -59,6 +59,7 @@ int main(void)
 	double gamma, gamma0, delta, amobi;
 	double aaa, vm0;
 	
+	double dtemp;
 	int    readff;
 
 //****** reg data ****************************************
@@ -85,16 +86,17 @@ int main(void)
 	L       = data[4];	// [nm]
 	time1max= int(data[5]);
 	temp    = data[6];	// [K]
-	vm0     = data[7];	// gamma=gamma0*vm0/RR/temp/b1;
-	gamma0  = data[8];	// gamma=gamma0*vm0/RR/temp/b1;
-	delta   = data[9];	// Not delt !!! For, aaa, W1, M1
-	K0      = data[10];	// K1=K0*delta*gamma/PI/PI;
-	W0      = data[11];	// W1=W0*gamma/delta;
-	amobi   = data[12];	// M1=amobi*PI*PI/(M0*delta);
-	M0      = data[13];	// M1=amobi*PI*PI/(M0*delta);
-	E0      = data[14];	// E1=E0/RR/temp;
-	Nstep   = int(data[15]);
-	readff  = int(data[16]);
+	dtemp   = data[7];
+	vm0     = data[8];	// gamma=gamma0*vm0/RR/temp/b1;
+	gamma0  = data[9];	// gamma=gamma0*vm0/RR/temp/b1;
+	delta   = data[10];	// Not delt !!! For, aaa, W1, M1
+	K0      = data[11];	// K1=K0*delta*gamma/PI/PI;
+	W0      = data[12];	// W1=W0*gamma/delta;
+	amobi   = data[13];	// M1=amobi*PI*PI/(M0*delta);
+	M0      = data[14];	// M1=amobi*PI*PI/(M0*delta);
+	E0      = data[15];	// E1=E0/RR/temp;
+	Nstep   = int(data[16]);
+	readff  = int(data[17]);
 	printf("---------------------------------\n");
 	//
 	nd=ND;
@@ -441,6 +443,7 @@ start: ;
 	if (time1<time1max) {goto start;}
 	printf("Finished \n");
 
+	temp += dtemp * delt;
 end:;
 	std::exit(0);
 	//return 0;
