@@ -8,6 +8,7 @@ al= 64.0          ! Computation area [nm]
 amob_c= 1.0       ! Atomic mobility constant 
 time1max= 20001.0 ! Max iteration
 temp= 1000.0      ! Temperature [K]
+dtemp= 0.10       ! T = temp + dtemp * delt * temp1 [K]
 L00= 1.0e+03      ! interatomic interaction L00 [J/mol]
 kapa_c0= 5.0e-15  ! Concentration gradient energy constant kapa_c0 [Jm2/mol]
 c_flu= 0.1        ! Fluctuation of concentration field

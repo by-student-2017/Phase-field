@@ -55,6 +55,7 @@ int main(void)
 	double sumc, dc0;
 	double c_flu, c_flu0;			//Magnitude of concentration field fluctuations
 	
+	double dtemp;
 	int    readff;
 
 //********************************************************************************
@@ -84,12 +85,13 @@ int main(void)
 	amob_c  = data[7];
 	time1max= int(data[8]);
 	temp    = data[9];	// [K]
-	L00     = data[10];	//L0=L00/RR/temp;
-	kapa_c0 = data[11];	//kapa_c=kapa_c0/b1/b1/RR/temp;
-	c_flu   = data[12];
-	flg     = int(data[13]);
-	Nstep   = int(data[14]);
-	readff  = int(data[15]);
+	dtemp   = data[10];
+	L00     = data[11];	//L0=L00/RR/temp;
+	kapa_c0 = data[12];	//kapa_c=kapa_c0/b1/b1/RR/temp;
+	c_flu   = data[13];
+	flg     = int(data[14]);
+	Nstep   = int(data[15]);
+	readff  = int(data[16]);
 	printf("---------------------------------\n");
 	//
 	nd=ND;
@@ -237,6 +239,7 @@ start: ;
 	time1=time1+1.;
 	if (time1<time1max) {goto start;}
 
+	temp += dtemp * delt;
 end:;
   return 0;
 }
