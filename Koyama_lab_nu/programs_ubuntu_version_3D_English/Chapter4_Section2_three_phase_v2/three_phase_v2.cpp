@@ -48,6 +48,7 @@ int main(void)
 	double kapa_c1, kapa_c2, kapa_c3;					//concentration gradient energy coefficient
 	double kapa_c1c, kapa_c2c, kapa_c3c;					//concentration gradient energy coefficient
 	
+	double dtemp;
 	int    readff;
 
 //****** Setting calculation conditions and material constants ****************************************
@@ -72,19 +73,20 @@ int main(void)
 	c3a     = data[2];
 	delt    = data[3];
 	temp    = data[4];
-	al      = data[5];	// [nm]
-	cmob22  = data[6];
-	cmob33  = data[7];
-	cmob23  = data[8];
-	om_12e  = data[9];	//L_AB
-	om_13e  = data[10];	//L_AC
-	om_23e  = data[11];	//L_BC
-	kapa_c1c= data[12];
-	kapa_c2c= data[13];
-	kapa_c3c= data[14];
-	time1max= int(data[15]);
-	Nstep   = int(data[16]);
-	readff  = int(data[17]);
+	dtemp   = data[5];
+	al      = data[6];	// [nm]
+	cmob22  = data[7];
+	cmob33  = data[8];
+	cmob23  = data[9];
+	om_12e  = data[10];	//L_AB
+	om_13e  = data[11];	//L_AC
+	om_23e  = data[12];	//L_BC
+	kapa_c1c= data[13];
+	kapa_c2c= data[14];
+	kapa_c3c= data[15];
+	time1max= int(data[16]);
+	Nstep   = int(data[17]);
+	readff  = int(data[18]);
 	printf("---------------------------------\n");
 	//
 	nd=ND;					//Number of difference divisions on one side of the computational domain (number of difference blocks)
@@ -320,6 +322,7 @@ start: ;
 	if(time1<time1max){goto start;}//Determining if the maximum count has been reached
 	printf("Finished \n");
 
+	temp += dtemp * delt;
 end:;
 	std::exit(0);
 	//return 0;

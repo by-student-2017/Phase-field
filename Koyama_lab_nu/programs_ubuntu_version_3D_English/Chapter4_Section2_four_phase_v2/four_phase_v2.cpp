@@ -51,6 +51,7 @@ int main(void)
 	
 	double div2_c2h, div2_c3h, div2_c4h;		//div(div(ch))=d^2(ch)/dx^2 + d^2(ch)/dy^2 + d^2(ch)/dz^2
 	
+	double dtemp;
 	int    readff;
 
 //****** Setting calculation conditions and material constants ****************************************
@@ -76,26 +77,27 @@ int main(void)
 	c4a     = data[3];
 	delt    = data[4];
 	temp    = data[5];
-	al      = data[6];	// [nm]
-	cmob22  = data[7];
-	cmob33  = data[8];
-	cmob44  = data[9];
-	cmob23  = data[10];
-	cmob24  = data[11];
-	cmob34  = data[12];
-	om_12e  = data[13];	//L_AB
-	om_13e  = data[14];	//L_AC
-	om_14e  = data[15];	//L_AD
-	om_23e  = data[16];	//L_BC
-	om_24e  = data[17];	//L_BD
-	om_34e  = data[18];	//L_CD
-	kapa_c1c= data[19];
-	kapa_c2c= data[20];
-	kapa_c3c= data[21];
-	kapa_c4c= data[22];
-	time1max= int(data[23]);
-	Nstep   = int(data[24]);
-	readff  = int(data[25]);
+	dtemp   = data[6];
+	al      = data[7];	// [nm]
+	cmob22  = data[8];
+	cmob33  = data[9];
+	cmob44  = data[10];
+	cmob23  = data[11];
+	cmob24  = data[12];
+	cmob34  = data[13];
+	om_12e  = data[14];	//L_AB
+	om_13e  = data[15];	//L_AC
+	om_14e  = data[16];	//L_AD
+	om_23e  = data[17];	//L_BC
+	om_24e  = data[18];	//L_BD
+	om_34e  = data[19];	//L_CD
+	kapa_c1c= data[20];
+	kapa_c2c= data[21];
+	kapa_c3c= data[22];
+	kapa_c4c= data[23];
+	time1max= int(data[24]);
+	Nstep   = int(data[25]);
+	readff  = int(data[26]);
 	printf("---------------------------------\n");
 	//
 	nd=ND;					//Number of difference divisions on one side of the computational domain (number of difference blocks)
@@ -306,7 +308,8 @@ start: ;
 	if(time1<time1max){goto start;}//Determining if the maximum count has been reached
 	printf("Finished \n");
 
-	end:;
+	temp += dtemp * delt;
+end:;
 	std::exit(0);
 	//return 0;
 }

@@ -4,6 +4,7 @@ c3a= 0.25          ! Concentration, C/(A+B+C+D)
 c4a= 0.25          ! Concentration, D/(A+B+C+D)
 delt= 0.005        ! timestep [dimensionless] (cmob22=cmob33=1.0, cmob23=cmob32=-0.5 [dimensionless])
 temp= 900.0        ! Temperature [K]
+dtemp= 0.10        ! T = temp + dtemp * delt * temp1 [K]
 al= 100.0          ! Computation area [nm]
 cmob22= 1.0        ! mobility, Mc(22)
 cmob33= 1.0        ! mobility, Mc(33)

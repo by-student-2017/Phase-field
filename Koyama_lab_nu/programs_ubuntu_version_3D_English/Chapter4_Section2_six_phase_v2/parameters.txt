@@ -6,6 +6,7 @@ c5a= 0.1333        ! Concentration, E/(A+B+C+D+E+F)
 c6a= 0.1333        ! Concentration, F/(A+B+C+D+E+F)
 delt= 0.005        ! timestep [dimensionless] (cmob22=cmob33=1.0, cmob23=cmob32=-0.5 [dimensionless])
 temp= 900.0        ! Temperature [K]
+dtemp= 0.10        ! T = temp + dtemp * delt * temp1 [K]
 al= 100.0          ! Computation area [nm]
 cmob22= 1.0        ! mobility, Mc(22)
 cmob33= 1.0        ! mobility, Mc(33)

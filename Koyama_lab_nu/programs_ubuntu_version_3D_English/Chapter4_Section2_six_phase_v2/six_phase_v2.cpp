@@ -67,7 +67,10 @@ int main(void)
 	double kapa_c1c, kapa_c2c, kapa_c3c, kapa_c4c, kapa_c5c, kapa_c6c;	//concentration gradient energy coefficient
 	
 	double div2_c2h, div2_c3h, div2_c4h, div2_c5h, div2_c6h;		//div(div(ch))=d^2(ch)/dx^2 + d^2(ch)/dy^2 + d^2(ch)/dz^2
-
+	
+	double dtemp;
+	int    readff;
+	
 //****** Setting calculation conditions and material constants ****************************************
 	printf("---------------------------------\n");
 	printf("read parameters from parameters.txt\n");
@@ -93,45 +96,47 @@ int main(void)
 	c6a     = data[5];
 	delt    = data[6];
 	temp    = data[7];
-	al      = data[8];	// [nm]
-	cmob22  = data[9];
-	cmob33  = data[10];
-	cmob44  = data[11];
-	cmob55  = data[12];
-	cmob66  = data[13];
-	cmob23  = data[14];
-	cmob24  = data[15];
-	cmob25  = data[16];
-	cmob26  = data[17];
-	cmob34  = data[18];
-	cmob35  = data[19];
-	cmob36  = data[20];
-	cmob45  = data[21];
-	cmob46  = data[22];
-	cmob56  = data[23];
-	om_12e  = data[24];	//L_AB
-	om_13e  = data[25];	//L_AC
-	om_14e  = data[26];	//L_AD
-	om_15e  = data[27];	//L_AE
-	om_16e  = data[28];	//L_AF
-	om_23e  = data[29];	//L_BC
-	om_24e  = data[30];	//L_BD
-	om_25e  = data[31];	//L_BE
-	om_26e  = data[32];	//L_BF
-	om_34e  = data[33];	//L_CD
-	om_35e  = data[34];	//L_CE
-	om_36e  = data[35];	//L_CF
-	om_45e  = data[36];	//L_DE
-	om_46e  = data[37];	//L_DF
-	om_56e  = data[38];	//L_EE
-	kapa_c1c= data[39];
-	kapa_c2c= data[40];
-	kapa_c3c= data[41];
-	kapa_c4c= data[42];
-	kapa_c5c= data[43];
-	kapa_c6c= data[44];
-	time1max= int(data[45]);
-	Nstep   = int(data[46]);
+	dtemp   = data[8];
+	al      = data[9];	// [nm]
+	cmob22  = data[10];
+	cmob33  = data[11];
+	cmob44  = data[12];
+	cmob55  = data[13];
+	cmob66  = data[14];
+	cmob23  = data[15];
+	cmob24  = data[16];
+	cmob25  = data[17];
+	cmob26  = data[18];
+	cmob34  = data[19];
+	cmob35  = data[20];
+	cmob36  = data[21];
+	cmob45  = data[22];
+	cmob46  = data[23];
+	cmob56  = data[24];
+	om_12e  = data[25];	//L_AB
+	om_13e  = data[26];	//L_AC
+	om_14e  = data[27];	//L_AD
+	om_15e  = data[28];	//L_AE
+	om_16e  = data[29];	//L_AF
+	om_23e  = data[30];	//L_BC
+	om_24e  = data[31];	//L_BD
+	om_25e  = data[32];	//L_BE
+	om_26e  = data[33];	//L_BF
+	om_34e  = data[34];	//L_CD
+	om_35e  = data[35];	//L_CE
+	om_36e  = data[36];	//L_CF
+	om_45e  = data[37];	//L_DE
+	om_46e  = data[38];	//L_DF
+	om_56e  = data[39];	//L_EE
+	kapa_c1c= data[40];
+	kapa_c2c= data[41];
+	kapa_c3c= data[42];
+	kapa_c4c= data[43];
+	kapa_c5c= data[44];
+	kapa_c6c= data[45];
+	time1max= int(data[46]);
+	Nstep   = int(data[47]);
+	readff  = int(data[48]);
 	printf("---------------------------------\n");
 	//
 	nd=ND;					//Number of difference divisions on one side of the computational domain (number of difference blocks)
@@ -428,7 +433,8 @@ start: ;
 	if(time1<time1max){goto start;}//Determining if the maximum count has been reached
 	printf("Finished \n");
 
-	end:;
+	temp += dtemp * delt;
+end:;
 	std::exit(0);
 	//return 0;
 }

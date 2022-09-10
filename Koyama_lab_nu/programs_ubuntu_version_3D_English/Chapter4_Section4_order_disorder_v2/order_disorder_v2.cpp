@@ -47,6 +47,7 @@ int main(void)
 	double kappa_s1c;
 	//double ds_fac;						//Fluctuation coefficient of crystal transformation
 	
+	double dtemp;
 	int    readff;
 
 //****** Setting calculation conditions and material constants ****************************************
@@ -69,14 +70,15 @@ int main(void)
 	ND      = int(data[0]);
 	delt    = data[1];
 	temp    = data[2];
-	al      = data[3];	// [nm]
-	smob    = data[4];
-	AA0e    = data[5];
-	kappa_s1c=data[6];
-	vm0     = data[7];
-	time1max= int(data[8]);
-	Nstep   = int(data[9]);
-	readff  = int(data[10]);
+	dtemp   = data[3];
+	al      = data[4];	// [nm]
+	smob    = data[5];
+	AA0e    = data[6];
+	kappa_s1c=data[7];
+	vm0     = data[8];
+	time1max= int(data[9]);
+	Nstep   = int(data[10]);
+	readff  = int(data[11]);
 	printf("---------------------------------\n");
 	
 	//
@@ -182,6 +184,7 @@ start: ;
 	if(time1<time1max){goto start;}	//Determining if the maximum count has been reached
 	printf("Finished \n");
 
+	temp += dtemp * delt;
 end:;
 	std::exit(0);
 	//return 0;

@@ -60,6 +60,7 @@ int main(void)
 	
 	double div2_c2h, div2_c3h, div2_c4h, div2_c5h;		//div(div(ch))=d^2(ch)/dx^2 + d^2(ch)/dy^2 + d^2(ch)/dz^2
 	
+	double dtemp;
 	int    readff;
 
 //****** Setting calculation conditions and material constants ****************************************
@@ -86,35 +87,36 @@ int main(void)
 	c5a     = data[4];
 	delt    = data[5];
 	temp    = data[6];
-	al      = data[7];	// [nm]
-	cmob22  = data[8];
-	cmob33  = data[9];
-	cmob44  = data[10];
-	cmob55  = data[11];
-	cmob23  = data[12];
-	cmob24  = data[13];
-	cmob25  = data[14];
-	cmob34  = data[15];
-	cmob35  = data[16];
-	cmob45  = data[17];
-	om_12e  = data[18];	//L_AB
-	om_13e  = data[19];	//L_AC
-	om_14e  = data[20];	//L_AD
-	om_15e  = data[21];	//L_AE
-	om_23e  = data[22];	//L_BC
-	om_24e  = data[23];	//L_BD
-	om_25e  = data[24];	//L_BE
-	om_34e  = data[25];	//L_CD
-	om_35e  = data[26];	//L_CE
-	om_45e  = data[27];	//L_DE
-	kapa_c1c= data[28];
-	kapa_c2c= data[29];
-	kapa_c3c= data[30];
-	kapa_c4c= data[31];
-	kapa_c5c= data[32];
-	time1max= int(data[33]);
-	Nstep   = int(data[34]);
-	readff  = int(data[35]);
+	dtemp   = data[7];
+	al      = data[8];	// [nm]
+	cmob22  = data[9];
+	cmob33  = data[10];
+	cmob44  = data[11];
+	cmob55  = data[12];
+	cmob23  = data[13];
+	cmob24  = data[14];
+	cmob25  = data[15];
+	cmob34  = data[16];
+	cmob35  = data[17];
+	cmob45  = data[18];
+	om_12e  = data[19];	//L_AB
+	om_13e  = data[20];	//L_AC
+	om_14e  = data[21];	//L_AD
+	om_15e  = data[22];	//L_AE
+	om_23e  = data[23];	//L_BC
+	om_24e  = data[24];	//L_BD
+	om_25e  = data[25];	//L_BE
+	om_34e  = data[26];	//L_CD
+	om_35e  = data[27];	//L_CE
+	om_45e  = data[28];	//L_DE
+	kapa_c1c= data[29];
+	kapa_c2c= data[30];
+	kapa_c3c= data[31];
+	kapa_c4c= data[32];
+	kapa_c5c= data[33];
+	time1max= int(data[34]);
+	Nstep   = int(data[35]);
+	readff  = int(data[36]);
 	printf("---------------------------------\n");
 	//
 	nd=ND;					//Number of difference divisions on one side of the computational domain (number of difference blocks)
@@ -366,7 +368,8 @@ start: ;
 	if(time1<time1max){goto start;}//Determining if the maximum count has been reached
 	printf("Finished \n");
 
-	end:;
+	temp += dtemp * delt;
+end:;
 	std::exit(0);
 	//return 0;
 }
