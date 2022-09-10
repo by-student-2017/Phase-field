@@ -3,6 +3,7 @@ delt= 0.1           ! timestep [dimensionless]
 time1max= 1.0e08    ! Max iterations
 Nstep= 10           ! output every "Nstep"
 temp= 298.0         ! Temperature [K]
+dtemp= 0.10         ! T = temp + dtemp * delt * temp1 [K]
 al= 250.0           ! The length of one side of the calculation area [micro meter]
 vm0= 3.87194E-5     ! Molar volume (1 mol of molecule)
 smob1= 1.0          ! Mobility mobility in structural phase transition (standardized and set to 1)

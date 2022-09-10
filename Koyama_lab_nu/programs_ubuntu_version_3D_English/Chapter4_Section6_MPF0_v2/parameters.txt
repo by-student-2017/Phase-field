@@ -2,6 +2,7 @@ ND= 64.0           ! Number of divisions
 N= 5.0             ! Number of crystal orientations + 1
 delt= 1.0          ! timestep [dimensionless] (amobi=1 [dimensionless])
 temp= 1000.0       ! Temperature [K]
+dtemp= 0.10        ! T = temp + dtemp * delt * temp1 [K]
 L= 2000.0          ! The length of one side of the calculation area [nm]
 vm0= 7.0e-6        ! Molar volume [m3/mol]
 gamma0= 0.5        ! Grain boundary energy density [J/m2]

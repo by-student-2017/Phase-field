@@ -42,6 +42,8 @@ int main(void)
 	double om_12, om_12e;		//interaction parameter
 	double kapa_c2, kapa_c2c;	//concentration gradient energy coefficient
 
+	double dtemp;
+	
 //****** Setting calculation conditions and material constants ****************************************
 	printf("---------------------------------\n");
 	printf("read parameters from parameters.txt\n");
@@ -63,12 +65,13 @@ int main(void)
 	c2a     = data[1];
 	delt    = data[2];	// timestep
 	temp    = data[3];	// [K]
-	al      = data[4];	// [nm]
-	cmob22  = data[5];
-	om_12e  = data[6];
-	kapa_c2c= data[7];
-	time1max= int(data[8]);
-	Nstep   = int(data[9]);
+	dtemp   = data[4];
+	al      = data[5];	// [nm]
+	cmob22  = data[6];
+	om_12e  = data[7];
+	kapa_c2c= data[8];
+	time1max= int(data[9]);
+	Nstep   = int(data[10]);
 	printf("---------------------------------\n");
 	//
 	nd=ND;
@@ -225,6 +228,7 @@ start: ;
 	if(time1<time1max){goto start;}//Determining if the maximum count has been reached
 	printf("Finished \n");
 
+	temp += dtemp * delt;
 end:;
 	std::exit(0);
 	//return 0;

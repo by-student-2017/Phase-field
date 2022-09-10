@@ -90,6 +90,8 @@ int main(void)
 	double Add0, Add0c;						//Coefficients in dipole-dipole interaction calculations
 
 	double t1, t2, t3, tQ, tR, tS, tT;		//Working variables for calculation of equilibrium moment of polarization
+
+	double dtemp;
 	int readff;
 
 //****** Setting calculation conditions and material constants ****************************************
@@ -114,29 +116,30 @@ int main(void)
 	time1max= int(data[2]);
 	Nstep   = int(data[3]);
 	temp    = data[4];
-	al      = data[5];
-	vm0     = data[6];
-	smob1   = data[7];
-	smob2   = data[8];
-	smob3   = data[9];
-	A1e     = data[10]; //Landau expansion form
-	A11e    = data[11]; //Landau expansion form
-	A12e    = data[12]; //Landau expansion form
-	A111e   = data[13]; //Landau expansion form
-	A112e   = data[14]; //Landau expansion form
-	A123e   = data[15]; //Landau expansion form
-	A1111e  = data[16]; //Landau expansion form
-	A1112e  = data[17]; //Landau expansion form
-	A1122e  = data[18]; //Landau expansion form
-	A1123e  = data[19]; //Landau expansion form
-	Tc0     = data[20];
-	kapaPc  = data[21];
-	E1_ex_x = data[22];
-	E1_ex_y = data[23];
-	E1_ex_z = data[24];
-	ep00    = data[25];
-	Add0c   = data[26];
-	readff  = int(data[27]);
+	dtemp   = data[5];
+	al      = data[6];
+	vm0     = data[7];
+	smob1   = data[8];
+	smob2   = data[9];
+	smob3   = data[10];
+	A1e     = data[11]; //Landau expansion form
+	A11e    = data[12]; //Landau expansion form
+	A12e    = data[13]; //Landau expansion form
+	A111e   = data[14]; //Landau expansion form
+	A112e   = data[15]; //Landau expansion form
+	A123e   = data[16]; //Landau expansion form
+	A1111e  = data[17]; //Landau expansion form
+	A1112e  = data[18]; //Landau expansion form
+	A1122e  = data[19]; //Landau expansion form
+	A1123e  = data[20]; //Landau expansion form
+	Tc0     = data[21];
+	kapaPc  = data[22];
+	E1_ex_x = data[23];
+	E1_ex_y = data[24];
+	E1_ex_z = data[25];
+	ep00    = data[26];
+	Add0c   = data[27];
+	readff  = int(data[28]);
 	printf("---------------------------------\n");
 	//
 	ig = int(log2(ND));
@@ -590,6 +593,7 @@ start: ;
 	if(time1<time1max){goto start;}	//Determining if the maximum count has been reached
 	printf("Finished \n");
 	
+	temp += dtemp * delt;
 end:;
 	if(plan) fftw_destroy_plan(plan);		//For FFT
 	if(iplan) fftw_destroy_plan(iplan);	//For IFFT

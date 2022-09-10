@@ -2,6 +2,7 @@ ND= 128.0          ! Division number, ND=2^n, n=integer
 c2a= 0.45          ! Concentration
 delt= 0.005        ! timestep [dimensionless] (cmob22=1 [dimensionless])
 temp= 900.0        ! Temperature [K]
+dtemp= 0.10        ! T = temp + dtemp * delt * temp1 [K]
 al= 100.0          ! Computation area [nm]
 cmob22= 1.0        ! mobility
 om_12e= 25000.0    ! interatomic interaction om_12e [J/mol]

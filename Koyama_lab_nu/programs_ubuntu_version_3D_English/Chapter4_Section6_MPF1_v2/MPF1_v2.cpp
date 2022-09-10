@@ -59,6 +59,7 @@ int main(void)
 	double amobi;			//Grain boundary mobility
 	double vm0;				//molar volume
 	
+	double dtemp;
 	int    readff;
 
 //****** Setting calculation conditions and material constants ****************************************
@@ -82,18 +83,19 @@ int main(void)
 	N       = int(data[1]);
 	delt    = data[2];
 	temp    = data[3];
-	L       = data[4];
-	vm0     = data[5];
-	gamma0  = data[6];
-	delta   = data[7];
-	K0      = data[8];
-	W0      = data[9];
-	amobi   = data[10];
-	M0      = data[11];
-	E0      = data[12];
-	time1max= int(data[13]);
-	Nstep   = int(data[14]);
-	readff  = int(data[15]);
+	dtemp   = data[4];
+	L       = data[5];
+	vm0     = data[6];
+	gamma0  = data[7];
+	delta   = data[8];
+	K0      = data[9];
+	W0      = data[10];
+	amobi   = data[11];
+	M0      = data[12];
+	E0      = data[13];
+	time1max= int(data[14]);
+	Nstep   = int(data[15]);
+	readff  = int(data[16]);
 	printf("---------------------------------\n");
 	//
 	nd=ND;
@@ -313,6 +315,7 @@ start: ;
 
 	printf("Finished \n");
 
+	temp += dtemp * delt;
 end:;
 	std::exit(0);
 	//return 0;
