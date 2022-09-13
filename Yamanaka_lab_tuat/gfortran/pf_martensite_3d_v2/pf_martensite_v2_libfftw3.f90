@@ -32,19 +32,19 @@ program martensite
 	integer:: half_grid
 	integer:: step_end			!! number of time steps
 	integer:: step_out			!! interval of output
-	double precision:: length	!! length of computationa domain [m]
+	double precision:: length	!! length of computationa domain (m)
 	double precision:: dx		!! spacing of computational grids
-	double precision:: dt		!! time increment [dimensionless time]
-	double precision:: temp		!! temperature [K]
+	double precision:: dt		!! time increment (dimensionless time)
+	double precision:: temp		!! temperature (K)
 	double precision, parameter:: pi = 3.141592
 	double precision, parameter:: rr = 8.3145	!! gas constant
 	double precision:: mobility	!! mobility of phase-field
-	double precision:: vm0	 	!! molar volume [m3/mol]
-	double precision:: aa0	 	!! magnitude of driving force [dimensionless]
+	double precision:: vm0	 	!! molar volume (m3/mol)
+	double precision:: aa0	 	!! magnitude of driving force (dimensionless)
 	double precision:: aa		!! constant A for chemical free energy
 	double precision:: bb		!! B
 	double precision:: cc		!! C
-	double precision:: grad_energ_coeff	!! gradient energy coefficient [dimensionless]
+	double precision:: grad_energ_coeff	!! gradient energy coefficient (dimensionless)
 	double precision:: stress_unit	!! stress is regularized by this number
 	double precision:: c11		!! elastic constant: C11=140GPa
 	double precision:: c22
@@ -172,28 +172,55 @@ program martensite
 	allocate (p2(0:grid,0:grid,0:grid))
 	allocate (eigen11_r(0:grid,0:grid,0:grid))
 	allocate (eigen22_r(0:grid,0:grid,0:grid))
+	allocate (eigen33_r(0:grid,0:grid,0:grid))
 	allocate (eigen12_r(0:grid,0:grid,0:grid))
 	allocate (eigen21_r(0:grid,0:grid,0:grid))
+	allocate (eigen13_r(0:grid,0:grid,0:grid))
+	allocate (eigen31_r(0:grid,0:grid,0:grid))
+	allocate (eigen23_r(0:grid,0:grid,0:grid))
+	allocate (eigen32_r(0:grid,0:grid,0:grid))
 	allocate (eigen11_f_real(0:grid,0:grid,0:grid))
 	allocate (eigen11_f_imag(0:grid,0:grid,0:grid))
 	allocate (eigen22_f_real(0:grid,0:grid,0:grid))
 	allocate (eigen22_f_imag(0:grid,0:grid,0:grid))
+	allocate (eigen33_f_real(0:grid,0:grid,0:grid))
+	allocate (eigen33_f_imag(0:grid,0:grid,0:grid))
 	allocate (eigen12_f_real(0:grid,0:grid,0:grid))
 	allocate (eigen12_f_imag(0:grid,0:grid,0:grid))
 	allocate (eigen21_f_real(0:grid,0:grid,0:grid))
 	allocate (eigen21_f_imag(0:grid,0:grid,0:grid))
+	allocate (eigen13_f_real(0:grid,0:grid,0:grid))
+	allocate (eigen13_f_imag(0:grid,0:grid,0:grid))
+	allocate (eigen31_f_real(0:grid,0:grid,0:grid))
+	allocate (eigen31_f_imag(0:grid,0:grid,0:grid))
+	allocate (eigen23_f_real(0:grid,0:grid,0:grid))
+	allocate (eigen23_f_imag(0:grid,0:grid,0:grid))
+	allocate (eigen32_f_real(0:grid,0:grid,0:grid))
+	allocate (eigen32_f_imag(0:grid,0:grid,0:grid))
 	allocate (inhomo_strain11(0:grid,0:grid,0:grid))
 	allocate (inhomo_strain22(0:grid,0:grid,0:grid))
+	allocate (inhomo_strain33(0:grid,0:grid,0:grid))
 	allocate (inhomo_strain12(0:grid,0:grid,0:grid))
 	allocate (inhomo_strain21(0:grid,0:grid,0:grid))
+	allocate (inhomo_strain13(0:grid,0:grid,0:grid))
+	allocate (inhomo_strain31(0:grid,0:grid,0:grid))
+	allocate (inhomo_strain23(0:grid,0:grid,0:grid))
+	allocate (inhomo_strain32(0:grid,0:grid,0:grid))
 	allocate (stress11(0:grid,0:grid,0:grid))
 	allocate (stress22(0:grid,0:grid,0:grid))
 	allocate (stress33(0:grid,0:grid,0:grid))
 	allocate (stress12(0:grid,0:grid,0:grid))
+	allocate (stress13(0:grid,0:grid,0:grid))
+	allocate (stress23(0:grid,0:grid,0:grid))
 	allocate (elastic_strain11(0:grid,0:grid,0:grid))
 	allocate (elastic_strain22(0:grid,0:grid,0:grid))
+	allocate (elastic_strain33(0:grid,0:grid,0:grid))
 	allocate (elastic_strain12(0:grid,0:grid,0:grid))
 	allocate (elastic_strain21(0:grid,0:grid,0:grid))
+	allocate (elastic_strain13(0:grid,0:grid,0:grid))
+	allocate (elastic_strain31(0:grid,0:grid,0:grid))
+	allocate (elastic_strain23(0:grid,0:grid,0:grid))
+	allocate (elastic_strain32(0:grid,0:grid,0:grid))
 	allocate (xi(0:grid,0:grid,0:grid))
 	allocate (xr(0:grid,0:grid,0:grid))
 	
@@ -203,23 +230,26 @@ program martensite
 	call dfftw_plan_dft_3d( plan,grid,grid,grid,in,out,FFTW_FORWARD, FFTW_ESTIMATE) !! forward FFT (FFT)
 	call dfftw_plan_dft_3d(iplan,grid,grid,grid,in,out,FFTW_BACKWARD,FFTW_ESTIMATE) !! inverse FFT (IFFT)
 
-! cec[i][j][k][l] = C ijkl
-	! Memo 1 (cec[i][j][k][l]=cec[i][j][l][k]=cec[j][i][k][l]=cec[k][l][i][j])
-	! cec[1][1][1][1]=c11;  cec[1][1][2][2]=c12;  cec[1][1][3][3]=c13;  c1123=c1131=c1112=0, c2311=c3111=c1211=0
-	! cec[2][2][1][1]=c21;  cec[2][2][2][2]=c22;  cec[2][2][3][3]=c23;  c2223=c2231=c2212=0, c2322=c3122=c1222=0
-	! cec[3][3][1][1]=c31;  cec[3][3][2][2]=c32;  cec[3][3][3][3]=c33;  c3323=c2231=c2212=0, c2333=c3133=c1232=0
-	! cec[2][3][2][3]=c44;  c2331=c2312=0
-	! cec[3][1][3][1]=c55;  c3123=c3112=0
-	! cec[1][2][1][2]=c66;  c1223=c1231=0
-	cec[1][1][1][1]=(ram0+2.0*mu0)
-	cec[2][2][2][2]=(ram0+2.0*mu0)
-	cec[3][3][3][3]=(ram0+2.0*mu0)
-	cec[1][2][1][2]=mu0, cec[1][2][2][1]=mu0,cec[2][1][1][2]=mu0,cec[2][1][2][1]=mu0
-	cec[2][3][2][3]=mu0, cec[2][3][3][2]=mu0,cec[3][2][2][3]=mu0,cec[3][2][3][2]=mu0
-	cec[1][3][1][3]=mu0, cec[1][3][3][1]=mu0,cec[3][1][1][3]=mu0,cec[3][1][3][1]=mu0
-	cec[1][1][2][2]=ram0,cec[2][2][1][1]=ram0
-	cec[1][1][3][3]=ram0,cec[3][3][1][1]=ram0
-	cec[2][2][3][3]=ram0,cec[3][3][2][2]=ram0
+! cec(i,j,k,l) = C ijkl
+	cec = 0 ! initialization
+	!
+	! Memo 1 (cec(i,j,k,l)=cec(i,j,l,k)=cec(j,i,k,l)=cec(k,l,i,j))
+	! cec(1,1,1,1)=c11;  cec(1,1,2,2)=c12;  cec(1,1,3,3)=c13;  c1123=c1131=c1112=0, c2311=c3111=c1211=0
+	! cec(2,2,1,1)=c21;  cec(2,2,2,2)=c22;  cec(2,2,3,3)=c23;  c2223=c2231=c2212=0, c2322=c3122=c1222=0
+	! cec(3,3,1,1)=c31;  cec(3,3,2,2)=c32;  cec(3,3,3,3)=c33;  c3323=c2231=c2212=0, c2333=c3133=c1232=0
+	! cec(2,3,2,3)=c44;  c2331=c2312=0
+	! cec(3,1,3,1)=c55;  c3123=c3112=0
+	! cec(1,2,1,2)=c66;  c1223=c1231=0
+	!
+	cec(1,1,1,1)=(ram0+2.0*mu0)
+	cec(2,2,2,2)=(ram0+2.0*mu0)
+	cec(3,3,3,3)=(ram0+2.0*mu0)
+	cec(1,2,1,2)=mu0, cec(1,2,2,1)=mu0,cec(2,1,1,2)=mu0,cec(2,1,2,1)=mu0
+	cec(2,3,2,3)=mu0, cec(2,3,3,2)=mu0,cec(3,2,2,3)=mu0,cec(3,2,3,2)=mu0
+	cec(1,3,1,3)=mu0, cec(1,3,3,1)=mu0,cec(3,1,1,3)=mu0,cec(3,1,3,1)=mu0
+	cec(1,1,2,2)=ram0,cec(2,2,1,1)=ram0
+	cec(1,1,3,3)=ram0,cec(3,3,1,1)=ram0
+	cec(2,2,3,3)=ram0,cec(3,3,2,2)=ram0
 
 ! input eigen strain for each variant
 	eigen0_1 = 0
@@ -473,32 +503,32 @@ program martensite
 					!!   0   0   0   0 C55   0  = 0          0          0          0  mu 0
 					!!   0   0   0   0   0 C66  = 0          0          0          0  0  mu
 						! old version
-						!sigma_r[1][1]=ram0*(eigen11_f_real(i,j,k)+eigen22_f_real(i,j,k)+eigen33_f_real(i,j,k)) + 2.0*mu0*eigen11_f_real(i,j,k)
-						!sigma_r[2][2]=ram0*(eigen11_f_real(i,j,k)+eigen22_f_real(i,j,k)+eigen33_f_real(i,j,k)) + 2.0*mu0*eigen22_f_real(i,j,k)
-						!sigma_r[3][3]=ram0*(eigen11_f_real(i,j,k)+eigen22_f_real(i,j,k)+eigen33_f_real(i,j,k)) + 2.0*mu0*eigen33_f_real(i,j,k)
-						!sigma_r[1][2]= mu0*(eigen12_f_real(i,j,k)+eigen21_f_real(i,j,k))
-						!sigma_r[1][3]= mu0*(eigen13_f_real(i,j,k)+eigen31_f_real(i,j,k))
-						!sigma_r[2][3]= mu0*(eigen23_f_real(i,j,k)+eigen32_f_real(i,j,k))
-					sigma_r[1][1]=cec[1][1][1][1]*eigen11_f_real(i,j,k)+cec[1][1][2][2]*eigen22_f_real(i,j,k)+cec[1][1][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[2][2]=cec[2][2][1][1]*eigen11_f_real(i,j,k)+cec[2][2][2][2]*eigen22_f_real(i,j,k)+cec[2][2][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[3][3]=cec[3][3][1][1]*eigen11_f_real(i,j,k)+cec[3][3][2][2]*eigen22_f_real(i,j,k)+cec[3][3][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[1][2]=cec[1][2][1][2]*eigen12_f_real(i,j,k)+cec[1][2][2][1]*eigen21_f_real(i,j,k)
-					sigma_r[1][3]=cec[1][3][1][3]*eigen13_f_real(i,j,k)+cec[1][3][3][1]*eigen31_f_real(i,j,k)
-					sigma_r[2][3]=cec[2][3][2][3]*eigen23_f_real(i,j,k)+cec[2][3][3][2]*eigen32_f_real(i,j,k)
+						!sigma_r(1,1)=ram0*(eigen11_f_real(i,j,k)+eigen22_f_real(i,j,k)+eigen33_f_real(i,j,k)) + 2.0*mu0*eigen11_f_real(i,j,k)
+						!sigma_r(2,2)=ram0*(eigen11_f_real(i,j,k)+eigen22_f_real(i,j,k)+eigen33_f_real(i,j,k)) + 2.0*mu0*eigen22_f_real(i,j,k)
+						!sigma_r(3,3)=ram0*(eigen11_f_real(i,j,k)+eigen22_f_real(i,j,k)+eigen33_f_real(i,j,k)) + 2.0*mu0*eigen33_f_real(i,j,k)
+						!sigma_r(1,2)= mu0*(eigen12_f_real(i,j,k)+eigen21_f_real(i,j,k))
+						!sigma_r(1,3)= mu0*(eigen13_f_real(i,j,k)+eigen31_f_real(i,j,k))
+						!sigma_r(2,3)= mu0*(eigen23_f_real(i,j,k)+eigen32_f_real(i,j,k))
+					sigma_r(1,1)=cec(1,1,1,1)*eigen11_f_real(i,j,k)+cec(1,1,2,2)*eigen22_f_real(i,j,k)+cec(1,1,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(2,2)=cec(2,2,1,1)*eigen11_f_real(i,j,k)+cec(2,2,2,2)*eigen22_f_real(i,j,k)+cec(2,2,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(3,3)=cec(3,3,1,1)*eigen11_f_real(i,j,k)+cec(3,3,2,2)*eigen22_f_real(i,j,k)+cec(3,3,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(1,2)=cec(1,2,1,2)*eigen12_f_real(i,j,k)+cec(1,2,2,1)*eigen21_f_real(i,j,k)
+					sigma_r(1,3)=cec(1,3,1,3)*eigen13_f_real(i,j,k)+cec(1,3,3,1)*eigen31_f_real(i,j,k)
+					sigma_r(2,3)=cec(2,3,2,3)*eigen23_f_real(i,j,k)+cec(2,3,3,2)*eigen32_f_real(i,j,k)
 					!
 						! old version
-						!sigma_i[1][1]=ram0*(eigen11_f_imag(i,j,k)+eigen22_f_imag(i,j,k)+eigen33_f_imag(i,j,k)) + 2.0*mu0*eigen11_f_imag(i,j,k)
-						!sigma_i[2][2]=ram0*(eigen11_f_imag(i,j,k)+eigen22_f_imag(i,j,k)+eigen33_f_imag(i,j,k)) + 2.0*mu0*eigen22_f_imag(i,j,k)
-						!sigma_i[3][3]=ram0*(eigen11_f_imag(i,j,k)+eigen22_f_imag(i,j,k)+eigen33_f_imag(i,j,k)) + 2.0*mu0*eigen33_f_imag(i,j,k)
-						!sigma_i[1][2]= mu0*(eigen12_f_imag(i,j,k)+eigen21_f_imag(i,j,k))
-						!sigma_i[1][3]= mu0*(eigen13_f_imag(i,j,k)+eigen31_f_imag(i,j,k))
-						!sigma_i[2][3]= mu0*(eigen23_f_imag(i,j,k)+eigen32_f_imag(i,j,k))
-					sigma_i[1][1]=cec[1][1][1][1]*eigen11_f_imag(i,j,k)+cec[1][1][2][2]*eigen22_f_imag(i,j,k)+cec[1][1][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[2][2]=cec[2][2][1][1]*eigen11_f_imag(i,j,k)+cec[2][2][2][2]*eigen22_f_imag(i,j,k)+cec[2][2][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[3][3]=cec[3][3][1][1]*eigen11_f_imag(i,j,k)+cec[3][3][2][2]*eigen22_f_imag(i,j,k)+cec[3][3][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[1][2]=cec[1][2][1][2]*eigen12_f_imag(i,j,k)+cec[1][2][2][1]*eigen21_f_imag(i,j,k)
-					sigma_i[1][3]=cec[1][3][1][3]*eigen13_f_imag(i,j,k)+cec[1][3][3][1]*eigen31_f_imag(i,j,k)
-					sigma_i[2][3]=cec[2][3][2][3]*eigen23_f_imag(i,j,k)+cec[2][3][3][2]*eigen32_f_imag(i,j,k)
+						!sigma_i(1,1)=ram0*(eigen11_f_imag(i,j,k)+eigen22_f_imag(i,j,k)+eigen33_f_imag(i,j,k)) + 2.0*mu0*eigen11_f_imag(i,j,k)
+						!sigma_i(2,2)=ram0*(eigen11_f_imag(i,j,k)+eigen22_f_imag(i,j,k)+eigen33_f_imag(i,j,k)) + 2.0*mu0*eigen22_f_imag(i,j,k)
+						!sigma_i(3,3)=ram0*(eigen11_f_imag(i,j,k)+eigen22_f_imag(i,j,k)+eigen33_f_imag(i,j,k)) + 2.0*mu0*eigen33_f_imag(i,j,k)
+						!sigma_i(1,2)= mu0*(eigen12_f_imag(i,j,k)+eigen21_f_imag(i,j,k))
+						!sigma_i(1,3)= mu0*(eigen13_f_imag(i,j,k)+eigen31_f_imag(i,j,k))
+						!sigma_i(2,3)= mu0*(eigen23_f_imag(i,j,k)+eigen32_f_imag(i,j,k))
+					sigma_i(1,1)=cec(1,1,1,1)*eigen11_f_imag(i,j,k)+cec(1,1,2,2)*eigen22_f_imag(i,j,k)+cec(1,1,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(2,2)=cec(2,2,1,1)*eigen11_f_imag(i,j,k)+cec(2,2,2,2)*eigen22_f_imag(i,j,k)+cec(2,2,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(3,3)=cec(3,3,1,1)*eigen11_f_imag(i,j,k)+cec(3,3,2,2)*eigen22_f_imag(i,j,k)+cec(3,3,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(1,2)=cec(1,2,1,2)*eigen12_f_imag(i,j,k)+cec(1,2,2,1)*eigen21_f_imag(i,j,k)
+					sigma_i(1,3)=cec(1,3,1,3)*eigen13_f_imag(i,j,k)+cec(1,3,3,1)*eigen31_f_imag(i,j,k)
+					sigma_i(2,3)=cec(2,3,2,3)*eigen23_f_imag(i,j,k)+cec(2,3,3,2)*eigen32_f_imag(i,j,k)
 					!
 					! lambda = v*E/((1+v)*(1-2*v)), mu=E/(2*(1+v))
 					!! munu0=2.0*mu0*(1.0-nu0)
@@ -509,9 +539,9 @@ program martensite
 					if(nnn.eq.0.0) nnn=1.0
 					!
 					!! real part of inhomogeneous strain in Fourier space
-					xr(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, ndm, sigma_r, grid, cec)
+					xr(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, sigma_r, cec)
 					!! imaginary part of inhomogeneous strain in Fourier space
-					xi(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, ndm, sigma_i, grid, cec)
+					xi(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, sigma_i, cec)
 					!
 					in(i,j,k)= cmplx(xr(i,j,k),xi(i,j,k))
 				enddo
@@ -541,28 +571,28 @@ program martensite
 					if(k.le.half_grid-1) kk=k		!! periodic boundary conditions after forward FFT (FFT)
 					if(k.ge.half_grid  ) kk=k-grid	!! periodic boundary conditions after forward FFT (FFT)
 					!
-					sigma_r[1][1]=cec[1][1][1][1]*eigen11_f_real(i,j,k)+cec[1][1][2][2]*eigen22_f_real(i,j,k)+cec[1][1][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[2][2]=cec[2][2][1][1]*eigen11_f_real(i,j,k)+cec[2][2][2][2]*eigen22_f_real(i,j,k)+cec[2][2][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[3][3]=cec[3][3][1][1]*eigen11_f_real(i,j,k)+cec[3][3][2][2]*eigen22_f_real(i,j,k)+cec[3][3][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[1][2]=cec[1][2][1][2]*eigen12_f_real(i,j,k)+cec[1][2][2][1]*eigen21_f_real(i,j,k)
-					sigma_r[1][3]=cec[1][3][1][3]*eigen13_f_real(i,j,k)+cec[1][3][3][1]*eigen31_f_real(i,j,k)
-					sigma_r[2][3]=cec[2][3][2][3]*eigen23_f_real(i,j,k)+cec[2][3][3][2]*eigen32_f_real(i,j,k)
+					sigma_r(1,1)=cec(1,1,1,1)*eigen11_f_real(i,j,k)+cec(1,1,2,2)*eigen22_f_real(i,j,k)+cec(1,1,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(2,2)=cec(2,2,1,1)*eigen11_f_real(i,j,k)+cec(2,2,2,2)*eigen22_f_real(i,j,k)+cec(2,2,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(3,3)=cec(3,3,1,1)*eigen11_f_real(i,j,k)+cec(3,3,2,2)*eigen22_f_real(i,j,k)+cec(3,3,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(1,2)=cec(1,2,1,2)*eigen12_f_real(i,j,k)+cec(1,2,2,1)*eigen21_f_real(i,j,k)
+					sigma_r(1,3)=cec(1,3,1,3)*eigen13_f_real(i,j,k)+cec(1,3,3,1)*eigen31_f_real(i,j,k)
+					sigma_r(2,3)=cec(2,3,2,3)*eigen23_f_real(i,j,k)+cec(2,3,3,2)*eigen32_f_real(i,j,k)
 					!
-					sigma_i[1][1]=cec[1][1][1][1]*eigen11_f_imag(i,j,k)+cec[1][1][2][2]*eigen22_f_imag(i,j,k)+cec[1][1][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[2][2]=cec[2][2][1][1]*eigen11_f_imag(i,j,k)+cec[2][2][2][2]*eigen22_f_imag(i,j,k)+cec[2][2][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[3][3]=cec[3][3][1][1]*eigen11_f_imag(i,j,k)+cec[3][3][2][2]*eigen22_f_imag(i,j,k)+cec[3][3][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[1][2]=cec[1][2][1][2]*eigen12_f_imag(i,j,k)+cec[1][2][2][1]*eigen21_f_imag(i,j,k)
-					sigma_i[1][3]=cec[1][3][1][3]*eigen13_f_imag(i,j,k)+cec[1][3][3][1]*eigen31_f_imag(i,j,k)
-					sigma_i[2][3]=cec[2][3][2][3]*eigen23_f_imag(i,j,k)+cec[2][3][3][2]*eigen32_f_imag(i,j,k)
+					sigma_i(1,1)=cec(1,1,1,1)*eigen11_f_imag(i,j,k)+cec(1,1,2,2)*eigen22_f_imag(i,j,k)+cec(1,1,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(2,2)=cec(2,2,1,1)*eigen11_f_imag(i,j,k)+cec(2,2,2,2)*eigen22_f_imag(i,j,k)+cec(2,2,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(3,3)=cec(3,3,1,1)*eigen11_f_imag(i,j,k)+cec(3,3,2,2)*eigen22_f_imag(i,j,k)+cec(3,3,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(1,2)=cec(1,2,1,2)*eigen12_f_imag(i,j,k)+cec(1,2,2,1)*eigen21_f_imag(i,j,k)
+					sigma_i(1,3)=cec(1,3,1,3)*eigen13_f_imag(i,j,k)+cec(1,3,3,1)*eigen31_f_imag(i,j,k)
+					sigma_i(2,3)=cec(2,3,2,3)*eigen23_f_imag(i,j,k)+cec(2,3,3,2)*eigen32_f_imag(i,j,k)
 					!
 					k_mag=ii*ii+jj*jj+kk*kk
 					nnn=dsqrt(k_mag)	   !! magnutude of wave vector |k|
 					if(nnn.eq.0.0) nnn=1.0
 					!
 					!! real part of inhomogeneous strain in Fourier space
-					xr(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, ndm, sigma_r, grid, cec)
+					xr(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, sigma_r, cec)
 					!! imaginary part of inhomogeneous strain in Fourier space
-					xi(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, ndm, sigma_i, grid, cec)
+					xi(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, sigma_i, cec)
 					!
 					in(i,j,k)= cmplx(xr(i,j,k),xi(i,j,k))
 				enddo
@@ -592,28 +622,28 @@ program martensite
 					if(k.le.half_grid-1) kk=k		!! periodic boundary conditions after forward FFT (FFT)
 					if(k.ge.half_grid  ) kk=k-grid	!! periodic boundary conditions after forward FFT (FFT)
 					!
-					sigma_r[1][1]=cec[1][1][1][1]*eigen11_f_real(i,j,k)+cec[1][1][2][2]*eigen22_f_real(i,j,k)+cec[1][1][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[2][2]=cec[2][2][1][1]*eigen11_f_real(i,j,k)+cec[2][2][2][2]*eigen22_f_real(i,j,k)+cec[2][2][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[3][3]=cec[3][3][1][1]*eigen11_f_real(i,j,k)+cec[3][3][2][2]*eigen22_f_real(i,j,k)+cec[3][3][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[1][2]=cec[1][2][1][2]*eigen12_f_real(i,j,k)+cec[1][2][2][1]*eigen21_f_real(i,j,k)
-					sigma_r[1][3]=cec[1][3][1][3]*eigen13_f_real(i,j,k)+cec[1][3][3][1]*eigen31_f_real(i,j,k)
-					sigma_r[2][3]=cec[2][3][2][3]*eigen23_f_real(i,j,k)+cec[2][3][3][2]*eigen32_f_real(i,j,k)
+					sigma_r(1,1)=cec(1,1,1,1)*eigen11_f_real(i,j,k)+cec(1,1,2,2)*eigen22_f_real(i,j,k)+cec(1,1,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(2,2)=cec(2,2,1,1)*eigen11_f_real(i,j,k)+cec(2,2,2,2)*eigen22_f_real(i,j,k)+cec(2,2,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(3,3)=cec(3,3,1,1)*eigen11_f_real(i,j,k)+cec(3,3,2,2)*eigen22_f_real(i,j,k)+cec(3,3,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(1,2)=cec(1,2,1,2)*eigen12_f_real(i,j,k)+cec(1,2,2,1)*eigen21_f_real(i,j,k)
+					sigma_r(1,3)=cec(1,3,1,3)*eigen13_f_real(i,j,k)+cec(1,3,3,1)*eigen31_f_real(i,j,k)
+					sigma_r(2,3)=cec(2,3,2,3)*eigen23_f_real(i,j,k)+cec(2,3,3,2)*eigen32_f_real(i,j,k)
 					!
-					sigma_i[1][1]=cec[1][1][1][1]*eigen11_f_imag(i,j,k)+cec[1][1][2][2]*eigen22_f_imag(i,j,k)+cec[1][1][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[2][2]=cec[2][2][1][1]*eigen11_f_imag(i,j,k)+cec[2][2][2][2]*eigen22_f_imag(i,j,k)+cec[2][2][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[3][3]=cec[3][3][1][1]*eigen11_f_imag(i,j,k)+cec[3][3][2][2]*eigen22_f_imag(i,j,k)+cec[3][3][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[1][2]=cec[1][2][1][2]*eigen12_f_imag(i,j,k)+cec[1][2][2][1]*eigen21_f_imag(i,j,k)
-					sigma_i[1][3]=cec[1][3][1][3]*eigen13_f_imag(i,j,k)+cec[1][3][3][1]*eigen31_f_imag(i,j,k)
-					sigma_i[2][3]=cec[2][3][2][3]*eigen23_f_imag(i,j,k)+cec[2][3][3][2]*eigen32_f_imag(i,j,k)
+					sigma_i(1,1)=cec(1,1,1,1)*eigen11_f_imag(i,j,k)+cec(1,1,2,2)*eigen22_f_imag(i,j,k)+cec(1,1,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(2,2)=cec(2,2,1,1)*eigen11_f_imag(i,j,k)+cec(2,2,2,2)*eigen22_f_imag(i,j,k)+cec(2,2,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(3,3)=cec(3,3,1,1)*eigen11_f_imag(i,j,k)+cec(3,3,2,2)*eigen22_f_imag(i,j,k)+cec(3,3,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(1,2)=cec(1,2,1,2)*eigen12_f_imag(i,j,k)+cec(1,2,2,1)*eigen21_f_imag(i,j,k)
+					sigma_i(1,3)=cec(1,3,1,3)*eigen13_f_imag(i,j,k)+cec(1,3,3,1)*eigen31_f_imag(i,j,k)
+					sigma_i(2,3)=cec(2,3,2,3)*eigen23_f_imag(i,j,k)+cec(2,3,3,2)*eigen32_f_imag(i,j,k)
 					!
 					k_mag=ii*ii+jj*jj+kk*kk
 					nnn=dsqrt(k_mag)	   !! magnutude of wave vector |k|
 					if(nnn.eq.0.0) nnn=1.0
 					!
 					!! real part of inhomogeneous strain in Fourier space
-					xr(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, ndm, sigma_r, grid, cec)
+					xr(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, sigma_r, cec)
 					!! imaginary part of inhomogeneous strain in Fourier space
-					xi(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, ndm, sigma_i, grid, cec)
+					xi(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, sigma_i, cec)
 					!
 					in(i,j,k)= cmplx(xr(i,j,k),xi(i,j,k))
 				enddo
@@ -643,28 +673,28 @@ program martensite
 					if(k.le.half_grid-1) kk=k		!! periodic boundary conditions after forward FFT (FFT)
 					if(k.ge.half_grid  ) kk=k-grid	!! periodic boundary conditions after forward FFT (FFT)
 					!
-					sigma_r[1][1]=cec[1][1][1][1]*eigen11_f_real(i,j,k)+cec[1][1][2][2]*eigen22_f_real(i,j,k)+cec[1][1][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[2][2]=cec[2][2][1][1]*eigen11_f_real(i,j,k)+cec[2][2][2][2]*eigen22_f_real(i,j,k)+cec[2][2][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[3][3]=cec[3][3][1][1]*eigen11_f_real(i,j,k)+cec[3][3][2][2]*eigen22_f_real(i,j,k)+cec[3][3][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[1][2]=cec[1][2][1][2]*eigen12_f_real(i,j,k)+cec[1][2][2][1]*eigen21_f_real(i,j,k)
-					sigma_r[1][3]=cec[1][3][1][3]*eigen13_f_real(i,j,k)+cec[1][3][3][1]*eigen31_f_real(i,j,k)
-					sigma_r[2][3]=cec[2][3][2][3]*eigen23_f_real(i,j,k)+cec[2][3][3][2]*eigen32_f_real(i,j,k)
+					sigma_r(1,1)=cec(1,1,1,1)*eigen11_f_real(i,j,k)+cec(1,1,2,2)*eigen22_f_real(i,j,k)+cec(1,1,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(2,2)=cec(2,2,1,1)*eigen11_f_real(i,j,k)+cec(2,2,2,2)*eigen22_f_real(i,j,k)+cec(2,2,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(3,3)=cec(3,3,1,1)*eigen11_f_real(i,j,k)+cec(3,3,2,2)*eigen22_f_real(i,j,k)+cec(3,3,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(1,2)=cec(1,2,1,2)*eigen12_f_real(i,j,k)+cec(1,2,2,1)*eigen21_f_real(i,j,k)
+					sigma_r(1,3)=cec(1,3,1,3)*eigen13_f_real(i,j,k)+cec(1,3,3,1)*eigen31_f_real(i,j,k)
+					sigma_r(2,3)=cec(2,3,2,3)*eigen23_f_real(i,j,k)+cec(2,3,3,2)*eigen32_f_real(i,j,k)
 					!
-					sigma_i[1][1]=cec[1][1][1][1]*eigen11_f_imag(i,j,k)+cec[1][1][2][2]*eigen22_f_imag(i,j,k)+cec[1][1][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[2][2]=cec[2][2][1][1]*eigen11_f_imag(i,j,k)+cec[2][2][2][2]*eigen22_f_imag(i,j,k)+cec[2][2][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[3][3]=cec[3][3][1][1]*eigen11_f_imag(i,j,k)+cec[3][3][2][2]*eigen22_f_imag(i,j,k)+cec[3][3][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[1][2]=cec[1][2][1][2]*eigen12_f_imag(i,j,k)+cec[1][2][2][1]*eigen21_f_imag(i,j,k)
-					sigma_i[1][3]=cec[1][3][1][3]*eigen13_f_imag(i,j,k)+cec[1][3][3][1]*eigen31_f_imag(i,j,k)
-					sigma_i[2][3]=cec[2][3][2][3]*eigen23_f_imag(i,j,k)+cec[2][3][3][2]*eigen32_f_imag(i,j,k)
+					sigma_i(1,1)=cec(1,1,1,1)*eigen11_f_imag(i,j,k)+cec(1,1,2,2)*eigen22_f_imag(i,j,k)+cec(1,1,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(2,2)=cec(2,2,1,1)*eigen11_f_imag(i,j,k)+cec(2,2,2,2)*eigen22_f_imag(i,j,k)+cec(2,2,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(3,3)=cec(3,3,1,1)*eigen11_f_imag(i,j,k)+cec(3,3,2,2)*eigen22_f_imag(i,j,k)+cec(3,3,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(1,2)=cec(1,2,1,2)*eigen12_f_imag(i,j,k)+cec(1,2,2,1)*eigen21_f_imag(i,j,k)
+					sigma_i(1,3)=cec(1,3,1,3)*eigen13_f_imag(i,j,k)+cec(1,3,3,1)*eigen31_f_imag(i,j,k)
+					sigma_i(2,3)=cec(2,3,2,3)*eigen23_f_imag(i,j,k)+cec(2,3,3,2)*eigen32_f_imag(i,j,k)
 					!
 					k_mag=ii*ii+jj*jj+kk*kk
 					nnn=dsqrt(k_mag)	   !! magnutude of wave vector |k|
 					if(nnn.eq.0.0) nnn=1.0
 					!
 					!! real part of inhomogeneous strain in Fourier space
-					xr(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, ndm, sigma_r, grid, cec)
+					xr(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, sigma_r, cec)
 					!! imaginary part of inhomogeneous strain in Fourier space
-					xi(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, ndm, sigma_i, grid, cec)
+					xi(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, sigma_i, cec)
 					!
 					in(i,j,k)= cmplx(xr(i,j,k),xi(i,j,k))
 				enddo
@@ -695,28 +725,28 @@ program martensite
 					if(k.le.half_grid-1) kk=k		!! periodic boundary conditions after forward FFT (FFT)
 					if(k.ge.half_grid  ) kk=k-grid	!! periodic boundary conditions after forward FFT (FFT)
 					!
-					sigma_r[1][1]=cec[1][1][1][1]*eigen11_f_real(i,j,k)+cec[1][1][2][2]*eigen22_f_real(i,j,k)+cec[1][1][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[2][2]=cec[2][2][1][1]*eigen11_f_real(i,j,k)+cec[2][2][2][2]*eigen22_f_real(i,j,k)+cec[2][2][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[3][3]=cec[3][3][1][1]*eigen11_f_real(i,j,k)+cec[3][3][2][2]*eigen22_f_real(i,j,k)+cec[3][3][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[1][2]=cec[1][2][1][2]*eigen12_f_real(i,j,k)+cec[1][2][2][1]*eigen21_f_real(i,j,k)
-					sigma_r[1][3]=cec[1][3][1][3]*eigen13_f_real(i,j,k)+cec[1][3][3][1]*eigen31_f_real(i,j,k)
-					sigma_r[2][3]=cec[2][3][2][3]*eigen23_f_real(i,j,k)+cec[2][3][3][2]*eigen32_f_real(i,j,k)
+					sigma_r(1,1)=cec(1,1,1,1)*eigen11_f_real(i,j,k)+cec(1,1,2,2)*eigen22_f_real(i,j,k)+cec(1,1,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(2,2)=cec(2,2,1,1)*eigen11_f_real(i,j,k)+cec(2,2,2,2)*eigen22_f_real(i,j,k)+cec(2,2,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(3,3)=cec(3,3,1,1)*eigen11_f_real(i,j,k)+cec(3,3,2,2)*eigen22_f_real(i,j,k)+cec(3,3,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(1,2)=cec(1,2,1,2)*eigen12_f_real(i,j,k)+cec(1,2,2,1)*eigen21_f_real(i,j,k)
+					sigma_r(1,3)=cec(1,3,1,3)*eigen13_f_real(i,j,k)+cec(1,3,3,1)*eigen31_f_real(i,j,k)
+					sigma_r(2,3)=cec(2,3,2,3)*eigen23_f_real(i,j,k)+cec(2,3,3,2)*eigen32_f_real(i,j,k)
 					!
-					sigma_i[1][1]=cec[1][1][1][1]*eigen11_f_imag(i,j,k)+cec[1][1][2][2]*eigen22_f_imag(i,j,k)+cec[1][1][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[2][2]=cec[2][2][1][1]*eigen11_f_imag(i,j,k)+cec[2][2][2][2]*eigen22_f_imag(i,j,k)+cec[2][2][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[3][3]=cec[3][3][1][1]*eigen11_f_imag(i,j,k)+cec[3][3][2][2]*eigen22_f_imag(i,j,k)+cec[3][3][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[1][2]=cec[1][2][1][2]*eigen12_f_imag(i,j,k)+cec[1][2][2][1]*eigen21_f_imag(i,j,k)
-					sigma_i[1][3]=cec[1][3][1][3]*eigen13_f_imag(i,j,k)+cec[1][3][3][1]*eigen31_f_imag(i,j,k)
-					sigma_i[2][3]=cec[2][3][2][3]*eigen23_f_imag(i,j,k)+cec[2][3][3][2]*eigen32_f_imag(i,j,k)
+					sigma_i(1,1)=cec(1,1,1,1)*eigen11_f_imag(i,j,k)+cec(1,1,2,2)*eigen22_f_imag(i,j,k)+cec(1,1,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(2,2)=cec(2,2,1,1)*eigen11_f_imag(i,j,k)+cec(2,2,2,2)*eigen22_f_imag(i,j,k)+cec(2,2,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(3,3)=cec(3,3,1,1)*eigen11_f_imag(i,j,k)+cec(3,3,2,2)*eigen22_f_imag(i,j,k)+cec(3,3,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(1,2)=cec(1,2,1,2)*eigen12_f_imag(i,j,k)+cec(1,2,2,1)*eigen21_f_imag(i,j,k)
+					sigma_i(1,3)=cec(1,3,1,3)*eigen13_f_imag(i,j,k)+cec(1,3,3,1)*eigen31_f_imag(i,j,k)
+					sigma_i(2,3)=cec(2,3,2,3)*eigen23_f_imag(i,j,k)+cec(2,3,3,2)*eigen32_f_imag(i,j,k)
 					!
 					k_mag=ii*ii+jj*jj+kk*kk
 					nnn=dsqrt(k_mag)	   !! magnutude of wave vector |k|
 					if(nnn.eq.0.0) nnn=1.0
 					!
 					!! real part of inhomogeneous strain in Fourier space
-					xr(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, ndm, sigma_r, grid, cec)
+					xr(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, sigma_r, cec)
 					!! imaginary part of inhomogeneous strain in Fourier space
-					xi(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, ndm, sigma_i, grid, cec)
+					xi(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, sigma_i, cec)
 					!
 					in(i,j,k)= cmplx(xr(i,j,k),xi(i,j,k))
 				enddo
@@ -748,28 +778,28 @@ program martensite
 					if(k.le.half_grid-1) kk=k		!! periodic boundary conditions after forward FFT (FFT)
 					if(k.ge.half_grid  ) kk=k-grid	!! periodic boundary conditions after forward FFT (FFT)
 					!
-					sigma_r[1][1]=cec[1][1][1][1]*eigen11_f_real(i,j,k)+cec[1][1][2][2]*eigen22_f_real(i,j,k)+cec[1][1][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[2][2]=cec[2][2][1][1]*eigen11_f_real(i,j,k)+cec[2][2][2][2]*eigen22_f_real(i,j,k)+cec[2][2][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[3][3]=cec[3][3][1][1]*eigen11_f_real(i,j,k)+cec[3][3][2][2]*eigen22_f_real(i,j,k)+cec[3][3][3][3]*eigen33_f_real(i,j,k)
-					sigma_r[1][2]=cec[1][2][1][2]*eigen12_f_real(i,j,k)+cec[1][2][2][1]*eigen21_f_real(i,j,k)
-					sigma_r[1][3]=cec[1][3][1][3]*eigen13_f_real(i,j,k)+cec[1][3][3][1]*eigen31_f_real(i,j,k)
-					sigma_r[2][3]=cec[2][3][2][3]*eigen23_f_real(i,j,k)+cec[2][3][3][2]*eigen32_f_real(i,j,k)
+					sigma_r(1,1)=cec(1,1,1,1)*eigen11_f_real(i,j,k)+cec(1,1,2,2)*eigen22_f_real(i,j,k)+cec(1,1,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(2,2)=cec(2,2,1,1)*eigen11_f_real(i,j,k)+cec(2,2,2,2)*eigen22_f_real(i,j,k)+cec(2,2,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(3,3)=cec(3,3,1,1)*eigen11_f_real(i,j,k)+cec(3,3,2,2)*eigen22_f_real(i,j,k)+cec(3,3,3,3)*eigen33_f_real(i,j,k)
+					sigma_r(1,2)=cec(1,2,1,2)*eigen12_f_real(i,j,k)+cec(1,2,2,1)*eigen21_f_real(i,j,k)
+					sigma_r(1,3)=cec(1,3,1,3)*eigen13_f_real(i,j,k)+cec(1,3,3,1)*eigen31_f_real(i,j,k)
+					sigma_r(2,3)=cec(2,3,2,3)*eigen23_f_real(i,j,k)+cec(2,3,3,2)*eigen32_f_real(i,j,k)
 					!
-					sigma_i[1][1]=cec[1][1][1][1]*eigen11_f_imag(i,j,k)+cec[1][1][2][2]*eigen22_f_imag(i,j,k)+cec[1][1][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[2][2]=cec[2][2][1][1]*eigen11_f_imag(i,j,k)+cec[2][2][2][2]*eigen22_f_imag(i,j,k)+cec[2][2][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[3][3]=cec[3][3][1][1]*eigen11_f_imag(i,j,k)+cec[3][3][2][2]*eigen22_f_imag(i,j,k)+cec[3][3][3][3]*eigen33_f_imag(i,j,k)
-					sigma_i[1][2]=cec[1][2][1][2]*eigen12_f_imag(i,j,k)+cec[1][2][2][1]*eigen21_f_imag(i,j,k)
-					sigma_i[1][3]=cec[1][3][1][3]*eigen13_f_imag(i,j,k)+cec[1][3][3][1]*eigen31_f_imag(i,j,k)
-					sigma_i[2][3]=cec[2][3][2][3]*eigen23_f_imag(i,j,k)+cec[2][3][3][2]*eigen32_f_imag(i,j,k)
+					sigma_i(1,1)=cec(1,1,1,1)*eigen11_f_imag(i,j,k)+cec(1,1,2,2)*eigen22_f_imag(i,j,k)+cec(1,1,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(2,2)=cec(2,2,1,1)*eigen11_f_imag(i,j,k)+cec(2,2,2,2)*eigen22_f_imag(i,j,k)+cec(2,2,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(3,3)=cec(3,3,1,1)*eigen11_f_imag(i,j,k)+cec(3,3,2,2)*eigen22_f_imag(i,j,k)+cec(3,3,3,3)*eigen33_f_imag(i,j,k)
+					sigma_i(1,2)=cec(1,2,1,2)*eigen12_f_imag(i,j,k)+cec(1,2,2,1)*eigen21_f_imag(i,j,k)
+					sigma_i(1,3)=cec(1,3,1,3)*eigen13_f_imag(i,j,k)+cec(1,3,3,1)*eigen31_f_imag(i,j,k)
+					sigma_i(2,3)=cec(2,3,2,3)*eigen23_f_imag(i,j,k)+cec(2,3,3,2)*eigen32_f_imag(i,j,k)
 					!
 					k_mag=ii*ii+jj*jj+kk*kk
 					nnn=dsqrt(k_mag)	   !! magnutude of wave vector |k|
 					if(nnn.eq.0.0) nnn=1.0
 					!
 					!! real part of inhomogeneous strain in Fourier space
-					xr(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, ndm, sigma_r, grid, cec)
+					xr(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, sigma_r, cec)
 					!! imaginary part of inhomogeneous strain in Fourier space
-					xi(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, ndm, sigma_i, grid, cec)
+					xi(i,j,k)=zcij(ii, jj, kk, nnn, iii, jjj, sigma_i, cec)
 					!
 					in(i,j,k)= cmplx(xr(i,j,k),xi(i,j,k))
 				enddo
@@ -810,21 +840,21 @@ program martensite
 						!stress23(i,j,k)=mu0*(homo_strain23+inhomo_strain23(i,j,k)-eigen23_r(i,j,k)) &
 						!			+(homo_strain32+inhomo_strain32(i,j,k)-eigen32_r(i,j,k))
 					!
-					stress11(i,j,k)=cec[1][1][1][1]*(homo_strain11+inhomo_strain11(i,j,k)-eigen11_r(i,j,k)) &
-								   +cec[1][1][2][2]*(homo_strain22+inhomo_strain22(i,j,k)-eigen22_r(i,j,k)) &
-								   +cec[1][1][3][3]*(homo_strain33+inhomo_strain33(i,j,k)-eigen33_r(i,j,k))
-					stress22(i,j,k)=cec[2][2][1][1]*(homo_strain11+inhomo_strain11(i,j,k)-eigen11_r(i,j,k)) &
-								   +cec[2][2][2][2]*(homo_strain22+inhomo_strain22(i,j,k)-eigen22_r(i,j,k)) &
-								   +cec[2][2][3][3]*(homo_strain33+inhomo_strain33(i,j,k)-eigen33_r(i,j,k))
-					stress33(i,j,k)=cec[3][3][1][1]*(homo_strain11+inhomo_strain11(i,j,k)-eigen11_r(i,j,k)) &
-								   +cec[3][3][2][2]*(homo_strain22+inhomo_strain22(i,j,k)-eigen22_r(i,j,k)) &
-								   +cec[3][3][3][3]*(homo_strain33+inhomo_strain33(i,j,k)-eigen33_r(i,j,k))
-					stress12(i,j,k)=cec[1][2][1][2]*(homo_strain12+inhomo_strain12(i,j,k)-eigen12_r(i,j,k)) &
-								   +cec[1][2][2][1]*(homo_strain21+inhomo_strain21(i,j,k)-eigen21_r(i,j,k))
-					stress13(i,j,k)=cec[1][3][1][3]*(homo_strain13+inhomo_strain13(i,j,k)-eigen13_r(i,j,k)) &
-								   +cec[1][3][3][1]*(homo_strain31+inhomo_strain31(i,j,k)-eigen31_r(i,j,k))
-					stress23(i,j,k)=cec[2][3][2][3]*(homo_strain23+inhomo_strain23(i,j,k)-eigen23_r(i,j,k)) &
-								   +cec[2][3][3][2]*(homo_strain32+inhomo_strain32(i,j,k)-eigen32_r(i,j,k))
+					stress11(i,j,k)=cec(1,1,1,1)*(homo_strain11+inhomo_strain11(i,j,k)-eigen11_r(i,j,k)) &
+								   +cec(1,1,2,2)*(homo_strain22+inhomo_strain22(i,j,k)-eigen22_r(i,j,k)) &
+								   +cec(1,1,3,3)*(homo_strain33+inhomo_strain33(i,j,k)-eigen33_r(i,j,k))
+					stress22(i,j,k)=cec(2,2,1,1)*(homo_strain11+inhomo_strain11(i,j,k)-eigen11_r(i,j,k)) &
+								   +cec(2,2,2,2)*(homo_strain22+inhomo_strain22(i,j,k)-eigen22_r(i,j,k)) &
+								   +cec(2,2,3,3)*(homo_strain33+inhomo_strain33(i,j,k)-eigen33_r(i,j,k))
+					stress33(i,j,k)=cec(3,3,1,1)*(homo_strain11+inhomo_strain11(i,j,k)-eigen11_r(i,j,k)) &
+								   +cec(3,3,2,2)*(homo_strain22+inhomo_strain22(i,j,k)-eigen22_r(i,j,k)) &
+								   +cec(3,3,3,3)*(homo_strain33+inhomo_strain33(i,j,k)-eigen33_r(i,j,k))
+					stress12(i,j,k)=cec(1,2,1,2)*(homo_strain12+inhomo_strain12(i,j,k)-eigen12_r(i,j,k)) &
+								   +cec(1,2,2,1)*(homo_strain21+inhomo_strain21(i,j,k)-eigen21_r(i,j,k))
+					stress13(i,j,k)=cec(1,3,1,3)*(homo_strain13+inhomo_strain13(i,j,k)-eigen13_r(i,j,k)) &
+								   +cec(1,3,3,1)*(homo_strain31+inhomo_strain31(i,j,k)-eigen31_r(i,j,k))
+					stress23(i,j,k)=cec(2,3,2,3)*(homo_strain23+inhomo_strain23(i,j,k)-eigen23_r(i,j,k)) &
+								   +cec(2,3,3,2)*(homo_strain32+inhomo_strain32(i,j,k)-eigen32_r(i,j,k))
 					!
 					elastic_strain11(i,j,k)=homo_strain11+inhomo_strain11(i,j,k)+ep11_a-eigen11_r(i,j,k)	!! elastic strain 11
 					elastic_strain22(i,j,k)=homo_strain22+inhomo_strain22(i,j,k)+ep22_a-eigen22_r(i,j,k)	!! elastic strain 22
@@ -971,30 +1001,33 @@ end program martensite
 ! Eq.(7.30)
 ! Omega ik = (C ijkl * nj * nl)^-1
 !===================================
-	subroutine zcij(ii, jj, kk, nnn, iii, jjj, ndm, sigma, grid, cec)
+	subroutine zcij(ii, jj, kk, nnn, iii, jjj, sigma, cec)
 	implicit none
 	integer:: m, n
 	double precision:: nx, ny, nz
-	double precision:: nec[4]
+	double precision, dimension(3):: nec
+	!
 	double precision:: a11, a22, a33, a12, a13, a23, a21, a31, a32
 	double precision:: b11, b22, b33, b12, b13, b23, b21, b31, b32
 	double precision:: det1, zij
-	double precision:: om[4][4]
-	double precision, dimension(0:grid,0:grid,0:grid):: sigma
+	!
+	double precision, dimension(3,3):: sigma
 	double precision, dimension(3,3,3,3):: cec
+	!
+	double precision, dimension(3,3):: om
 	
-	nec[1]=ii/nnn, nx=nec[1]	! n is the unit vector in the k direction, n=k/|k|
-	nec[2]=jj/nnn, ny=nec[2]	! n is the unit vector in the k direction, n=k/|k|
-	nec[3]=kk/nnn, nz=nec[3]	! n is the unit vector in the k direction, n=k/|k|
+	nec(1)=ii/nnn, nx=nec(1)	! n is the unit vector in the k direction, n=k/|k|
+	nec(2)=jj/nnn, ny=nec(2)	! n is the unit vector in the k direction, n=k/|k|
+	nec(3)=kk/nnn, nz=nec(3)	! n is the unit vector in the k direction, n=k/|k|
 
-	! C[i][k][j][l]*n[j]*n[l], C: elastic modulus, n: unit vector
+	! C(i,k,j,l)*n(j)*n(l), C: elastic modulus, n: unit vector
 	! C = cec
-	a11=cec[1][1][1][1]*nx*nx+cec[1][2][1][2]*ny*ny+cec[1][3][1][3]*nz*nz
-	a22=cec[1][2][1][2]*nx*nx+cec[2][2][2][2]*ny*ny+cec[2][3][2][3]*nz*nz
-	a33=cec[3][1][3][1]*nx*nx+cec[2][3][2][3]*ny*ny+cec[3][3][3][3]*nz*nz
-	a12=(cec[1][1][2][2]+cec[1][2][1][2])*nx*ny
-	a23=(cec[2][2][3][3]+cec[2][3][2][3])*ny*nz
-	a31=(cec[3][3][1][1]+cec[3][1][3][1])*nx*nz
+	a11=cec(1,1,1,1)*nx*nx+cec(1,2,1,2)*ny*ny+cec(1,3,1,3)*nz*nz
+	a22=cec(1,2,1,2)*nx*nx+cec(2,2,2,2)*ny*ny+cec(2,3,2,3)*nz*nz
+	a33=cec(3,1,3,1)*nx*nx+cec(2,3,2,3)*ny*ny+cec(3,3,3,3)*nz*nz
+	a12=(cec(1,1,2,2)+cec(1,2,1,2))*nx*ny
+	a23=(cec(2,2,3,3)+cec(2,3,2,3))*ny*nz
+	a31=(cec(3,3,1,1)+cec(3,1,3,1))*nx*nz
 	a21=a12
 	a32=a23
 	a13=a31
@@ -1010,25 +1043,25 @@ end program martensite
 	b32=b23
 	b13=b31
 
-	! det (C[i][k][j][l]*n[j]*n[l])
+	! det (C(i,k,j,l)*n(j)*n(l))
 	det1=a11*a22*a33+a12*a23*a31+a13*a32*a21-a13*a31*a22-a11*a23*a32-a33*a12*a21;
 	if(det1==0.0) det1=1.0
 
 	! inverse matrix
-	om[1][1]=b11/det1
-	om[2][2]=b22/det1
-	om[3][3]=b33/det1
-	om[1][2]=om[2][1]=b12/det1
-	om[2][3]=om[3][2]=b23/det1
-	om[3][1]=om[1][3]=b31/det1
+	om(1,1)=b11/det1
+	om(2,2)=b22/det1
+	om(3,3)=b33/det1
+	om(1,2)=om(2,1)=b12/det1
+	om(2,3)=om(3,2)=b23/det1
+	om(3,1)=om(1,3)=b31/det1
 	
-	! sigma[i][j] = cec[i][j][k][l]*eta_c[k][l]*(Kronecker delta[k][l])
+	! sigma(i,j) = cec(i,j,k,l)*eta_c(k,l)*(Kronecker delta(k,l))
 	! sigma: Eigen stress
 	zij=0.0
-	do m=0,ndm
-		do n=0,ndm
-			! /zij=zij+0.5*( om[m][iii]*nec[n]*nec[jjj] + om[m][jjj]*nec[n]*nec[iii] )*sigma[m][n]; // eq.(5.26) or eq.(II 3.5)
-			zij=zij+0.5*( nec[jjj]*om[m][iii] + nec[iii]*om[m][jjj] )*nec[n]*sigma[m][n] ! Eq.(7.30)
+	do m=1,3
+		do n=1,3
+			! /zij=zij+0.5*( om(m,iii)*nec(n)*nec(jjj) + om(m,jjj)*nec(n)*nec(iii) )*sigma(m,n); // eq.(5.26) or eq.(II 3.5)
+			zij=zij+0.5*( nec(jjj)*om(m,iii) + nec(iii)*om(m,jjj) )*nec(n)*sigma(m,n) ! Eq.(7.30)
 		enddo
 	enddo
 	
