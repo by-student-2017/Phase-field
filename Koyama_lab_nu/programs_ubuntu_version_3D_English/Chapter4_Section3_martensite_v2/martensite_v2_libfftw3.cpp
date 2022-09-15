@@ -9,6 +9,7 @@
 //#include <fftw3-mpi.h> //mpi version
 
 #define DRND(x) ((double)(x)/RAND_MAX*rand())//Random number function setting
+	
 	double PI=3.14159;			//Pi
 	double rr=8.3145;			//gas constant
 	double time1;				//Number of calculation counts (proportional to time)
@@ -16,7 +17,9 @@
 	
 	double cec[4][4][4][4];		//Elastic constant
 	double sigma[4][4];			//Eigen stress (stress when elastically deformed by the amount of Eigen strain)
-
+	
+	double zcij(int i0, int j0, int k0, int iii, int jjj, int ND);//Coefficient calculation of elastic function (Fourier space)
+	
 	void ini000(double *s1h, double *s2h, int ND);	//Initial field setup subroutine
 	void datsave(double *s1h, double *s2h, int ND);			//data save subroutine
 	void datsave_paraview(double *s1h, double *s2h, int ND);//data save subroutine
@@ -48,8 +51,9 @@ int main(void)
 
 	int   i, j, k, l, ii, jj, kk, iii, jjj;			//integer
 	int   p, q, m, n;								//integer
-	int   ip, im, jp, jm, kp, im;					//integer
+	int   ip, im, jp, jm, kp, km;					//integer
 	int   Nstep;									//integer
+	//
 	double al, temp, delt;							//Computational domain, temperature, time step
 	double time1max;								//Maximum calculation count (calculation end count)
 	double b1, vm0, atom_n;							//Side length of difference block, molar volume, number of atoms in unit cell
@@ -58,12 +62,14 @@ int main(void)
 
 	double AA0, AA1, AA2, AA3;						//factor in Gibbs energy
 	double AA0e;									//factor in Gibbs energy
+	//
 	double a1_c, b1_c, c1_c;						//lattice constant
 	double a1_t, b1_t, c1_t;						//lattice constant
+	//
 	double kappa_s1, kappa_s2;						//gradient energy factor
 	double kappa_s1c, kappa_s2c;					//gradient energy factor
+	//
 	double ds_fac;									//Fluctuation coefficient of crystal transformation
-	double eta1, eta2, eta3;
 
 //****** Setting calculation conditions and material constants ****************************************
 	printf("---------------------------------\n");
@@ -109,12 +115,12 @@ int main(void)
 	ep_a[1][1]=data[24];
 	ep_a[2][2]=data[25];
 	ep_a[3][3]=data[26];
-	eta11_s1= data[27];
-	eta22_s1= data[28];
-	eta33_s1= data[29];
-	eta11_s2= data[30];
-	eta22_s2= data[31];
-	eta33_s2= data[32];
+	eta_s1[1][1]=data[27];
+	eta_s1[2][2]=data[28];
+	eta_s1[3][3]=data[29];
+	eta_s2[1][1]=data[30];
+	eta_s2[2][2]=data[31];
+	eta_s2[3][3]=data[32];
 	printf("---------------------------------\n");
 	//
 	IG=int(log2(ND));
@@ -128,20 +134,30 @@ int main(void)
 	//
 	double *ep11h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
 	double *ep22h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
+	double *ep33h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
+	double *ep12h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
+	double *ep13h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
+	double *ep23h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
 	//
 	double *ep11qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
 	double *ep22qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
 	double *ep33qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
 	double *ep12qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
+	double *ep21qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
 	double *ep13qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
+	double *ep31qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
 	double *ep23qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
+	double *ep32qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
 	//
 	double *ep11qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
 	double *ep22qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
 	double *ep33qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
 	double *ep12qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
+	double *ep21qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
 	double *ep13qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
+	double *ep31qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
 	double *ep23qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
+	double *ep32qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
 	//
 	double *s1k_su   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//potential
 	double *s2k_su   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//potential
@@ -160,15 +176,21 @@ int main(void)
 	double *sigma22_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
 	double *sigma33_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
 	double *sigma12_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *sigma21_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
 	double *sigma13_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *sigma31_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
 	double *sigma23_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *sigma32_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
 	//
 	double *sigma11_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
 	double *sigma22_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
 	double *sigma33_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
 	double *sigma12_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *sigma21_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
 	double *sigma13_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *sigma31_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
 	double *sigma23_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *sigma32_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
 	//
 	const int fftsize = ND;
 	fftw_complex *in, *out; // in[i][0] for real, in[i][1] for imag.
@@ -193,17 +215,17 @@ int main(void)
 
 //*** Setting the Eigen distortion of the s1 field ***************
 	//eta_s1[1][1]=0.05; eta_s1[2][2]=-0.05;
-	eta_s1[1][1]=eta11_s1;
-	eta_s1[2][2]=eta22_s1;
-	eta_s1[3][3]=eta33_s1;
+	//eta_s1[1][1]=eta11_s1;
+	//eta_s1[2][2]=eta22_s1;
+	//eta_s1[3][3]=eta33_s1;
 	eta_s1[1][2]=eta_s1[2][1]=0.0;
 	eta_s1[1][3]=eta_s1[3][1]=0.0;
 	eta_s1[2][3]=eta_s1[3][2]=0.0;
 
 //*** Setting the Eigen distortion of the s2 field ***************
-	eta_s2[1][1]=eta11_s2;
-	eta_s2[2][2]=eta22_s2;
-	eta_s2[3][3]=eta33_s2;
+	//eta_s2[1][1]=eta11_s2;
+	//eta_s2[2][2]=eta22_s2;
+	//eta_s2[3][3]=eta33_s2;
 	eta_s2[1][2]=eta_s2[2][1]=0.0;
 	eta_s2[1][3]=eta_s2[3][1]=0.0;
 	eta_s2[2][3]=eta_s2[3][2]=0.0;
