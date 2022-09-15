@@ -40,9 +40,10 @@ program martensite
 	double precision:: mobility	!! mobility of phase-field
 	double precision:: vm0	 	!! molar volume (m3/mol)
 	double precision:: aa0,aa0c	!! magnitude of driving force (dimensionless)
-	double precision:: aa		!! constant A for chemical free energy
-	double precision:: bb		!! B
-	double precision:: cc		!! C
+	double precision:: aa0t		!! temp
+	double precision:: aa		!! constant A for chemical free energy, Landau polynomial expansion
+	double precision:: bb		!! constant B for chemical free energy, Landau polynomial expansion
+	double precision:: cc		!! constant C for chemical free energy, Landau polynomial expansion
 	double precision:: grad_energ_coeff, grad0c	!! gradient energy coefficient (dimensionless)
 	double precision:: stress_unit	!! stress is regularized by this number
 	double precision:: c11		!! elastic constant: C11=140GPa
@@ -146,7 +147,7 @@ program martensite
 
 	real(8)::data(40)
 	open(1,file="parameters.txt")
-	read(1,'(11x,e10.3)') (data(i),i=1,31)
+	read(1,'(11x,e10.3)') (data(i),i=1,32)
 	close(1)
 	grid     = int(data(1))
 	step_end = int(data(2))
@@ -156,33 +157,34 @@ program martensite
 	temp     = data(6)
 	mobility = data(7)
 	aa0c     = data(8)
-	vm0      = data(9)
-	grad0c   = data(10)
-	aa       = data(11)
-	bb       = data(12)
-	cc       = data(13)
+	aa0t     = data(9)
+	vm0      = data(10)
+	grad0c   = data(11)
+	aa       = data(12)
+	bb       = data(13)
+	cc       = data(14)
 	stress_unit=(1.0e+11)*vm0/rr/temp
-	c11      = data(14)*stress_unit
-	c22      = data(15)*stress_unit
-	c33      = data(16)*stress_unit
-	c44      = data(17)*stress_unit
-	c55      = data(18)*stress_unit
-	c66      = data(19)*stress_unit
-	c12      = data(20)*stress_unit
-	c13      = data(21)*stress_unit
-	c23      = data(22)*stress_unit
+	c11      = data(15)*stress_unit
+	c22      = data(16)*stress_unit
+	c33      = data(17)*stress_unit
+	c44      = data(18)*stress_unit
+	c55      = data(19)*stress_unit
+	c66      = data(20)*stress_unit
+	c12      = data(21)*stress_unit
+	c13      = data(22)*stress_unit
+	c23      = data(23)*stress_unit
 	ep_a = 0.0
-	ep_a(1,1)= data(23)
-	ep_a(2,2)= data(24)
-	ep_a(3,3)= data(25)
+	ep_a(1,1)= data(24)
+	ep_a(2,2)= data(25)
+	ep_a(3,3)= data(26)
 	eigen0_1 = 0.0	! eigen strain for variant 1 (phase field 1)
-	eigen0_1(1,1)=data(26)	! eigen011s1 in parameters.txt
-	eigen0_1(2,2)=data(27)	! eigen022s1 in parameters.txt
-	eigen0_1(3,3)=data(28)	! eigen033s1 in parameters.txt
+	eigen0_1(1,1)=data(27)	! eigen011s1 in parameters.txt
+	eigen0_1(2,2)=data(28)	! eigen022s1 in parameters.txt
+	eigen0_1(3,3)=data(29)	! eigen033s1 in parameters.txt
 	eigen0_2 = 0.0	! eigen strain for variant 2 (phase field 2)
-	eigen0_2(1,1)=data(29)	! eigen011s2 in parameters.txt
-	eigen0_2(2,2)=data(30)	! eigen022s2 in parameters.txt
-	eigen0_2(3,3)=data(31)	! eigen033s3 in parameters.txt
+	eigen0_2(1,1)=data(30)	! eigen011s2 in parameters.txt
+	eigen0_2(2,2)=data(31)	! eigen022s2 in parameters.txt
+	eigen0_2(3,3)=data(32)	! eigen033s3 in parameters.txt
 
 	!ig=int(log(dble(grid+0.5))/log(2.0))
 	!write(*,*) 'ig = ',ig
@@ -190,7 +192,8 @@ program martensite
 	ndm = grid-1
 	half_grid = grid/2
 	dx = length/grid
-	aa0 = (aa0c*(405.-temp)/405.)*vm0/rr/temp
+	!aa0 = (aa0c*(405.0-temp)/405.0)*vm0/rr/temp
+	aa0 = (aa0c*(aa0t-temp)/aa0t)*vm0/rr/temp
 	!bb = 3.*aa+12.
 	!cc = 2.*aa+12.
 	grad_energ_coeff=grad0c/rr/temp/dx/dx
