@@ -146,7 +146,7 @@ program martensite
 
 	real(8)::data(40)
 	open(1,file="parameters.txt")
-	read(1,'(11x,e10.3)') (data(i),i=1,26)
+	read(1,'(11x,e10.3)') (data(i),i=1,31)
 	close(1)
 	grid     = int(data(1))
 	step_end = int(data(2))
@@ -171,14 +171,18 @@ program martensite
 	c12      = data(20)*stress_unit
 	c13      = data(21)*stress_unit
 	c23      = data(22)*stress_unit
-	sig22_a  = data(23) ! applied stress along y direction
 	ep_a = 0.0
-	ep_a(1,1)= data(24) ! ep11_a=-c12/(c11-c12)/(c11+2.*c12)*sig22_a
-	ep_a(2,2)= data(25) ! ep22_a=(c11+c12)/(c11-c12)/(c11+2.*c12)*sig22_a
-	ep_a(3,3)= data(26) ! ep33_a=-c12/(c11-c12)/(c11+2.*c12)*sig22_a
-	!ep11_a   = data(24) ! ep11_a=-c12/(c11-c12)/(c11+2.*c12)*sig22_a
-	!ep22_a   = data(25) ! ep22_a=(c11+c12)/(c11-c12)/(c11+2.*c12)*sig22_a
-	!ep33_a   = data(26) ! ep33_a=-c12/(c11-c12)/(c11+2.*c12)*sig22_a
+	ep_a(1,1)= data(23)
+	ep_a(2,2)= data(24)
+	ep_a(3,3)= data(25)
+	eigen0_1 = 0.0	! eigen strain for variant 1 (phase field 1)
+	eigen0_1(1,1)=data(26)	! eigen011s1 in parameters.txt
+	eigen0_1(2,2)=data(27)	! eigen022s1 in parameters.txt
+	eigen0_1(3,3)=data(28)	! eigen033s1 in parameters.txt
+	eigen0_2 = 0.0	! eigen strain for variant 2 (phase field 2)
+	eigen0_2(1,1)=data(29)	! eigen011s2 in parameters.txt
+	eigen0_2(2,2)=data(30)	! eigen022s2 in parameters.txt
+	eigen0_2(3,3)=data(31)	! eigen033s3 in parameters.txt
 
 	!ig=int(log(dble(grid+0.5))/log(2.0))
 	!write(*,*) 'ig = ',ig
@@ -307,16 +311,16 @@ program martensite
 
 ! input eigen strain for each variant (Lattice mismatch, epsilon00(i,j))
 	! eigen strain for variant 1 (phase field 1)
-	eigen0_1 = 0
-	eigen0_1(1,1)=-0.1994
-	eigen0_1(2,2)= 0.1322
-	eigen0_1(3,3)= 0.1322
+	!eigen0_1 = 0
+	!eigen0_1(1,1)= eigen0_s1(1,1)
+	!eigen0_1(2,2)= eigen0_s1(2,2)
+	!eigen0_1(3,3)= eigen0_s1(3,3)
 	!
 	! eigen strain for variant 2 (phase field 2)
-	eigen0_2 = 0
-	eigen0_2(1,1)= 0.1322
-	eigen0_2(2,2)=-0.1994
-	eigen0_2(3,3)= 0.1322
+	!eigen0_2 = 0
+	!eigen0_2(1,1)= eigen0_s2(1,1)
+	!eigen0_2(2,2)= eigen0_s2(2,2)
+	!eigen0_2(3,3)= eigen0_s2(3,3)
 
 ! setting initial distribution of phase-field variable
 	do i=0,ndm

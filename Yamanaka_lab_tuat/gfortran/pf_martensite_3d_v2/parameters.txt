@@ -1,6 +1,6 @@
 grid      = 64.0      ! number of computational grids (must be 2^ig)
 step_end  = 1000.0    ! number of time steps
-step_out  = 1.0       ! interval of output
+step_out  = 10.0      ! interval of output
 length    = 256.e-09  ! length of computationa domain [m] (dx=length/grid)
 dt        = 0.02      ! time increment [dimensionless] (mobility=1.0 [dimensionless] )
 temp      = 355.0     ! temperature [K]
@@ -20,7 +20,12 @@ c66       = 0.28      !
 c12       = 0.84      ! C12 = 84 [GPa], C21=C12
 c13       = 0.84      ! C31 = C13
 c23       = 0.84      ! C23 = C32
-sig22_a   = 0.0       ! applied stress along y direction
-ep11_a    = 0.0       ! ep11_a=-c12/(c11-c12)/(c11+2.*c12)*sig22_a
-ep22_a    = 0.0       ! ep22_a=(c11+c12)/(c11-c12)/(c11+2.*c12)*sig22_a
-ep33_a    = 0.0       ! ep33_a=-c12/(c11-c12)/(c11+2.*c12)*sig22_a
+ep11_a    = 0.0       ! elastic strain unit, e.g., E/sigma=C(i,j,k,l)/sigma(i,j)
+ep22_a    = 0.0       ! elastic strain unit
+ep33_a    = 0.03      ! elastic strain unit
+eigen011s1=-0.1994    ! eigen strain for variant 1 (phase field 1), s1=p1=p_1
+eigen022s1= 0.1322    ! eigen strain for variant 1 (phase field 1), s1=p1=p_1
+eigen033s1= 0.1322    ! eigen strain for variant 1 (phase field 1), s1=p1=p_1
+eigen011s2= 0.1322    ! eigen strain for variant 2 (phase field 2), s2=p2=p_2
+eigen022s2=-0.1994    ! eigen strain for variant 2 (phase field 2), s2=p2=p_2
+eigen033s2= 0.1322    ! eigen strain for variant 2 (phase field 2), s2=p2=p_2
