@@ -609,7 +609,9 @@ program martensite
 						!sigma_r(1,3)=cec(1,3,1,3)*2.0*eigen13_f_real(i,j,k)
 						!sigma_r(2,3)=cec(2,3,2,3)*2.0*eigen23_f_real(i,j,k)
 					sigma_r(1,1)=sigma11_r(i,j,k); sigma_r(2,2)=sigma22_r(i,j,k); sigma_r(3,3)=sigma33_r(i,j,k)
-					sigma_r(1,2)=sigma12_r(i,j,k); sigma_r(1,3)=sigma13_r(i,j,k); sigma_r(2,3)=sigma23_r(i,j,k)
+					sigma_r(1,2)=sigma12_r(i,j,k); sigma_r(2,1)=sigma_r(1,2)
+					sigma_r(1,3)=sigma13_r(i,j,k); sigma_r(3,1)=sigma_r(1,3)
+					sigma_r(2,3)=sigma23_r(i,j,k); sigma_r(3,2)=sigma_r(2,3)
 					!
 							! old version 1
 							!sigma_i(1,1)=ram0*(eigen11_f_imag(i,j,k)+eigen22_f_imag(i,j,k)+eigen33_f_imag(i,j,k)) + 2.0*mu0*eigen11_f_imag(i,j,k)
@@ -628,7 +630,9 @@ program martensite
 						!sigma_i(1,3)=cec(1,3,1,3)*2.0*eigen13_f_imag(i,j,k)
 						!sigma_i(2,3)=cec(2,3,2,3)*2.0*eigen23_f_imag(i,j,k)
 					sigma_i(1,1)=sigma11_i(i,j,k); sigma_i(2,2)=sigma22_i(i,j,k); sigma_i(3,3)=sigma33_i(i,j,k)
-					sigma_i(1,2)=sigma12_i(i,j,k); sigma_i(1,3)=sigma13_i(i,j,k); sigma_i(2,3)=sigma23_i(i,j,k)
+					sigma_i(1,2)=sigma12_i(i,j,k); sigma_i(2,1)=sigma_i(1,2)
+					sigma_i(1,3)=sigma13_i(i,j,k); sigma_i(3,1)=sigma_i(1,3)
+					sigma_i(2,3)=sigma23_i(i,j,k); sigma_i(3,2)=sigma_i(2,3)
 					!
 					! lambda = v*E/((1+v)*(1-2*v)), mu=E/(2*(1+v))
 					!! munu0=2.0*mu0*(1.0-nu0)
@@ -672,10 +676,14 @@ program martensite
 					if(k.ge.half_grid  ) kk=k-grid	!! periodic boundary conditions after forward FFT (FFT)
 					!
 					sigma_r(1,1)=sigma11_r(i,j,k); sigma_r(2,2)=sigma22_r(i,j,k); sigma_r(3,3)=sigma33_r(i,j,k)
-					sigma_r(1,2)=sigma12_r(i,j,k); sigma_r(1,3)=sigma13_r(i,j,k); sigma_r(2,3)=sigma23_r(i,j,k)
+					sigma_r(1,2)=sigma12_r(i,j,k); sigma_r(2,1)=sigma_r(1,2)
+					sigma_r(1,3)=sigma13_r(i,j,k); sigma_r(3,1)=sigma_r(1,3)
+					sigma_r(2,3)=sigma23_r(i,j,k); sigma_r(3,2)=sigma_r(2,3)
 					!
 					sigma_i(1,1)=sigma11_i(i,j,k); sigma_i(2,2)=sigma22_i(i,j,k); sigma_i(3,3)=sigma33_i(i,j,k)
-					sigma_i(1,2)=sigma12_i(i,j,k); sigma_i(1,3)=sigma13_i(i,j,k); sigma_i(2,3)=sigma23_i(i,j,k)
+					sigma_i(1,2)=sigma12_i(i,j,k); sigma_i(2,1)=sigma_i(1,2)
+					sigma_i(1,3)=sigma13_i(i,j,k); sigma_i(3,1)=sigma_i(1,3)
+					sigma_i(2,3)=sigma23_i(i,j,k); sigma_i(3,2)=sigma_i(2,3)
 					!
 					k_mag=ii*ii+jj*jj+kk*kk
 					nnn=dsqrt(k_mag)	   !! magnutude of wave vector |k|
@@ -715,10 +723,14 @@ program martensite
 					if(k.ge.half_grid  ) kk=k-grid	!! periodic boundary conditions after forward FFT (FFT)
 					!
 					sigma_r(1,1)=sigma11_r(i,j,k); sigma_r(2,2)=sigma22_r(i,j,k); sigma_r(3,3)=sigma33_r(i,j,k)
-					sigma_r(1,2)=sigma12_r(i,j,k); sigma_r(1,3)=sigma13_r(i,j,k); sigma_r(2,3)=sigma23_r(i,j,k)
+					sigma_r(1,2)=sigma12_r(i,j,k); sigma_r(2,1)=sigma_r(1,2)
+					sigma_r(1,3)=sigma13_r(i,j,k); sigma_r(3,1)=sigma_r(1,3)
+					sigma_r(2,3)=sigma23_r(i,j,k); sigma_r(3,2)=sigma_r(2,3)
 					!
 					sigma_i(1,1)=sigma11_i(i,j,k); sigma_i(2,2)=sigma22_i(i,j,k); sigma_i(3,3)=sigma33_i(i,j,k)
-					sigma_i(1,2)=sigma12_i(i,j,k); sigma_i(1,3)=sigma13_i(i,j,k); sigma_i(2,3)=sigma23_i(i,j,k)
+					sigma_i(1,2)=sigma12_i(i,j,k); sigma_i(2,1)=sigma_i(1,2)
+					sigma_i(1,3)=sigma13_i(i,j,k); sigma_i(3,1)=sigma_i(1,3)
+					sigma_i(2,3)=sigma23_i(i,j,k); sigma_i(3,2)=sigma_i(2,3)
 					!
 					k_mag=ii*ii+jj*jj+kk*kk
 					nnn=dsqrt(k_mag)	   !! magnutude of wave vector |k|
@@ -758,10 +770,14 @@ program martensite
 					if(k.ge.half_grid  ) kk=k-grid	!! periodic boundary conditions after forward FFT (FFT)
 					!
 					sigma_r(1,1)=sigma11_r(i,j,k); sigma_r(2,2)=sigma22_r(i,j,k); sigma_r(3,3)=sigma33_r(i,j,k)
-					sigma_r(1,2)=sigma12_r(i,j,k); sigma_r(1,3)=sigma13_r(i,j,k); sigma_r(2,3)=sigma23_r(i,j,k)
+					sigma_r(1,2)=sigma12_r(i,j,k); sigma_r(2,1)=sigma_r(1,2)
+					sigma_r(1,3)=sigma13_r(i,j,k); sigma_r(3,1)=sigma_r(1,3)
+					sigma_r(2,3)=sigma23_r(i,j,k); sigma_r(3,2)=sigma_r(2,3)
 					!
 					sigma_i(1,1)=sigma11_i(i,j,k); sigma_i(2,2)=sigma22_i(i,j,k); sigma_i(3,3)=sigma33_i(i,j,k)
-					sigma_i(1,2)=sigma12_i(i,j,k); sigma_i(1,3)=sigma13_i(i,j,k); sigma_i(2,3)=sigma23_i(i,j,k)
+					sigma_i(1,2)=sigma12_i(i,j,k); sigma_i(2,1)=sigma_i(1,2)
+					sigma_i(1,3)=sigma13_i(i,j,k); sigma_i(3,1)=sigma_i(1,3)
+					sigma_i(2,3)=sigma23_i(i,j,k); sigma_i(3,2)=sigma_i(2,3)
 					!
 					k_mag=ii*ii+jj*jj+kk*kk
 					nnn=dsqrt(k_mag)	   !! magnutude of wave vector |k|
@@ -802,10 +818,14 @@ program martensite
 					if(k.ge.half_grid  ) kk=k-grid	!! periodic boundary conditions after forward FFT (FFT)
 					!
 					sigma_r(1,1)=sigma11_r(i,j,k); sigma_r(2,2)=sigma22_r(i,j,k); sigma_r(3,3)=sigma33_r(i,j,k)
-					sigma_r(1,2)=sigma12_r(i,j,k); sigma_r(1,3)=sigma13_r(i,j,k); sigma_r(2,3)=sigma23_r(i,j,k)
+					sigma_r(1,2)=sigma12_r(i,j,k); sigma_r(2,1)=sigma_r(1,2)
+					sigma_r(1,3)=sigma13_r(i,j,k); sigma_r(3,1)=sigma_r(1,3)
+					sigma_r(2,3)=sigma23_r(i,j,k); sigma_r(3,2)=sigma_r(2,3)
 					!
 					sigma_i(1,1)=sigma11_i(i,j,k); sigma_i(2,2)=sigma22_i(i,j,k); sigma_i(3,3)=sigma33_i(i,j,k)
-					sigma_i(1,2)=sigma12_i(i,j,k); sigma_i(1,3)=sigma13_i(i,j,k); sigma_i(2,3)=sigma23_i(i,j,k)
+					sigma_i(1,2)=sigma12_i(i,j,k); sigma_i(2,1)=sigma_i(1,2)
+					sigma_i(1,3)=sigma13_i(i,j,k); sigma_i(3,1)=sigma_i(1,3)
+					sigma_i(2,3)=sigma23_i(i,j,k); sigma_i(3,2)=sigma_i(2,3)
 					!
 					k_mag=ii*ii+jj*jj+kk*kk
 					nnn=dsqrt(k_mag)	   !! magnutude of wave vector |k|
@@ -847,10 +867,14 @@ program martensite
 					if(k.ge.half_grid  ) kk=k-grid	!! periodic boundary conditions after forward FFT (FFT)
 					!
 					sigma_r(1,1)=sigma11_r(i,j,k); sigma_r(2,2)=sigma22_r(i,j,k); sigma_r(3,3)=sigma33_r(i,j,k)
-					sigma_r(1,2)=sigma12_r(i,j,k); sigma_r(1,3)=sigma13_r(i,j,k); sigma_r(2,3)=sigma23_r(i,j,k)
+					sigma_r(1,2)=sigma12_r(i,j,k); sigma_r(2,1)=sigma_r(1,2)
+					sigma_r(1,3)=sigma13_r(i,j,k); sigma_r(3,1)=sigma_r(1,3)
+					sigma_r(2,3)=sigma23_r(i,j,k); sigma_r(3,2)=sigma_r(2,3)
 					!
 					sigma_i(1,1)=sigma11_i(i,j,k); sigma_i(2,2)=sigma22_i(i,j,k); sigma_i(3,3)=sigma33_i(i,j,k)
-					sigma_i(1,2)=sigma12_i(i,j,k); sigma_i(1,3)=sigma13_i(i,j,k); sigma_i(2,3)=sigma23_i(i,j,k)
+					sigma_i(1,2)=sigma12_i(i,j,k); sigma_i(2,1)=sigma_i(1,2)
+					sigma_i(1,3)=sigma13_i(i,j,k); sigma_i(3,1)=sigma_i(1,3)
+					sigma_i(2,3)=sigma23_i(i,j,k); sigma_i(3,2)=sigma_i(2,3)
 					!
 					k_mag=ii*ii+jj*jj+kk*kk
 					nnn=dsqrt(k_mag)	   !! magnutude of wave vector |k|
