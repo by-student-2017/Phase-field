@@ -9,9 +9,9 @@ aa0c      = 3.5e+08   ! aa0 = (aa0c*(aa0t-temp)/aa0t)*vm0/rr/temp
 aa0t      = 405.0     ! 
 vm0       = 7.0e-6    ! molar volume [m3/mol]
 grad0c    = 1.0e-15   ! grad_energ_coeff=grad0c/rr/temp/dx/dx
-aa        = 0.15      ! constant A for chemical free energy
-bb        = 12.45     ! constant B for chemical free energy
-cc        = 12.3      ! constant C for chemical free energy
+aa        = 0.15      ! constant A for chemical free energy, Landau polynomial expansion (A/2)
+bb        = 12.45     ! constant B for chemical free energy, Landau polynomial expansion (B/3)
+cc        = 12.3      ! constant C for chemical free energy, Landau polynomial expansion (C/4)
 c11       = 1.4       ! elastic constant: C11 = 140 [GPa]
 c22       = 1.4       ! c11 to mu0 multiplied by stress_unit
 c33       = 1.4       ! stress_unit=(1.0e+11)*vm0/rr/temp in code)
