@@ -1,4 +1,4 @@
-ND= 128.0           ! Number of divisions, ND=2^n
+ND= 64.0            ! Number of divisions, ND=2^n
 delt= 0.1           ! timestep [dimensionless]
 time1max= 1.0e08    ! Max iterations
 Nstep= 10           ! output every "Nstep"
