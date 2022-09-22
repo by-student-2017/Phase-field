@@ -319,6 +319,7 @@ iout = -1;
 iplan = fftw_plan_dft_3d(fftsize, fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW_ESTIMATE);	//For IFFT
 start: ;
 
+	if((((int)(time1) % Nstep)==0)){iout = iout + 1;}
 	if((((int)(time1) % Nstep)==0)){datsave(s1h, s2h, s3h, ND);} //Save tissue data every fixed repeat count
 	if((((int)(time1) % Nstep)==0)){datsave_paraview(s1h, s2h, s3h, ND);} //Save tissue data every fixed repeat count
 
@@ -1264,7 +1265,7 @@ void datsave_paraview(double *s1h, double *s2h, double *s3h, int ND)
 	int 	i, j, k;
 	int nd=ND, ndm=ND-1, nd2=ND/2;
 	
-	iout = iout + 1;
+	//iout = iout + 1;
 	printf("dip_ext_result%06d.vtk \n",iout);
 	sprintf(fName,"dip_ext_result%06d.vtk",iout);
 	fp = fopen(fName, "w");
