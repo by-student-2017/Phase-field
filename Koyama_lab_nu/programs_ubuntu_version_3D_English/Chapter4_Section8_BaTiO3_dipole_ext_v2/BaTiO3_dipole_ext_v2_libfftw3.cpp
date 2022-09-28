@@ -592,15 +592,14 @@ start: ;
 	//Advance the time, and if it is not the end time, go to the start
 	//if(keypress()){return 0;}//Waiting for key
 	time1=time1+1.0;								//Add calculation count
-	if(time1<time1max){goto start;}	//Determining if the maximum count has been reached
-	printf("Finished \n");
-
 	temp += dtemp * delt;
+	if(time1<time1max){goto start;}	//Determining if the maximum count has been reached
+
 end:;
-	if(plan) fftw_destroy_plan(plan);		//For FFT
+	printf("Finished \n");
+	if(plan) fftw_destroy_plan(plan);	//For FFT
 	if(iplan) fftw_destroy_plan(iplan);	//For IFFT
 	fftw_free(in); fftw_free(out);		// For FFT and IFFT
-	
 	std::exit(0);
 	//return 0;
 }

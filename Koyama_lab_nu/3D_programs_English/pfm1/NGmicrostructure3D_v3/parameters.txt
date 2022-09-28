@@ -1,0 +1,33 @@
+ND= 64            ! Division number 
+delt= 0.005       ! timestep [dimensionless] (amob_c=1 [dimensionless])
+c0= 0.4           ! Concentration
+Mx= 1.0           ! mobility
+My= 1.0           ! mobility
+Mz= 1.0           ! mobility
+al= 64.0          ! Computation area [nm]
+amob_c= 1.0       ! Atomic mobility constant 
+time1max= 20001.0 ! Max iteration
+temp= 1000.0      ! Temperature [K]
+dtemp= 0.10       ! T = temp + dtemp * delt * temp1 [K]
+L00= 1.0e+03      ! interatomic interaction L00 [J/mol]
+kapa_c0= 5.0e-15  ! Concentration gradient energy constant kapa_c0 [Jm2/mol]
+c_flu= 0.1        ! Fluctuation of concentration field
+flg= 2.0          ! 1:Spinodal, 2:Nucleation-Growth Degradation
+Nstep= 10.0       ! output every "Nstep"
+readff= 0.0       ! 0.0: no read. 1.0: read previous "data.dat" file (ch). 
+eta_c11= 0.05     ! Lattice mismatch, (aB-aA)/aA, eta_c[1][1]
+eta_c22= 0.05     ! Lattice mismatch, (bB-bA)/bA, eta_c[2][2]
+eta_c33= 0.05     ! Lattice mismatch, (cB-cA)/cA, eta_c[3][3]
+el_mag= 100.0     ! el_mag=1.0E+11/1.0E+09
+c11= 2.33         ! elastic constant c11=c11*el_mag, (2.33*10^11 [Pa] = 233.0 [GPa])
+c22= 2.33         !
+c33= 2.33         !
+c12= 1.35         ! elastic constant c12=c12*el_mag, (1.35*10^11 [Pa] = 135.0 [GPa])
+c13= 1.35         !
+c23= 1.35         !
+c44= 1.18         ! elastic constant c44=c44*el_mag, (1.18*10^11 [Pa] = 118.0 [GPa])
+c55= 1.18         !
+c66= 1.18         !
+ep11_a= 0.0       ! elastic strain related External force, e.g., E/sigma=C(i,j,k,l)/sigma(i,j)
+ep22_a= 0.0       ! elastic strain related External force
+ep33_a= 0.0       ! elastic strain related External force

@@ -310,13 +310,11 @@ start: ;
 //*********************************************************************
 	//if(keypress()){return 0;}//Waiting for key
 	time1=time1+1.;
-	
+	temp += dtemp * delt;
 	if(time1<time1max){goto start;}//Determining if the maximum count has been reached
 
-	printf("Finished \n");
-
-	temp += dtemp * delt;
 end:;
+	printf("Finished \n");
 	std::exit(0);
 	//return 0;
 }

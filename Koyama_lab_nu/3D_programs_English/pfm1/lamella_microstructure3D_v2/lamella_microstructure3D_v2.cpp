@@ -237,11 +237,12 @@ start: ;
 //******[time increase]*************************************************
 	//if(keypress()){return 0;}
 	time1=time1+1.;
-	if (time1<time1max) {goto start;}
-
 	temp += dtemp * delt;
+	if (time1<time1max) {goto start;}//Determining if the maximum count has been reached
 end:;
-  return 0;
+	printf("Finished \n");
+	std::exit(0);
+	//return 0;
 }
 
 //************[initial concentration wave]*****************************************
