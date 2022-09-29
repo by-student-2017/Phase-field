@@ -20,9 +20,9 @@
 	
 	double zcij(int i0, int j0, int k0, int iii, int jjj, int ND);//Coefficient calculation of elastic function (Fourier space)
 	
-	void ini000(double *s1h, double *s2h, int ND);	//Initial field setup subroutine
-	void datsave(double *s1h, double *s2h, int ND);			//data save subroutine
-	void datsave_paraview(double *s1h, double *s2h, int ND);//data save subroutine
+	void ini000(double *s1h, double *s2h, double *s3h, int ND);	//Initial field setup subroutine
+	void datsave(double *s1h, double *s2h, double *s3h, int ND);			//data save subroutine
+	void datsave_paraview(double *s1h, double *s2h, double *s3h, int ND);//data save subroutine
 
 //******* main program ******************************************
 int main(void)
@@ -30,15 +30,16 @@ int main(void)
     int ND, IG;
 	int nd, ndm, nd2, ig;
 	
-	double s1, s2;									//Phase field of martensite
+	double s1, s2, s3;								//Phase field of martensite
 	//
 	double s1k_chem, s1k_str;						//potential
 	double s2k_chem, s2k_str;						//potential
+	double s3k_chem, s3k_str;						//potential
 	//
 	double c11, c22, c33, c12, c13, c23, c44, c55, c66; //elastic constant
 	double c11c, c22c, c33c, c12c, c13c, c23c, c44c, c55c, c66c; //elastic constant
 	//
-	double eta_s1[4][4], eta_s2[4][4];				//Eigen distortion component
+	double eta_s1[4][4], eta_s2[4][4], eta_s3[4][4];//Eigen distortion component
 	double ep_a[4][4];								//elastic strain related external force
 	//
 	double sum11, sum22, sum33;						//spatial integral of s1 and s2
@@ -46,7 +47,7 @@ int main(void)
 	double ep0[4][4];								//Mean value of transformation strain in the structure
 	//
 	double epT[4][4];
-	double s1ddtt, s2ddtt;							//Time variation of s1 and s2 (left side of evolution equation)
+	double s1ddtt, s2ddtt, s3ddtt;					//Time variation of s1 and s2 (left side of evolution equation)
 	double el_fac;									//Normalization constant of elastic constant
 
 	int   i, j, k, l, ii, jj, kk, iii, jjj;			//integer
@@ -66,12 +67,14 @@ int main(void)
 	double a1_c, b1_c, c1_c;						//lattice constant
 	double a1_t, b1_t, c1_t;						//lattice constant
 	//
-	double kappa_s1, kappa_s2;						//gradient energy factor
-	double kappa_s1c, kappa_s2c;					//gradient energy factor
+	double kappa_s1, kappa_s2, kappa_s3;			//gradient energy factor
+	double kappa_s1c, kappa_s2c, kappa_s3c;			//gradient energy factor
 	//
 	double ds_fac;									//Fluctuation coefficient of crystal transformation
 	//
-	double theta, phi;								//Angle
+	double theta, phi;								//Angle of common
+	double theta_s2, phi_s2;						//Angle of s2
+	double theta_s3, phi_s3;						//Angle of s3
 	double Rx[4][4], Ry[4][4], Rz[4][4];			//Rotation matrix
 	double Rtmp[4][4];
 
@@ -81,7 +84,7 @@ int main(void)
 	FILE *fp;
 	char name[40], comment[72];
 	float param;
-	float data[40];
+	float data[60];
 	i = 0;
 	fp = fopen("parameters.txt","r");
 	while(fscanf(fp,"%s %e %[^\n] ",name, &param, comment) != EOF)
@@ -104,29 +107,32 @@ int main(void)
 	AA3     = data[9];
 	kappa_s1c=data[10];
 	kappa_s2c=data[11];
-	vm0     = data[12];
-	time1max= int(data[13]);
-	Nstep   = int(data[14]);
-	c11c    = data[15];
-	c22c    = data[16];
-	c33c    = data[17];
-	c12c    = data[18];
-	c13c    = data[19];
-	c23c    = data[20];
-	c44c    = data[21];
-	c55c    = data[22];
-	c66c    = data[23];
-	ep_a[1][1]=data[24];
-	ep_a[2][2]=data[25];
-	ep_a[3][3]=data[26];
-	eta_s1[1][1]=data[27];
-	eta_s1[2][2]=data[28];
-	eta_s1[3][3]=data[29];
-	eta_s2[1][1]=data[30];
-	eta_s2[2][2]=data[31];
-	eta_s2[3][3]=data[32];
-	theta    = data[33]; theta=double(theta/180.0)*PI;
-	phi      = data[34]; phi=double(phi/180.0)*PI;
+	kappa_s3c=data[12];
+	vm0     = data[13];
+	time1max= int(data[14]);
+	Nstep   = int(data[15]);
+	c11c    = data[16];
+	c22c    = data[17];
+	c33c    = data[18];
+	c12c    = data[19];
+	c13c    = data[20];
+	c23c    = data[21];
+	c44c    = data[22];
+	c55c    = data[23];
+	c66c    = data[24];
+	ep_a[1][1]=data[25];
+	ep_a[2][2]=data[26];
+	ep_a[3][3]=data[27];
+	eta_s1[1][1]=data[28];
+	eta_s1[2][2]=data[29];
+	eta_s1[3][3]=data[30];
+	eta_s1[1][2]=data[31];
+	eta_s1[1][3]=data[32];
+	eta_s1[2][3]=data[33];
+	theta_s2 = data[34]; theta_s2=double(theta_s2/180.0)*PI;
+	phi_s2   = data[35]; phi_s2=double(phi_s2/180.0)*PI;
+	theta_s3 = data[36]; theta_s3=double(theta_s3/180.0)*PI;
+	phi_s3   = data[37]; phi_s3=double(phi_s3/180.0)*PI;
 	printf("---------------------------------\n");
 	//
 	IG=int(log2(ND));
@@ -137,6 +143,7 @@ int main(void)
 	//
 	double *s1h      = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Phase field of martensite
 	double *s2h      = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Phase field of martensite
+	double *s3h      = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Phase field of martensite
 	//
 	double *ep11h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
 	double *ep22h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
@@ -167,6 +174,7 @@ int main(void)
 	//
 	double *s1k_su   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//potential
 	double *s2k_su   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//potential
+	double *s3k_su   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//potential
 	//
 	double *ec11     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Constraint strain variation (real space)
 	double *ec22     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Constraint strain variation (real space)
@@ -218,19 +226,20 @@ int main(void)
 
 	kappa_s1=kappa_s1c/rr/temp/b1/b1;	//gradient energy factor
 	kappa_s2=kappa_s2c/rr/temp/b1/b1;	//gradient energy factor
+	kappa_s3=kappa_s3c/rr/temp/b1/b1;	//gradient energy factor
 
 //*** Rotation matrix ***************
 	//Rx[1][1]=1.0;         Rx[1][2]=0.0;         Rx[1][3]=0.0; 
 	//Rx[2][1]=0.0;         Rx[2][2]=cos(theta);  Rx[2][3]=-sin(theta); 
 	//Rx[3][1]=0.0;         Rx[3][2]=sin(theta);  Rx[3][3]= cos(theta); 
 	
-	Rz[1][1]=cos(theta);  Rz[1][2]=-sin(theta); Rz[1][3]=0.0; 
-	Rz[2][1]=sin(theta);  Rz[2][2]= cos(theta); Rz[2][3]=0.0; 
-	Rz[3][1]=0.0;         Rz[3][2]=0.0;         Rz[3][3]=1.0; 
+	//Rz[1][1]=cos(theta);  Rz[1][2]=-sin(theta); Rz[1][3]=0.0; 
+	//Rz[2][1]=sin(theta);  Rz[2][2]= cos(theta); Rz[2][3]=0.0; 
+	//Rz[3][1]=0.0;         Rz[3][2]=0.0;         Rz[3][3]=1.0; 
 	
-	Ry[1][1]=cos(phi);    Ry[1][2]=0.0;         Ry[1][3]=sin(phi); 
-	Ry[2][1]=0.0;         Ry[2][2]=1.0;         Ry[2][3]=0.0; 
-	Ry[3][1]=-sin(phi);   Ry[3][2]=0.0;         Ry[3][3]=cos(phi); 
+	//Ry[1][1]=cos(phi);    Ry[1][2]=0.0;         Ry[1][3]=sin(phi); 
+	//Ry[2][1]=0.0;         Ry[2][2]=1.0;         Ry[2][3]=0.0; 
+	//Ry[3][1]=-sin(phi);   Ry[3][2]=0.0;         Ry[3][3]=cos(phi); 
 
 //*** Setting the Eigen distortion of the s1 field ***************
 	//eta_s1[1][1]=0.05; eta_s1[2][2]=-0.05;
@@ -251,38 +260,74 @@ int main(void)
 	printf("---------------------------------\n");
 
 //*** Setting the Eigen distortion of the s2 field ***************
-	//eta_s2[1][1]=eta11_s2;
-	//eta_s2[2][2]=eta22_s2;
-	//eta_s2[3][3]=eta33_s2;
-	eta_s2[1][2]=eta_s2[2][1]=0.0;
-	eta_s2[1][3]=eta_s2[3][1]=0.0;
-	eta_s2[2][3]=eta_s2[3][2]=0.0;
+	theta = theta_s2; phi = phi_s2;
 	//
-	if(eta_s2[1][1]==0.0 && eta_s2[2][2]==0.0 && eta_s2[3][3]==0.0){
-		for(i=1;i<=3;i++){
-			for(j=1;j<=3;j++){
-				Rtmp[i][j] = 0.0;
-				for(k=1;k<=3;k++){
-					Rtmp[i][j] += Rz[i][k]*eta_s1[k][j];
-				}
+	Rz[1][1]=cos(theta);  Rz[1][2]=-sin(theta); Rz[1][3]=0.0; 
+	Rz[2][1]=sin(theta);  Rz[2][2]= cos(theta); Rz[2][3]=0.0; 
+	Rz[3][1]=0.0;         Rz[3][2]=0.0;         Rz[3][3]=1.0; 
+	//
+	Ry[1][1]=cos(phi);    Ry[1][2]=0.0;         Ry[1][3]=sin(phi); 
+	Ry[2][1]=0.0;         Ry[2][2]=1.0;         Ry[2][3]=0.0; 
+	Ry[3][1]=-sin(phi);   Ry[3][2]=0.0;         Ry[3][3]=cos(phi); 
+	//
+	for(i=1;i<=3;i++){
+		for(j=1;j<=3;j++){
+			Rtmp[i][j] = 0.0;
+			for(k=1;k<=3;k++){
+				Rtmp[i][j] += Rz[i][k]*eta_s1[k][j];
 			}
 		}
-		for(i=1;i<=3;i++){
-			for(j=1;j<=3;j++){
-				for(k=1;k<=3;k++){
-					eta_s2[i][j] += Ry[i][k]*Rtmp[k][j];
-				}
-			}
-		}
-		printf("eta_s2[1][1]= %8.5f,  ",eta_s2[1][1]);
-		printf("eta_s2[2][2]= %8.5f,  ",eta_s2[2][2]);
-		printf("eta_s2[3][3]= %8.5f \n",eta_s2[3][3]);
-		//
-		printf("eta_s2[1][2]= %8.5f,  ",eta_s2[1][2]);
-		printf("eta_s2[1][3]= %8.5f,  ",eta_s2[1][3]);
-		printf("eta_s2[2][3]= %8.5f \n",eta_s2[2][3]);
-		printf("---------------------------------\n");
 	}
+	for(i=1;i<=3;i++){
+		for(j=1;j<=3;j++){
+			for(k=1;k<=3;k++){
+				eta_s2[i][j] += Ry[i][k]*Rtmp[k][j];
+			}
+		}
+	}
+	printf("eta_s2[1][1]= %8.5f,  ",eta_s2[1][1]);
+	printf("eta_s2[2][2]= %8.5f,  ",eta_s2[2][2]);
+	printf("eta_s2[3][3]= %8.5f \n",eta_s2[3][3]);
+	//
+	printf("eta_s2[1][2]= %8.5f,  ",eta_s2[1][2]);
+	printf("eta_s2[1][3]= %8.5f,  ",eta_s2[1][3]);
+	printf("eta_s2[2][3]= %8.5f \n",eta_s2[2][3]);
+	printf("---------------------------------\n");
+
+//*** Setting the Eigen distortion of the s3 field ***************
+	theta = theta_s3; phi = phi_s3;
+	//
+	Rz[1][1]=cos(theta);  Rz[1][2]=-sin(theta); Rz[1][3]=0.0; 
+	Rz[2][1]=sin(theta);  Rz[2][2]= cos(theta); Rz[2][3]=0.0; 
+	Rz[3][1]=0.0;         Rz[3][2]=0.0;         Rz[3][3]=1.0; 
+	//
+	Ry[1][1]=cos(phi);    Ry[1][2]=0.0;         Ry[1][3]=sin(phi); 
+	Ry[2][1]=0.0;         Ry[2][2]=1.0;         Ry[2][3]=0.0; 
+	Ry[3][1]=-sin(phi);   Ry[3][2]=0.0;         Ry[3][3]=cos(phi); 
+	//
+	for(i=1;i<=3;i++){
+		for(j=1;j<=3;j++){
+			Rtmp[i][j] = 0.0;
+			for(k=1;k<=3;k++){
+				Rtmp[i][j] += Rz[i][k]*eta_s1[k][j];
+			}
+		}
+	}
+	for(i=1;i<=3;i++){
+		for(j=1;j<=3;j++){
+			for(k=1;k<=3;k++){
+				eta_s3[i][j] += Ry[i][k]*Rtmp[k][j];
+			}
+		}
+	}
+	printf("eta_s3[1][1]= %8.5f,  ",eta_s3[1][1]);
+	printf("eta_s3[2][2]= %8.5f,  ",eta_s3[2][2]);
+	printf("eta_s3[3][3]= %8.5f \n",eta_s3[3][3]);
+	//
+	printf("eta_s3[1][2]= %8.5f,  ",eta_s3[1][2]);
+	printf("eta_s3[1][3]= %8.5f,  ",eta_s3[1][3]);
+	printf("eta_s3[2][3]= %8.5f \n",eta_s3[2][3]);
+	printf("---------------------------------\n");
 
 //***** elastic constant ****************************
 	for(i=0;i<=3;i++){
@@ -328,7 +373,7 @@ int main(void)
 
 //*** Setting up sin and cos tables, bit reversal tables, and initial fields ***************
 
-	ini000(s1h, s2h, ND);		//Initial field setting
+	ini000(s1h, s2h, s3h, ND);		//Initial field setting
 
 //**** Simulation start ******************************
 //Nstep = 10;
@@ -338,13 +383,14 @@ iplan = fftw_plan_dft_3d(fftsize, fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW
 start:;
 
 	if((((int)(time1) % Nstep)==0)) {iout = iout + 1;}
-	if((((int)(time1) % Nstep)==0)) {datsave(s1h, s2h, ND);} 	//Save tissue data every fixed repeat count
-	if((((int)(time1) % Nstep)==0)) {datsave_paraview(s1h, s2h, ND);} 	//Save tissue data every fixed repeat count
+	if((((int)(time1) % Nstep)==0)) {datsave(s1h, s2h, s3h, ND);} 	//Save tissue data every fixed repeat count
+	if((((int)(time1) % Nstep)==0)) {datsave_paraview(s1h, s2h, s3h, ND);} 	//Save tissue data every fixed repeat count
 
 //***** gradient potential ***********************
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
+				//
 				ip=i+1; im=i-1; jp=j+1; jm=j-1; kp=k+1; km=k-1;
 				if(i==ndm){ip=0;}  if(i==0){im=ndm;}	//periodic boundary conditions
 				if(j==ndm){jp=0;}  if(j==0){jm=ndm;}
@@ -361,6 +407,12 @@ start:;
 					+s2h[i*ND*ND+jp*ND+k]+s2h[i*ND*ND+jm*ND+k]
 					+s2h[i*ND*ND+j*ND+kp]+s2h[i*ND*ND+j*ND+km]
 					-6.0*s2h[i*ND*ND+j*ND+k]);
+				//
+				s3k_su[i*ND*ND+j*ND+k]=-kappa_s3*(
+					 s3h[ip*ND*ND+j*ND+k]+s3h[im*ND*ND+j*ND+k]
+					+s3h[i*ND*ND+jp*ND+k]+s3h[i*ND*ND+jm*ND+k]
+					+s3h[i*ND*ND+j*ND+kp]+s3h[i*ND*ND+j*ND+km]
+					-6.0*s3h[i*ND*ND+j*ND+k]);
 			}
 		}
 	}
@@ -369,7 +421,8 @@ start:;
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
-				xr[i*ND*ND+j*ND+k]=ep11h0[i*ND*ND+j*ND+k]=eta_s1[1][1]*s1h[i*ND*ND+j*ND+k]+eta_s2[1][1]*s2h[i*ND*ND+j*ND+k];
+				xr[i*ND*ND+j*ND+k]=ep11h0[i*ND*ND+j*ND+k]
+					=eta_s1[1][1]*s1h[i*ND*ND+j*ND+k]+eta_s2[1][1]*s2h[i*ND*ND+j*ND+k]+eta_s3[1][1]*s3h[i*ND*ND+j*ND+k];
 				xi[i*ND*ND+j*ND+k]=0.0;
 				//
 				in[i*ND*ND+j*ND+k][0] = xr[i*ND*ND+j*ND+k]; //For FFT (real)
@@ -395,7 +448,8 @@ start:;
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
-				xr[i*ND*ND+j*ND+k]=ep22h0[i*ND*ND+j*ND+k]=eta_s1[2][2]*s1h[i*ND*ND+j*ND+k]+eta_s2[2][2]*s2h[i*ND*ND+j*ND+k];
+				xr[i*ND*ND+j*ND+k]=ep22h0[i*ND*ND+j*ND+k]
+					=eta_s1[2][2]*s1h[i*ND*ND+j*ND+k]+eta_s2[2][2]*s2h[i*ND*ND+j*ND+k]+eta_s3[2][2]*s3h[i*ND*ND+j*ND+k];
 				xi[i*ND*ND+j*ND+k]=0.0;
 				//
 				in[i*ND*ND+j*ND+k][0] = xr[i*ND*ND+j*ND+k]; //For FFT (real)
@@ -421,7 +475,8 @@ start:;
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
-				xr[i*ND*ND+j*ND+k]=ep33h0[i*ND*ND+j*ND+k]=eta_s1[3][3]*s1h[i*ND*ND+j*ND+k]+eta_s2[3][3]*s2h[i*ND*ND+j*ND+k];
+				xr[i*ND*ND+j*ND+k]=ep33h0[i*ND*ND+j*ND+k]
+					=eta_s1[3][3]*s1h[i*ND*ND+j*ND+k]+eta_s2[3][3]*s2h[i*ND*ND+j*ND+k]+eta_s3[3][3]*s3h[i*ND*ND+j*ND+k];
 				xi[i*ND*ND+j*ND+k]=0.0;
 				//
 				in[i*ND*ND+j*ND+k][0] = xr[i*ND*ND+j*ND+k]; //For FFT (real)
@@ -447,7 +502,8 @@ start:;
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
-				xr[i*ND*ND+j*ND+k]=ep12h0[i*ND*ND+j*ND+k]=eta_s1[1][2]*s1h[i*ND*ND+j*ND+k]+eta_s2[1][2]*s2h[i*ND*ND+j*ND+k];
+				xr[i*ND*ND+j*ND+k]=ep12h0[i*ND*ND+j*ND+k]
+					=eta_s1[1][2]*s1h[i*ND*ND+j*ND+k]+eta_s2[1][2]*s2h[i*ND*ND+j*ND+k]+eta_s3[1][2]*s3h[i*ND*ND+j*ND+k];
 				xi[i*ND*ND+j*ND+k]=0.0;
 				//
 				in[i*ND*ND+j*ND+k][0] = xr[i*ND*ND+j*ND+k]; //For FFT (real)
@@ -473,7 +529,8 @@ start:;
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
-				xr[i*ND*ND+j*ND+k]=ep13h0[i*ND*ND+j*ND+k]=eta_s1[1][3]*s1h[i*ND*ND+j*ND+k]+eta_s2[1][3]*s2h[i*ND*ND+j*ND+k];
+				xr[i*ND*ND+j*ND+k]=ep13h0[i*ND*ND+j*ND+k]
+					=eta_s1[1][3]*s1h[i*ND*ND+j*ND+k]+eta_s2[1][3]*s2h[i*ND*ND+j*ND+k]+eta_s3[1][3]*s3h[i*ND*ND+j*ND+k];
 				xi[i*ND*ND+j*ND+k]=0.0;
 				//
 				in[i*ND*ND+j*ND+k][0] = xr[i*ND*ND+j*ND+k]; //For FFT (real)
@@ -499,7 +556,8 @@ start:;
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
-				xr[i*ND*ND+j*ND+k]=ep23h0[i*ND*ND+j*ND+k]=eta_s1[2][3]*s1h[i*ND*ND+j*ND+k]+eta_s2[2][3]*s2h[i*ND*ND+j*ND+k];
+				xr[i*ND*ND+j*ND+k]=ep23h0[i*ND*ND+j*ND+k]
+					=eta_s1[2][3]*s1h[i*ND*ND+j*ND+k]+eta_s2[2][3]*s2h[i*ND*ND+j*ND+k]+eta_s3[2][3]*s3h[i*ND*ND+j*ND+k];
 				xi[i*ND*ND+j*ND+k]=0.0;
 				//
 				in[i*ND*ND+j*ND+k][0] = xr[i*ND*ND+j*ND+k]; //For FFT (real)
@@ -822,13 +880,18 @@ start:;
 				//
 				s1=s1h[i*ND*ND+j*ND+k];
 				s2=s2h[i*ND*ND+j*ND+k];
+				s3=s3h[i*ND*ND+j*ND+k];
 
 //****** Calculation of chemical potential [equation (4.4)] ********************************
 				// Landau polynomial expansion
 				// fchem = df*{(a/2)*sum(sp^2)-(b/3)*sum(sp^3)+(c/4)*(sum(sp^2))^2}
 				// chem_pot = d(fchem)/d(sp)
-				s1k_chem=AA0*s1*(AA1-AA2*s1+AA3*(s1*s1+s2*s2));
-				s2k_chem=AA0*s2*(AA1-AA2*s2+AA3*(s1*s1+s2*s2));
+				//(s1^2 + s2^2 + s3^2)*(s1^2 + s2^2 + s3^2) = s1^4 + s1^2*s2^2 + s1^2*s3^2
+				//	+ s2^2*s1^2 + s2^4 + s2^2*s3^2  +  s3^2*s1^2 + s3^2*s2^2 + s3^4
+				//	= s1^4 + s2^4 + s3^4 + 2*s1^2*s2^2 + 2*s1^2*s3^2 + 2*s2^2*s3^2
+				s1k_chem=AA0*s1*(AA1-AA2*s1+AA3*(s1*s1+s2*s2+s3*s3));
+				s2k_chem=AA0*s2*(AA1-AA2*s2+AA3*(s1*s1+s2*s2+s3*s3));
+				s3k_chem=AA0*s3*(AA1-AA2*s3+AA3*(s1*s1+s2*s2+s3*s3));
 
 //****** Calculation of elastic potential [equation (4.8)] ********************************
 				// epsilonT ij = epsilon0 ij - average epsilon0 ij - d(epsilonC ij) - epsilonA ij
@@ -860,25 +923,40 @@ start:;
 						+cec[2][3][2][3]*eta_s2[2][3]*epT[2][3]*4.0
 						+cec[1][3][1][3]*eta_s2[1][3]*epT[1][3]*4.0
 						+cec[1][2][1][2]*eta_s2[1][2]*epT[1][2]*4.0;
+				//
+				s3k_str= cec[1][1][1][1]*eta_s3[1][1]*epT[1][1]
+						+cec[2][2][2][2]*eta_s3[2][2]*epT[2][2]
+						+cec[3][3][3][3]*eta_s3[3][3]*epT[3][3]
+						+cec[1][1][2][2]*eta_s3[1][1]*epT[2][2]*2.0
+						+cec[1][1][3][3]*eta_s3[1][1]*epT[3][3]*2.0
+						+cec[2][2][3][3]*eta_s3[2][2]*epT[3][3]*2.0
+						+cec[2][3][2][3]*eta_s3[2][3]*epT[2][3]*4.0
+						+cec[1][3][1][3]*eta_s3[1][3]*epT[1][3]*4.0
+						+cec[1][2][1][2]*eta_s3[1][2]*epT[1][2]*4.0;
 
 //****** Calculate the time evolution of the phase field [equation (4.10)] ********************************
 				s1ddtt = -smob*( s1k_chem + s1k_su[i*ND*ND+j*ND+k] + s1k_str );
 				s2ddtt = -smob*( s2k_chem + s2k_su[i*ND*ND+j*ND+k] + s2k_str );
+				s3ddtt = -smob*( s3k_chem + s3k_su[i*ND*ND+j*ND+k] + s3k_str );
 				//
 				s1h[i*ND*ND+j*ND+k] = s1h[i*ND*ND+j*ND+k] + ( s1ddtt+ds_fac*(2.0*DRND(1.0)-1.0) )*delt;	//Explicit method
 				s2h[i*ND*ND+j*ND+k] = s2h[i*ND*ND+j*ND+k] + ( s2ddtt+ds_fac*(2.0*DRND(1.0)-1.0) )*delt;
+				s3h[i*ND*ND+j*ND+k] = s3h[i*ND*ND+j*ND+k] + ( s3ddtt+ds_fac*(2.0*DRND(1.0)-1.0) )*delt;
 
 //*** Correction for s domain (0<=s<=1) ***
 				if(s1h[i*ND*ND+j*ND+k]>=1.0){s1h[i*ND*ND+j*ND+k]=1.0;}
 				if(s1h[i*ND*ND+j*ND+k]<=0.0){s1h[i*ND*ND+j*ND+k]=0.0;}
+				//
 				if(s2h[i*ND*ND+j*ND+k]>=1.0){s2h[i*ND*ND+j*ND+k]=1.0;}
 				if(s2h[i*ND*ND+j*ND+k]<=0.0){s2h[i*ND*ND+j*ND+k]=0.0;}
+				//
+				if(s3h[i*ND*ND+j*ND+k]>=1.0){s3h[i*ND*ND+j*ND+k]=1.0;}
+				if(s3h[i*ND*ND+j*ND+k]<=0.0){s3h[i*ND*ND+j*ND+k]=0.0;}
 			}
 		}
 	}
 
 	//if(keypress()){return 0;}//Waiting for key
-
 	time1=time1+1.0;								//Add calculation count
 	if(time1<time1max){goto start;}	//Determining if the maximum count has been reached
 	printf("Finished \n");
@@ -892,7 +970,7 @@ end:;
 }
 
 //************ Initial field setup subroutine *************
-void ini000(double *s1h, double *s2h, int ND)
+void ini000(double *s1h, double *s2h, double *s3h, int ND)
 {
 	int i, j, k;
 	//srand(time(NULL)); // random number initialization
@@ -903,6 +981,7 @@ void ini000(double *s1h, double *s2h, int ND)
 			for(k=0;k<=ndm;k++){
 				s1h[i*ND*ND+j*ND+k]=0.2*DRND(1.0);//Set the field with random numbers up to 20%
 				s2h[i*ND*ND+j*ND+k]=0.2*DRND(1.0);//Set the field with random numbers up to 20%
+				s3h[i*ND*ND+j*ND+k]=0.2*DRND(1.0);//Set the field with random numbers up to 20%
 			}
 		}
 	}
@@ -982,7 +1061,7 @@ double zcij(int i0, int j0, int k0, int iii, int jjj, int ND)
 }
 
 //************ data save subroutine *******************************
-void datsave(double *s1h, double *s2h, int ND)
+void datsave(double *s1h, double *s2h, double *s3h, int ND)
 {
 	FILE *stream;		//Stream pointer setting
 	int i, j, k;			//integer
@@ -993,7 +1072,7 @@ void datsave(double *s1h, double *s2h, int ND)
 	for(i=0;i<=ndm;i++){
 		for(j=0;j<=ndm;j++){
 			for(k=0;k<=ndm;k++){
-				fprintf(stream, "%e  %e ", s1h[i*ND*ND+j*ND+k], s2h[i*ND*ND+j*ND+k]);
+				fprintf(stream, "%e  %e  %e ", s1h[i*ND*ND+j*ND+k], s2h[i*ND*ND+j*ND+k], s3h[i*ND*ND+j*ND+k]);
 			}
 		}
 	}
@@ -1001,7 +1080,7 @@ void datsave(double *s1h, double *s2h, int ND)
 	fclose(stream);			//close file
 }
 
-void datsave_paraview(double *s1h, double *s2h, int ND)
+void datsave_paraview(double *s1h, double *s2h, double *s3h, int ND)
 {
 	FILE	*fp;
 	char	fName[256];
@@ -1035,6 +1114,15 @@ void datsave_paraview(double *s1h, double *s2h, int ND)
 		for(j=0;j<=ndm;j++){
 			for(i=0;i<=ndm;i++){
 				fprintf(fp,"%10.6f\n", s2h[i*ND*ND+j*ND+k]);
+			}
+		}
+	}
+	fprintf(fp,"SCALARS Phase_field_3 float \n");
+	fprintf(fp,"LOOKUP_TABLE default \n");
+	for(k=0;k<=ndm;k++){
+		for(j=0;j<=ndm;j++){
+			for(i=0;i<=ndm;i++){
+				fprintf(fp,"%10.6f\n", s3h[i*ND*ND+j*ND+k]);
 			}
 		}
 	}
