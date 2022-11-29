@@ -180,6 +180,7 @@ int main(void)
 	dtp=dx*dx/(5.0*pmobi*aaa*aaa);	//time increments
 	dtt=dx*dx/(5.0*cndct/speht);	//time increments
 	if(dtp>dtt){delt=dtt;} else{delt=dtp;}
+	delt = delt*0.1;
 	printf("delt= %e \n", delt);
 //-----------------------------------------------------------------
 
@@ -213,19 +214,43 @@ start: ;
 				s1ip=s1h[ip*NDP*NDP+j*NDP+k];  s1im=s1h[im*NDP*NDP+j*NDP+k];
 				s1jp=s1h[i*NDP*NDP+jp*NDP+k];  s1jm=s1h[i*NDP*NDP+jm*NDP+k];
 				s1kp=s1h[i*NDP*NDP+j*NDP+kp];  s1km=s1h[i*NDP*NDP+j*NDP+km];
+				//
 				// i and j, x and y
-				s1ipjp=s1h[ip*NDP*NDP+ip*NDP+k]; s1ipjm=s1h[ip*NDP*NDP+im*NDP+k];
-				s1imjp=s1h[im*NDP*NDP+jp*NDP+k]; s1imjm=s1h[im*NDP*NDP+jm*NDP+k];
+				//s1ipjp=s1h[ip*NDP*NDP+ip*NDP+k]; s1ipjm=s1h[ip*NDP*NDP+im*NDP+k];
+				//s1imjp=s1h[im*NDP*NDP+jp*NDP+k]; s1imjm=s1h[im*NDP*NDP+jm*NDP+k];
 				// i and k, x and z
-				s1ipkp=s1h[ip*NDP*NDP+i*NDP+kp]; s1ipkm=s1h[ip*NDP*NDP+i*NDP+km];
-				s1imkp=s1h[im*NDP*NDP+j*NDP+kp]; s1imkm=s1h[im*NDP*NDP+j*NDP+km];
+				//s1ipkp=s1h[ip*NDP*NDP+i*NDP+kp]; s1ipkm=s1h[ip*NDP*NDP+i*NDP+km];
+				//s1imkp=s1h[im*NDP*NDP+j*NDP+kp]; s1imkm=s1h[im*NDP*NDP+j*NDP+km];
 				// j and k, y and z
-				s1jpkp=s1h[i*NDP*NDP+ip*NDP+kp]; s1jpkm=s1h[i*NDP*NDP+ip*NDP+km];
-				s1jmkp=s1h[i*NDP*NDP+jm*NDP+kp]; s1jmkm=s1h[i*NDP*NDP+jm*NDP+km];
+				//s1jpkp=s1h[i*NDP*NDP+ip*NDP+kp]; s1jpkm=s1h[i*NDP*NDP+ip*NDP+km];
+				//s1jmkp=s1h[i*NDP*NDP+jm*NDP+kp]; s1jmkm=s1h[i*NDP*NDP+jm*NDP+km];
+				//
+				TT=Th[i*NDP*NDP+j*NDP+k];//temperature field
+				Tip=Th[ip*NDP*NDP+j*NDP+k];  Tim=Th[im*NDP*NDP+j*NDP+k];
+				Tjp=Th[i*NDP*NDP+jp*NDP+k];  Tjm=Th[i*NDP*NDP+jm*NDP+k];
+				Tkp=Th[i*NDP*NDP+j*NDP+kp];  Tkm=Th[i*NDP*NDP+j*NDP+km];
+
+//----- Deciding When to Skip Calculations ----------------------------------------------
+				dami1=fabs(s1+s1ip+s1im+s1jp+s1jm+s1kp+s1km);
+				dami2=fabs(TT+Tip+Tim+Tjp+Tjm+Tkp+Tkm-7.0*Tini);
+				if( (dami1<=1.0e-20)&&(dami2<=1.0e-20) ){
+					//s1h2[i][j][K]=s1h[i][j][K];  Th2[i][j][K]=Th[i][j][K];
+					s1h2[i*NDP*NDP+j*NDP+k]=s1h[i*NDP*NDP+j*NDP+k];
+					 Th2[i*NDP*NDP+j*NDP+k]= Th[i*NDP*NDP+j*NDP+k];
+					goto damif;
+				}
 				//
 				dx_s1=(s1ip-s1im)/(2.0*dx);  			//Spatial first derivative of the phase field
 				dy_s1=(s1jp-s1jm)/(2.0*dy);
 				dz_s1=(s1kp-s1km)/(2.0*dz);
+				//
+				div_s1 = sqrt(dx_s1*dx_s1 + dy_s1*dy_s1 + dz_s1*dz_s1);
+				// Processing to skip to avoid occurrence of "nan"
+				if( div_s1<=1.0e-20 ){
+					s1h2[i*NDP*NDP+j*NDP+k]=s1h[i*NDP*NDP+j*NDP+k];
+					 Th2[i*NDP*NDP+j*NDP+k]= Th[i*NDP*NDP+j*NDP+k];
+					goto damif;
+				}
 				//
 				//dxx_s1=(s1ip+s1im-2.0*s1)/(dx*dx);		//Spatial second derivative of the phase field
 				//dyy_s1=(s1jp+s1jm-2.0*s1)/(dy*dy);
@@ -239,18 +264,18 @@ start: ;
 				dz_s1_p4=dz_s1*dz_s1*dz_s1*dz_s1; //pow(dz_s1,4.0)
 				//
 				alphap=aaa*(1.0-3.0*zeta)*(1.0 + (4.0*zeta)/(1.0-3.0*zeta)*(dx_s1_p4 + dy_s1_p4 + dz_s1_p4)/abs_dph_p2); //Eq.(4.18)
-				alpha2=alphap*alphap/abs_dph;
+				alpha2=alphap*alphap;
 				//
 				partx=alphap*aaa*(4.0*zeta)*(
-					+(3.0*dx_s1*dx_s1*dx_s1)/abs_dph_p2
+					+(4.0*dx_s1*dx_s1*dx_s1)/abs_dph_p2
 					+(dx_s1_p4 + dy_s1_p4 + dz_s1_p4)*-2.0/(abs_dph*abs_dph*abs_dph)*2.0*dx_s1
 					)*abs_dph;
 				party=alphap*aaa*(4.0*zeta)*(
-					+(3.0*dy_s1*dy_s1*dy_s1)/abs_dph_p2
+					+(4.0*dy_s1*dy_s1*dy_s1)/abs_dph_p2
 					+(dx_s1_p4 + dy_s1_p4 + dz_s1_p4)*-2.0/(abs_dph*abs_dph*abs_dph)*2.0*dy_s1
 					)*abs_dph;
-				partx=alphap*aaa*(4.0*zeta)*(
-					+(3.0*dz_s1*dz_s1*dz_s1)/abs_dph_p2
+				partz=alphap*aaa*(4.0*zeta)*(
+					+(4.0*dz_s1*dz_s1*dz_s1)/abs_dph_p2
 					+(dx_s1_p4 + dy_s1_p4 + dz_s1_p4)*-2.0/(abs_dph*abs_dph*abs_dph)*2.0*dz_s1
 					)*abs_dph;
 				//
@@ -259,6 +284,7 @@ start: ;
 				s1y[i*NDP*NDP+j*NDP+k] = alpha2*dy_s1 + party;
 				s1z[i*NDP*NDP+j*NDP+k] = alpha2*dz_s1 + partz;
 				//
+				damif:;
 			}
 		}
 	}
@@ -306,13 +332,13 @@ start: ;
 				
 				//other test: Eq.(4.18): a = ep
 				//zeta = astre;
-				div_s1 = sqrt(dx_s1*dx_s1 + dy_s1*dy_s1 + dz_s1*dz_s1);
+				//div_s1 = sqrt(dx_s1*dx_s1 + dy_s1*dy_s1 + dz_s1*dz_s1);
 				// Processing to skip to avoid occurrence of "nan"
-				if( div_s1<=1.0e-20 ){
-					s1h2[i*NDP*NDP+j*NDP+k]=s1h[i*NDP*NDP+j*NDP+k];
-					 Th2[i*NDP*NDP+j*NDP+k]= Th[i*NDP*NDP+j*NDP+k];
-					goto dami;
-				}
+				//if( div_s1<=1.0e-20 ){
+				//	s1h2[i*NDP*NDP+j*NDP+k]=s1h[i*NDP*NDP+j*NDP+k];
+				//	 Th2[i*NDP*NDP+j*NDP+k]= Th[i*NDP*NDP+j*NDP+k];
+				//	goto dami;
+				//}
 				
 				//ep = alphap
 				//ep = aaa*(1.0-3.0*zeta)*(
@@ -342,7 +368,7 @@ start: ;
 				//Phase-field evolution equation [equation (4.25)]
 				//s1ddtt=-pmobi*(s1kai+s1kais);
 				//other test: Eq.(4.21)
-				s1ddtt=pmobi*(term1x + term1y + term1z + term2);
+				s1ddtt=-pmobi*(term1x + term1y + term1z + term2);
 
 				//s1h2[i][j][k]=s1+s1ddtt*delt;	//Phase field time evolution (explicit method)
 				//s1h2[i][j][k]=s1+s1ddtt*delt+anois*(DRND(1)-0.5)*s1*(1.0-s1);
@@ -429,7 +455,7 @@ void datsave(double *s1h, double *Th, int NDP)
 	int 		i, j, k;			//integer
 	int nd=NDP-1, ndm=NDP-2, nd2=(NDP-1)/2;
 
-	stream = fopen("test.dat", "a");	//Open the file to write to in append mode
+	stream = fopen("test.dat", "w");	//Open the file to write to in append mode
 	fprintf(stream, "%f\n", time1);		//Save repeat count
 	for(i=0;i<=nd;i++){
 		for(j=0;j<=nd;j++){
