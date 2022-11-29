@@ -270,6 +270,11 @@ start: ;
 				if(i==nd){ip=ndm;}  if(i==0){im=1;}
 				if(j==nd){jp=ndm;}  if(j==0){jm=1;}
 				if(k==nd){kp=ndm;}  if(k==0){km=1;}
+				
+				s1=s1h[i*NDP*NDP+j*NDP+k];//phase field
+				s1ip=s1h[ip*NDP*NDP+j*NDP+k];  s1im=s1h[im*NDP*NDP+j*NDP+k];
+				s1jp=s1h[i*NDP*NDP+jp*NDP+k];  s1jm=s1h[i*NDP*NDP+jm*NDP+k];
+				s1kp=s1h[i*NDP*NDP+j*NDP+kp];  s1km=s1h[i*NDP*NDP+j*NDP+km];
 
 				//TT=Th[i][j][k];//temperature field
 				//Tip=Th[ip][j][k];  Tim=Th[im][j][k];
