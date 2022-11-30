@@ -13,9 +13,9 @@ Tm= 1728.0         ! Melting point [K]
 Tini= 1511.2       ! Initial temperature [K]
 skine= 2.0         ! Kinetic Growth Coefficient [m/Ks]
 th0= 0.0           ! Angle of priority growth direction
-aaac= 3.0          ! Gradient energy coefficient ( aaa=sqrt(aaac*delta*gamma/bbb) )
-wwwc= 6.0          ! Penalty term energy barrier ( www=wwwc*gamma*bbb/delta )
-pmobic= 3.0        ! Phase field mobility ( pmobi=bbb*Tm*skine/(pmobic*delta*rlate) )
+aaac= 3.0          ! (Analytical, no changes required) Gradient energy coefficient ( aaa=sqrt(aaac*delta*gamma/bbb) )
+wwwc= 6.0          ! (Analytical, no changes required) Penalty term energy barrier ( www=wwwc*gamma*bbb/delta )
+pmobic= 3.0        ! (Analytical, no changes required) Phase field mobility ( pmobi=bbb*Tm*skine/(pmobic*delta*rlate) )
 anois= 0.1         ! Noise amplitude
 time1max= 1.0e08   ! Max iterations
 Nstep= 100.0       ! output every "Nstep"

@@ -1,11 +1,13 @@
-NDP= 65.0          ! Number of divisions + 1
-delt= 0.1          ! (not use) timestep
-dx= 30.0e-9        ! Difference grid size dx [m] Interface width delta=3.0*dx 
+NDPX= 65.0         ! Number of divisions + 1
+NDPY= 65.0         ! Number of divisions + 1
+NDPZ= 33.0         ! Number of divisions + 1
+delt= 1.0          ! (not use) timestep
+dx= 30.0e-9        ! Difference grid size dx [m] < (dendrite tip radius)/5, Interface width delta=6.0*dx 
 dy= 30.0e-9        ! Difference grid size dy [m] Computation area al=dx*(double)nd
 dz= 30.0e-9        ! Difference grid size dz [m] Computation area al=dx*(double)nd
 gamma= 0.37        ! Interface energy [J/m2]
 ram= 0.1           ! lambda, interface width ( 2.0*log((1.0+(1.0-2.0*ram))/(1.0-(1.0-2.0*ram)))/2.0 )
-j_fold= 4.0        ! Anisotropy mode (not use)
+j_fold= 4.0        ! (not use) Anisotropy mode
 astre= 0.03        ! Anisotropic strength, astre=zeta
 cndct= 84.01       ! Thermal conductivity [W/mK]
 speht= 5.42e+06    ! Specific heat [J/Km3]
@@ -13,10 +15,10 @@ rlate= 2.350e+09   ! Latent heat [J/m3]
 Tm= 1728.0         ! Melting point [K]
 Tini= 1511.2       ! Initial temperature [K]
 skine= 2.0         ! Kinetic Growth Coefficient [m/Ks]
-th0= 0.0           ! Angle of priority growth direction
-aaac= 3.0          ! Gradient energy coefficient ( aaa=sqrt(aaac*delta*gamma/bbb) )
-wwwc= 6.0          ! Penalty term energy barrier ( www=wwwc*gamma*bbb/delta )
-pmobic= 3.0        ! Phase field mobility ( pmobi=bbb*Tm*skine/(pmobic*delta*rlate) )
+th0= 0.0           ! (not use) Angle of priority growth direction
+aaac= 3.0          ! (Analytical, no changes required) Gradient energy coefficient ( aaa=sqrt(aaac*delta*gamma/bbb) )
+wwwc= 6.0          ! (Analytical, no changes required) Penalty term energy barrier ( www=wwwc*gamma*bbb/delta )
+pmobic= 3.0        ! (Analytical, no changes required) Phase field mobility ( pmobi=bbb*Tm*skine/(pmobic*delta*rlate) )
 anois= 0.1         ! Noise amplitude
 time1max= 1.0e08   ! Max iterations
 Nstep= 1.0         ! output every "Nstep"
