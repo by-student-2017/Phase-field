@@ -1,5 +1,5 @@
 NDPX= 65.0         ! Number of divisions + 1
-NDPY= 65.0         ! Number of divisions + 1
+NDPY= 33.0         ! Number of divisions + 1
 NDPZ= 33.0         ! Number of divisions + 1
 delt= 1.0          ! (not use) timestep
 dx= 20.0e-9        ! Difference grid size dx [m] < (dendrite tip radius)/5, Interface width delta=interd*dx 
