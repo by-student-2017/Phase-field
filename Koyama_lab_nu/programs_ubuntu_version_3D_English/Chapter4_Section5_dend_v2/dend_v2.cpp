@@ -87,6 +87,8 @@ int main(void)
 	double alphap, alpha2;
 	double partx, party, partz;
 	double term1x, term1y, term1z, term2;
+	//
+	double interd;
 
 //****** Setting calculation conditions and material constants ****************************************
 	printf("---------------------------------\n");
@@ -127,8 +129,9 @@ int main(void)
 	wwwc    = data[19];
 	pmobic  = data[20];
 	anois   = data[21];
-	time1max= int(data[22]);
-	Nstep   = int(data[23]);
+	interd  = data[22];
+	time1max= int(data[23]);
+	Nstep   = int(data[24]);
 	printf("---------------------------------\n");
 	//
 	ndx=NDPX-1;
@@ -156,7 +159,7 @@ int main(void)
 	//printf("DELT(1.5)=  "); scanf(" %lf",&delt);	//delt=1.5;
 
 	//dx=dy=30.0e-9;		//Difference grid size (x direction) [m]
-	delta=6.0*dx;      		//interface width [m]
+	delta=interd*dx;      		//interface width [m]
 	//dx=dy=20.0e-9;		//Difference grid size (x direction) [m]
 	//delta=4.0*dx;    		//interface width [m]
 	//al=dx*(double)nd;		//Computational domain [m]
@@ -368,12 +371,12 @@ start: ;
 
 				//chemical driving force [part of formula (4.29)]
 				// 15*L*(T-Tm)/(2*Wsl*Tm)*ph*(1-ph)
-				dF=15.0/(2.0*www)*s1*(1.0-s1)*rlate*(Tm-TT)/Tm;
+				dF=15.0/(2.0*www)*rlate*(TT-Tm)/Tm*s1*(1.0-s1);
 				
 				//chemical potential [part of equation (4.29)] (other test: Eq.(4.21))
 				//s1kai=4.0*www*s1*(1.0-s1)*(0.5-s1+dF+anois*(DRND(1)-0.5));
 				//other test: Eq.(4.21)
-				term2=4.0*www*s1*(1.0-s1)*(s1-0.5+dF+anois*(DRND(1)-0.5));
+				term2=4.0*www*s1*(1.0-s1)*(s1-0.5-dF+anois*(DRND(1)-0.5));
 
 				//Phase-field evolution equation [equation (4.25)]
 				//s1ddtt=-pmobi*(s1kai+s1kais);
