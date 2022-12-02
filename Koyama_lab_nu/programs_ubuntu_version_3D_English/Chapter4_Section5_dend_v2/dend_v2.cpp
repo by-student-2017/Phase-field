@@ -232,22 +232,23 @@ start: ;
 				s1jp=s1h[i*NDPY*NDPZ+jp*NDPZ+k];  s1jm=s1h[i*NDPY*NDPZ+jm*NDPZ+k];
 				s1kp=s1h[i*NDPY*NDPZ+j*NDPZ+kp];  s1km=s1h[i*NDPY*NDPZ+j*NDPZ+km];
 				//
+				dx_s1=(s1ip-s1im)/(2.0*dx);	//Spatial first derivative of the phase field
+				dy_s1=(s1jp-s1jm)/(2.0*dy);
+				dz_s1=(s1kp-s1km)/(2.0*dz);
 
 //----- Deciding When to Skip Calculations ----------------------------------------------
 				dami1=fabs(s1+s1ip+s1im+s1jp+s1jm+s1kp+s1km);
-				if(dami1<=1.0e-20){
+				if( dami1<=1.0e-20 ){
+					//s1h2[i][j][K]=s1h[i][j][K];  Th2[i][j][K]=Th[i][j][K];
+					s1h2[i*NDPY*NDPZ+j*NDPZ+k]=s1h[i*NDPY*NDPZ+j*NDPZ+k];
 					goto damif;
 				}
-				//
-				dx_s1=(s1ip-s1im)/(2.0*dx);  			//Spatial first derivative of the phase field
-				dy_s1=(s1jp-s1jm)/(2.0*dy);
-				dz_s1=(s1kp-s1km)/(2.0*dz);
-				//
+				
 				abs_dph=( dx_s1*dx_s1 + dy_s1*dy_s1 + dz_s1*dz_s1 );
-				// Processing to skip to avoid occurrence of "nan"
-				if( abs_dph<=1.0e-20 ){
-					s1h2[i*NDPY*NDPZ+j*NDPZ+k]=s1h[i*NDPY*NDPZ+j*NDPZ+k];
-					 Th2[i*NDPY*NDPZ+j*NDPZ+k]= Th[i*NDPY*NDPZ+j*NDPZ+k];
+				if( abs_dph==0.0 ){
+					s1x[i*NDPY*NDPZ+j*NDPZ+k] = 0.0;
+					s1y[i*NDPY*NDPZ+j*NDPZ+k] = 0.0;
+					s1z[i*NDPY*NDPZ+j*NDPZ+k] = 0.0;
 					goto damif;
 				}
 				//
@@ -317,24 +318,14 @@ start: ;
 //----- Deciding When to Skip Calculations ----------------------------------------------
 				dami1=fabs(s1+s1ip+s1im+s1jp+s1jm+s1kp+s1km);
 				dami2=fabs(TT+Tip+Tim+Tjp+Tjm+Tkp+Tkm-7.0*Tini);
-				if( (dami1<=1.0e-20)&&(dami2<=1.0e-20) ){
+				if( (dami1<=1.0e-20) && (dami2<=1.0e-20) ){
 					//s1h2[i][j][K]=s1h[i][j][K];  Th2[i][j][K]=Th[i][j][K];
 					s1h2[i*NDPY*NDPZ+j*NDPZ+k]=s1h[i*NDPY*NDPZ+j*NDPZ+k];
 					 Th2[i*NDPY*NDPZ+j*NDPZ+k]= Th[i*NDPY*NDPZ+j*NDPZ+k];
 					goto dami;
 				}
 //---------------------------------------------------------------------------------
-				dx_s1=(s1ip-s1im)/(2.0*dx);  			//Spatial first derivative of the phase field
-				dy_s1=(s1jp-s1jm)/(2.0*dy);
-				dz_s1=(s1kp-s1km)/(2.0*dz);
 				//
-				abs_dph=( dx_s1*dx_s1 + dy_s1*dy_s1 + dz_s1*dz_s1 );
-				// Processing to skip to avoid occurrence of "nan"
-				if( abs_dph<=1.0e-20 ){
-					s1h2[i*NDPY*NDPZ+j*NDPZ+k]=s1h[i*NDPY*NDPZ+j*NDPZ+k];
-					 Th2[i*NDPY*NDPZ+j*NDPZ+k]= Th[i*NDPY*NDPZ+j*NDPZ+k];
-					goto dami;
-				}
 				//Eq.(4.24): theta = arctan((dph/dy)/(dph/dx))
 				//th=atan(dy_s1/(dx_s1+1.0e-20));			//angle normal to interface [equation (4.24)]
 				
@@ -381,7 +372,6 @@ start: ;
 				//Phase-field evolution equation [equation (4.25)]
 				//s1ddtt=-pmobi*(s1kai+s1kais);
 				//other test: Eq.(4.21)
-				//pmobi=sqrt(2.0*www)/(6.0*aaa)*Velocity/(rlate*(Tm-TT)/Tm);
 				s1ddtt=pmobi*(term1x + term1y + term1z + term2);
 
 				//s1h2[i][j][k]=s1+s1ddtt*delt;	//Phase field time evolution (explicit method)
