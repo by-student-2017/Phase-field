@@ -7,7 +7,7 @@ Windows11 and WSL2(Ubuntu-22.04)
 3. cmake -S . -B build/ -G"Unix Makefiles"
 4. cmake --build build/ --target fft_FeCuMnNi_2d.exe
 5. cd ./build
-6. ./fft_FeCuMnNi_2d.exe
+6. mpirun -np 4 ./fft_FeCuMnNi_2d.exe
 
 (On windows11)
 6. paraview
