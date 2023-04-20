@@ -148,49 +148,49 @@ int main(void)
 	
 	//double ch[(nstep+1)*nstep]; // [(nstep+1)*nstep]=[nstep*nstep+nstep], a[i][j]= a[i*n+j] for a[][n]
 	//a[z * ySize * xSize + y * xSize + x], a[i][j][k]=a[i*n*m + j*n + k]
-	double *ck  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//diffusion potential
-	double *ch  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Concentration data array in tissue
-	double *ch2 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *ck  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//diffusion potential
+	double *ch  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//Concentration data array in tissue
+	double *ch2 = (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	//
-	double *ep11h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
-	double *ep22h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
-	double *ep33h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
-	double *ep12h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
-	double *ep13h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
-	double *ep23h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
+	double *ep11h0   = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Transformational strain in tissue
+	double *ep22h0   = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Transformational strain in tissue
+	double *ep33h0   = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Transformational strain in tissue
+	double *ep12h0   = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Transformational strain in tissue
+	double *ep13h0   = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Transformational strain in tissue
+	double *ep23h0   = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Transformational strain in tissue
 	//
-	double *ep11c = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Strain
-	double *ep22c = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep33c = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep12c = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep13c = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep23c = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *ep11c = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//Strain
+	double *ep22c = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep33c = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep12c = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep13c = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep23c = (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	//
-	double *sig11 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Elastic stress
-	double *sig22 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sig33 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sig12 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sig13 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sig23 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *sig11 = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//Elastic stress
+	double *sig22 = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sig33 = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sig12 = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sig13 = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sig23 = (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	//
-	double *Estr  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Elastic strain energy density
+	double *Estr  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//Elastic strain energy density
 	//
-	double *u1    = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Displacement
-	double *u2    = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *u3    = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *u1    = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//Displacement
+	double *u2    = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *u3    = (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	//
-	double *qrh1  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of the field
-	double *qih1  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *qrh1  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//Fourier transform of the field
+	double *qih1  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	//
-	double *xr    = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//array of real and imaginary parts of the Fourier transform
-	double *xi    = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//array of real and imaginary parts of the Fourier transform
+	double *xr    = (double *)malloc(sizeof(double)*( ND*ND*ND ));//array of real and imaginary parts of the Fourier transform
+	double *xi    = (double *)malloc(sizeof(double)*( ND*ND*ND ));//array of real and imaginary parts of the Fourier transform
 	//
-	double *ec11  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Constrained strain array
-	double *ec22  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ec33  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ec12  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ec13  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ec23  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *ec11  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//Constrained strain array
+	double *ec22  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ec33  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ec12  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ec13  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ec23  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	//
 	const int fftsize = ND;
 	fftw_complex *in, *out; // in[i][0] for real, in[i][1] for imag.

@@ -131,11 +131,11 @@ int main(void)
 	ndm=ND-1;
 	nd2=ND/2;
 	//
-	double *s1h     = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//polarization moment in x direction
-	double *s2h     = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//polarization moment in y direction
+	double *s1h     = (double *)malloc(sizeof(double)*( ND*ND ));	//polarization moment in x direction
+	double *s2h     = (double *)malloc(sizeof(double)*( ND*ND ));	//polarization moment in y direction
 	//
-	double *xi      = (double *)malloc(sizeof(double)*( ND*ND + ND ));//array of real and imaginary parts of the Fourier transform
-	double *xr      = (double *)malloc(sizeof(double)*( ND*ND + ND ));//array of real and imaginary parts of the Fourier transform
+	double *xi      = (double *)malloc(sizeof(double)*( ND*ND ));//array of real and imaginary parts of the Fourier transform
+	double *xr      = (double *)malloc(sizeof(double)*( ND*ND ));//array of real and imaginary parts of the Fourier transform
 	//
 	double *xif     = (double *)malloc(sizeof(double)*( ND ));//array of real and imaginary parts of the Fourier transform
 	double *xrf     = (double *)malloc(sizeof(double)*( ND ));//array of real and imaginary parts of the Fourier transform
@@ -152,21 +152,21 @@ int main(void)
 	//
 	//After calc.: fftw_destroy_plan(plan); fftw_free(in); fftw_free(out);
 	//
-	double *s1qrh   = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Fourier transform of s1 (real part)
-	double *s1qih   = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Fourier transform of s1 (imaginary part)
-	double *s2qrh   = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Fourier transform of s2 (real part)
-	double *s2qih   = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Fourier transform of s2 (imaginary part)
-	double *s1h2    = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//auxiliary array of s1
-	double *s2h2    = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//auxiliary array of s2
-	double *ss1qrh  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Fourier transform of s1*s1 (real part)
-	double *ss1qih  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Fourier transform of s1*s1 (imaginary part)
-	double *ss2qrh  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Fourier transform of s2*s2 (real part)
-	double *ss2qih  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Fourier transform of s2*s2 (imaginary part)
-	double *s1s2qrh = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Fourier transform of s1*s2 (real part)
-	double *s1s2qih = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Fourier transform of s1*s2 (imaginary part)
+	double *s1qrh   = (double *)malloc(sizeof(double)*( ND*ND ));	//Fourier transform of s1 (real part)
+	double *s1qih   = (double *)malloc(sizeof(double)*( ND*ND ));	//Fourier transform of s1 (imaginary part)
+	double *s2qrh   = (double *)malloc(sizeof(double)*( ND*ND ));	//Fourier transform of s2 (real part)
+	double *s2qih   = (double *)malloc(sizeof(double)*( ND*ND ));	//Fourier transform of s2 (imaginary part)
+	double *s1h2    = (double *)malloc(sizeof(double)*( ND*ND ));	//auxiliary array of s1
+	double *s2h2    = (double *)malloc(sizeof(double)*( ND*ND ));	//auxiliary array of s2
+	double *ss1qrh  = (double *)malloc(sizeof(double)*( ND*ND ));	//Fourier transform of s1*s1 (real part)
+	double *ss1qih  = (double *)malloc(sizeof(double)*( ND*ND ));	//Fourier transform of s1*s1 (imaginary part)
+	double *ss2qrh  = (double *)malloc(sizeof(double)*( ND*ND ));	//Fourier transform of s2*s2 (real part)
+	double *ss2qih  = (double *)malloc(sizeof(double)*( ND*ND ));	//Fourier transform of s2*s2 (imaginary part)
+	double *s1s2qrh = (double *)malloc(sizeof(double)*( ND*ND ));	//Fourier transform of s1*s2 (real part)
+	double *s1s2qih = (double *)malloc(sizeof(double)*( ND*ND ));	//Fourier transform of s1*s2 (imaginary part)
 	//
-	double *s1k_dd  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//dipole-dipole interaction potential
-	double *s2k_dd  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//dipole-dipole interaction potential
+	double *s1k_dd  = (double *)malloc(sizeof(double)*( ND*ND ));	//dipole-dipole interaction potential
+	double *s2k_dd  = (double *)malloc(sizeof(double)*( ND*ND ));	//dipole-dipole interaction potential
 	//
 	//printf("DELT(0.1)=  "); scanf(" %lf",&delt);//time step setting	//delt=0.1;
 

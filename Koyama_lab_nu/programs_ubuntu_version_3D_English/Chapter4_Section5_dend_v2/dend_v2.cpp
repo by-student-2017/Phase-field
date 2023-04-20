@@ -146,14 +146,14 @@ int main(void)
 	ndzm=NDPZ-2;
 	ndz2=(NDPZ-1)/2;
 	//
-	double *s1h  = (double *)malloc(sizeof(double)*( NDPX*NDPY*NDPZ + NDPY*NDPZ + NDPZ ));	//phase field
-	double *Th   = (double *)malloc(sizeof(double)*( NDPX*NDPY*NDPZ + NDPY*NDPZ + NDPZ ));	//temperature field
-	double *s1h2 = (double *)malloc(sizeof(double)*( NDPX*NDPY*NDPZ + NDPY*NDPZ + NDPZ ));
-	double *Th2  = (double *)malloc(sizeof(double)*( NDPX*NDPY*NDPZ + NDPY*NDPZ + NDPZ ));
+	double *s1h  = (double *)malloc(sizeof(double)*( NDPX*NDPY*NDPZ ));	//phase field
+	double *Th   = (double *)malloc(sizeof(double)*( NDPX*NDPY*NDPZ ));	//temperature field
+	double *s1h2 = (double *)malloc(sizeof(double)*( NDPX*NDPY*NDPZ ));
+	double *Th2  = (double *)malloc(sizeof(double)*( NDPX*NDPY*NDPZ ));
 	//
-	double *s1x  = (double *)malloc(sizeof(double)*( NDPX*NDPY*NDPZ + NDPY*NDPZ + NDPZ ));
-	double *s1y  = (double *)malloc(sizeof(double)*( NDPX*NDPY*NDPZ + NDPY*NDPZ + NDPZ ));
-	double *s1z  = (double *)malloc(sizeof(double)*( NDPX*NDPY*NDPZ + NDPY*NDPZ + NDPZ ));
+	double *s1x  = (double *)malloc(sizeof(double)*( NDPX*NDPY*NDPZ ));
+	double *s1y  = (double *)malloc(sizeof(double)*( NDPX*NDPY*NDPZ ));
+	double *s1z  = (double *)malloc(sizeof(double)*( NDPX*NDPY*NDPZ ));
 	//
 	//printf("dtemp(1.0)=  ");	scanf(" %lf",&dtemp);	//dtemp=1.0;
 	//printf("DELT(1.5)=  "); scanf(" %lf",&delt);	//delt=1.5;

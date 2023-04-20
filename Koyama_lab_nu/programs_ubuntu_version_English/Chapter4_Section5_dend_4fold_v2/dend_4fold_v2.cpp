@@ -113,10 +113,10 @@ int main(void)
 	ndm=NDP-2;
 	nd2=(NDP-1)/2;
 	//
-	double *s1h  = (double *)malloc(sizeof(double)*( NDP*NDP + NDP ));	//phase field
-	double *Th   = (double *)malloc(sizeof(double)*( NDP*NDP + NDP ));	//temperature field
-	double *s1h2 = (double *)malloc(sizeof(double)*( NDP*NDP + NDP ));
-	double *Th2  = (double *)malloc(sizeof(double)*( NDP*NDP + NDP ));
+	double *s1h  = (double *)malloc(sizeof(double)*( NDP*NDP ));	//phase field
+	double *Th   = (double *)malloc(sizeof(double)*( NDP*NDP ));	//temperature field
+	double *s1h2 = (double *)malloc(sizeof(double)*( NDP*NDP ));
+	double *Th2  = (double *)malloc(sizeof(double)*( NDP*NDP ));
 	//
 	//printf("dtemp(1.0)=  ");	scanf(" %lf",&dtemp);	//dtemp=1.0;
 	//printf("DELT(1.5)=  "); scanf(" %lf",&delt);	//delt=1.5;

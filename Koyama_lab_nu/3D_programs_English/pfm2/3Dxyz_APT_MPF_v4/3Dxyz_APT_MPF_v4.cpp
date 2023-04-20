@@ -122,27 +122,27 @@ int main(void)
 	//double ch[(nstep+1)*nstep]; // [(nstep+1)*nstep]=[nstep*nstep+nstep], a[i][j]= a[i*n+j] for a[][n]
 	//a[z * ySize * xSize + y * xSize + x], a[i][j][k]=a[i*n*m + j*n + k]
 	//change from N*NDX*NDY*NDZ to GNP*NDX*NDY*NDZ
-	double *ph   = (double *)malloc(sizeof(double)*( GNP*NDX*NDY*NDZ + NDX*NDY*NDZ + NDY*NDZ + NDZ ));	//ph[1][i][j][K] to ph[n][i][j][K]: pf at position [i][j][K]
-	int    *qh   =       (int *)malloc(sizeof(int)*( GNP*NDX*NDY*NDZ + NDX*NDY*NDZ + NDY*NDZ + NDZ ));	//qh[1][i][j][K] to qh[n][i][j][K]: grain number at position [i][j][K]
-	int    *n00  =       (int *)malloc(sizeof(int)*( NDX*NDY*NDZ + NDY*NDZ + NDZ ));	//number of cases where ph is not 0 at position [i][j][K]
-	int    *n00p =       (int *)malloc(sizeof(int)*( NDX*NDY*NDZ + NDY*NDZ + NDZ ));	//Number of cases where ph at position [i][j][K] and surrounding ph is not 0
+	double *ph   = (double *)malloc(sizeof(double)*( GNP*NDX*NDY*NDZ ));	//ph[1][i][j][K] to ph[n][i][j][K]: pf at position [i][j][K]
+	int    *qh   =       (int *)malloc(sizeof(int)*( GNP*NDX*NDY*NDZ ));	//qh[1][i][j][K] to qh[n][i][j][K]: grain number at position [i][j][K]
+	int    *n00  =       (int *)malloc(sizeof(int)*( NDX*NDY*NDZ ));	//number of cases where ph is not 0 at position [i][j][K]
+	int    *n00p =       (int *)malloc(sizeof(int)*( NDX*NDY*NDZ ));	//Number of cases where ph at position [i][j][K] and surrounding ph is not 0
 	// n00[i*ND*ND+j*ND+k], n00p[i*ND*ND+j*ND+k]
 	//
-	double *ph2  = (double *)malloc(sizeof(double)*( GNP*NDX*NDY*NDZ + NDX*NDY*NDZ + NDY*NDZ + NDZ ));	// ph2[kk*ND*ND*ND+i*ND*ND+j*ND+k];
-	int    *qh2  =       (int *)malloc(sizeof(int)*( GNP*NDX*NDY*NDZ + NDX*NDY*NDZ + NDY*NDZ + NDZ ));	// qh2[kk*ND*ND*ND+i*ND*ND+j*ND+k];
+	double *ph2  = (double *)malloc(sizeof(double)*( GNP*NDX*NDY*NDZ ));	// ph2[kk*ND*ND*ND+i*ND*ND+j*ND+k];
+	int    *qh2  =       (int *)malloc(sizeof(int)*( GNP*NDX*NDY*NDZ ));	// qh2[kk*ND*ND*ND+i*ND*ND+j*ND+k];
 	//
-	double *aij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));	// aij[i][j]= aij[i*GNP+j]
-	double *wij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));	// wij[i][j]= wij[i*GNP+j]
-	double *tij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));	// tij[i][j]= tij[i*GNP+j]
-	double *eij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));	// eij[i][j]= eij[i*GNP+j]
+	double *aij  = (double *)malloc(sizeof(double)*( GNP*GNP ));	// aij[i][j]= aij[i*GNP+j]
+	double *wij  = (double *)malloc(sizeof(double)*( GNP*GNP ));	// wij[i][j]= wij[i*GNP+j]
+	double *tij  = (double *)malloc(sizeof(double)*( GNP*GNP ));	// tij[i][j]= tij[i*GNP+j]
+	double *eij  = (double *)malloc(sizeof(double)*( GNP*GNP ));	// eij[i][j]= eij[i*GNP+j]
 	//
-	double *data_mat  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));
-	double *Sij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));
-	double *mij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));
-	double *crij = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));
-	double *Trij = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));
-	double *kij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));
-	double *cij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));
+	double *data_mat  = (double *)malloc(sizeof(double)*( GNP*GNP ));
+	double *Sij  = (double *)malloc(sizeof(double)*( GNP*GNP ));
+	double *mij  = (double *)malloc(sizeof(double)*( GNP*GNP ));
+	double *crij = (double *)malloc(sizeof(double)*( GNP*GNP ));
+	double *Trij = (double *)malloc(sizeof(double)*( GNP*GNP ));
+	double *kij  = (double *)malloc(sizeof(double)*( GNP*GNP ));
+	double *cij  = (double *)malloc(sizeof(double)*( GNP*GNP ));
 	double *cxx  = (double *)malloc(sizeof(double)*( GNP ));
 	//
 
@@ -701,7 +701,7 @@ void ini000(double *ph, int *qh, int *n00, int *n00p, int N, int NDX, int NDY, i
 	double r;
 	int x1, y1, z1, r0;
 	//int is[NDX][NDY][NDZ];
-	int *is = (int *)malloc(sizeof(int)*( NDX*NDY*NDZ + NDY*NDZ + NDZ ));	//is[i][j][k]=is[i*ND*ND+j*ND+k]
+	int *is = (int *)malloc(sizeof(int)*( NDX*NDY*NDZ ));	//is[i][j][k]=is[i*ND*ND+j*ND+k]
 	//srand(time(NULL)); // óêêîèâä˙âª
 	int ndx=NDX, ndxm=NDX-1;
 	int ndy=NDY, ndym=NDY-1;

@@ -124,24 +124,24 @@ int main(void)
 	nd2=ND/2;				//define ND/2 for FFT
 	ig=IG;					//2^ig=ND
 	//
-	double *s1h      = (double *)malloc(sizeof(double)*( ND*ND + ND ));//Phase field of martensite
-	double *s2h      = (double *)malloc(sizeof(double)*( ND*ND + ND ));//Phase field of martensite
+	double *s1h      = (double *)malloc(sizeof(double)*( ND*ND ));//Phase field of martensite
+	double *s2h      = (double *)malloc(sizeof(double)*( ND*ND ));//Phase field of martensite
 	//
-	double *ep11h0   = (double *)malloc(sizeof(double)*( ND*ND + ND ));//Transformational strain in tissue
-	double *ep22h0   = (double *)malloc(sizeof(double)*( ND*ND + ND ));//Transformational strain in tissue
-	double *ep11qrh0 = (double *)malloc(sizeof(double)*( ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep11qih0 = (double *)malloc(sizeof(double)*( ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep22qrh0 = (double *)malloc(sizeof(double)*( ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep22qih0 = (double *)malloc(sizeof(double)*( ND*ND + ND ));//Fourier transform of constraint strain variation
+	double *ep11h0   = (double *)malloc(sizeof(double)*( ND*ND ));//Transformational strain in tissue
+	double *ep22h0   = (double *)malloc(sizeof(double)*( ND*ND ));//Transformational strain in tissue
+	double *ep11qrh0 = (double *)malloc(sizeof(double)*( ND*ND ));//Fourier transform of constraint strain variation
+	double *ep11qih0 = (double *)malloc(sizeof(double)*( ND*ND ));//Fourier transform of constraint strain variation
+	double *ep22qrh0 = (double *)malloc(sizeof(double)*( ND*ND ));//Fourier transform of constraint strain variation
+	double *ep22qih0 = (double *)malloc(sizeof(double)*( ND*ND ));//Fourier transform of constraint strain variation
 	//
-	double *s1k_su   = (double *)malloc(sizeof(double)*( ND*ND + ND ));//potential
-	double *s2k_su   = (double *)malloc(sizeof(double)*( ND*ND + ND ));//potential
+	double *s1k_su   = (double *)malloc(sizeof(double)*( ND*ND ));//potential
+	double *s2k_su   = (double *)malloc(sizeof(double)*( ND*ND ));//potential
 	//
-	double *ec11     = (double *)malloc(sizeof(double)*( ND*ND + ND ));//Constraint strain variation (real space)
-	double *ec22     = (double *)malloc(sizeof(double)*( ND*ND + ND ));//Constraint strain variation (real space)
+	double *ec11     = (double *)malloc(sizeof(double)*( ND*ND ));//Constraint strain variation (real space)
+	double *ec22     = (double *)malloc(sizeof(double)*( ND*ND ));//Constraint strain variation (real space)
 	//
-	double *xi       = (double *)malloc(sizeof(double)*( ND*ND + ND ));//array of real and imaginary parts of the Fourier transform
-	double *xr       = (double *)malloc(sizeof(double)*( ND*ND + ND ));//array of real and imaginary parts of the Fourier transform
+	double *xi       = (double *)malloc(sizeof(double)*( ND*ND ));//array of real and imaginary parts of the Fourier transform
+	double *xr       = (double *)malloc(sizeof(double)*( ND*ND ));//array of real and imaginary parts of the Fourier transform
 	//
 	double *xif      = (double *)malloc(sizeof(double)*( ND ));//array of real and imaginary parts of the Fourier transform
 	double *xrf      = (double *)malloc(sizeof(double)*( ND ));//array of real and imaginary parts of the Fourier transform

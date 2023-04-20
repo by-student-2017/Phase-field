@@ -157,12 +157,12 @@ int main(void)
 	ndm=ND-1;
 	nd2=ND/2;
 	//
-	double *s1h     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//polarization moment in x direction
-	double *s2h     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//polarization moment in y direction
-	double *s3h     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//polarization moment in z direction	
+	double *s1h     = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//polarization moment in x direction
+	double *s2h     = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//polarization moment in y direction
+	double *s3h     = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//polarization moment in z direction	
 	//
-	double *xi      = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//array of real and imaginary parts of the Fourier transform
-	double *xr      = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//array of real and imaginary parts of the Fourier transform
+	double *xi      = (double *)malloc(sizeof(double)*( ND*ND*ND ));//array of real and imaginary parts of the Fourier transform
+	double *xr      = (double *)malloc(sizeof(double)*( ND*ND*ND ));//array of real and imaginary parts of the Fourier transform
 	//
 	const int fftsize = ND;
 	fftw_complex *in, *out; // in[i][0] for real, in[i][1] for imag.
@@ -175,78 +175,78 @@ int main(void)
 	//fftw_execute(iplan); //IFFT
 	//After calc.: fftw_destroy_plan(plan); fftw_free(in); fftw_free(out);
 	//
-	double *s1qrh   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s1 (real part) (x)
-	double *s2qrh   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s2 (real part) (y)
-	double *s3qrh   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s2 (real part) (z)
+	double *s1qrh   = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//Fourier transform of s1 (real part) (x)
+	double *s2qrh   = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//Fourier transform of s2 (real part) (y)
+	double *s3qrh   = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//Fourier transform of s2 (real part) (z)
 	//
-	double *s1qih   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s1 (imaginary part) (x)
-	double *s2qih   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s2 (imaginary part) (y)
-	double *s3qih   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//Fourier transform of s2 (imaginary part) (z)
+	double *s1qih   = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//Fourier transform of s1 (imaginary part) (x)
+	double *s2qih   = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//Fourier transform of s2 (imaginary part) (y)
+	double *s3qih   = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//Fourier transform of s2 (imaginary part) (z)
 	//
-	double *s1h2    = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//auxiliary array of s1
-	double *s2h2    = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//auxiliary array of s2
-	double *s3h2    = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//auxiliary array of s3
+	double *s1h2    = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//auxiliary array of s1
+	double *s2h2    = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//auxiliary array of s2
+	double *s3h2    = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//auxiliary array of s3
 	//
-	double *s1k_dd  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//dipole-dipole interaction potential (x)
-	double *s2k_dd  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//dipole-dipole interaction potential (y)
-	double *s3k_dd  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//dipole-dipole interaction potential (z)
+	double *s1k_dd  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//dipole-dipole interaction potential (x)
+	double *s2k_dd  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//dipole-dipole interaction potential (y)
+	double *s3k_dd  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//dipole-dipole interaction potential (z)
 	//
-	double *ep11qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep22qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep33qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep12qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep21qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep13qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep31qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep23qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep32qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *ep11qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep22qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep33qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep12qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep21qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep13qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep31qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep23qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep32qrh0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	//
-	double *ep11qih0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep22qih0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep33qih0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep12qih0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep21qih0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep13qih0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep31qih0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep23qih0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep32qih0= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *ep11qih0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep22qih0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep33qih0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep12qih0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep21qih0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep13qih0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep31qih0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep23qih0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep32qih0= (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	//
-	double *ep11h0  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep22h0  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep33h0  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep12h0  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep21h0  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep13h0  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep31h0  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep23h0  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ep32h0  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *ep11h0  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep22h0  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep33h0  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep12h0  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep21h0  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep13h0  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep31h0  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep23h0  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ep32h0  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	//
-	double *sigma11_r = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma22_r = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma33_r = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma12_r = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma21_r = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma13_r = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma31_r = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma23_r = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma32_r = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *sigma11_r = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma22_r = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma33_r = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma12_r = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma21_r = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma13_r = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma31_r = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma23_r = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma32_r = (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	//
-	double *sigma11_i = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma22_i = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma33_i = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma12_i = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma21_i = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma13_i = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma31_i = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma23_i = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma32_i = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *sigma11_i = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma22_i = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma33_i = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma12_i = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma21_i = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma13_i = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma31_i = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma23_i = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma32_i = (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	//
-	double *ec11     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ec22     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ec33     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ec12     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ec13     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *ec23     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *ec11     = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ec22     = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ec33     = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ec12     = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ec13     = (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *ec23     = (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	
 	time1=0.0;								//Initial calculation count setting
 	

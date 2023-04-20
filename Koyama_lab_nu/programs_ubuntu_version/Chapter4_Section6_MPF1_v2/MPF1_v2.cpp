@@ -96,14 +96,14 @@ int main(void)
 	nm=N-1;
 	nmm=N-2;
 	//
-	double *ph   = (double *)malloc(sizeof(double)*( N*ND*ND + ND*ND + ND ));	//フェーズフィールド
-	double *ph2  = (double *)malloc(sizeof(double)*( N*ND*ND + ND*ND + ND ));	//フェーズフィールド補助配列
-	double *aij  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//勾配エネルギー係数
-	double *wij  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//ペナルティー項の係数
-	double *tij  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//粒界の易動度
-	double *eij  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//粒界移動の駆動力
-	double *m00h = (double *)malloc(sizeof(double)*( N*ND*ND + ND*ND + ND ));	//位置(i,j)およびその周囲(i±1,j±1)において、pが0ではない方位の番号
-	double *n00h = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//位置(i,j)およびその周囲(i±1,j±1)において、pが0ではない方位の個数
+	double *ph   = (double *)malloc(sizeof(double)*( N*ND*ND ));	//フェーズフィールド
+	double *ph2  = (double *)malloc(sizeof(double)*( N*ND*ND ));	//フェーズフィールド補助配列
+	double *aij  = (double *)malloc(sizeof(double)*( ND*ND ));	//勾配エネルギー係数
+	double *wij  = (double *)malloc(sizeof(double)*( ND*ND ));	//ペナルティー項の係数
+	double *tij  = (double *)malloc(sizeof(double)*( ND*ND ));	//粒界の易動度
+	double *eij  = (double *)malloc(sizeof(double)*( ND*ND ));	//粒界移動の駆動力
+	double *m00h = (double *)malloc(sizeof(double)*( N*ND*ND ));	//位置(i,j)およびその周囲(i±1,j±1)において、pが0ではない方位の番号
+	double *n00h = (double *)malloc(sizeof(double)*( ND*ND ));	//位置(i,j)およびその周囲(i±1,j±1)において、pが0ではない方位の個数
 	//
 	//printf("delt(5.0)=  "); scanf(" %lf",&delt);//時間刻みの入力	//	delt=5.0;
 
@@ -361,7 +361,7 @@ void datsave_paraview(double *ph, int ND, int N)
 	char	fName[256];
 	int 	i, j, k;
 	int nd=ND, ndm=ND-1, nm=N-1, nmm=N-2;
-	double *pht  = (double *)malloc(sizeof(double)*( ND*ND + ND ));
+	double *pht  = (double *)malloc(sizeof(double)*( ND*ND ));
 	
 	for(j=0;j<=ndm;j++){
 		for(i=0;i<=ndm;i++){

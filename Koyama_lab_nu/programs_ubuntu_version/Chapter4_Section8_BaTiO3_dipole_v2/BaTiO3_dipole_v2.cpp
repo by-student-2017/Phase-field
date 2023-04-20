@@ -132,11 +132,11 @@ int main(void)
 	ndm=ND-1;
 	nd2=ND/2;
 	//
-	double *s1h     = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//x方向の分極モーメント
-	double *s2h     = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//y方向の分極モーメント
+	double *s1h     = (double *)malloc(sizeof(double)*( ND*ND ));	//x方向の分極モーメント
+	double *s2h     = (double *)malloc(sizeof(double)*( ND*ND ));	//y方向の分極モーメント
 	//
-	double *xi      = (double *)malloc(sizeof(double)*( ND*ND + ND ));//フ－リエ変換の実部・虚部配列
-	double *xr      = (double *)malloc(sizeof(double)*( ND*ND + ND ));//フ－リエ変換の実部・虚部配列
+	double *xi      = (double *)malloc(sizeof(double)*( ND*ND ));//フ－リエ変換の実部・虚部配列
+	double *xr      = (double *)malloc(sizeof(double)*( ND*ND ));//フ－リエ変換の実部・虚部配列
 	//
 	double *xif     = (double *)malloc(sizeof(double)*( ND ));//フ－リエ変換の実部・虚部配列
 	double *xrf     = (double *)malloc(sizeof(double)*( ND ));//フ－リエ変換の実部・虚部配列
@@ -146,21 +146,21 @@ int main(void)
 	//
 	int *ik         = (int *)malloc(sizeof(int)*( ND ));//ビット反転テーブル
 	//
-	double *s1qrh   = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//s1のフーリエ変換（実部）
-	double *s1qih   = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//s1のフーリエ変換（虚部）
-	double *s2qrh   = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//s2のフーリエ変換（実部）
-	double *s2qih   = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//s2のフーリエ変換（虚部）
-	double *s1h2    = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//s1の補助配列
-	double *s2h2    = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//s2の補助配列
-	double *ss1qrh  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//s1*s1のフーリエ変換（実部）
-	double *ss1qih  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//s1*s1のフーリエ変換（虚部）
-	double *ss2qrh  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//s2*s2のフーリエ変換（実部）
-	double *ss2qih  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//s2*s2のフーリエ変換（虚部）
-	double *s1s2qrh = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//s1*s2のフーリエ変換（実部）
-	double *s1s2qih = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//s1*s2のフーリエ変換（虚部）
+	double *s1qrh   = (double *)malloc(sizeof(double)*( ND*ND ));	//s1のフーリエ変換（実部）
+	double *s1qih   = (double *)malloc(sizeof(double)*( ND*ND ));	//s1のフーリエ変換（虚部）
+	double *s2qrh   = (double *)malloc(sizeof(double)*( ND*ND ));	//s2のフーリエ変換（実部）
+	double *s2qih   = (double *)malloc(sizeof(double)*( ND*ND ));	//s2のフーリエ変換（虚部）
+	double *s1h2    = (double *)malloc(sizeof(double)*( ND*ND ));	//s1の補助配列
+	double *s2h2    = (double *)malloc(sizeof(double)*( ND*ND ));	//s2の補助配列
+	double *ss1qrh  = (double *)malloc(sizeof(double)*( ND*ND ));	//s1*s1のフーリエ変換（実部）
+	double *ss1qih  = (double *)malloc(sizeof(double)*( ND*ND ));	//s1*s1のフーリエ変換（虚部）
+	double *ss2qrh  = (double *)malloc(sizeof(double)*( ND*ND ));	//s2*s2のフーリエ変換（実部）
+	double *ss2qih  = (double *)malloc(sizeof(double)*( ND*ND ));	//s2*s2のフーリエ変換（虚部）
+	double *s1s2qrh = (double *)malloc(sizeof(double)*( ND*ND ));	//s1*s2のフーリエ変換（実部）
+	double *s1s2qih = (double *)malloc(sizeof(double)*( ND*ND ));	//s1*s2のフーリエ変換（虚部）
 	//
-	double *s1k_dd  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//双極子-双極子相互作用ポテンシャル
-	double *s2k_dd  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//双極子-双極子相互作用ポテンシャル
+	double *s1k_dd  = (double *)malloc(sizeof(double)*( ND*ND ));	//双極子-双極子相互作用ポテンシャル
+	double *s2k_dd  = (double *)malloc(sizeof(double)*( ND*ND ));	//双極子-双極子相互作用ポテンシャル
 	//
 	//printf("DELT(0.1)=  "); scanf(" %lf",&delt);//時間刻み設定	//delt=0.1;
 

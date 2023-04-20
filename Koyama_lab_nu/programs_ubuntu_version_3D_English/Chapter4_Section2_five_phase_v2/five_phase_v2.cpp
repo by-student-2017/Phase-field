@@ -124,18 +124,18 @@ int main(void)
 	//
 	//double ch[(nstep+1)*nstep]; // [(nstep+1)*nstep]=[nstep*nstep+nstep], a[i][j]= a[i*n+j] for a[][n]
 	//a[z * ySize * xSize + y * xSize + x], a[i][j][k]=a[i*n*m + j*n + k]
-	double *c2h  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//topical composition
-	double *c3h  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//topical composition
-	double *c4h  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//topical composition
-	double *c5h  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//topical composition
-	double *c2h2 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//auxiliary matrix for the local concentration field
-	double *c3h2 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//auxiliary matrix for the local concentration field
-	double *c4h2 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//auxiliary matrix for the local concentration field
-	double *c5h2 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//auxiliary matrix for the local concentration field
-	double *c2k  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//local potential
-	double *c3k  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//local potential
-	double *c4k  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//local potential
-	double *c5k  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//local potential
+	double *c2h  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//topical composition
+	double *c3h  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//topical composition
+	double *c4h  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//topical composition
+	double *c5h  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//topical composition
+	double *c2h2 = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//auxiliary matrix for the local concentration field
+	double *c3h2 = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//auxiliary matrix for the local concentration field
+	double *c4h2 = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//auxiliary matrix for the local concentration field
+	double *c5h2 = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//auxiliary matrix for the local concentration field
+	double *c2k  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//local potential
+	double *c3k  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//local potential
+	double *c4k  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//local potential
+	double *c5k  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//local potential
 	//
 	rtemp=rr*temp;				//RT
 	

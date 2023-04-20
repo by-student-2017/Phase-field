@@ -103,14 +103,14 @@ int main(void)
 	nm=N-1;
 	nmm=N-2;
 	//
-	double *ph   = (double *)malloc(sizeof(double)*( N*ND*ND*ND + ND*ND*ND + ND*ND + ND ));	//phase field
-	double *ph2  = (double *)malloc(sizeof(double)*( N*ND*ND*ND + ND*ND*ND + ND*ND + ND ));	//Phase field auxiliary array
-	double *aij  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//gradient energy factor
-	double *wij  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//the coefficient of the penalty term
-	double *tij  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Grain boundary mobility
-	double *eij  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Driving force of grain boundary migration
-	double *m00h = (double *)malloc(sizeof(double)*( N*ND*ND*ND + ND*ND*ND + ND*ND + ND ));	//number of orientations where p is not 0 at location (i,j) and its surroundings (iÅ}1,jÅ}1)
-	int    *n00h =       (int *)malloc(sizeof(int)*( ND*ND*ND + ND*ND + ND ));	//The number of orientations where p is not 0 at location (i,j) and its surroundings (iÅ}1,jÅ}1)
+	double *ph   = (double *)malloc(sizeof(double)*( N*ND*ND*ND ));	//phase field
+	double *ph2  = (double *)malloc(sizeof(double)*( N*ND*ND*ND ));	//Phase field auxiliary array
+	double *aij  = (double *)malloc(sizeof(double)*( ND*ND ));	//gradient energy factor
+	double *wij  = (double *)malloc(sizeof(double)*( ND*ND ));	//the coefficient of the penalty term
+	double *tij  = (double *)malloc(sizeof(double)*( ND*ND ));	//Grain boundary mobility
+	double *eij  = (double *)malloc(sizeof(double)*( ND*ND ));	//Driving force of grain boundary migration
+	double *m00h = (double *)malloc(sizeof(double)*( N*ND*ND*ND ));	//number of orientations where p is not 0 at location (i,j) and its surroundings (iÅ}1,jÅ}1)
+	int    *n00h =       (int *)malloc(sizeof(int)*( ND*ND*ND ));	//The number of orientations where p is not 0 at location (i,j) and its surroundings (iÅ}1,jÅ}1)
 	//
 	//printf("delt(5.0)=  "); scanf(" %lf",&delt);//Enter time step	//	delt=5.0;
 
@@ -409,7 +409,7 @@ void datsave_paraview(double *ph, int ND, int N)
 	int 	i, j, k, kk;
 	int nd=ND, ndm=ND-1, nm=N-1, nmm=N-2;
 	int ndxm=ndm, ndym=ndm, ndzm=ndm;
-	double *pht  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *pht  = (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	
 	for(i=0;i<=ndxm;i++){
 		for(j=0;j<=ndym;j++){

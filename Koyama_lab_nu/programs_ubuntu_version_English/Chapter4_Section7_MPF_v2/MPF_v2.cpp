@@ -122,21 +122,21 @@ int main(void)
 	nm=N-1;
 	nmm=N-2;
 	//
-	double *ph   = (double *)malloc(sizeof(double)*( N*ND*ND + ND*ND + ND ));	//phase field
-	double *ph2  = (double *)malloc(sizeof(double)*( N*ND*ND + ND*ND + ND ));	//Phase field auxiliary array
-	double *ch   = (double *)malloc(sizeof(double)*( ND*ND + ND ));
-	double *ch2  = (double *)malloc(sizeof(double)*( ND*ND + ND ));
-	double *aij  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//gradient energy factor
-	double *wij  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//the coefficient of the penalty term
-	double *tij  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Grain boundary mobility
-	double *eij  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Driving force of grain boundary migration
-	double *m00h = (double *)malloc(sizeof(double)*( N*ND*ND + ND*ND + ND ));	//number of orientations where p is not 0 at location (i,j) and its surroundings (iÅ}1,jÅ}1)
-	double *n00h = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Number of orientations where p is not 0 at location (i,j) and its surroundings (iÅ}1,jÅ}1)
+	double *ph   = (double *)malloc(sizeof(double)*( N*ND*ND ));	//phase field
+	double *ph2  = (double *)malloc(sizeof(double)*( N*ND*ND ));	//Phase field auxiliary array
+	double *ch   = (double *)malloc(sizeof(double)*( ND*ND ));
+	double *ch2  = (double *)malloc(sizeof(double)*( ND*ND ));
+	double *aij  = (double *)malloc(sizeof(double)*( ND*ND ));	//gradient energy factor
+	double *wij  = (double *)malloc(sizeof(double)*( ND*ND ));	//the coefficient of the penalty term
+	double *tij  = (double *)malloc(sizeof(double)*( ND*ND ));	//Grain boundary mobility
+	double *eij  = (double *)malloc(sizeof(double)*( ND*ND ));	//Driving force of grain boundary migration
+	double *m00h = (double *)malloc(sizeof(double)*( N*ND*ND ));	//number of orientations where p is not 0 at location (i,j) and its surroundings (iÅ}1,jÅ}1)
+	double *n00h = (double *)malloc(sizeof(double)*( ND*ND ));	//Number of orientations where p is not 0 at location (i,j) and its surroundings (iÅ}1,jÅ}1)
 	//
-	double *cah  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Concentration field in local equilibrium (parallel tangent rule)
-	double *cbh  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Concentration field in local equilibrium (parallel tangent rule)
-	double *sah  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Probability of existence of Éø phase and É¿ phase (SÉø and SÉ¿)
-	double *sbh  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Probability of existence of Éø phase and É¿ phase (SÉø and SÉ¿)
+	double *cah  = (double *)malloc(sizeof(double)*( ND*ND ));	//Concentration field in local equilibrium (parallel tangent rule)
+	double *cbh  = (double *)malloc(sizeof(double)*( ND*ND ));	//Concentration field in local equilibrium (parallel tangent rule)
+	double *sah  = (double *)malloc(sizeof(double)*( ND*ND ));	//Probability of existence of Éø phase and É¿ phase (SÉø and SÉ¿)
+	double *sbh  = (double *)malloc(sizeof(double)*( ND*ND ));	//Probability of existence of Éø phase and É¿ phase (SÉø and SÉ¿)
 	//
 	//printf("delt(0.2)=  "); scanf(" %lf",&delt);//Enter time step	//	delt=0.2;
 	//printf("c0(0.4)=  "); scanf(" %lf",&c0);//Enter Average Composition	//c0=0.2;
@@ -558,7 +558,7 @@ void datsave_paraview(double *ph, double *ch, int ND, int N)
 	char	fName[256];
 	int 	i, j, k;
 	int nd=ND, ndm=ND-1, nm=N-1, nmm=N-2;
-	double *pht  = (double *)malloc(sizeof(double)*( ND*ND + ND ));
+	double *pht  = (double *)malloc(sizeof(double)*( ND*ND ));
 	
 	for(j=0;j<=ndm;j++){
 		for(i=0;i<=ndm;i++){

@@ -86,12 +86,12 @@ int main(void)
 	nd=ND;					//Number of difference divisions on one side of the computational domain (number of difference blocks)
 	ndm=ND-1;				//Define ND-1
 	//
-	double *c2h  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//topical composition
-	double *c3h  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//topical composition
-	double *c2h2 = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//auxiliary matrix for the local concentration field
-	double *c3h2 = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//auxiliary matrix for the local concentration field
-	double *c2k  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//local potential
-	double *c3k  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//local potential
+	double *c2h  = (double *)malloc(sizeof(double)*( ND*ND ));	//topical composition
+	double *c3h  = (double *)malloc(sizeof(double)*( ND*ND ));	//topical composition
+	double *c2h2 = (double *)malloc(sizeof(double)*( ND*ND ));	//auxiliary matrix for the local concentration field
+	double *c3h2 = (double *)malloc(sizeof(double)*( ND*ND ));	//auxiliary matrix for the local concentration field
+	double *c2k  = (double *)malloc(sizeof(double)*( ND*ND ));	//local potential
+	double *c3k  = (double *)malloc(sizeof(double)*( ND*ND ));	//local potential
 	//
 	//printf("C2B(0.333) =  ");	scanf(" %lf",&c2a);//Input average composition (B component) from standard input/output	//	c2a=1./3.;
 	//printf("C3C(0.333) =  ");	scanf(" %lf",&c3a);//Input average composition (C component) from standard input/output	//	c3a=1./3.;

@@ -79,8 +79,8 @@ int main(void)
 	nd=ND, ndm=ND-1; 			//Define the number of difference divisions (number of difference blocks) on one side of the calculation area, ND-1
 	nd2=ND/2;				 	//Defined use ND/2
 	//
-	double *s1h  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//long range regular field
-	double *s1h2 = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//Auxiliary array of fields
+	double *s1h  = (double *)malloc(sizeof(double)*( ND*ND ));	//long range regular field
+	double *s1h2 = (double *)malloc(sizeof(double)*( ND*ND ));	//Auxiliary array of fields
 	//
 	//printf("DELT(1.0)=  ");	scanf(" %lf",&delt);//Time step input	//delt=1.0;
 

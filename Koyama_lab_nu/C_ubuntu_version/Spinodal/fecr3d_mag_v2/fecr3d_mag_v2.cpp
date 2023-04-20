@@ -163,9 +163,9 @@ int main(void)
 	
 	//double ch[(nstep+1)*nstep]; // [(nstep+1)*nstep]=[nstep*nstep+nstep], a[i][j]= a[i*n+j] for a[][n]
 	//a[z * ySize * xSize + y * xSize + x], a[i][j][k]=a[i*n*m + j*n + k]
-	double *ck  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//拡散ポテンシャル
-	double *ch  = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));	//組織内の濃度デ－タ配列
-	double *ch2 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *ck  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//拡散ポテンシャル
+	double *ch  = (double *)malloc(sizeof(double)*( ND*ND*ND ));	//組織内の濃度デ－タ配列
+	double *ch2 = (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	
 	//printf("DELT(0.05)=  "); scanf(" %lf",&delt);	//	delt=0.05;
 	//printf("ca (0.4)= "); scanf(" %lf",&ca);	//	ca=0.4;

@@ -102,21 +102,21 @@ int main(void)
 	//double ch[(nstep+1)*nstep]; // [(nstep+1)*nstep]=[nstep*nstep+nstep], a[i][j]= a[i*n+j] for a[][n]
 	//a[z * ySize * xSize + y * xSize + x], a[i][j][k]=a[i*n*m + j*n + k]
 	//bag fix: change from N*ND*ND*ND to GNP*ND*ND*ND
-	double *ph   = (double *)malloc(sizeof(double)*( GNP*ND*ND*ND + ND*ND*ND + ND*ND + ND ));	//ph[1][i][j][k]～ph[n][i][j][k]:位置[i][j][k]におけるpf
-	int    *qh   =       (int *)malloc(sizeof(int)*( GNP*ND*ND*ND + ND*ND*ND + ND*ND + ND ));	//qh[1][i][j][k]～qh[n][i][j][k]:位置[i][j][k]においておける粒番号
-	int    *n00  =       (int *)malloc(sizeof(int)*( ND*ND*ND + ND*ND + ND ));	//位置[i][j][k]においてphが0ではない場合の個数
-	int    *n00p =       (int *)malloc(sizeof(int)*( ND*ND*ND + ND*ND + ND ));	//位置[i][j][k]におけるphおよびその周辺のphが0ではない場合の個数
+	double *ph   = (double *)malloc(sizeof(double)*( GNP*ND*ND*ND ));	//ph[1][i][j][k]～ph[n][i][j][k]:位置[i][j][k]におけるpf
+	int    *qh   =       (int *)malloc(sizeof(int)*( GNP*ND*ND*ND ));	//qh[1][i][j][k]～qh[n][i][j][k]:位置[i][j][k]においておける粒番号
+	int    *n00  =       (int *)malloc(sizeof(int)*( ND*ND*ND ));	//位置[i][j][k]においてphが0ではない場合の個数
+	int    *n00p =       (int *)malloc(sizeof(int)*( ND*ND*ND ));	//位置[i][j][k]におけるphおよびその周辺のphが0ではない場合の個数
 	// n00[i*ND*ND+j*ND+k], n00p[i*ND*ND+j*ND+k]
 	//
-	double *ph2  = (double *)malloc(sizeof(double)*( GNP*ND*ND*ND + ND*ND*ND + ND*ND + ND ));	// ph2[kk*ND*ND*ND+i*ND*ND+j*ND+k];
-	int    *qh2  =       (int *)malloc(sizeof(int)*( GNP*ND*ND*ND + ND*ND*ND + ND*ND + ND ));	// qh2[kk*ND*ND*ND+i*ND*ND+j*ND+k];
+	double *ph2  = (double *)malloc(sizeof(double)*( GNP*ND*ND*ND ));	// ph2[kk*ND*ND*ND+i*ND*ND+j*ND+k];
+	int    *qh2  =       (int *)malloc(sizeof(int)*( GNP*ND*ND*ND ));	// qh2[kk*ND*ND*ND+i*ND*ND+j*ND+k];
 	//
-	double *aij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));	// aij[i][j]= aij[i*GNP+j]
-	double *wij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));	// wij[i][j]= wij[i*GNP+j]
-	double *tij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));	// tij[i][j]= tij[i*GNP+j]
-	double *eij  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));	// eij[i][j]= eij[i*GNP+j]
+	double *aij  = (double *)malloc(sizeof(double)*( GNP*GNP ));	// aij[i][j]= aij[i*GNP+j]
+	double *wij  = (double *)malloc(sizeof(double)*( GNP*GNP ));	// wij[i][j]= wij[i*GNP+j]
+	double *tij  = (double *)malloc(sizeof(double)*( GNP*GNP ));	// tij[i][j]= tij[i*GNP+j]
+	double *eij  = (double *)malloc(sizeof(double)*( GNP*GNP ));	// eij[i][j]= eij[i*GNP+j]
 	//
-	double *data_mat  = (double *)malloc(sizeof(double)*( GNP*GNP + GNP ));
+	double *data_mat  = (double *)malloc(sizeof(double)*( GNP*GNP ));
 	//
 	//printf("delt(2.0)=  "); scanf(" %lf",&delt);	//	delt=2.0;
 	//L=500.0;	// [nm]
@@ -562,7 +562,7 @@ void ini000(double *ph, int *qh, int *n00, int *n00p, int N, int ND, int GNP)
 	double r;
 	int x1, y1, z1, r0;
 	//int is[NDX][NDY][NDZ];
-	int *is = (int *)malloc(sizeof(int)*( ND*ND*ND + ND*ND + ND ));	//is[i][j][k]=is[i*ND*ND+j*ND+k]
+	int *is = (int *)malloc(sizeof(int)*( ND*ND*ND ));	//is[i][j][k]=is[i*ND*ND+j*ND+k]
 	int nd=ND, ndm=ND-1, GN=GNP-1;
  	//srand(time(NULL)); // 乱数初期化
 

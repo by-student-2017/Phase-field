@@ -76,10 +76,10 @@ int main(void)
 	//
 	//double ch[(nstep+1)*nstep]; // [(nstep+1)*nstep]=[nstep*nstep+nstep], a[i][j]= a[i*n+j] for a[][n]
 	//a[z * ySize * xSize + y * xSize + x], a[i][j][k]=a[i*n*m + j*n + k]
-	double *c2h  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//局所組成
-	double *ph   = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//局所体積分率
-	double *c2h2 = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//局所濃度場の補助行列
-	double *c2k  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//局所ポテンシャル
+	double *c2h  = (double *)malloc(sizeof(double)*( ND*ND ));	//局所組成
+	double *ph   = (double *)malloc(sizeof(double)*( ND*ND ));	//局所体積分率
+	double *c2h2 = (double *)malloc(sizeof(double)*( ND*ND ));	//局所濃度場の補助行列
+	double *c2k  = (double *)malloc(sizeof(double)*( ND*ND ));	//局所ポテンシャル
 
 	//printf("C2B(0.45) =  ");	scanf(" %lf",&c2a);//標準入出力から平均組成(B成分)を入力	//	c2a=0.45;
 	//printf("delt(0.005)=  ");	scanf(" %lf",&delt);//時間刻み	//	delt=0.005;

@@ -122,24 +122,24 @@ int main(void)
 	nd2=ND/2;				//define ND/2 for FFT
 	ig=IG;					//2^ig=ND
 	//
-	double *s1h      = (double *)malloc(sizeof(double)*( ND*ND + ND ));//マルテンサイトのフェーズフィールド
-	double *s2h      = (double *)malloc(sizeof(double)*( ND*ND + ND ));//マルテンサイトのフェーズフィールド
+	double *s1h      = (double *)malloc(sizeof(double)*( ND*ND ));//マルテンサイトのフェーズフィールド
+	double *s2h      = (double *)malloc(sizeof(double)*( ND*ND ));//マルテンサイトのフェーズフィールド
 	//
-	double *ep11h0   = (double *)malloc(sizeof(double)*( ND*ND + ND ));//組織内の変態歪
-	double *ep22h0   = (double *)malloc(sizeof(double)*( ND*ND + ND ));//組織内の変態歪
-	double *ep11qrh0 = (double *)malloc(sizeof(double)*( ND*ND + ND ));//拘束歪変動量のフーリエ変換
-	double *ep11qih0 = (double *)malloc(sizeof(double)*( ND*ND + ND ));//拘束歪変動量のフーリエ変換
-	double *ep22qrh0 = (double *)malloc(sizeof(double)*( ND*ND + ND ));//拘束歪変動量のフーリエ変換
-	double *ep22qih0 = (double *)malloc(sizeof(double)*( ND*ND + ND ));//拘束歪変動量のフーリエ変換
+	double *ep11h0   = (double *)malloc(sizeof(double)*( ND*ND ));//組織内の変態歪
+	double *ep22h0   = (double *)malloc(sizeof(double)*( ND*ND ));//組織内の変態歪
+	double *ep11qrh0 = (double *)malloc(sizeof(double)*( ND*ND ));//拘束歪変動量のフーリエ変換
+	double *ep11qih0 = (double *)malloc(sizeof(double)*( ND*ND ));//拘束歪変動量のフーリエ変換
+	double *ep22qrh0 = (double *)malloc(sizeof(double)*( ND*ND ));//拘束歪変動量のフーリエ変換
+	double *ep22qih0 = (double *)malloc(sizeof(double)*( ND*ND ));//拘束歪変動量のフーリエ変換
 	//
-	double *s1k_su   = (double *)malloc(sizeof(double)*( ND*ND + ND ));//ポテンシャル
-	double *s2k_su   = (double *)malloc(sizeof(double)*( ND*ND + ND ));//ポテンシャル
+	double *s1k_su   = (double *)malloc(sizeof(double)*( ND*ND ));//ポテンシャル
+	double *s2k_su   = (double *)malloc(sizeof(double)*( ND*ND ));//ポテンシャル
 	//
-	double *ec11     = (double *)malloc(sizeof(double)*( ND*ND + ND ));//拘束歪変動量（実空間）
-	double *ec22     = (double *)malloc(sizeof(double)*( ND*ND + ND ));//拘束歪変動量（実空間）
+	double *ec11     = (double *)malloc(sizeof(double)*( ND*ND ));//拘束歪変動量（実空間）
+	double *ec22     = (double *)malloc(sizeof(double)*( ND*ND ));//拘束歪変動量（実空間）
 	//
-	double *xi       = (double *)malloc(sizeof(double)*( ND*ND + ND ));//フ－リエ変換の実部・虚部配列
-	double *xr       = (double *)malloc(sizeof(double)*( ND*ND + ND ));//フ－リエ変換の実部・虚部配列
+	double *xi       = (double *)malloc(sizeof(double)*( ND*ND ));//フ－リエ変換の実部・虚部配列
+	double *xr       = (double *)malloc(sizeof(double)*( ND*ND ));//フ－リエ変換の実部・虚部配列
 	//
 	double *xif      = (double *)malloc(sizeof(double)*( ND ));//フ－リエ変換の実部・虚部配列
 	double *xrf      = (double *)malloc(sizeof(double)*( ND ));//フ－リエ変換の実部・虚部配列

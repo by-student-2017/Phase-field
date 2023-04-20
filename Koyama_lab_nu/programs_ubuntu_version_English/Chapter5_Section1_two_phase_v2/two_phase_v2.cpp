@@ -76,10 +76,10 @@ int main(void)
 	//
 	//double ch[(nstep+1)*nstep]; // [(nstep+1)*nstep]=[nstep*nstep+nstep], a[i][j]= a[i*n+j] for a[][n]
 	//a[z * ySize * xSize + y * xSize + x], a[i][j][k]=a[i*n*m + j*n + k]
-	double *c2h  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//topical composition
-	double *ph   = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//local volume fraction
-	double *c2h2 = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//auxiliary matrix for the local concentration field
-	double *c2k  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//local potential
+	double *c2h  = (double *)malloc(sizeof(double)*( ND*ND ));	//topical composition
+	double *ph   = (double *)malloc(sizeof(double)*( ND*ND ));	//local volume fraction
+	double *c2h2 = (double *)malloc(sizeof(double)*( ND*ND ));	//auxiliary matrix for the local concentration field
+	double *c2k  = (double *)malloc(sizeof(double)*( ND*ND ));	//local potential
 
 	//printf("C2B(0.45) =  ");	scanf(" %lf",&c2a);//Input average composition (B component) from standard input/output	//	c2a=0.45;
 	//printf("delt(0.005)=  ");	scanf(" %lf",&delt);//ticking	//	delt=0.005;

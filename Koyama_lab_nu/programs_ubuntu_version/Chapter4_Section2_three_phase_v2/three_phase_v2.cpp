@@ -85,12 +85,12 @@ int main(void)
 	nd=ND;					//計算領域の一辺の差分分割数(差分ブロック数)
 	ndm=ND-1;				//ND-1を定義
 	//
-	double *c2h  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//局所組成
-	double *c3h  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//局所組成
-	double *c2h2 = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//局所濃度場の補助行列
-	double *c3h2 = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//局所濃度場の補助行列
-	double *c2k  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//局所ポテンシャル
-	double *c3k  = (double *)malloc(sizeof(double)*( ND*ND + ND ));	//局所ポテンシャル
+	double *c2h  = (double *)malloc(sizeof(double)*( ND*ND ));	//局所組成
+	double *c3h  = (double *)malloc(sizeof(double)*( ND*ND ));	//局所組成
+	double *c2h2 = (double *)malloc(sizeof(double)*( ND*ND ));	//局所濃度場の補助行列
+	double *c3h2 = (double *)malloc(sizeof(double)*( ND*ND ));	//局所濃度場の補助行列
+	double *c2k  = (double *)malloc(sizeof(double)*( ND*ND ));	//局所ポテンシャル
+	double *c3k  = (double *)malloc(sizeof(double)*( ND*ND ));	//局所ポテンシャル
 	//
 	//printf("C2B(0.333) =  ");	scanf(" %lf",&c2a);//標準入出力から平均組成(B成分)を入力	//	c2a=1./3.;
 	//printf("C3C(0.333) =  ");	scanf(" %lf",&c3a);//標準入出力から平均組成(C成分)を入力	//	c3a=1./3.;

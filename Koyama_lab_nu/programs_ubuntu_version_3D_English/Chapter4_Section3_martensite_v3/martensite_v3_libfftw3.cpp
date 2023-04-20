@@ -141,70 +141,70 @@ int main(void)
 	nd2=ND/2;				//define ND/2 for FFT
 	ig=IG;					//2^ig=ND
 	//
-	double *s1h      = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Phase field of martensite
-	double *s2h      = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Phase field of martensite
-	double *s3h      = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Phase field of martensite
+	double *s1h      = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Phase field of martensite
+	double *s2h      = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Phase field of martensite
+	double *s3h      = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Phase field of martensite
 	//
-	double *ep11h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
-	double *ep22h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
-	double *ep33h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
-	double *ep12h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
-	double *ep13h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
-	double *ep23h0   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Transformational strain in tissue
+	double *ep11h0   = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Transformational strain in tissue
+	double *ep22h0   = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Transformational strain in tissue
+	double *ep33h0   = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Transformational strain in tissue
+	double *ep12h0   = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Transformational strain in tissue
+	double *ep13h0   = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Transformational strain in tissue
+	double *ep23h0   = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Transformational strain in tissue
 	//
-	double *ep11qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep22qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep33qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep12qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep21qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep13qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep31qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep23qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep32qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
+	double *ep11qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep22qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep33qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep12qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep21qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep13qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep31qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep23qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep32qrh0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
 	//
-	double *ep11qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep22qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep33qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep12qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep21qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep13qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep31qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep23qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
-	double *ep32qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Fourier transform of constraint strain variation
+	double *ep11qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep22qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep33qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep12qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep21qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep13qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep31qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep23qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
+	double *ep32qih0 = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Fourier transform of constraint strain variation
 	//
-	double *s1k_su   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//potential
-	double *s2k_su   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//potential
-	double *s3k_su   = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//potential
+	double *s1k_su   = (double *)malloc(sizeof(double)*( ND*ND*ND ));//potential
+	double *s2k_su   = (double *)malloc(sizeof(double)*( ND*ND*ND ));//potential
+	double *s3k_su   = (double *)malloc(sizeof(double)*( ND*ND*ND ));//potential
 	//
-	double *ec11     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Constraint strain variation (real space)
-	double *ec22     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Constraint strain variation (real space)
-	double *ec33     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Constraint strain variation (real space)
-	double *ec12     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Constraint strain variation (real space)
-	double *ec13     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Constraint strain variation (real space)
-	double *ec23     = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//Constraint strain variation (real space)
+	double *ec11     = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Constraint strain variation (real space)
+	double *ec22     = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Constraint strain variation (real space)
+	double *ec33     = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Constraint strain variation (real space)
+	double *ec12     = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Constraint strain variation (real space)
+	double *ec13     = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Constraint strain variation (real space)
+	double *ec23     = (double *)malloc(sizeof(double)*( ND*ND*ND ));//Constraint strain variation (real space)
 	//
-	double *xi       = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//array of real and imaginary parts of the Fourier transform
-	double *xr       = (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));//array of real and imaginary parts of the Fourier transform
+	double *xi       = (double *)malloc(sizeof(double)*( ND*ND*ND ));//array of real and imaginary parts of the Fourier transform
+	double *xr       = (double *)malloc(sizeof(double)*( ND*ND*ND ));//array of real and imaginary parts of the Fourier transform
 	//
-	double *sigma11_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma22_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma33_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma12_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma21_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma13_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma31_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma23_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma32_r= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *sigma11_r= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma22_r= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma33_r= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma12_r= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma21_r= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma13_r= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma31_r= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma23_r= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma32_r= (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	//
-	double *sigma11_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma22_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma33_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma12_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma21_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma13_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma31_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma23_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
-	double *sigma32_i= (double *)malloc(sizeof(double)*( ND*ND*ND + ND*ND + ND ));
+	double *sigma11_i= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma22_i= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma33_i= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma12_i= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma21_i= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma13_i= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma31_i= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma23_i= (double *)malloc(sizeof(double)*( ND*ND*ND ));
+	double *sigma32_i= (double *)malloc(sizeof(double)*( ND*ND*ND ));
 	//
 	const int fftsize = ND;
 	fftw_complex *in, *out; // in[i][0] for real, in[i][1] for imag.
