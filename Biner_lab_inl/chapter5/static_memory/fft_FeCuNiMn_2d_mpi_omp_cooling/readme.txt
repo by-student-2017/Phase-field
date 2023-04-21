@@ -8,7 +8,8 @@ Windows11 and WSL2(Ubuntu-22.04)
 4. cmake -S . -B build/ -G"Unix Makefiles"
 5. cmake --build build/ --target fft_FeCuMnNi_2d.exe
 6. cd ./build
-7. mpirun -np 8 ./fft_FeCuMnNi_2d.exe
+7. export OMP_NUM_THREADS=2
+8. mpirun -np 4 ./fft_FeCuMnNi_2d.exe
 
 (On windows11)
 6. paraview
