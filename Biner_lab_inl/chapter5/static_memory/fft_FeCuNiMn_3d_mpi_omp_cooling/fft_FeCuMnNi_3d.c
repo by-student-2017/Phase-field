@@ -152,6 +152,7 @@ int main(int argc, char **argv){
 	//prepare microstructure
 	init_FeCuMnNi_micro_3d(Nx,Ny,Nz,cu0,mn0,ni0,cu,mn,ni,orp);
 	
+	//----- ----- ----- ----- ----- -----
 	int rank;
 	
 	//MPI version
@@ -245,6 +246,7 @@ int main(int argc, char **argv){
 	plan_dgdorc = fftw_mpi_plan_dft_3d(fftsizex, fftsizey, fftsizez, dgdorc, dgdorck, MPI_COMM_WORLD, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
 	//fftw_plan iplan_dgdorck;
 	//iplan_dgdorck = fftw_plan_dft_3d(fftsizex, fftsizey, fftsizez, dgdorck, dgdorc, MPI_COMM_WORLD, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
+	//----- ----- ----- ----- ----- -----
 	//
 	//initialization
 	for(int i=0;i<local_n0;i++){
@@ -512,6 +514,7 @@ int main(int argc, char **argv){
 		printf("Compute Time: %lf \n", compute_time);
 	}
 	
+	//----- ----- ----- ----- ----- -----
 	fftw_destroy_plan(plan_cuc);
 	fftw_destroy_plan(plan_mnc);
 	fftw_destroy_plan(plan_nic);
@@ -525,7 +528,7 @@ int main(int argc, char **argv){
 	fftw_destroy_plan(plan_dgdmnc);
 	fftw_destroy_plan(plan_dgdnic);
 	fftw_destroy_plan(plan_dgdorc);
-	//
+	//----- ----- ----- ----- ----- -----
 	fftw_free(cuc);
 	fftw_free(cuck);
 	fftw_free(mnc);
@@ -543,6 +546,6 @@ int main(int argc, char **argv){
 	fftw_free(dgdnick);
 	fftw_free(dgdorc);
 	fftw_free(dgdorck);
-	
+	//----- ----- ----- ----- ----- -----
 	MPI_Finalize(); //for fftw3_mpi
 }

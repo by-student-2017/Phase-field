@@ -152,9 +152,11 @@ int main(int argc, char **argv){
 	//double  mn[Nx][Ny];
 	//double  ni[Nx][Ny];
 	//double orp[Nx][Ny];
+	
 	//prepare microstructure
 	init_FeCuMnNi_micro_2d(Nx,Ny,cu0,mn0,ni0,cu,mn,ni,orp);
 	
+	//----- ----- ----- ----- ----- -----
 	const ptrdiff_t fftsizex = Nx, fftsizey = Ny;
 	ptrdiff_t alloc_local, local_n0, local_0_start;
 	
@@ -247,6 +249,7 @@ int main(int argc, char **argv){
 	plan_dgdorc = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, dgdorc, dgdorck, MPI_COMM_WORLD, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
 	//fftw_plan iplan_dgdorck;
 	//iplan_dgdorck = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, dgdorck, dgdorc, MPI_COMM_WORLD, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
+	//----- ----- ----- ----- ----- -----
 	//
 	//initialization
 	for(int i=0;i<local_n0;i++){
@@ -505,6 +508,7 @@ int main(int argc, char **argv){
 		printf("Compute Time: %lf \n", compute_time);
 	}
 	
+	//----- ----- ----- ----- ----- -----
 	fftw_destroy_plan(plan_cuc);
 	fftw_destroy_plan(plan_mnc);
 	fftw_destroy_plan(plan_nic);
@@ -518,7 +522,7 @@ int main(int argc, char **argv){
 	fftw_destroy_plan(plan_dgdmnc);
 	fftw_destroy_plan(plan_dgdnic);
 	fftw_destroy_plan(plan_dgdorc);
-	//
+	//----- ----- ----- ----- ----- -----
 	fftw_free(cuc);
 	fftw_free(cuck);
 	fftw_free(mnc);
@@ -536,6 +540,6 @@ int main(int argc, char **argv){
 	fftw_free(dgdnick);
 	fftw_free(dgdorc);
 	fftw_free(dgdorck);
-	
+	//----- ----- ----- ----- ----- -----
 	MPI_Finalize(); //for fftw3_mpi
 }

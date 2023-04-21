@@ -140,9 +140,11 @@ int main(){
 	//double  mn[Nx][Ny];
 	//double  ni[Nx][Ny];
 	//double orp[Nx][Ny];
+	
 	//prepare microstructure
 	init_FeCuMnNi_micro_2d(Nx,Ny,cu0,mn0,ni0,cu,mn,ni,orp);
 	
+	//----- ----- ----- ----- ----- -----
 	const int fftsizex = Nx, fftsizey = Ny;
 	/* fftw_complex *in, *out; // in[i][0] for real, in[i][1] for imag.
 	    in = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
@@ -219,6 +221,7 @@ int main(){
 	plan_dgdorc = fftw_plan_dft_2d(fftsizex, fftsizey, dgdorc, dgdorck, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
 	//fftw_plan iplan_dgdorck;
 	//iplan_dgdorck = fftw_plan_dft_2d(fftsizex, fftsizey, dgdorck, dgdorc, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
+	//----- ----- ----- ----- ----- -----
 	//
 	//initialization
 	for(int i=0;i<Nx;i++){
@@ -467,6 +470,7 @@ int main(){
 	compute_time = ((double) (end - start)) / CLOCKS_PER_SEC;
 	printf("Compute Time: %lf \n", compute_time);
 	
+	//----- ----- ----- ----- ----- -----
 	fftw_destroy_plan(plan_cuc);
 	fftw_destroy_plan(plan_mnc);
 	fftw_destroy_plan(plan_nic);
@@ -480,7 +484,7 @@ int main(){
 	fftw_destroy_plan(plan_dgdmnc);
 	fftw_destroy_plan(plan_dgdnic);
 	fftw_destroy_plan(plan_dgdorc);
-	//
+	//----- ----- ----- ----- ----- -----
 	fftw_free(cuc);
 	fftw_free(cuck);
 	fftw_free(mnc);
@@ -498,4 +502,5 @@ int main(){
 	fftw_free(dgdnick);
 	fftw_free(dgdorc);
 	fftw_free(dgdorck);
+	//----- ----- ----- ----- ----- -----
 }
