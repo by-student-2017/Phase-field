@@ -182,7 +182,7 @@ int main(int argc, char **argv){
 		//calculate the value of denominator in Eq.7.10 at every grid points
 		for(int i=0;i<local_n0;i++){
 			for(int j=0;j<Ny;j++){
-				Linx[local_0_start+i][j]=-k2[local_0_start+i][j]*(tempr+1.0-2.0*k2[local_0_start+i][j]+k4[local_0_start+i][j]);
+				 Linx[local_0_start+i][j]=-k2[local_0_start+i][j]*(tempr+1.0-2.0*k2[local_0_start+i][j]+k4[local_0_start+i][j]);
 				denom[local_0_start+i][j]=1.0-dtime*Linx[local_0_start+i][j];
 			}
 		}
@@ -190,7 +190,6 @@ int main(int argc, char **argv){
 		//calculate the nonlinear term, phi^3, in Eq.7.10
 		for(int i=0;i<local_n0;i++){
 			for(int j=0;j<Ny;j++){
-				//den3[local_0_start+i][j]=den[local_0_start+i][j]*den[local_0_start+i][j]*den[local_0_start+i][j];
 				ii=i*Ny+j;
 				den3[ii][0] =   den[ii][0]*den[ii][0]*den[ii][0] -3*den[ii][0]*den[ii][1]*den[ii][1];
 				den3[ii][1] = 3*den[ii][0]*den[ii][0]*den[ii][1]   -den[ii][1]*den[ii][1]*den[ii][1];
@@ -206,11 +205,9 @@ int main(int argc, char **argv){
 		//calculate the value of phi^(t+1) from Fourier space to real space (inverse FFT transformation)
 		for(int i=0;i<local_n0;i++){
 			for(int j=0;j<Ny;j++){
-				//Nonx[local_0_start+i][j]=-k2[local_0_start+i][j]*f_den3[local_0_start+i][j];
-				//f_den[local_0_start+i][j]=(f_den[local_0_start+i][j]+dtime*Nonx[local_0_start+i][j])/denom[local_0_start+i][j];
 				ii=i*Ny+j;
-				Nonx[ii][0] = -k2[local_0_start+i][j]*f_den3[ii][0];
-				Nonx[ii][1] = -k2[local_0_start+i][j]*f_den3[ii][1];
+				 Nonx[ii][0] = -k2[local_0_start+i][j]*f_den3[ii][0];
+				 Nonx[ii][1] = -k2[local_0_start+i][j]*f_den3[ii][1];
 				f_den[ii][0] = (f_den[ii][0]+dtime*Nonx[ii][0])/denom[local_0_start+i][j];
 				f_den[ii][1] = (f_den[ii][1]+dtime*Nonx[ii][1])/denom[local_0_start+i][j];
 			}
@@ -230,7 +227,6 @@ int main(int argc, char **argv){
 			//calculate the free energy distribution, Eq.7.6
 			for(int i=0;i<local_n0;i++){
 				for(int j=0;j<Ny;j++){
-					//ss2[local_0_start+i][j]=creal(den[local_0_start+i][j])*creal(den[local_0_start+i][j]);
 					ii=i*Ny+j;
 					den_out[local_0_start+i][j]=den[ii][0]/(fftsizex*fftsizey);
 					ss2[local_0_start+i][j]=den_out[local_0_start+i][j]*den_out[local_0_start+i][j];
@@ -240,7 +236,6 @@ int main(int argc, char **argv){
 			
 			for(int i=0;i<local_n0;i++){
 				for(int j=0;j<Ny;j++){
-					//f_ff[local_0_start+i][j]=0.5*f_den[local_0_start+i][j]*(1.0-2.0*k2[local_0_start+i][j]+k4[local_0_start+i][j]);
 					ii=i*Ny+j;
 					f_ff[ii][0] = 0.5*f_den[ii][0]*(1.0-2.0*k2[local_0_start+i][j]+k4[local_0_start+i][j]);
 					f_ff[ii][1] = 0.5*f_den[ii][1]*(1.0-2.0*k2[local_0_start+i][j]+k4[local_0_start+i][j]);
@@ -252,7 +247,6 @@ int main(int argc, char **argv){
 			
 			for(int i=0;i<local_n0;i++){
 				for(int j=0;j<Ny;j++){
-					//f_ff[local_0_start+i][j]=creal(ff[local_0_start+i][j])*creal(den[local_0_start+i][j])
 					ii=i*Ny+j;
 					ff[ii][0] = (ff[ii][0]/(fftsizex*fftsizey))
 							  *(den[ii][0]/(fftsizex*fftsizey))
@@ -282,6 +276,7 @@ int main(int argc, char **argv){
 			
 			energy=energy-energy0;
 			
+			MPI_Gather(ff_out[local_0_start], local_n0*Ny, MPI_DOUBLE, ff_out[local_0_start], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 			MPI_Gather(den_out[local_0_start], local_n0*Ny, MPI_DOUBLE, den_out[local_0_start], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 			//
 			MPI_Comm_rank(MPI_COMM_WORLD, &rank);

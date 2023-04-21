@@ -5,7 +5,7 @@ project(MyProject VERSION 1.0)
 
 find_package(MPI)
 
-add_executable(pfc_def_2d_mpi.exe pfc_def_2d.c prepare_fft_2d.c write_vtk_grid_values_2D.c)
+add_executable(pfc_def_2d_mpi.exe pfc_def_2d_mpi.c prepare_fft_2d.c write_vtk_grid_values_2D.c)
 
 target_compile_options(pfc_def_2d_mpi.exe PUBLIC -O2 -Wall)
 
