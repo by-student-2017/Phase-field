@@ -87,6 +87,9 @@ int main(int argc, char **argv){
 		}
 	}
 	
+	//prepare fft (output: kx,ky,kz,k2,k4)
+	prepare_fft_2d(Nx,Ny,dx,dy,kx,ky,k2,k4); //get FFT coefficients
+	
 	//----- ----- ----- ----- ----- -----
 	const ptrdiff_t fftsizex = Nx, fftsizey = Ny;
 	ptrdiff_t alloc_local, local_n0, local_0_start;
@@ -145,9 +148,6 @@ int main(int argc, char **argv){
 			den[ii][1] = 0.0;
 		}
 	}
-	
-	//prepare fft (output: kx,ky,kz,k2,k4)
-	prepare_fft_2d(Nx,Ny,dx,dy,kx,ky,k2,k4); //get FFT coefficients
 	
 	//evolve (evolve microstructure)
 	for(int istep=0;istep<=nstep;istep++){

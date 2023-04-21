@@ -70,6 +70,35 @@ int main(int argc, char **argv){
 	
 	int ii;
 	
+	//if infile=1 read input from file
+	int infile = 0;
+	FILE *in1;
+	int mx,my,mz;
+	if(infile==1){
+		//open input file
+		in1=fopen("g3_3r.inp","r");
+		for(int i=0;i<Nx;i++){
+			for(int j=0;j<Ny;j++){
+				for(int k=0;k<Nz;k++){
+					fscanf(in1,"%5d %5d %5d %lf",&mx,&my,&mz,&den_out[i][j][k]);
+				}
+			}
+		}
+	}else{
+		//initialize density
+		for(int i=0;i<Nx;i++){
+			for(int j=0;j<Ny;j++){
+				for(int k=0;k<Nz;k++){
+					den_out[i][j][k] = den0 + noise*(0.5-(double)rand()/RAND_MAX);
+					//modulate the density field with given noise term
+				}
+			}
+		}
+	}
+	
+	//prepare fft (output: kx,ky,kz,k2,k4)
+	prepare_fft_3d(Nx,Ny,Nz,dx,dy,dz,kx,ky,kz,k2,k4); //get FFT coefficients
+	
 	//----- ----- ----- ----- ----- -----
 	int rank;
 	//int num_proc;
@@ -121,41 +150,17 @@ int main(int argc, char **argv){
 	iplan_f_ff = fftw_mpi_plan_dft_3d(fftsizex, fftsizey, fftsizez, f_ff, ff, MPI_COMM_WORLD, FFTW_BACKWARD, FFTW_ESTIMATE);	//For inverse FFT
 	//----- ----- ----- ----- ----- -----
 	
-	//if infile=1 read input from file
-	int infile = 0;
-	FILE *in1;
-	int mx,my,mz;
-	if(infile==1){
-		//open input file
-		in1=fopen("g3_3r.inp","r");
-		for(int i=0;i<Nx;i++){
-			for(int j=0;j<Ny;j++){
-				for(int k=0;k<Nz;k++){
-					//ii=i*Ny*Nz+j*Nz+k;
-					ii=(i*Ny+j)*Nz+k;
-					fscanf(in1,"%5d %5d %5d %lf",&mx,&my,&mz,&den[ii][0]);
-					den[ii][1] = 0.0;
-				}
-			}
-		}
-	}else{
-		//initialize density
-		for(int i=0;i<Nx;i++){
-			for(int j=0;j<Ny;j++){
-				for(int k=0;k<Nz;k++){
-					//den[i][j][k]=den0+noise*(0.5-(double)rand()/RAND_MAX);
-					//ii=i*Ny*Nz+j*Nz+k;
-					ii=(i*Ny+j)*Nz+k;
-					den[ii][0] = den0 + noise*(0.5-(double)rand()/RAND_MAX);
-					den[ii][1] = 0.0;
-					//modulate the density field with given noise term
-				}
+	for(int i=0;i<local_n0;i++){
+		for(int j=0;j<Ny;j++){
+			for(int k=0;k<Nz;k++){
+				//ii=i*Ny*Nz+j*Nz+k;
+				ii=(i*Ny+j)*Nz+k;
+				den[ii][0] = den_out[local_0_start+i][j][k];
+				den[ii][1] = 0.0;
+				//modulate the density field with given noise term
 			}
 		}
 	}
-	
-	//prepare fft (output: kx,ky,kz,k2,k4)
-	prepare_fft_3d(Nx,Ny,Nz,dx,dy,dz,kx,ky,kz,k2,k4); //get FFT coefficients
 	
 	//evolve (evolve microstructure)
 	for(int istep=0;istep<=nstep;istep++){
@@ -167,20 +172,20 @@ int main(int argc, char **argv){
 		fftw_execute(plan_den);
 		
 		//calculate the value of denominator in Eq.7.10 at every grid points
-		for(int i=0;i<Nx;i++){
+		for(int i=0;i<local_n0;i++){
 			for(int j=0;j<Ny;j++){
 				for(int k=0;k<Nz;k++){
-					Linx[i][j][k]=-k2[i][j][k]*(tempr+1.0-2.0*k2[i][j][k]+k4[i][j][k]);
-					denom[i][j][k]=1.0-dtime*Linx[i][j][k];
+					Linx[local_0_start+i][j][k]=-k2[local_0_start+i][j][k]*(tempr+1.0-2.0*k2[local_0_start+i][j][k]+k4[local_0_start+i][j][k]);
+					denom[local_0_start+i][j][k]=1.0-dtime*Linx[local_0_start+i][j][k];
 				}
 			}
 		}
 		
 		//calculate the nonlinear term, phi^3, in Eq.7.10
-		for(int i=0;i<Nx;i++){
+		for(int i=0;i<local_n0;i++){
 			for(int j=0;j<Ny;j++){
 				for(int k=0;k<Nz;k++){
-					//den3[i][j][k]=den[i][j][k]*den[i][j][k]*den[i][j][k];
+					//den3[local_0_start+i][j][k]=den[local_0_start+i][j][k]*den[local_0_start+i][j][k]*den[local_0_start+i][j][k];
 					//ii=i*Ny*Nz+j*Nz+k;
 					ii=(i*Ny+j)*Nz+k;
 					den3[ii][0] =   den[ii][0]*den[ii][0]*den[ii][0] -3*den[ii][0]*den[ii][1]*den[ii][1];
@@ -196,17 +201,17 @@ int main(int argc, char **argv){
 		fftw_execute(plan_den3);
 		
 		//calculate the value of phi^(t+1) from Fourier space to real space (inverse FFT transformation)
-		for(int i=0;i<Nx;i++){
+		for(int i=0;i<local_n0;i++){
 			for(int j=0;j<Ny;j++){
 				for(int k=0;k<Nz;k++){
-					//Nonx[i][j][k]=-k2[i][j][k]*f_den3[i][j][k];
-					//f_den[i][j][k]=(f_den[i][j][k]+dtime*Nonx[i][j][k])/denom[i][j][k];
+					//Nonx[local_0_start+i][j][k]=-k2[local_0_start+i][j][k]*f_den3[local_0_start+i][j][k];
+					//f_den[local_0_start+i][j][k]=(f_den[local_0_start+i][j][k]+dtime*Nonx[local_0_start+i][j][k])/denom[local_0_start+i][j][k];
 					//ii=i*Ny*Nz+j*Nz+k;
 					ii=(i*Ny+j)*Nz+k;
-					Nonx[ii][0] = -k2[i][j][k]*f_den3[ii][0];
-					Nonx[ii][1] = -k2[i][j][k]*f_den3[ii][1];
-					f_den[ii][0] = (f_den[ii][0]+dtime*Nonx[ii][0])/denom[i][j][k];
-					f_den[ii][1] = (f_den[ii][1]+dtime*Nonx[ii][1])/denom[i][j][k];
+					Nonx[ii][0] = -k2[local_0_start+i][j][k]*f_den3[ii][0];
+					Nonx[ii][1] = -k2[local_0_start+i][j][k]*f_den3[ii][1];
+					f_den[ii][0] = (f_den[ii][0]+dtime*Nonx[ii][0])/denom[local_0_start+i][j][k];
+					f_den[ii][1] = (f_den[ii][1]+dtime*Nonx[ii][1])/denom[local_0_start+i][j][k];
 				}
 			}
 		}
@@ -219,31 +224,31 @@ int main(int argc, char **argv){
 		//if print frequency is reached, output the results to file
 		if(fmod(istep,nprint)==0){
 		
-			printf("done step: %5d \n", istep);
+			//printf("done step: %5d \n", istep);
 			
 			//energy calculation
 			//calculate the free energy distribution, Eq.7.6
-			for(int i=0;i<Nx;i++){
+			for(int i=0;i<local_n0;i++){
 				for(int j=0;j<Ny;j++){
 					for(int k=0;k<Nz;k++){
-						//ss2[i][j][k]=creal(den[i][j][k])*creal(den[i][j][k]);
+						//ss2[local_0_start+i][j][k]=creal(den[local_0_start+i][j][k])*creal(den[local_0_start+i][j][k]);
 						//ii=i*Ny*Nz+j*Nz+k;
 						ii=(i*Ny+j)*Nz+k;
-						den_out[i][j][k]=den[ii][0]/(fftsizex*fftsizey*fftsizez);
-						ss2[i][j][k]=den_out[i][j][k]*den_out[i][j][k];
-						ss4[i][j][k]=ss2[i][j][k]*ss2[i][j][k];
+						den_out[local_0_start+i][j][k]=den[ii][0]/(fftsizex*fftsizey*fftsizez);
+						ss2[local_0_start+i][j][k]=den_out[local_0_start+i][j][k]*den_out[local_0_start+i][j][k];
+						ss4[local_0_start+i][j][k]=ss2[local_0_start+i][j][k]*ss2[local_0_start+i][j][k];
 					}
 				}
 			}
 			
-			for(int i=0;i<Nx;i++){
+			for(int i=0;i<local_n0;i++){
 				for(int j=0;j<Ny;j++){
 					for(int k=0;k<Nz;k++){
-						//f_ff[i][j][k]=0.5*f_den[i][j][k]*(1.0-2.0*k2[i][j][k]+k4[i][j][k]);
+						//f_ff[local_0_start+i][j][k]=0.5*f_den[local_0_start+i][j][k]*(1.0-2.0*k2[local_0_start+i][j][k]+k4[local_0_start+i][j][k]);
 						//ii=i*Ny*Nz+j*Nz+k;
 						ii=(i*Ny+j)*Nz+k;
-						f_ff[ii][0] = 0.5*f_den[ii][0]*(1.0-2.0*k2[i][j][k]+k4[i][j][k]);
-						f_ff[ii][1] = 0.5*f_den[ii][1]*(1.0-2.0*k2[i][j][k]+k4[i][j][k]);
+						f_ff[ii][0] = 0.5*f_den[ii][0]*(1.0-2.0*k2[local_0_start+i][j][k]+k4[local_0_start+i][j][k]);
+						f_ff[ii][1] = 0.5*f_den[ii][1]*(1.0-2.0*k2[local_0_start+i][j][k]+k4[local_0_start+i][j][k]);
 					}
 				}
 			}
@@ -251,16 +256,16 @@ int main(int argc, char **argv){
 			//ff=real(ifftn(f_ff));
 			fftw_execute(iplan_f_ff);
 			
-			for(int i=0;i<Nx;i++){
+			for(int i=0;i<local_n0;i++){
 				for(int j=0;j<Ny;j++){
 					for(int k=0;k<Nz;k++){
-						//f_ff[i][j][k]=creal(ff[i][j][k])*creal(den[i][j][k])
+						//f_ff[local_0_start+i][j][k]=creal(ff[local_0_start+i][j][k])*creal(den[local_0_start+i][j][k])
 						//ii=i*Ny*Nz+j*Nz+k;
 						ii=(i*Ny+j)*Nz+k;
 						ff[ii][0] = (ff[ii][0]/(fftsizex*fftsizey*fftsizez))
 								  *(den[ii][0]/(fftsizex*fftsizey*fftsizez))
-						+ 0.5*tempr*ss2[i][j][k]
-						+ 0.25*ss4[i][j][k];
+						+ 0.5*tempr*ss2[local_0_start+i][j][k]
+						+ 0.25*ss4[local_0_start+i][j][k];
 					}
 				}
 			}
@@ -268,10 +273,10 @@ int main(int argc, char **argv){
 			//integrate the free energy field
 			energy = 0.0;
 			
-			for(int i=0;i<Nx;i++){
+			for(int i=0;i<local_n0;i++){
 				for(int j=0;j<Ny;j++){
 					for(int k=0;k<Nz;k++){
-						//energy = energy + creal(ff[i][j][k]);
+						//energy = energy + creal(ff[local_0_start+i][j][k]);
 						//ii=i*Ny*Nz+j*Nz+k;
 						ii=(i*Ny+j)*Nz+k;
 						energy = energy + ff[ii][0];
@@ -286,6 +291,8 @@ int main(int argc, char **argv){
 			//
 			MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 			if (rank == 0){
+				printf("done step: %5d \n", istep);
+				
 				//print the average free energy density value to file
 				fprintf(out2, "%d %14.6e \n",istep, energy);
 				
@@ -311,7 +318,7 @@ int main(int argc, char **argv){
 		}
 		
 		//for recycle
-		for(int i=0;i<Nx;i++){
+		for(int i=0;i<local_n0;i++){
 			for(int j=0;j<Ny;j++){
 				for(int k=0;k<Nz;k++){
 					//ii=i*Ny*Nz+j*Nz+k;
