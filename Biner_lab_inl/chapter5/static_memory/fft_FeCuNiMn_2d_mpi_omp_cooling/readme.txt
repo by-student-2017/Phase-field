@@ -6,10 +6,10 @@ Windows11 and WSL2(Ubuntu-22.04)
 2. sudo apt -y install gcc build-essential libfftw3-dev
 3. sudo apt -y install libopenmpi-dev libfftw3-mpi-dev
 4. cmake -S . -B build/ -G"Unix Makefiles"
-5. cmake --build build/ --target fft_FeCuMnNi_2d.exe
+5. cmake --build build/ --targetfft_FeCuMnNi_2d_mpi.exe
 6. cd ./build
 7. export OMP_NUM_THREADS=2
-8. mpirun -np 4 ./fft_FeCuMnNi_2d.exe
+8. mpirun -np 4 ./fft_FeCuMnNi_2d_mpi.exe
 
 (On windows11)
 6. paraview
