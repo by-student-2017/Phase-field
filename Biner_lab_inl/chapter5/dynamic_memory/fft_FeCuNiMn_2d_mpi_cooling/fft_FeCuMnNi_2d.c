@@ -145,6 +145,27 @@ int main(int argc, char **argv){
 	//prepare microstructure
 	init_FeCuMnNi_micro_2d(Nx,Ny,cu0,mn0,ni0,cu,mn,ni,orp);
 	
+	//double kx[Nx];
+	double *kx = (double *)malloc(sizeof(double)*( Nx ));
+	//double ky[Ny];
+	double *ky = (double *)malloc(sizeof(double)*( Ny ));
+	//double k2[Nx][Ny];
+	double *k2 = (double *)malloc(sizeof(double)*( Nx*Ny ));
+	//double k4[Nx][Ny];
+	double *k4 = (double *)malloc(sizeof(double)*( Nx*Ny ));
+	
+	//prepare fft (output: kx,ky,k2,k4)
+	prepare_fft_2d(Nx,Ny,dx,dy,kx,ky,k2,k4); //get FFT coefficients
+	
+	//double dgdcu[Nx][Ny];
+	double *dgdcu = (double *)malloc(sizeof(double)*( Nx*Ny ));
+	//double dgdmn[Nx][Ny];
+	double *dgdmn = (double *)malloc(sizeof(double)*( Nx*Ny ));
+	//double dgdni[Nx][Ny];
+	double *dgdni = (double *)malloc(sizeof(double)*( Nx*Ny ));
+	//double dgdor[Nx][Ny];
+	double *dgdor = (double *)malloc(sizeof(double)*( Nx*Ny ));
+	
 	//----- ----- ----- ----- ----- -----
 	const ptrdiff_t fftsizex = Nx, fftsizey = Ny;
 	ptrdiff_t alloc_local, local_n0, local_0_start;
@@ -248,27 +269,6 @@ int main(int argc, char **argv){
 			//----- ----- ----- -----
 		}
 	}
-	
-	//double kx[Nx];
-	double *kx = (double *)malloc(sizeof(double)*( Nx ));
-	//double ky[Ny];
-	double *ky = (double *)malloc(sizeof(double)*( Ny ));
-	//double k2[Nx][Ny];
-	double *k2 = (double *)malloc(sizeof(double)*( Nx*Ny ));
-	//double k4[Nx][Ny];
-	double *k4 = (double *)malloc(sizeof(double)*( Nx*Ny ));
-	
-	//prepare fft (output: kx,ky,k2,k4)
-	prepare_fft_2d(Nx,Ny,dx,dy,kx,ky,k2,k4); //get FFT coefficients
-	
-	//double dgdcu[Nx][Ny];
-	double *dgdcu = (double *)malloc(sizeof(double)*( Nx*Ny ));
-	//double dgdmn[Nx][Ny];
-	double *dgdmn = (double *)malloc(sizeof(double)*( Nx*Ny ));
-	//double dgdni[Nx][Ny];
-	double *dgdni = (double *)malloc(sizeof(double)*( Nx*Ny ));
-	//double dgdor[Nx][Ny];
-	double *dgdor = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	
 	double mcoef_cu;
 	double mcoef_mn;

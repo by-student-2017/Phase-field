@@ -144,6 +144,20 @@ int main(int argc, char **argv){
 	//prepare microstructure
 	init_FeCuMnNi_micro_3d(Nx,Ny,Nz,cu0,mn0,ni0,cu,mn,ni,orp);
 	
+	//double kx[Nx];
+	//double ky[Ny];
+	//double kz[Nz];
+	//double k2[Nx][Ny][Nz];
+	//double k4[Nx][Ny][Nz];
+	
+	//prepare fft (output: kx,ky,kz,k2,k4)
+	prepare_fft_3d(Nx,Ny,Nz,dx,dy,dz,kx,ky,kz,k2,k4); //get FFT coefficients
+	
+	//double dgdcu[Nx][Ny][Nz];
+	//double dgdmn[Nx][Ny][Nz];
+	//double dgdni[Nx][Ny][Nz];
+	//double dgdor[Nx][Ny][Nz];
+	
 	//----- ----- ----- ----- ----- -----
 	int rank;
 	//int num_proc;
@@ -249,20 +263,6 @@ int main(int argc, char **argv){
 			}
 		}
 	}
-	//
-	//double kx[Nx];
-	//double ky[Ny];
-	//double kz[Nz];
-	//double k2[Nx][Ny][Nz];
-	//double k4[Nx][Ny][Nz];
-	
-	//prepare fft (output: kx,ky,kz,k2,k4)
-	prepare_fft_3d(Nx,Ny,Nz,dx,dy,dz,kx,ky,kz,k2,k4); //get FFT coefficients
-	
-	//double dgdcu[Nx][Ny][Nz];
-	//double dgdmn[Nx][Ny][Nz];
-	//double dgdni[Nx][Ny][Nz];
-	//double dgdor[Nx][Ny][Nz];
 	
 	double mcoef_cu;
 	double mcoef_mn;

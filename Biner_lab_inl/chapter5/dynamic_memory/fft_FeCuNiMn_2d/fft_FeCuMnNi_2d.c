@@ -237,7 +237,7 @@ int main(){
 			//----- ----- ----- -----
 		}
 	}
-	//
+	
 	//double kx[Nx];
 	double *kx = (double *)malloc(sizeof(double)*( Nx ));
 	//double ky[Ny];
