@@ -8,7 +8,7 @@ Windows11 and WSL2(Ubuntu-22.04)
 4. cmake -S . -B build/ -G"Unix Makefiles"
 5. cmake --build build/ --target pfc_2d_mpi.exe
 6. cd ./build
-7. ./pfc_2d_mpi.exe
+7. mpirun -np 8 ./pfc_2d_mpi.exe
 
 (On windows11)
 6. paraview

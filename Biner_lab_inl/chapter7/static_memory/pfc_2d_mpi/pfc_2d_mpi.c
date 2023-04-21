@@ -66,6 +66,27 @@ int main(int argc, char **argv){
 	
 	int ii;
 	
+	//if infile=1 read input from file
+	int infile = 0;
+	FILE *in1;
+	int mx,my;
+	if(infile==1){
+		//open input file
+		in1=fopen("g3_2r.inp","r");
+		for(int i=0;i<Nx;i++){
+			for(int j=0;j<Ny;j++){
+				fscanf(in1,"%5d %5d %lf",&mx,&my,&den_out[i][j]);
+			}
+		}
+	}else{
+		//initialize density
+		for(int i=0;i<Nx;i++){
+			for(int j=0;j<Ny;j++){
+				den_out[i][j]= den0 + noise*(0.5-(double)rand()/RAND_MAX);
+			}
+		}
+	}
+	
 	//----- ----- ----- ----- ----- -----
 	const ptrdiff_t fftsizex = Nx, fftsizey = Ny;
 	ptrdiff_t alloc_local, local_n0, local_0_start;
@@ -116,29 +137,12 @@ int main(int argc, char **argv){
 	iplan_f_ff = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, f_ff, ff, MPI_COMM_WORLD, FFTW_BACKWARD, FFTW_ESTIMATE);	//For inverse FFT
 	//----- ----- ----- ----- ----- -----
 	
-	//if infile=1 read input from file
-	int infile = 0;
-	FILE *in1;
-	int mx,my;
-	if(infile==1){
-		//open input file
-		in1=fopen("g3_2r.inp","r");
-		for(int i=0;i<Nx;i++){
-			for(int j=0;j<Ny;j++){
-				ii=i*Ny+j;
-				fscanf(in1,"%5d %5d %lf",&mx,&my,&den[ii][0]);
-				den[ii][1] = 0.0;
-			}
-		}
-	}else{
-		//initialize density
-		for(int i=0;i<Nx;i++){
-			for(int j=0;j<Ny;j++){
-				//den[i][j]=den0+noise*(0.5-(double)rand()/RAND_MAX);
-				ii=i*Ny+j;
-				den[ii][0] = den0 + noise*(0.5-(double)rand()/RAND_MAX);
-				den[ii][1] = 0.0;
-			}
+	for(int i=0;i<local_n0;i++){
+		for(int j=0;j<Ny;j++){
+			//den[local_0_start+i][j]=den0+noise*(0.5-(double)rand()/RAND_MAX);
+			ii=i*Ny+j;
+			den[ii][0] = den_out[local_0_start+i][j];
+			den[ii][1] = 0.0;
 		}
 	}
 	
@@ -155,17 +159,17 @@ int main(int argc, char **argv){
 		fftw_execute(plan_den);
 		
 		//calculate the value of denominator in Eq.7.10 at every grid points
-		for(int i=0;i<Nx;i++){
+		for(int i=0;i<local_n0;i++){
 			for(int j=0;j<Ny;j++){
-				Linx[i][j]=-k2[i][j]*(tempr+1.0-2.0*k2[i][j]+k4[i][j]);
-				denom[i][j]=1.0-dtime*Linx[i][j];
+				Linx[local_0_start+i][j]=-k2[local_0_start+i][j]*(tempr+1.0-2.0*k2[local_0_start+i][j]+k4[local_0_start+i][j]);
+				denom[local_0_start+i][j]=1.0-dtime*Linx[local_0_start+i][j];
 			}
 		}
 		
 		//calculate the nonlinear term, phi^3, in Eq.7.10
-		for(int i=0;i<Nx;i++){
+		for(int i=0;i<local_n0;i++){
 			for(int j=0;j<Ny;j++){
-				//den3[i][j]=den[i][j]*den[i][j]*den[i][j];
+				//den3[local_0_start+i][j]=den[local_0_start+i][j]*den[local_0_start+i][j]*den[local_0_start+i][j];
 				ii=i*Ny+j;
 				den3[ii][0] =   den[ii][0]*den[ii][0]*den[ii][0] -3*den[ii][0]*den[ii][1]*den[ii][1];
 				den3[ii][1] = 3*den[ii][0]*den[ii][0]*den[ii][1]   -den[ii][1]*den[ii][1]*den[ii][1];
@@ -179,15 +183,15 @@ int main(int argc, char **argv){
 		fftw_execute(plan_den3);
 		
 		//calculate the value of phi^(t+1) from Fourier space to real space (inverse FFT transformation)
-		for(int i=0;i<Nx;i++){
+		for(int i=0;i<local_n0;i++){
 			for(int j=0;j<Ny;j++){
-				//Nonx[i][j]=-k2[i][j]*f_den3[i][j];
-				//f_den[i][j]=(f_den[i][j]+dtime*Nonx[i][j])/denom[i][j];
+				//Nonx[local_0_start+i][j]=-k2[local_0_start+i][j]*f_den3[local_0_start+i][j];
+				//f_den[local_0_start+i][j]=(f_den[local_0_start+i][j]+dtime*Nonx[local_0_start+i][j])/denom[local_0_start+i][j];
 				ii=i*Ny+j;
-				Nonx[ii][0] = -k2[i][j]*f_den3[ii][0];
-				Nonx[ii][1] = -k2[i][j]*f_den3[ii][1];
-				f_den[ii][0] = (f_den[ii][0]+dtime*Nonx[ii][0])/denom[i][j];
-				f_den[ii][1] = (f_den[ii][1]+dtime*Nonx[ii][1])/denom[i][j];
+				Nonx[ii][0] = -k2[local_0_start+i][j]*f_den3[ii][0];
+				Nonx[ii][1] = -k2[local_0_start+i][j]*f_den3[ii][1];
+				f_den[ii][0] = (f_den[ii][0]+dtime*Nonx[ii][0])/denom[local_0_start+i][j];
+				f_den[ii][1] = (f_den[ii][1]+dtime*Nonx[ii][1])/denom[local_0_start+i][j];
 			}
 		}
 		
@@ -199,49 +203,49 @@ int main(int argc, char **argv){
 		//if print frequency is reached, output the results to file
 		if(fmod(istep,nprint)==0){
 		
-			printf("done step: %5d \n", istep);
+			//printf("done step: %5d \n", istep);
 			
 			//energy calculation
 			//calculate the free energy distribution, Eq.7.6
-			for(int i=0;i<Nx;i++){
+			for(int i=0;i<local_n0;i++){
 				for(int j=0;j<Ny;j++){
-					//ss2[i][j]=creal(den[i][j])*creal(den[i][j]);
+					//ss2[local_0_start+i][j]=creal(den[local_0_start+i][j])*creal(den[local_0_start+i][j]);
 					ii=i*Ny+j;
-					den_out[i][j]=den[ii][0]/(fftsizex*fftsizey);
-					ss2[i][j]=den_out[i][j]*den_out[i][j];
-					ss4[i][j]=ss2[i][j]*ss2[i][j];
+					den_out[local_0_start+i][j]=den[ii][0]/(fftsizex*fftsizey);
+					ss2[local_0_start+i][j]=den_out[local_0_start+i][j]*den_out[local_0_start+i][j];
+					ss4[local_0_start+i][j]=ss2[local_0_start+i][j]*ss2[local_0_start+i][j];
 				}
 			}
 			
-			for(int i=0;i<Nx;i++){
+			for(int i=0;i<local_n0;i++){
 				for(int j=0;j<Ny;j++){
-					//f_ff[i][j]=0.5*f_den[i][j]*(1.0-2.0*k2[i][j]+k4[i][j]);
+					//f_ff[local_0_start+i][j]=0.5*f_den[local_0_start+i][j]*(1.0-2.0*k2[local_0_start+i][j]+k4[local_0_start+i][j]);
 					ii=i*Ny+j;
-					f_ff[ii][0] = 0.5*f_den[ii][0]*(1.0-2.0*k2[i][j]+k4[i][j]);
-					f_ff[ii][1] = 0.5*f_den[ii][1]*(1.0-2.0*k2[i][j]+k4[i][j]);
+					f_ff[ii][0] = 0.5*f_den[ii][0]*(1.0-2.0*k2[local_0_start+i][j]+k4[local_0_start+i][j]);
+					f_ff[ii][1] = 0.5*f_den[ii][1]*(1.0-2.0*k2[local_0_start+i][j]+k4[local_0_start+i][j]);
 				}
 			}
 			
 			//ff=real(ifftn(f_ff));
 			fftw_execute(iplan_f_ff);
 			
-			for(int i=0;i<Nx;i++){
+			for(int i=0;i<local_n0;i++){
 				for(int j=0;j<Ny;j++){
-					//f_ff[i][j]=creal(ff[i][j])*creal(den[i][j])
+					//f_ff[local_0_start+i][j]=creal(ff[local_0_start+i][j])*creal(den[local_0_start+i][j])
 					ii=i*Ny+j;
 					ff[ii][0] = (ff[ii][0]/(fftsizex*fftsizey))
 							  *(den[ii][0]/(fftsizex*fftsizey))
-					+ 0.5*tempr*ss2[i][j]
-					+ 0.25*ss4[i][j];
+					+ 0.5*tempr*ss2[local_0_start+i][j]
+					+ 0.25*ss4[local_0_start+i][j];
 				}
 			}
 			
 			//integrate the free energy field
 			energy = 0.0;
 			
-			for(int i=0;i<Nx;i++){
+			for(int i=0;i<local_n0;i++){
 				for(int j=0;j<Ny;j++){
-					//energy = energy + creal(ff[i][j]);
+					//energy = energy + creal(ff[local_0_start+i][j]);
 					ii=i*Ny+j;
 					energy = energy + ff[ii][0];
 				}
@@ -250,10 +254,12 @@ int main(int argc, char **argv){
 			//average free energy density
 			energy = energy/(Nx*Ny);
 			
-			MPI_Gather(den[local_0_start], local_n0*Ny, MPI_DOUBLE, den[local_0_start], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+			MPI_Gather(den_out[local_0_start], local_n0*Ny, MPI_DOUBLE, den_out[local_0_start], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 			//
 			MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 			if (rank == 0){
+				printf("done step: %5d \n", istep);
+				
 				//print the average free energy density value to file
 				fprintf(out2, "%d %14.6e \n",istep, energy);
 				
@@ -264,7 +270,7 @@ int main(int argc, char **argv){
 		
 		//if intermediate configuration files are required, print the density field to file
 		if(istep==nstep){
-			MPI_Gather(den[local_0_start], local_n0*Ny, MPI_DOUBLE, den[local_0_start], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+			MPI_Gather(den_out[local_0_start], local_n0*Ny, MPI_DOUBLE, den_out[local_0_start], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 			//
 			MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 			if (rank == 0){
@@ -277,7 +283,7 @@ int main(int argc, char **argv){
 		}
 		
 		//for recycle
-		for(int i=0;i<Nx;i++){
+		for(int i=0;i<local_n0;i++){
 			for(int j=0;j<Ny;j++){
 				ii=i*Ny+j;
 				den[ii][0] = den[ii][0]/(fftsizex*fftsizey);
