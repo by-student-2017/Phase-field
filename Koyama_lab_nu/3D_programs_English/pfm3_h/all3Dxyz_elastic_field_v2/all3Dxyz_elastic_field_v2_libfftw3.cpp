@@ -866,7 +866,8 @@ void datsave_paraview(double *ch, double *Estr,
 	fprintf(fp,"DATASET STRUCTURED_POINTS \n");
 	fprintf(fp,"DIMENSIONS %5d %5d %5d \n",(ndxm+1),(ndym+1),(ndzm+1));
 	fprintf(fp,"ORIGIN 0.0 0.0 0.0 \n");
-	fprintf(fp,"ASPECT_RATIO %f %f %f \n",float(ndxm/ndxm),float(ndym/ndxm),float(ndzm/ndxm));
+	//fprintf(fp,"ASPECT_RATIO %f %f %f \n",float(ndxm/ndxm),float(ndym/ndxm),float(ndzm/ndxm)); //wrong
+	fprintf(fp,"ASPECT_RATIO 1 1 1 \n");
 	fprintf(fp,"POINT_DATA %16d \n",((ndxm+1)*(ndym+1)*(ndzm+1)));
 	fprintf(fp,"SCALARS concentration float \n");
 	fprintf(fp,"LOOKUP_TABLE default \n");
