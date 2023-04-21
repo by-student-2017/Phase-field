@@ -22,30 +22,22 @@ the alpha phase at temperature T. */
 //#include <mpi.h> //mpi version
 //#include <fftw3-mpi.h> //mpi version
 
-#define Nx 64 //Number of grid points in the x-direction
-#define Ny 64 //Number of grid points in the y-direction
-#define Nz 64 //Number of grid points in the z-direction
+void init_FeCuMnNi_micro_3d(int Nx, int Ny, int Nz, 
+	double cu0, double mn0, double ni0,
+	double *cu, double *mn, double *ni, double *orp);
 
-	double  cu[Nx][Ny][Nz];
-	double  mn[Nx][Ny][Nz];
-	double  ni[Nx][Ny][Nz];
-	double orp[Nx][Ny][Nz];
-	
-	double kx[Nx];
-	double ky[Ny];
-	double kz[Nz];
-	double k2[Nx][Ny][Nz];
-	double k4[Nx][Ny][Nz];
-	
-	double dgdcu[Nx][Ny][Nz];
-	double dgdmn[Nx][Ny][Nz];
-	double dgdni[Nx][Ny][Nz];
-	double dgdor[Nx][Ny][Nz];
+void prepare_fft_3d(int Nx, int Ny, int Nz, 
+	double dx, double dy, double dz,
+	double *kx, double *ky, double *kz, 
+	double *k2, double *k4);
 
-void init_FeCuMnNi_micro_3d();
-void prepare_fft_3d();
-void FeCuMnNi_free_energy_3d();
-void write_vtk_grid_values_3D();
+void FeCuMnNi_free_energy_3d(int Nx, int Ny, int Nz, 
+	double *cu, double *mn, double *ni, double *orp, double tempr,
+	double *dgdcu, double *dgdmn, double *dgdni, double *dgdor);
+
+void write_vtk_grid_values_3D(int nx, int ny, int nz, 
+	double dx, double dy, double dz, int istep, 
+	double *data1, double *data2, double *data3, double *data4);
 
 int main(){
 	clock_t start, end;
@@ -55,8 +47,9 @@ int main(){
 	start = clock();
 	
 	//simulation cell parameters
-	//int Nx=128;
-	//int Ny=128;
+	int Nx=64;
+	int Ny=64;
+	int Nz=64;
 	
 	//Total number of grid points in the simulation cell
 	//int NxNy=Nx*Ny;
@@ -140,9 +133,13 @@ int main(){
 	int ii;
 	
 	//double  cu[Nx][Ny][Nz];
+	 double *cu = (double *)malloc(sizeof(double)*( Nx*Ny*Nz ));
 	//double  mn[Nx][Ny][Nz];
+	 double *mn = (double *)malloc(sizeof(double)*( Nx*Ny*Nz ));
 	//double  ni[Nx][Ny][Nz];
+	 double *ni = (double *)malloc(sizeof(double)*( Nx*Ny*Nz ));
 	//double orp[Nx][Ny][Nz];
+	 double *orp = (double *)malloc(sizeof(double)*( Nx*Ny*Nz ));
 	
 	//prepare microstructure
 	init_FeCuMnNi_micro_3d(Nx,Ny,Nz,cu0,mn0,ni0,cu,mn,ni,orp);
@@ -230,18 +227,19 @@ int main(){
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Ny;j++){
 			for(int k=0;k<Nz;k++){
-				ii=i*Ny*Nz+j*Nz+k;
+				//ii=i*Ny*Nz+j*Nz+k;
+				ii=(i*Ny+j)*Nz+k;
 				//----- ----- ----- -----
-				 cuc[ii][0] =  cu[i][j][k];
+				 cuc[ii][0] =  cu[ii];
 				 cuc[ii][1] =  0.0;
 				//----- ----- ----- -----
-				 mnc[ii][0] =  mn[i][j][k];
+				 mnc[ii][0] =  mn[ii];
 				 mnc[ii][1] =  0.0;
 				//----- ----- ----- -----
-				 nic[ii][0] =  ni[i][j][k];
+				 nic[ii][0] =  ni[ii];
 				 nic[ii][1] =  0.0;
 				//----- ----- ----- -----
-				orpc[ii][0] =  orp[i][j][k];
+				orpc[ii][0] =  orp[ii];
 				orpc[ii][1] =  0.0;
 				//----- ----- ----- -----
 			}
@@ -249,18 +247,27 @@ int main(){
 	}
 	
 	//double kx[Nx];
+	double *kx = (double *)malloc(sizeof(double)*( Nx ));
 	//double ky[Ny];
-	//double kz[Nz];
+	double *ky = (double *)malloc(sizeof(double)*( Ny ));
+	//double kz[Ny];
+	double *kz = (double *)malloc(sizeof(double)*( Nz ));
 	//double k2[Nx][Ny][Nz];
+	double *k2 = (double *)malloc(sizeof(double)*( Nx*Ny*Nz ));
 	//double k4[Nx][Ny][Nz];
+	double *k4 = (double *)malloc(sizeof(double)*( Nx*Ny*Nz ));
 	
 	//prepare fft (output: kx,ky,kz,k2,k4)
 	prepare_fft_3d(Nx,Ny,Nz,dx,dy,dz,kx,ky,kz,k2,k4); //get FFT coefficients
 	
 	//double dgdcu[Nx][Ny][Nz];
+	 double *dgdcu = (double *)malloc(sizeof(double)*( Nx*Ny*Nz ));
 	//double dgdmn[Nx][Ny][Nz];
+	 double *dgdmn = (double *)malloc(sizeof(double)*( Nx*Ny*Nz ));
 	//double dgdni[Nx][Ny][Nz];
+	 double *dgdni = (double *)malloc(sizeof(double)*( Nx*Ny*Nz ));
 	//double dgdor[Nx][Ny][Nz];
+	 double *dgdor = (double *)malloc(sizeof(double)*( Nx*Ny*Nz ));
 	
 	double mcoef_cu;
 	double mcoef_mn;
@@ -314,18 +321,19 @@ int main(){
 		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
 				for(int k=0;k<Nz;k++){
-					ii=i*Ny*Nz+j*Nz+k;
+					//ii=i*Ny*Nz+j*Nz+k;
+					ii=(i*Ny+j)*Nz+k;
 					//----- ----- ----- -----
-					dgdcuc[ii][0] = dgdcu[i][j][k];
+					dgdcuc[ii][0] = dgdcu[ii];
 					dgdcuc[ii][1] = 0.0;
 					//----- ----- ----- -----
-					dgdmnc[ii][0] = dgdmn[i][j][k];
+					dgdmnc[ii][0] = dgdmn[ii];
 					dgdmnc[ii][1] = 0.0;
 					//----- ----- ----- -----
-					dgdnic[ii][0] = dgdni[i][j][k];
+					dgdnic[ii][0] = dgdni[ii];
 					dgdnic[ii][1] = 0.0;
 					//----- ----- ----- -----
-					dgdorc[ii][0] = dgdor[i][j][k];
+					dgdorc[ii][0] = dgdor[ii];
 					dgdorc[ii][1] = 0.0;
 					//----- ----- ----- -----
 				}
@@ -346,7 +354,8 @@ int main(){
 		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
 				for(int k=0;k<Nz;k++){
-					ii=i*Ny*Nz+j*Nz+k;
+					//ii=i*Ny*Nz+j*Nz+k;
+					ii=(i*Ny+j)*Nz+k;
 					
 					//mobilities
 					/* Calculate the mobility of each alloying elements,
@@ -354,9 +363,9 @@ int main(){
 					   concentration and order parameter */
 					/* Mi(eta,T) = ci0*(1.0-ci0)*{(1.0-eta)*Dia(T)/RT + eta*Dig(T)/RT} (Eq.5.24)
 					   eta=orp[i][j] */
-					mcoef_cu=cu0*(1.0-cu0)*( (1.0-orp[i][j][k])*DCuA + orp[i][j][k]*DCuG );
-					mcoef_mn=mn0*(1.0-mn0)*( (1.0-orp[i][j][k])*DMnA + orp[i][j][k]*DMnG );
-					mcoef_ni=ni0*(1.0-ni0)*( (1.0-orp[i][j][k])*DNiA + orp[i][j][k]*DNiG );
+					mcoef_cu=cu0*(1.0-cu0)*( (1.0-orp[ii])*DCuA + orp[ii]*DCuG );
+					mcoef_mn=mn0*(1.0-mn0)*( (1.0-orp[ii])*DMnA + orp[ii]*DMnG );
+					mcoef_ni=ni0*(1.0-ni0)*( (1.0-orp[ii])*DNiA + orp[ii]*DNiG );
 					mcoef_orp=0.1;
 					
 					//time integration
@@ -366,24 +375,24 @@ int main(){
 					// These are related by Eq.5.14 (Cahn-Hilliard for ci) or Eq.5.21 (Allen-Cahn for eta)
 					//----- ----- ----- -----
 					// real part
-					 cuck[ii][0]= (cuck[ii][0]-dtime*k2[i][j][k]*mcoef_cu*dgdcuck[ii][0])/
-						(1.0+dtime*k4[i][j][k]*mcoef_cu*grcoef_cu);
-					 nick[ii][0]= (nick[ii][0]-dtime*k2[i][j][k]*mcoef_ni*dgdnick[ii][0])/
-						(1.0+dtime*k4[i][j][k]*mcoef_ni*grcoef_ni);
-					 mnck[ii][0]= (mnck[ii][0]-dtime*k2[i][j][k]*mcoef_mn*dgdmnck[ii][0])/
-						(1.0+dtime*k4[i][j][k]*mcoef_mn*grcoef_mn);
-					orpck[ii][0]=(orpck[ii][0]-dtime*k2[i][j][k]*mcoef_ni*dgdorck[ii][0])/
-						(1.0+dtime*k4[i][j][k]*mcoef_orp*grcoef_or);
+					 cuck[ii][0]= (cuck[ii][0]-dtime*k2[ii]*mcoef_cu*dgdcuck[ii][0])/
+						(1.0+dtime*k4[ii]*mcoef_cu*grcoef_cu);
+					 nick[ii][0]= (nick[ii][0]-dtime*k2[ii]*mcoef_ni*dgdnick[ii][0])/
+						(1.0+dtime*k4[ii]*mcoef_ni*grcoef_ni);
+					 mnck[ii][0]= (mnck[ii][0]-dtime*k2[ii]*mcoef_mn*dgdmnck[ii][0])/
+						(1.0+dtime*k4[ii]*mcoef_mn*grcoef_mn);
+					orpck[ii][0]=(orpck[ii][0]-dtime*k2[ii]*mcoef_ni*dgdorck[ii][0])/
+						(1.0+dtime*k4[ii]*mcoef_orp*grcoef_or);
 					//----- ----- ----- -----
 					// imaginary part
-					 cuck[ii][1]= (cuck[ii][1]-dtime*k2[i][j][k]*mcoef_cu*dgdcuck[ii][1])/
-						(1.0+dtime*k4[i][j][k]*mcoef_cu*grcoef_cu);
-					 nick[ii][1]= (nick[ii][1]-dtime*k2[i][j][k]*mcoef_ni*dgdnick[ii][1])/
-						(1.0+dtime*k4[i][j][k]*mcoef_ni*grcoef_ni);
-					 mnck[ii][1]= (mnck[ii][1]-dtime*k2[i][j][k]*mcoef_mn*dgdmnck[ii][1])/
-						(1.0+dtime*k4[i][j][k]*mcoef_mn*grcoef_mn);
-					orpck[ii][1]=(orpck[ii][1]-dtime*k2[i][j][k]*mcoef_ni*dgdorck[ii][1])/
-						(1.0+dtime*k4[i][j][k]*mcoef_orp*grcoef_or);
+					 cuck[ii][1]= (cuck[ii][1]-dtime*k2[ii]*mcoef_cu*dgdcuck[ii][1])/
+						(1.0+dtime*k4[ii]*mcoef_cu*grcoef_cu);
+					 nick[ii][1]= (nick[ii][1]-dtime*k2[ii]*mcoef_ni*dgdnick[ii][1])/
+						(1.0+dtime*k4[ii]*mcoef_ni*grcoef_ni);
+					 mnck[ii][1]= (mnck[ii][1]-dtime*k2[ii]*mcoef_mn*dgdmnck[ii][1])/
+						(1.0+dtime*k4[ii]*mcoef_mn*grcoef_mn);
+					orpck[ii][1]=(orpck[ii][1]-dtime*k2[ii]*mcoef_ni*dgdorck[ii][1])/
+						(1.0+dtime*k4[ii]*mcoef_orp*grcoef_or);
 					//----- ----- ----- -----
 				}
 			}
@@ -404,7 +413,8 @@ int main(){
 		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
 				for(int k=0;k<Nz;k++){
-					ii=i*Ny*Nz+j*Nz+k;
+					//ii=i*Ny*Nz+j*Nz+k;
+					ii=(i*Ny+j)*Nz+k;
 					//----- ----- ----- -----
 					 cuc[ii][0] =  cuc[ii][0]/(fftsizex*fftsizey*fftsizez);
 					 cuc[ii][1] =  cuc[ii][1]/(fftsizex*fftsizey*fftsizez);
@@ -454,10 +464,10 @@ int main(){
 					}
 					orpc[ii][1]=0.0;
 					//----- ----- ----- -----
-					 cu[i][j][k]  = cuc[ii][0];
-					 mn[i][j][k]  = mnc[ii][0];
-					 ni[i][j][k]  = nic[ii][0];
-					orp[i][j][k] = orpc[ii][0];
+					 cu[ii]  = cuc[ii][0];
+					 mn[ii]  = mnc[ii][0];
+					 ni[ii]  = nic[ii][0];
+					orp[ii] = orpc[ii][0];
 					//----- ----- ----- -----
 				}
 			}
