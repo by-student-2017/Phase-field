@@ -1,12 +1,16 @@
-/* 2D semi-implicit spectral
-  phase-field code 
-  for solving precipitation in 
-  Fe_Cu_Ni_Mn alloy          */
+/* 2D semi-implicit spectral phase-field code 
+  for solving precipitation in Fe_Cu_Ni_Mn alloy */
 
 // The dimension of energy were normalized with RT.
 /* The time t was normalized with dx^2/Dcua(T),
 where Dacu(T) is the diffusion constant of Cu in
 the alpha phase at temperature T. */
+
+/* The phase-field variable eta(r,t) characterize
+  the phases distribution of alpha(bcc) and gamma(fcc) phase in
+  the Cu precipitates and takes the values of 0 < h(eta) < 1, 
+  corresponding h(eta)=0 for alpha(bcc) and
+  h(eta)=1 for gamma(fcc) phase, respectively. */
 
 #include <stdio.h>
 #include <stdlib.h> //rand()
