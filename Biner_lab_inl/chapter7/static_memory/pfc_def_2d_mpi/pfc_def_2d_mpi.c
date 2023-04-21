@@ -276,8 +276,8 @@ int main(int argc, char **argv){
 			
 			energy=energy-energy0;
 			
-			MPI_Gather(ff_out[local_0_start], local_n0*Ny, MPI_DOUBLE, ff_out[local_0_start], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 			MPI_Gather(den_out[local_0_start], local_n0*Ny, MPI_DOUBLE, den_out[local_0_start], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+			MPI_Gather(ff_out[local_0_start], local_n0*Ny, MPI_DOUBLE, ff_out[local_0_start], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 			//
 			MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 			if (rank == 0){
