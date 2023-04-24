@@ -10,7 +10,7 @@
 //gcc test.c -lfftw3
 #include <mpi.h> //mpi version
 #include <fftw3-mpi.h> //mpi version
-//mpicc test.c -lfftw3_mpi -lfftw3
+//mpicc test.c -lfftw3_mpi -lfftw3 -lm
 //Note: need -lfftw3 for " undefined reference to symbol 'fftw_malloc'"
 
 #define Nx 512
