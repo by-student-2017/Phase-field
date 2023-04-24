@@ -5,7 +5,7 @@ project(MyProject VERSION 1.0)
 
 find_package(MPI)
 
-add_executable(fft_FeCuMnNi_3d_mpi.exe fft_FeCuMnNi_3d.c init_FeCuMnNi_micro_3d.c
+add_executable(fft_FeCuMnNi_3d_mpi.exe fft_FeCuMnNi_3d_mpi.c init_FeCuMnNi_micro_3d.c
   prepare_fft_3d.c FeCuMnNi_free_energy_3d.c write_vtk_grid_values_3d.c)
 
 target_compile_options(fft_FeCuMnNi_3d_mpi.exe PUBLIC -O2 -Wall)
