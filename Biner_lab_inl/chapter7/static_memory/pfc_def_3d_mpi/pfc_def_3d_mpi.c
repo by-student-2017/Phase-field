@@ -181,7 +181,8 @@ int main(int argc, char **argv){
 		//loding
 		if(fmod(istep,ndefor)==0){
 			dx=dx+5.0e-4*dx0;
-			dy=dy-5.0e-4*dx0;
+			dy=dy-5.0e-4/2.0*dx0;
+			dz=dz-5.0e-4/2.0*dx0;
 			
 			stran=stran+5.0e-4*dx0;
 			

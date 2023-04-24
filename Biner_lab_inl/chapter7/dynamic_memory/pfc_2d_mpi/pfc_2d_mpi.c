@@ -146,7 +146,6 @@ int main(int argc, char **argv){
 	
 	for(int i=0;i<local_n0;i++){
 		for(int j=0;j<Ny;j++){
-			//den[local_0_start+i][j]=den0+noise*(0.5-(double)rand()/RAND_MAX);
 			ii=i*Ny+j;
 			iimpi=(local_0_start+i)*Ny+j;
 			den[ii][0] = den_out[iimpi];
