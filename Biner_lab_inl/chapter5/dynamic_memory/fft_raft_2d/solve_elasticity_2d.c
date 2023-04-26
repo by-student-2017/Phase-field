@@ -303,12 +303,26 @@ void solve_elasticity_2d(int Nx, int Ny,
 			et12=ea[2]+e12[ii][0]-ei12[ii]-ed12[ii];
 			
 			//Functional derivative of the elastic energy with respect to composition
+			/* F=(1/2)*sigma[i][j]*(epsilon[i][j] - epsilon0[i][j])
+			   sigma[i][j] = C[i][j][k][l]*(epsilon[k][l] - epsilon0[k][l])
+			   epsilon0[i][j] is the position- and composition-dependent eigenstrains */
+			/* dF/dc = dF/d(con) = (1/2)*( dCijkl/d(con)*etij*etkl + Cijkl*d(etij)/d(con)*etkl + Cijkl*etij*d(etkl)/d(con) )
+			   dCijkl/d(con) = (cpijkl - cmijkl), d(etij)/d(con) = -d(eiij)/d(con) = -ei0 */
+			// cp21=cp12, cp22=cp11, et21=et12, etc
+			//delsdc[ii][0]=0.5*( (cp11-cm11)*et11*et11 -c11[ii]*et11*ei0 -c11[ii]*et11*ei0
+			//				   +(cp12-cm12)*et11*et22 -c12[ii]*et11*ei0 -c12[ii]*et22*ei0
+			//				   //
+			//				   +(cp21-cm21)*et22*et11 -c21[ii]*et22*ei0 -c21[ii]*et11*ei0
+			//				   +(cp22-cm22)*et22*et22 -c22[ii]*et22*ei0 -c22[ii]*et22*ei0
+			//				   //
+			//				   +(cp44-cm44)*et12*et12 -c44[ii]*et12*ei0 -c44[ii]*et21*ei0
+			//				   +(cp44-cm44)*et21*et21 -c44[ii]*et21*ei0 -c44[ii]*et12*ei0
+			//				  );
 			delsdc[ii][0]=0.5*(et11*( (cp12-cm12)*et22 + (cp11-cm11)*et11 - c12[ii]*ei0 - c11[ii]*ei0 )
 							   -ei0*(     c12[ii]*et22 +     c11[ii]*et11 )
 						      +et22*( (cp11-cm11)*et22 + (cp12-cm12)*et11 - c12[ii]*ei0 - c11[ii]*ei0 )
 							   -ei0*(     c11[ii]*et22 +     c12[ii]*et11 )
-							   +2.0*(cp44-cm44)*et12*et12
-							   -4.0*ei0*c44[ii]*et12
+							   +2.0*(cp44-cm44)*et12*et12 -4.0*ei0*c44[ii]*et12
 							  );
 			delsdc[ii][1]=0.0;
 		}
