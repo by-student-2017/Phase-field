@@ -49,9 +49,15 @@ void green_tensor_2d(int Nx, int Ny,
 	
 	int ij;
 	
-	/* K0[i][k][zeta] = C0[i][j][k][l]*zeta[l]*zeta[k] (Eq.5.40)
+	/* K0[i][j][zeta] = C0[i][j][k][l]*zeta[l]*zeta[k] (Eq.5.40)
 	   where K0(zeta) is the acoustic tensor of the homogenous material.
-	   N0(eta) = [K0(eta)]^-1 (Eq.5.42) */
+	   zeta is the Fourier frequencies or vectors and i=sqrt(-1).
+	   
+	   N0(zeta) = [K0(zeta)]^-1 (Eq.5.42)
+	   K0(zeta) = C[i][j][k][l]*zeta[l]*zeta[k] (Eq.5.40) 
+	   
+	   sigma[i][j] = C[i][j][k][l] * epsilon[k][l] (Eq.5.35)
+	   where C[i][j][k][l] is position-dependent (also composition-dependent) elastic modulus tensor. */
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Ny;j++){
 			ij=i*Ny+j;
