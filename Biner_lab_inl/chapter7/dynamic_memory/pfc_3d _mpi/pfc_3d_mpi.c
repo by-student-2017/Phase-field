@@ -33,9 +33,9 @@ int main(int argc, char **argv){
 	FILE *out2=fopen("energy.out","w");
 	
 	//simulation cell parameters
-	int Nx=32;
-	int Ny=32;
-	int Nz=32;
+	int Nx=64;
+	int Ny=64;
+	int Nz=2;
 	
 	//The value of pi
 	double pix=4.0*atan(1.0);
