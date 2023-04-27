@@ -6,7 +6,8 @@ Windows11 and WSL2(Ubuntu-22.04)
 2. sudo apt -y install gcc build-essential libfftw3-dev
 3. cmake -S . -B build/ -G"Unix Makefiles"
 4. cmake --build build/ --target pfc_3d.exe
-5. ./build/pfc_3d.exe
+5. cd ./build
+6. ./pfc_3d.exe
 
 (On windows11)
 6. paraview

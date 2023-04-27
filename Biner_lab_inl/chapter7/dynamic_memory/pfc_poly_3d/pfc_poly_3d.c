@@ -5,18 +5,18 @@
 #include <math.h> //mod() and -lm
 
 #define bicrystal 2
-#define width 10.0
+#define width 16.0
 
 //[r']=[Rx(theta_x)][Ry(theta_y)][Rz(theta_z)][r]
 #define theta_x  0.0 //rotate_second_crystal
 #define theta_y  0.0 //rotate_second_crystal
-#define theta_z 30.0 //rotate_second_crystal
+#define theta_z 15.0 //rotate_second_crystal
 
 //bicrystal==1 case (circle type)
-#define radius_size_of_second_crystal 24.0
+#define radius_size_of_second_crystal 120.0
 
 //bicrystal==2 case (side type)
-#define left_side 20.0
+#define left_side 120.0
 
 void rotate_second_crystal_3d(double theta_xx, double theta_yy, double theta_zz,
 	double con, int Nx1, int Ny1, int Nz1, double *den0, double *den1);
@@ -31,13 +31,13 @@ int main(){
 	FILE *out=fopen("bi_2r_3d.inp","w");
 	
 	//simulation cell parameters
-	int Nx=32;
-	int Ny=32;
-	int Nz=32;
+	int Nx=64;
+	int Ny=64;
+	int Nz=1;
 	//
-	int Ntimes_x=3;
-	int Ntimes_y=3;
-	int Ntimes_z=3;
+	int Ntimes_x=8;
+	int Ntimes_y=8;
+	int Ntimes_z=2;
 	//
 	int Nx1=(Nx*Ntimes_x);
 	int Ny1=(Ny*Ntimes_y);
