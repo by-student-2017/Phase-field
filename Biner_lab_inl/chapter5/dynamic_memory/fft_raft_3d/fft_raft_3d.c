@@ -36,9 +36,9 @@ int main(){
 	start = clock();
 	
 	//simulation cell parameters
-	int Nx=64;
-	int Ny=64;
-	int Nz=64;
+	int Nx=256;
+	int Ny=256;
+	int Nz=2;
 	
 	//Total number of grid points in the simulation cell
 	int NxNyNz=Nx*Ny*Nz;
