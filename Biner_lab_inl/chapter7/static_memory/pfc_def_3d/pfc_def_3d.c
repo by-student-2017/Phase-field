@@ -13,7 +13,7 @@
 
 #define Nx 512
 #define Ny 512
-#define Nz 1
+#define Nz 2
 
 	double den_out[Nx][Ny][Nz];
 	//
@@ -47,7 +47,7 @@ int main(){
 	//simulation cell parameters
 	//int Nx=512;
 	//int Ny=512;
-	//int Nz=1;
+	//int Nz=2;
 	
 	//The value of pi
 	double pix=4.0*atan(1.0);

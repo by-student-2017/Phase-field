@@ -4,25 +4,25 @@
 #include <math.h> //mod() and -lm
 
 #define bicrystal 2
-#define width 10.0
+#define width 16.0
 
 //[r']=[Rx(theta_x)][Ry(theta_y)][Rz(theta_z)][r]
 #define theta_x  0.0 //rotate_second_crystal
 #define theta_y  0.0 //rotate_second_crystal
-#define theta_z 30.0 //rotate_second_crystal
+#define theta_z 15.0 //rotate_second_crystal
 
 //bicrystal==1 case (circle type)
-#define radius_size_of_second_crystal 24.0
+#define radius_size_of_second_crystal 120.0
 
 //bicrystal==2 case (side type)
-#define left_side 20.0
+#define left_side 120.0
 
-#define Nx 32
-#define Ny 32
-#define Nz 32
+#define Nx 64
+#define Ny 64
+#define Nz 1
 
-#define Ntimes_x 3
-#define Ntimes_y 3
+#define Ntimes_x 8
+#define Ntimes_y 8
 #define Ntimes_z 2
 
 #define Nx1 (Nx*Ntimes_x)

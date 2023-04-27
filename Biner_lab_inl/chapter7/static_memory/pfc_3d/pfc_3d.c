@@ -11,9 +11,9 @@
 //#include <mpi.h> //mpi version
 //#include <fftw3-mpi.h> //mpi version
 
-#define Nx 32
-#define Ny 32
-#define Nz 32
+#define Nx 64
+#define Ny 64
+#define Nz 1
 
 	double den_out[Nx][Ny][Nz];
 	//
