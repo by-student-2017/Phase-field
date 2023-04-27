@@ -18,10 +18,10 @@ the alpha phase at temperature T. */
 #include <time.h>
 
 //#include <fftw3.h>
-//gcc test.c -lfftw3 -lm
+//gcc test.c -lfftw3
 #include <mpi.h> //mpi version
 #include <fftw3-mpi.h> //mpi version
-//mpicc test.c -lfftw3_mpi -lfftw3 -lm
+//mpicc test.c -lfftw3_mpi -lfftw3
 //Note: need -lfftw3 for " undefined reference to symbol 'fftw_malloc'"
 
 void init_FeCuMnNi_micro_3d(int Nx, int Ny, int Nz, 
@@ -49,9 +49,9 @@ int main(int argc, char **argv){
 	start = clock();
 	
 	//simulation cell parameters
-	int Nx=64;
-	int Ny=64;
-	int Nz=64;
+	int Nx=128;
+	int Ny=128;
+	int Nz=2;
 	
 	//Total number of grid points in the simulation cell
 	//int NxNy=Nx*Ny;
