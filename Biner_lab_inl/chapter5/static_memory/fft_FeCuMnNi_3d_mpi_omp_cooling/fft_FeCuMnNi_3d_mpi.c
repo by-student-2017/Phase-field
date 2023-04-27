@@ -29,9 +29,9 @@ the alpha phase at temperature T. */
 //mpicc test.c -fopenmp -lfftw3_omp -lfftw3 -lm -lpthread
 //export OMP_NUM_THREADS=4
 
-#define Nx 64 //Number of grid points in the x-direction
-#define Ny 64 //Number of grid points in the y-direction
-#define Nz 64 //Number of grid points in the z-direction
+#define Nx 128 //Number of grid points in the x-direction
+#define Ny 128 //Number of grid points in the y-direction
+#define Nz 2   //Number of grid points in the z-direction
 
 	double  cu[Nx][Ny][Nz];
 	double  mn[Nx][Ny][Nz];
@@ -67,6 +67,7 @@ int main(int argc, char **argv){
 	//simulation cell parameters
 	//int Nx=128;
 	//int Ny=128;
+	//int Nz=2;
 	
 	//Total number of grid points in the simulation cell
 	//int NxNy=Nx*Ny;

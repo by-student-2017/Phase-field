@@ -29,9 +29,9 @@ void write_vtk_grid_values_3D(int nx, int ny, int nz,
 	fprintf(out,"DIMENSIONS %5d %5d %5d \n",nx,ny,nz);
 	fprintf(out,"POINTS %15d float \n",npoin);
 	
-	for(int i=0;i<nx;i++){
+	for(int k=0;k<nz;k++){
 		for(int j=0;j<ny;j++){
-			for(int k=0;k<nz;k++){
+			for(int i=0;i<nx;i++){
 				x=dx*i;
 				y=dy*j;
 				z=dz*k;
@@ -46,12 +46,12 @@ void write_vtk_grid_values_3D(int nx, int ny, int nz,
 	fprintf(out,"SCALARS Concentration_Cu float 1 \n");
 	fprintf(out,"LOOKUP_TABLE default \n");
 	
-	for(int i=0;i<nx;i++){
+	for(int k=0;k<nz;k++){
 		for(int j=0;j<ny;j++){
-			for(int k=0;k<nz;k++){
+			for(int i=0;i<nx;i++){
 				//ii=i*ny*nz+j*nz+k;
 				//fprintf(out,"%14.6e \n",data1[i][j][k]);
-				fprintf(out,"%14.6e \n",data1[i*ny*nz+j*nz+k]);
+				fprintf(out,"%14.6e \n",data1[(i*ny+j)*nz+k]);
 			}
 		}
 	}
@@ -59,10 +59,10 @@ void write_vtk_grid_values_3D(int nx, int ny, int nz,
 	fprintf(out,"SCALARS Concentration_Mn float 1 \n");
 	fprintf(out,"LOOKUP_TABLE default \n");
 	
-	for(int i=0;i<nx;i++){
+	for(int k=0;k<nz;k++){
 		for(int j=0;j<ny;j++){
-			for(int k=0;k<nz;k++){
-				fprintf(out,"%14.6e \n",data2[i*ny*nz+j*nz+k]);
+			for(int i=0;i<nx;i++){
+				fprintf(out,"%14.6e \n",data2[(i*ny+j)*nz+k]);
 			}
 		}
 	}
@@ -71,10 +71,10 @@ void write_vtk_grid_values_3D(int nx, int ny, int nz,
 	fprintf(out,"SCALARS Concentration_Ni float 1 \n");
 	fprintf(out,"LOOKUP_TABLE default \n");
 	
-	for(int i=0;i<nx;i++){
+	for(int k=0;k<nz;k++){
 		for(int j=0;j<ny;j++){
-			for(int k=0;k<nz;k++){
-				fprintf(out,"%14.6e \n",data3[i*ny*nz+j*nz+k]);
+			for(int i=0;i<nx;i++){
+				fprintf(out,"%14.6e \n",data3[(i*ny+j)*nz+k]);
 			}
 		}
 	}
@@ -82,20 +82,20 @@ void write_vtk_grid_values_3D(int nx, int ny, int nz,
 	fprintf(out,"SCALARS Order_parameter float 1 \n");
 	fprintf(out,"LOOKUP_TABLE default \n");
 	
-	for(int i=0;i<nx;i++){
+	for(int k=0;k<nz;k++){
 		for(int j=0;j<ny;j++){
-			for(int k=0;k<nz;k++){
-				fprintf(out,"%14.6e \n",data4[i*ny*nz+j*nz+k]);
+			for(int i=0;i<nx;i++){
+				fprintf(out,"%14.6e \n",data4[(i*ny+j)*nz+k]);
 			}
 		}
 	}
 	
 	fprintf(out,"SCALARS Concentration_Fe float 1 \n");
 	fprintf(out,"LOOKUP_TABLE default \n");
-	for(int i=0;i<nx;i++){
+	for(int k=0;k<nz;k++){
 		for(int j=0;j<ny;j++){
-			for(int k=0;k<nz;k++){
-				ii=i*ny*nz+j*nz+k;
+			for(int i=0;i<nx;i++){
+				ii=(i*ny+j)*nz+k;
 				data0=(1.0-data2[ii]-data2[ii]-data3[ii]);
 				if(data0<0){
 					data0=0.0;
