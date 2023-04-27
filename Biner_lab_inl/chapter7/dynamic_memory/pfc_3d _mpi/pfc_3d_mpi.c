@@ -35,7 +35,7 @@ int main(int argc, char **argv){
 	//simulation cell parameters
 	int Nx=64;
 	int Ny=64;
-	int Nz=2;
+	int Nz=1;
 	
 	//The value of pi
 	double pix=4.0*atan(1.0);
