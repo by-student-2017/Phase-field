@@ -11,9 +11,9 @@
 //mpicc test.c -lfftw3_mpi -lfftw3 -lm
 //Note: need -lfftw3 for " undefined reference to symbol 'fftw_malloc'"
 
-#define Nx 32
-#define Ny 32
-#define Nz 32
+#define Nx 64
+#define Ny 64
+#define Nz 1
 
 	double den_out[Nx][Ny][Nz];
 	//
@@ -43,9 +43,9 @@ int main(int argc, char **argv){
 	FILE *out2=fopen("energy.out","w");
 	
 	//simulation cell parameters
-	//int Nx=32;
-	//int Ny=32;
-	//int Nz=32;
+	//int Nx=64;
+	//int Ny=64;
+	//int Nz=1;
 	
 	//The value of pi
 	double pix=4.0*atan(1.0);

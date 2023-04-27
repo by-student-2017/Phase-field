@@ -15,9 +15,9 @@
 //mpicc test.c -fopenmp -lfftw3_omp -lfftw3 -lm -lpthread
 //export OMP_NUM_THREADS=4
 
-#define Nx 32
-#define Ny 32
-#define Nz 32
+#define Nx 512
+#define Ny 512
+#define Nz 2
 
 	double den_out[Nx][Ny][Nz];
 	//
@@ -51,9 +51,9 @@ int main(int argc, char **argv){
 	FILE *out2=fopen("energy.out","w");
 	
 	//simulation cell parameters
-	//int Nx=32;
-	//int Ny=32;
-	//int Nz=32;
+	//int Nx=512;
+	//int Ny=512;
+	//int Nz=2;
 	
 	//The value of pi
 	double pix=4.0*atan(1.0);
