@@ -712,7 +712,7 @@ double zuij(int i0, int j0, int k0, int iii, int ND)
 	if(i0<=nd2-1) {ii=i0;}  if(i0>=nd2) {ii=i0-nd;}
 	if(j0<=nd2-1) {jj=j0;}  if(j0>=nd2) {jj=j0-nd;}
 	if(k0<=nd2-1) {kk=k0;}  if(k0>=nd2) {kk=k0-nd;}
-	//alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj); // 3D
+	//alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj); // 2D
 	alnn=sqrt((double)ii*(double)ii+(double)jj*(double)jj+(double)kk*(double)kk);
 	if(alnn==0.0){alnn=1.0;}
 	nec[1]=nx=(double)ii/alnn;	// n is the unit vector in the k direction, n=k/|k|
