@@ -61,7 +61,8 @@ int main(){
 	   (see Eqs. 4.55, 4.58 and 4.59). */
 	double pix=4.0*atan(1.0);
 	double const1=30.0/(lambda*lambda);
-	double const2=2.0*mu/(pix*R*R);
+	//double const2=2.0*mu/(pix*R*R); //2D
+	double const2=2.0*mu/(pix*R*R*R); //3D
 	double const3=60.0*kappa/(lambda*lambda*kisa);
 	
 	//set array
@@ -215,7 +216,7 @@ int main(){
 						hnu=phi[(i*Ny+j)*Nz+kp];
 						hnd=phi[(i*Ny+j)*Nz+km];
 						// current
-						hnc=phi[(i*Ny+j)*Nz+k];
+						hnc=phi[ijk];
 						
 						lap_phi[ijk] = (hne + hnw -2.0*hnc)/(dx*dx)
 									  +(hns + hnn -2.0*hnc)/(dy*dy)
@@ -277,7 +278,8 @@ int main(){
 						
 						//Third term
 						// For the current grid point, calculate the third term of Eq.4.59
-						term3 = -const2 * (vinteg - pix*R*R)*phi[ijk];
+						//term3 = -const2 * (vinteg - pix*R*R)*phi[ijk]; //2D
+						term3 = -const2 * (vinteg - pix*R*R*R)*phi[ijk]; //3D
 						
 						//cell velocity
 						// If time steps <= 200 do not include the self-propulsion
