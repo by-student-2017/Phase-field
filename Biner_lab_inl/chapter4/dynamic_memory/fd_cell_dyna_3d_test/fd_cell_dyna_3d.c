@@ -21,9 +21,9 @@ int main(){
 	start = clock();
 	
 	//simulation cell parameters
-	int Nx=60; //Number of grid points in the x-direction
-	int Ny=60; //Number of grid points in the y-direction
-	int Nz=12; //Number of grid points in the z-direction
+	int Nx=50; //Number of grid points in the x-direction
+	int Ny=50; //Number of grid points in the y-direction
+	int Nz=10; //Number of grid points in the z-direction
 	int NxNyNz=Nx*Ny*Nz; //Total number of grid points in the simulation cell
 	
 	//The distance between two grid points in x,y-direction
