@@ -189,7 +189,8 @@ int main(){
 					hnn=phi[i*Ny+jp];
 					hnc=phi[i*Ny+j];
 					
-					lap_phi[ij] = (hne + hnw + hns + hnn -4.0*hnc)/(dx*dy);
+					lap_phi[ij] = (hne + hnw -2.0*hnc)/(dx*dx)
+								 +(hns + hnn -2.0*hnc)/(dy*dy);
 					
 					//gradients of phi
 					phidx[ij]=(phi[ip*Ny+j]-phi[im*Ny+j])/(2.0*dx);
