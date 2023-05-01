@@ -83,8 +83,8 @@ int micro_poly_cell_2d(int Nx, int Ny, double R,
 		xmin = 0.0;
 		ymin = 0.0;
 		
-		xmax=Nx;
-		ymax=Ny;
+		xmax=(double)Nx;
+		ymax=(double)Ny;
 		
 		// Initialize the coordinates of the cell centeres
 		for(int i=0;i<64;i++){
@@ -96,8 +96,8 @@ int micro_poly_cell_2d(int Nx, int Ny, double R,
 		for(iter=0;iter<500000;iter++){
 			
 			// Randomly assign cell center coordinates
-			xnc=Nx*( (double)rand()/RAND_MAX );
-			ync=Ny*( (double)rand()/RAND_MAX );
+			xnc=(double)Nx*( (double)rand()/RAND_MAX );
+			ync=(double)Ny*( (double)rand()/RAND_MAX );
 			
 			/* Set iflag=1. In the following tests, if its value
 			   still remains as iflag=1, a new cell will be generated. */
@@ -216,7 +216,7 @@ int micro_poly_cell_2d(int Nx, int Ny, double R,
 				//
 				for(int i=0;i<Nx;i++){
 					for(int j=0;j<Ny;j++){
-						if( ((i-dx)*(i-dx)+(j-dy)*(j-dy))<R2 ){
+						if( ((i-dx)*(i-dx) + (j-dy)*(j-dy))<R2 ){
 							ijc=((i*Ny+j)*max_ncell+(icell-1));
 							phis[ijc]=0.999;
 						}
