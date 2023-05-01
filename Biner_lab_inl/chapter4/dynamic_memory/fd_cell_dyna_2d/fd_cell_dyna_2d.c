@@ -298,8 +298,6 @@ int main(){
 		//print results
 		// If print frequency reached, print the results to file
 		if(fmod(istep,nprint)==0){
-			printf("done step: %5d \n",istep);
-			
 			//write vtk file
 			/* Write the results for contour plot in vtk format
 			   to be viewed by Paraview. */
@@ -330,6 +328,7 @@ int main(){
 				}
 				write_vtk_grid_values_2D(Nx,Ny,dx,dy,istep,phi1);
 			}
+			printf("done step: %5d \n",istep);
 		}//end if
 	}//end for(istep
 	
