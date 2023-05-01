@@ -21,9 +21,9 @@ int main(){
 	start = clock();
 	
 	//simulation cell parameters
-	int Nx=200; //Number of grid points in the x-direction
-	int Ny=200; //Number of grid points in the y-direction
-	int Nz=40; //Number of grid points in the z-direction
+	int Nx=60; //Number of grid points in the x-direction
+	int Ny=60; //Number of grid points in the y-direction
+	int Nz=12; //Number of grid points in the z-direction
 	int NxNyNz=Nx*Ny*Nz; //Total number of grid points in the simulation cell
 	
 	//The distance between two grid points in x,y-direction
@@ -40,7 +40,7 @@ int main(){
 	/* For poly-cell simulations set the desired number of cells and
 	   radius of the cells (in grid points) */
 	int ncell=80;
-	double R=12.0;
+	double R=3.0;
 	
 	/* For two-cell simulations set the ncell=2 and 
 	   radius of the cells (in grid points). */
@@ -156,7 +156,7 @@ int main(){
 			
 			//Assign cells
 			/* Assign current cell order parameter values from
-			   common array phis[Nx][Ny][ncell] to phi[Nx][Ny]. */
+			   common array phis[Nx][Ny][Nz][ncell] to phi[Nx][Ny][Nz]. */
 			for(int i=0;i<Nx;i++){
 				for(int j=0;j<Ny;j++){
 					for(int k=0;k<Nz;k++){
@@ -318,7 +318,7 @@ int main(){
 			}//end for(i
 			
 			/* Return the current values of cell under
-			   consideration to common array phis[Nx][Ny][ncell]. */
+			   consideration to common array phis[Nx][Ny][Nz][ncell]. */
 			for(int i=0;i<Nx;i++){
 				for(int j=0;j<Ny;j++){
 					for(int k=0;k<Nz;k++){
