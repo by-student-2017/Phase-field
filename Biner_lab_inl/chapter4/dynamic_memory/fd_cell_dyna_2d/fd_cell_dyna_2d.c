@@ -37,13 +37,13 @@ int main(){
 	//material specific parameters
 	/* For poly-cell simulations set the desired number of cells and
 	   radius of the cells (in grid points) */
-	//int ncell=80;
-	//double R=12.0;
+	int ncell=80;
+	double R=12.0;
 	
 	/* For two-cell simulations set the ncell=2 and 
 	   radius of the cells (in grid points). */
-	int ncell=2;
-	double R=25.0;
+	//int ncell=2;
+	//double R=25.0;
 	
 	// Set the values of the parameters (Eq.4.53 and 4.59, and Table 4.3)
 	//The non-dimensionalized values of the parameters used in the model
