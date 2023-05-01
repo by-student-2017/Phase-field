@@ -62,7 +62,7 @@ int main(){
 	double pix=4.0*atan(1.0);
 	double const1=30.0/(lambda*lambda);
 	//double const2=2.0*mu/(pix*R*R); //2D
-	double const2=2.0*mu/(pix*R*R*R); //3D
+	double const2=2.0*mu/((4.0/3.0)*pix*R*R*R); //3D
 	double const3=60.0*kappa/(lambda*lambda*kisa);
 	
 	//set array
@@ -279,7 +279,7 @@ int main(){
 						//Third term
 						// For the current grid point, calculate the third term of Eq.4.59
 						//term3 = -const2 * (vinteg - pix*R*R)*phi[ijk]; //2D
-						term3 = -const2 * (vinteg - pix*R*R*R)*phi[ijk]; //3D
+						term3 = -const2 * (vinteg - (4.0/3.0)*pix*R*R*R)*phi[ijk]; //3D
 						
 						//cell velocity
 						// If time steps <= 200 do not include the self-propulsion
