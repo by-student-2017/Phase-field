@@ -288,12 +288,12 @@ int main(int argc, char **argv){
 			//
 			MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 			if (rank == 0){
-				printf("done step: %5d \n",istep);
-				
 				//write vtk file
 				/* Write the results in vtk format for contour plots
 				   to be viewed by using Paraview */
 				write_vtk_grid_values_2D(Nx,Ny,dx,dy,istep,con_out);
+				
+				printf("done step: %5d \n",istep);
 			}
 		}
 		
