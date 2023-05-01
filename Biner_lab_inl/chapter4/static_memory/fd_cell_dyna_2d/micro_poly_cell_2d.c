@@ -76,7 +76,7 @@ int micro_poly_cell_2d(int Nx, int Ny, double R,
 		Rsq = R*R;
 		
 		// Initialize the total number cells in the simulation
-		ncell = -1;
+		ncell = 0;
 		
 		/* Determine the minimum and maximum cell dimensions in
 		   the x and y directions */
@@ -141,7 +141,7 @@ int micro_poly_cell_2d(int Nx, int Ny, double R,
 				for(int i=0;i<Nx;i++){
 					for(int j=0;j<Ny;j++){
 						if( ((i-xnc)*(i-xnc) + (j-ync)*(j-ync))<Rsq ){
-							ijc=((i*Ny+j)*max_ncell+ncell);
+							ijc=((i*Ny+j)*max_ncell+(ncell-1));
 							phis[ijc]=0.999;
 						}
 					}
@@ -150,7 +150,7 @@ int micro_poly_cell_2d(int Nx, int Ny, double R,
 			
 			/* If the total number of cell equals to 80 exit
 			   from the loop irand. */
-			if(ncell==(80-1)){
+			if(ncell==80){
 				break;
 			}
 		}//end for(iter)
@@ -205,7 +205,7 @@ int micro_poly_cell_2d(int Nx, int Ny, double R,
 		//ncol=1;
 		//nrow=2;
 		
-		icell=-1;
+		icell=0;
 		
 		for(int icol=0;icol<ncol;icol++){
 			for(int irow=0;irow<nrow;irow++){
@@ -217,7 +217,7 @@ int micro_poly_cell_2d(int Nx, int Ny, double R,
 				for(int i=0;i<Nx;i++){
 					for(int j=0;j<Ny;j++){
 						if( ((i-dx)*(i-dx)+(j-dy)*(j-dy))<R2 ){
-							ijc=((i*Ny+j)*max_ncell+icell);
+							ijc=((i*Ny+j)*max_ncell+(icell-1));
 							phis[ijc]=0.999;
 						}
 					}
