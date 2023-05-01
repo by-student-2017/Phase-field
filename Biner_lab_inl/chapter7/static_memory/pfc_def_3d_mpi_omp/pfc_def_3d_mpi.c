@@ -332,13 +332,13 @@ int main(int argc, char **argv){
 			//
 			MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 			if (rank == 0){
-				printf("done step: %5d \n", istep);
-				
 				//print the average free energy density value to file
 				fprintf(out2, "%d %14.6e \n",istep, energy);
 				
 				//output the results in vtk file format for contour plots to be viewed by using paraview
 				write_vtk_grid_values_3D(Nx,Ny,Nz,dx,dy,dz,istep,den_out,ff_out);
+				
+				printf("done step: %5d \n", istep);
 			}
 		}
 		

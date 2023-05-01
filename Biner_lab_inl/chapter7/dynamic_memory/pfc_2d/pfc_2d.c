@@ -192,8 +192,6 @@ int main(){
 		//print results
 		//if print frequency is reached, output the results to file
 		if(fmod(istep,nprint)==0){
-		
-			printf("done step: %5d \n", istep);
 			
 			//energy calculation
 			//calculate the free energy distribution, Eq.7.6
@@ -250,6 +248,7 @@ int main(){
 			//output the results in vtk file format for contour plots to be viewed by using paraview
 			write_vtk_grid_values_2D(Nx,Ny,dx,dy,istep,den_out);
 			
+			printf("done step: %5d \n", istep);
 		}
 		
 		//if intermediate configuration files are required, print the density field to file
