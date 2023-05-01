@@ -124,7 +124,7 @@ int main(){
 	double vnx;
 	double vny;
 	double vnz;
-	double vnphi; //term4x[i][j]=vnphi;
+	double vnphi; //term4x[i][j][k]=vnphi;
 	//----- ----- ----- -----
 	double add;
 	//----- ----- ----- -----
