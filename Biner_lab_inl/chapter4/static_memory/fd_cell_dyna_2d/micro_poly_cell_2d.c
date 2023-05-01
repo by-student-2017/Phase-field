@@ -17,7 +17,7 @@
 #include <stdlib.h> //rand()
 #include <stdio.h> //printf()
 
-void micro_poly_cell_2d(int Nx, int Ny, double R,
+int micro_poly_cell_2d(int Nx, int Ny, double R,
 	int ncell, double *phis, double *vac,
 	int nccell, int *ccell){
 	
@@ -76,7 +76,7 @@ void micro_poly_cell_2d(int Nx, int Ny, double R,
 		Rsq = R*R;
 		
 		// Initialize the total number cells in the simulation
-		ncell = 0;
+		ncell = -1;
 		
 		/* Determine the minimum and maximum cell dimensions in
 		   the x and y directions */
@@ -141,7 +141,7 @@ void micro_poly_cell_2d(int Nx, int Ny, double R,
 				for(int i=0;i<Nx;i++){
 					for(int j=0;j<Ny;j++){
 						if( ((i-xnc)*(i-xnc) + (j-ync)*(j-ync))<Rsq ){
-							ijc=((i*Ny+j)*max_ncell+(ncell-1));
+							ijc=((i*Ny+j)*max_ncell+ncell);
 							phis[ijc]=0.999;
 						}
 					}
@@ -150,7 +150,7 @@ void micro_poly_cell_2d(int Nx, int Ny, double R,
 			
 			/* If the total number of cell equals to 80 exit
 			   from the loop irand. */
-			if(ncell==80){
+			if(ncell==(80-1)){
 				break;
 			}
 		}//end for(iter)
@@ -191,8 +191,8 @@ void micro_poly_cell_2d(int Nx, int Ny, double R,
 	   assign their self-propulsion values. */
 	if(ncell==2){
 		
-		nccell=0;
-		ccell[0]=10000;
+		nccell=1;
+		ccell[0]=1;
 		
 		R2=R*R;
 		
@@ -202,10 +202,10 @@ void micro_poly_cell_2d(int Nx, int Ny, double R,
 		xc_2d[0][1]=Nx/2+1.25*R;
 		yc_2d[0][1]=Ny/2;
 		
-		ncol=1;
-		nrow=2;
+		//ncol=1;
+		//nrow=2;
 		
-		icell=0;
+		icell=-1;
 		
 		for(int icol=0;icol<ncol;icol++){
 			for(int irow=0;irow<nrow;irow++){
@@ -217,7 +217,7 @@ void micro_poly_cell_2d(int Nx, int Ny, double R,
 				for(int i=0;i<Nx;i++){
 					for(int j=0;j<Ny;j++){
 						if( ((i-dx)*(i-dx)+(j-dy)*(j-dy))<R2 ){
-							ijc=((i*Ny+j)*max_ncell+(icell-1));
+							ijc=((i*Ny+j)*max_ncell+icell);
 							phis[ijc]=0.999;
 						}
 					}
@@ -231,5 +231,5 @@ void micro_poly_cell_2d(int Nx, int Ny, double R,
 		vac[1]=-0.5;
 	}//end if(ncell==2
 	
-	return;
+	return nccell;
 }

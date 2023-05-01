@@ -23,7 +23,7 @@
 	double             vac[ncell];
 	int              ccell[ncell];
 
-void micro_poly_cell_2d();
+int micro_poly_cell_2d();
 double free_energy_2d();
 void write_vtk_grid_values_2D();
 
@@ -78,10 +78,10 @@ int main(){
 	int nccell=0;
 	
 	//prepare initial microstructure
-	micro_poly_cell_2d(Nx,Ny,R,
+	nccell = micro_poly_cell_2d(Nx,Ny,R,
 					ncell,phis,vac,
 					nccell,ccell);
-	//Note: nccell(output) derived from ncell values.
+	printf("check nccell: %5d \n",nccell);
 	
 	//----- ----- ----- -----
 	double gamma_cell;
