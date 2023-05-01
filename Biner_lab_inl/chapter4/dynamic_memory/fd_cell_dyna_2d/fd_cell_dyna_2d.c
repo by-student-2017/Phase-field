@@ -47,7 +47,8 @@ int main(){
 	
 	// Set the values of the parameters (Eq.4.53 and 4.59, and Table 4.3)
 	//The non-dimensionalized values of the parameters used in the model
-	double gamma=5.0; // or 2.5
+	//double gamma=5.0; // For ncell 2
+	double gamma=2.5; // For ncell 80
 	double lambda=7.0;
 	double kappa=60.0;
 	double mu=40.0;
