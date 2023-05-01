@@ -24,12 +24,14 @@ double free_energy_2d(int i, int j, int Nx, int Ny,
 	
 	double sum_phi=0.0;
 	
+	int ij=i*Ny+j;
+	
 	/* Go over total number of cells in the simulation
 	   if jcell counter is not icell add their value to sum_phi */
 	int ijcj;
 	for(int jcell=0;jcell<used_ncell;jcell++){
 		if( icell != jcell ){
-			ijcj=((i*Ny+j)*ncell+jcell);
+			ijcj=(ij*ncell+jcell);
 			//sum_phi = sum_phi + phis[i][j][jcell]*phis[i][j][jcell];
 			sum_phi = sum_phi + phis[ijcj]*phis[ijcj];
 		}
@@ -40,7 +42,6 @@ double free_energy_2d(int i, int j, int Nx, int Ny,
 	   the current grid point location. */
 	//double dfdphi = gamma*phi[i][j]*(1.0-phi[i][j])*(1.0-2.0*phi[i][j])
 	//		   +2.0*kappa*phi[i][j]*sum_phi;
-	int ij=i*Ny+j;
 	double dfdphi = gamma*phi[ij]*(1.0-phi[ij])*(1.0-2.0*phi[ij])
 			   +2.0*kappa*phi[ij]*sum_phi;
 	
