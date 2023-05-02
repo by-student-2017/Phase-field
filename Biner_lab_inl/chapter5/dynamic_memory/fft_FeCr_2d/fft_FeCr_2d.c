@@ -55,12 +55,12 @@ int main(){
 	//material specific parameters
 	
 	//Initial concentrations of alloying elements
-	double c0=0.20;       //Initial concentraion
+	double c0=0.20;       //Initial concentraion (20%Cr-containing Fe-Cr alloy
 	double mobility=1.0;  //The value of mobility coefficient (dimensionless)
 	double grad_coef=0.5; //The value of gradient energy coefficients [J(nm)^2/mol]
 	
-	double tempr=535.0;
-	double RT=8.314462*tempr;
+	double tempr=535.0; //Annealing temperature [K]
+	double RT=8.314462*tempr; //Gas constant x temperature
 	
 	//elastic constants
 	//Elastic constants of Fe-rich phase [GPa]
