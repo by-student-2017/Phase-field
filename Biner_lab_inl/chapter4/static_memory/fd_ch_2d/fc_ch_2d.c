@@ -75,7 +75,6 @@ int main(){
 	//Time evolution of concentration filed
 	for(int istep=0;istep<=nstep;istep++){
 		
-		
 		//Update the total time
 		ttime=ttime+dtime;
 		
