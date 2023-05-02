@@ -38,17 +38,18 @@ void dislo_strain_2d(int Nx, int Ny, int idislo,
 	
 	int Ny2=(int)Ny/2;
 	
+	int ndipoles=34;
+	int ndipolee=94;
+	
 	if(idislo==1){
 		for(int i=0;i<Nx;i++){
-			if(i>=34 && i<=94){
+			//if(i>=34 && i<=94){
+			if(i>=ndipoles && i<=ndipolee){
 				ed12[i*Ny+Ny2][0]=5.0e-3;
 				ed12[i*Ny+Ny2][1]=0.0;
 			}
 		}
 	}//end if
-	
-	int ndipoles=34;
-	int ndipolee=94;
 	
 	int ndis=11;
 	int jj=0;
