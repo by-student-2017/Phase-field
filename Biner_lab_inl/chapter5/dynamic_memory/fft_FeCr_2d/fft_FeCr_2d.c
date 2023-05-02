@@ -77,6 +77,8 @@ int main(){
 	//The value of eigenstrains for Cr-rich phase
 	double ei0=0.006; //Maginitude of eigenstrains
 	
+	int ii; //ii=(i*Ny+j);
+	
 	//----- ----- ----- ----- ----- -----
 	const int fftsizex = Nx, fftsizey = Ny;
 	/* fftw_complex *in, *out; // in[i][0] for real, in[i][1] for imag.
@@ -126,15 +128,6 @@ int main(){
 	 e12 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
 	//----- ----- ----- ----- ----- -----
 	
-	//double ed11[Nx][Ny];
-	double *ed11 = (double *)malloc(sizeof(double)*( Nx*Ny ));
-	//double ed22[Nx][Ny];
-	double *ed22 = (double *)malloc(sizeof(double)*( Nx*Ny ));
-	//double ed12[Nx][Ny];
-	double *ed12 = (double *)malloc(sizeof(double)*( Nx*Ny ));
-	
-	int ii;
-	
 	//Initialize stress & strain componentes
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Ny;j++){
@@ -156,14 +149,16 @@ int main(){
 			e22[ii][1] = 0.0;
 			e12[ii][1] = 0.0;
 			//----- ----- ----- -----
-			//----- ----- ----- -----
-			//Strain components due to lattice defects
-			//ed11[ii] = 0.0;
-			//ed22[ii] = 0.0;
-			//ed12[ii] = 0.0;
-			//----- ----- ----- -----
 		}
 	}
+	
+	//Strain components due to lattice defects
+	//double ed11[Nx][Ny];
+	double *ed11 = (double *)malloc(sizeof(double)*( Nx*Ny ));
+	//double ed22[Nx][Ny];
+	double *ed22 = (double *)malloc(sizeof(double)*( Nx*Ny ));
+	//double ed12[Nx][Ny];
+	double *ed12 = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	
 	//dislocation eigen strain
 	/* idislo=1 for dislocation diploe,

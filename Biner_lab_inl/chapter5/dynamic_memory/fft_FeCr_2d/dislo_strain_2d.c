@@ -17,17 +17,13 @@ void dislo_strain_2d(int Nx, int Ny, int idislo,
 	
 	int ii;
 	
+	//Initialization
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Ny;j++){
 			ii=i*Ny+j;
 			//
 			ed11[ii] = 0.0;
-			ed11[ii] = 0.0;
-			//
 			ed22[ii] = 0.0;
-			ed22[ii] = 0.0;
-			//
-			ed12[ii] = 0.0;
 			ed12[ii] = 0.0;
 		}
 	}
