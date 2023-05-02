@@ -63,15 +63,18 @@ int main(){
 	double RT=8.314462*tempr;
 	
 	//elastic constants
-	//Elastic constants of Fe-rich phase
+	//Elastic constants of Fe-rich phase [GPa]
 	double cm11=233.10e3;
 	double cm12=135.44e3;
 	double cm44=178.30e3;
 	//
-	//Elastic constants of Cr-rich phase
+	//Elastic constants of Cr-rich phase [GPa]
 	double cp11=350.00e3;
 	double cp12= 67.80e3;
 	double cp44=100.80e3;
+	
+	//elastic constant of other materials
+	//Ref: https://www.jstage.jst.go.jp/article/jsms/69/9/69_657/_pdf
 	
 	//eigen strains
 	//The value of eigenstrains for Cr-rich phase
@@ -163,7 +166,7 @@ int main(){
 	//dislocation eigen strain
 	/* idislo=1 for dislocation diploe,
 	   idislo=2 for dislocation array */
-	int idislo=2;
+	int idislo=1;
 	dislo_strain_2d(Nx,Ny,idislo,ed11,ed22,ed12);
 	
 	//Applied strains
