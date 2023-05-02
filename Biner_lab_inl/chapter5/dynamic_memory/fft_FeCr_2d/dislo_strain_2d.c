@@ -17,7 +17,7 @@ void dislo_strain_2d(int Nx, int Ny, int idislo,
 	
 	int ii;
 	
-	//Initialization
+	//Initialize eigenstrain field of dislocations
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Ny;j++){
 			ii=i*Ny+j;
@@ -30,9 +30,11 @@ void dislo_strain_2d(int Nx, int Ny, int idislo,
 	
 	int Ny2=(int)Ny/2;
 	
+	// Begin and end grid points of dislocation dipoles
 	int ndipoles=(34-1);
 	int ndipolee=(94-1);
 	
+	// Introduce eigenstrain values of dislocation dipole into the simulation cell
 	if(idislo==1){
 		for(int i=0;i<Nx;i++){
 			//if(i>=34 && i<=94){
@@ -42,14 +44,15 @@ void dislo_strain_2d(int Nx, int Ny, int idislo,
 		}
 	}//end if
 	
-	int ndis=12;
+	int ndis=11;
 	int jj=0;
 	
+	/* Introduce eigenstrain values of a dislocation array,
+	   12 grid points apart in in the y-direction, into the simulation cell */
 	if(idislo==2){
 		//
 		for(int idis=0;idis<ndis;idis++){
-			//jj=jj+12;
-			jj=jj+ndis;
+			jj=jj+12;
 			for(int i=0;i<Nx;i++){
 				for(int j=0;j<Ny;j++){
 					//if(i>=34 && i<94){

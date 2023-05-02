@@ -163,7 +163,7 @@ int main(){
 	//dislocation eigen strain
 	/* idislo=1 for dislocation diploe,
 	   idislo=2 for dislocation array */
-	int idislo=2;
+	int idislo=1;
 	dislo_strain_2d(Nx,Ny,idislo,ed11,ed22,ed12);
 	
 	//Applied strains
