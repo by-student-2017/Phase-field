@@ -20,7 +20,6 @@ void dislo_strain_2d(int Nx, int Ny, int idislo,
 	
 	int ii;
 	
-	//Introduce random flucturation to concentration, con[Nx][Ny]
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Ny;j++){
 			ii=i*Ny+j;
@@ -38,8 +37,8 @@ void dislo_strain_2d(int Nx, int Ny, int idislo,
 	
 	int Ny2=(int)Ny/2;
 	
-	int ndipoles=34;
-	int ndipolee=94;
+	int ndipoles=(34-1);
+	int ndipolee=(94-1);
 	
 	if(idislo==1){
 		for(int i=0;i<Nx;i++){
@@ -51,7 +50,7 @@ void dislo_strain_2d(int Nx, int Ny, int idislo,
 		}
 	}//end if
 	
-	int ndis=11;
+	int ndis=12;
 	int jj=0;
 	
 	if(idislo==2){
