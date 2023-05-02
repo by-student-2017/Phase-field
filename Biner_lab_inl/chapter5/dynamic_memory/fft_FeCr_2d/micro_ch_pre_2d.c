@@ -19,7 +19,7 @@ void micro_ch_pre_2d(int Nx, int Ny, double c0, fftw_complex *con){
 	//int NxNy=Nx*Ny;
 	
 	//Set the magnitude of the noise term for fluctuations
-	double noise=0.02;
+	double noise=0.001;
 	
 	int ii;
 	

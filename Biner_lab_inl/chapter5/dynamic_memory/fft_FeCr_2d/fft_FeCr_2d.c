@@ -163,7 +163,7 @@ int main(){
 	//dislocation eigen strain
 	/* idislo=1 for dislocation diploe,
 	   idislo=2 for dislocation array */
-	int idislo=1;
+	int idislo=2;
 	dislo_strain_2d(Nx,Ny,idislo,ed11,ed22,ed12);
 	
 	//Applied strains
@@ -297,7 +297,9 @@ int main(){
 			printf("done step: %5d, time: %f \n",istep,ttime*(mobility/(dx*dx)));
 			/* The quantities having the dimension of distance were normalized with the
 			   magnitude of the Burger's vector, the  quantities having the dimension of
-			   energy were normalized with RT, and the time t was normalized with M/(dx^2). */
+			   energy were normalized with RT, and the time t was normalized with M/(dx^2).
+			   The initial concentration was modulated by setting the noise term to
+			   0.001 in function micro_ch_pre_2d.c */
 		}
 		
 	}//end of time step (evolve,for)
