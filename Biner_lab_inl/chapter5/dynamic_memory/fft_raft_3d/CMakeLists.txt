@@ -4,7 +4,8 @@ cmake_minimum_required(VERSION 3.22.1 FATAL_ERROR)
 project(MyProject VERSION 1.0)
 
 add_executable(fft_raft_3d.exe fft_raft_3d.c
-  micro_ch_pre_3d.c prepare_fft_3d.c green_tensor1_3D.c green_tensor2_3D.c
+  micro_ch_pre_3d.c prepare_fft_3d.c
+  green_tensor1_3D.c green_tensor2_3D.c
   free_energy_ch_3d.c solve_elasticity_3d.c
   write_vtk_grid_values_3D.c)
 
