@@ -123,5 +123,9 @@ void green_tensor_2d_mpi(int Nx, int Ny,
 		}//j
 	}//i
 	
+	free(omeg11);
+	free(omeg22);
+	free(omeg12);
+	
 	return;
 }
