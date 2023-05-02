@@ -298,7 +298,10 @@ int main(){
 			   to be viewed by using Paraview */
 			write_vtk_grid_values_2D(Nx,Ny,dx,dy,istep,cr_out);
 			
-			printf("done step: %5d \n",istep);
+			printf("done step: %5d, time: %f \n",istep,ttime*(mobility/(dx*dx)));
+			/* The quantities having the dimension of distance were normalized with the
+			   magnitude of the Burger's vector, the  quantities having the dimension of
+			   energy were normalized with RT, and the time t was normalized with M/(dx^2). */
 		}
 		
 	}//end of time step (evolve,for)
