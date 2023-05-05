@@ -47,6 +47,10 @@ int main(){
 	double mobil=5.0;  //The value of mobility coefficient
 	double grcoef=0.1; //The value of gradient energy coefficients [J(nm)^2/mol]
 	
+	//----- ----- ----- -----
+	int ij; //ij=i*Ny+j;
+	//----- ----- ----- -----
+	
 	/* Generate initial grain microstructure
 	   iflag=1 is for bi-crystal and
 	   iflag=2 is for polycrystal */
@@ -78,7 +82,8 @@ int main(){
 				if( i != ri ){ printf("Don't match x data \n"); }
 				if( j != rj ){ printf("Don't match y data \n"); }
 				//----- ----- ----- -----
-				etas[(ri*Ny+rj)*ngrain+rigrain]=reta;
+				ij=i*Ny+j;
+				etas[ij*ngrain+rigrain]=reta;
 				//----- ----- ----- -----
 			}
 		}
@@ -102,8 +107,6 @@ int main(){
 	double grain_sum;
 	//----- ----- ----- -----
 	int ncount;
-	//----- ----- ----- -----
-	int ij; //ij=i*Ny+j;
 	//----- ----- ----- -----
 	
 	//Time integration
