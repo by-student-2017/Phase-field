@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.22.1 FATAL_ERROR)
 # set the project name and version
 project(MyProject VERSION 1.0)
 
-add_executable(fd_ch_2d.exe fc_ch_2d.c
+add_executable(fd_ch_2d.exe fd_ch_2d.c
 	micro_ch_pre_2d.c calculate_energy_2d.c
 	free_energy_ch_2d.c write_vtk_grid_values_2D.c)
 
