@@ -39,7 +39,7 @@ void write_vtk_grid_values_2D(int nx, int ny,
 	
 	//write grid point values
 	fprintf(out,"POINT_DATA %10d \n",npoin);
-	fprintf(out,"SCALARS Concentration float 1 \n");
+	fprintf(out,"SCALARS Grains float 1 \n");
 	fprintf(out,"LOOKUP_TABLE default \n");
 	
 	for(int i=0;i<nx;i++){
