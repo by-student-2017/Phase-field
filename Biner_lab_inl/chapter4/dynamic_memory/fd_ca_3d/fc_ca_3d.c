@@ -211,8 +211,8 @@ int main(){
 							if(eta[ijk]>=0.9999){
 							   eta[ijk]=0.9999;
 							}
-							if(eta[ijk]<0.0000){
-							   eta[ijk]=0.0000;
+							if(eta[ijk]<1.0e-6){
+							   eta[ijk]=1.0e-6;
 							}
 						//
 						}//end for(k

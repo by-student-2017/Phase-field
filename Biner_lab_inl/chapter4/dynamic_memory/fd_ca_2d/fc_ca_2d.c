@@ -183,8 +183,8 @@ int main(){
 						if(eta[ij]>=0.9999){
 						   eta[ij]=0.9999;
 						}
-						if(eta[ij]<0.0000){
-						   eta[ij]=0.0000;
+						if(eta[ij]<1.0e-6){
+						   eta[ij]=1.0e-6;
 						}
 						//
 					}//end for(j
