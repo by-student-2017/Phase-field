@@ -141,7 +141,7 @@ int main(){
 	int Ny=(int)(ymax-y0)/dy;
 	//
 	double *cu = (double *)malloc(sizeof(double)*( Nx*Ny ));
-	double *fu = (double *)malloc(sizeof(double)*( Nx*Ny ));
+	int *fu = (int *)malloc(sizeof(int)*( Nx*Ny ));
 	//
 	//calculate voronoi diagram of the unit cell
 	Discrete_Voronoi_diagram_2d(npoints, x, y,
@@ -152,7 +152,7 @@ int main(){
 	// Add vertex markers (vu[Nx][Ny])
 	//----- ----- ----- ---- ----- -----
 	
-	double *vu = (double *)malloc(sizeof(double)*( Nx*Ny ));
+	int *vu = (int *)malloc(sizeof(int)*( Nx*Ny ));
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Ny;j++){
 			ij=i*Ny+j;
@@ -160,7 +160,7 @@ int main(){
 			for(int igrain=0;igrain<ngrains;igrain++){
 				if( (fabs(dx*i - x[igrain]) < dx)
 				 && (fabs(dy*j - y[igrain]) < dy) ){
-				 	vu[ij]=ngrains*1.2;
+				 	vu[ij]=ngrains+(int)(ngrains/5);
 				}
 			}
 		}
@@ -173,8 +173,8 @@ int main(){
 	int Nx3=Nx*3;
 	int Ny3=Ny*3;
 	double *c = (double *)malloc(sizeof(double)*( Nx3*Ny3 ));
-	double *f = (double *)malloc(sizeof(double)*( Nx3*Ny3 ));
-	double *v = (double *)malloc(sizeof(double)*( Nx3*Ny3 ));
+	int *f = (int *)malloc(sizeof(int)*( Nx3*Ny3 ));
+	int *v = (int *)malloc(sizeof(int)*( Nx3*Ny3 ));
 	//
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Ny;j++){

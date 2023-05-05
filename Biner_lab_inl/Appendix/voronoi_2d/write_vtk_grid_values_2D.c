@@ -4,7 +4,7 @@
 
 void write_vtk_grid_values_2D(int nx, int ny, 
 	double dx, double dy,
-	int istep, double *data1){
+	int istep, int *data1){
 	
 	//open output file
 	char fname[256];
@@ -44,9 +44,7 @@ void write_vtk_grid_values_2D(int nx, int ny,
 	
 	for(int i=0;i<nx;i++){
 		for(int j=0;j<ny;j++){
-			//ii=i*ny+j;
-			//fprintf(out,"%14.6e \n",data1[i][j]);
-			fprintf(out,"%14.6e \n",data1[i*ny+j]);
+			fprintf(out,"%5d \n",data1[i*ny+j]);
 		}
 	}
 	

@@ -12,7 +12,7 @@
 
 void Discrete_Voronoi_diagram_2d(
 	int npoints, double *x, double *y,
-	int Nx, int Ny, double *c, double *f,
+	int Nx, int Ny, double *c, int *f,
 	double distance_x, double distance_y){
 	
 	int ij; //ij=i*Ny+j;

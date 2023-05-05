@@ -14,7 +14,7 @@
 
 void Discrete_Voronoi_diagram_3d(
 	int npoints, double *x, double *y, double *z,
-	int Nx, int Ny, int Nz, double *c, double *f,
+	int Nx, int Ny, int Nz, double *c, int *f,
 	double distance_x, double distance_y, double distance_z){
 	
 	int ijk; //ijk=(i*Ny+j)*Nz+k;

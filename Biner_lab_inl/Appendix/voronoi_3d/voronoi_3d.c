@@ -85,7 +85,7 @@ int main(){
 	int Nz=(int)(zmax-z0)/dz;
 	//
 	double *cu = (double *)malloc(sizeof(double)*( Nx*Ny*Nz ));
-	double *fu = (double *)malloc(sizeof(double)*( Nx*Ny*Nz ));
+	int *fu = (int *)malloc(sizeof(int)*( Nx*Ny*Nz ));
 	//
 	//calculate voronoi diagram of the unit cell
 	Discrete_Voronoi_diagram_3d(npoints, x, y, z,
@@ -96,7 +96,7 @@ int main(){
 	// Add vertex markers (vu[Nx][Ny][Nz])
 	//----- ----- ----- ---- ----- -----
 	
-	double *vu = (double *)malloc(sizeof(double)*( Nx*Ny*Nz ));
+	int *vu = (int *)malloc(sizeof(int)*( Nx*Ny*Nz ));
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Ny;j++){
 			for(int k=0;k<Nz;k++){
@@ -106,7 +106,7 @@ int main(){
 					if( (fabs(dx*i - x[igrain]) < dx)
 					 && (fabs(dy*j - y[igrain]) < dy)
 					 && (fabs(dz*k - z[igrain]) < dz) ){
-					 	vu[ijk]=ngrains*1.2;
+					 	vu[ijk]=ngrains+(int)(ngrains/5);
 					}
 				}//for (igrain
 			}//for(k
@@ -121,8 +121,8 @@ int main(){
 	int Nyn=Ny*ntimes;
 	int Nzn=Nz*ntimes;
 	double *c = (double *)malloc(sizeof(double)*( Nxn*Nyn*Nzn ));
-	double *f = (double *)malloc(sizeof(double)*( Nxn*Nyn*Nzn ));
-	double *v = (double *)malloc(sizeof(double)*( Nxn*Nyn*Nzn ));
+	int *f = (int *)malloc(sizeof(int)*( Nxn*Nyn*Nzn ));
+	int *v = (int *)malloc(sizeof(int)*( Nxn*Nyn*Nzn ));
 	//
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Ny;j++){
@@ -165,9 +165,9 @@ int main(){
 	int istep=0;
 	//----- ----- ----- ---- ----- -----
 	//write_vtk_grid_values_3D(Nx,Ny,Nz,dx,dy,dz,istep,fu);
-	//write_vtk_grid_values_3D(Nx,Ny,Nz,dx,dy,dz,istep,vu);
+	write_vtk_grid_values_3D(Nx,Ny,Nz,dx,dy,dz,istep,vu);
 	//----- ----- ----- ---- ----- -----
 	//write_vtk_grid_values_3D(Nxn,Nyn,Nzn,dx,dy,dz,istep,f);
-	write_vtk_grid_values_3D(Nxn,Nyn,Nzn,dx,dy,dz,istep,v);
+	//write_vtk_grid_values_3D(Nxn,Nyn,Nzn,dx,dy,dz,istep,v);
 	//----- ----- ----- ---- ----- -----
 }
