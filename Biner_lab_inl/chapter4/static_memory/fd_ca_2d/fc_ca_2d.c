@@ -13,7 +13,7 @@
 
 #define Nx 192 //Number of grid points in the x-direction
 #define Ny 192 //Number of grid points in the y-direction
-#define ngrain 25 //iflag=1 (generate two garins) only
+#define ngrain 25 //iflag=2 case
 
 	double     eta[Nx][Ny];
 	double lap_eta[Nx][Ny]; //Laplacian
