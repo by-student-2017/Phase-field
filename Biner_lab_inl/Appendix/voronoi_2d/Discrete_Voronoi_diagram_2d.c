@@ -61,13 +61,13 @@ void Discrete_Voronoi_diagram_2d(
 			jp=j+1; if(jp==Ny){jp=0;}
 			jm=j-1; if(jm==-1){jm=(Ny-1);}
 			//
-			c[ij]=0;
-			if(  fabs(f[ip*Ny+j]-f[ij]) >= 0.0
-			  || fabs(f[im*Ny+j]-f[ij]) >= 0.0
-			  || fabs(f[i*Ny+jp]-f[ij]) >= 0.0
-			  || fabs(f[i*Ny+jm]-f[ij]) >= 0.0
+			c[ij]=0.0;
+			if(  fabs(f[ip*Ny+j]-f[ij]) >= 1.0
+			  || fabs(f[im*Ny+j]-f[ij]) >= 1.0
+			  || fabs(f[i*Ny+jp]-f[ij]) >= 1.0
+			  || fabs(f[i*Ny+jm]-f[ij]) >= 1.0
 			){
-				c[ij]=1;
+				c[ij]=1.0;
 			}
 		}//end for(j
 	}//end for(i

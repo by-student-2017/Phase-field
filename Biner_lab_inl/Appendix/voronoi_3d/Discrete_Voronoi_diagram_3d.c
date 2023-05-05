@@ -74,15 +74,15 @@ void Discrete_Voronoi_diagram_3d(
 				kp=k+1; if(kp==Nz){kp=0;}
 				km=k-1; if(km==-1){km=(Nz-1);}
 				//
-				c[ijk]=0;
-				if(  fabs(f[(ip*Ny+j)*Nz+k]-f[ijk]) >= 0.0
-				  || fabs(f[(im*Ny+j)*Nz+k]-f[ijk]) >= 0.0
-				  || fabs(f[(i*Ny+jp)*Nz+k]-f[ijk]) >= 0.0
-				  || fabs(f[(i*Ny+jm)*Nz+k]-f[ijk]) >= 0.0
-				  || fabs(f[(i*Ny+j)*Nz+kp]-f[ijk]) >= 0.0
-				  || fabs(f[(i*Ny+j)*Nz+km]-f[ijk]) >= 0.0
+				c[ijk]=0.0;
+				if(  fabs(f[(ip*Ny+j)*Nz+k]-f[ijk]) >= 1.0
+				  || fabs(f[(im*Ny+j)*Nz+k]-f[ijk]) >= 1.0
+				  || fabs(f[(i*Ny+jp)*Nz+k]-f[ijk]) >= 1.0
+				  || fabs(f[(i*Ny+jm)*Nz+k]-f[ijk]) >= 1.0
+				  || fabs(f[(i*Ny+j)*Nz+kp]-f[ijk]) >= 1.0
+				  || fabs(f[(i*Ny+j)*Nz+km]-f[ijk]) >= 1.0
 				){
-					c[ijk]=1;
+					c[ijk]=1.0;
 				}
 			}//end for(k
 		}//end for(j
