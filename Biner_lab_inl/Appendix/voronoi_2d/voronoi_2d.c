@@ -251,7 +251,7 @@ int main(){
 	for(int i=0;i<Nx3;i++){
 		for(int j=0;j<Ny3;j++){
 			ij=i*Ny3+j;
-			fprintf(out5, "%5d %5d %14.6e %14.6e \n",i,j,f[ij],(1.0-c[ij])); //for etas[i][j][ngrain]=(1.0-f[ij])
+			fprintf(out5, "%5d %5d %5d %14.6e \n",i,j,f[ij],(1.0-c[ij])); //for etas[i][j][f[ij]]=(1.0-c[ij])
 		}
 	}
 	
