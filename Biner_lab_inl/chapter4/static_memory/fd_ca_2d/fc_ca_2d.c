@@ -11,9 +11,9 @@
 #include <math.h> //mod() and -lm
 #include <time.h>
 
-#define Nx 64 //Number of grid points in the x-direction
-#define Ny 64 //Number of grid points in the y-direction
-#define ngrain 2 //iflag=1 (generate two garins) only
+#define Nx 192 //Number of grid points in the x-direction
+#define Ny 192 //Number of grid points in the y-direction
+#define ngrain 25 //iflag=1 (generate two garins) only
 
 	double     eta[Nx][Ny];
 	double lap_eta[Nx][Ny]; //Laplacian
@@ -45,8 +45,8 @@ int main(){
 	double dy=0.5; //Grid spacing between two grid pints in y-direction
 	
 	//time integration parameters
-	int nstep=100; //Number of time integration steps
-	int nprint=10; //Output frequency to write the results to file
+	int nstep=100000; //Number of time integration steps
+	int nprint=100; //Output frequency to write the results to file
 	double dtime=0.005; //Time increment for the numerical integration
 	double ttime=0.0;   //Total time
 	
@@ -59,7 +59,7 @@ int main(){
 	/* Generate initial grain microstructure
 	   iflag=1 is for bi-crystal and
 	   iflag=2 is for polycrystal */
-	int iflag=1;
+	int iflag=2;
 	init_grain_micro_2d(Nx,Ny,dx,dy,iflag,ngrain,etas,glist);
 	
 	//----- ----- ----- -----
@@ -174,7 +174,7 @@ int main(){
 				
 				if(grain_sum<=0.001){
 					glist[igrain]=0;
-					printf("grain: %5d is eliminated \n",igrain);
+					printf("grain: No. %3d is eliminated \n",igrain);
 				}
 				
 			}//end if(glist
@@ -198,7 +198,8 @@ int main(){
 				ncount=0;
 				for(int i=0;i<Nx;i++){
 					for(int j=0;j<Ny;j++){
-						eta2[i][j]=eta2[i][j]+etas[i][j][igrain]*etas[i][j][igrain];
+						//eta2[i][j]=eta2[i][j]+etas[i][j][igrain]*etas[i][j][igrain];
+						eta2[i][j]=eta2[i][j]+etas[i][j][igrain]*etas[i][j][igrain]*igrain;
 						if(etas[i][j][igrain]>=0.5){
 							ncount=ncount+1;
 						}//end if

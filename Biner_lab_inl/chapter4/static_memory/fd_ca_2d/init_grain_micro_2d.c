@@ -3,6 +3,7 @@
    structure consist of 25 grains which is generated
    with the source code given in Appendix A. */
 
+#include <stdio.h> //printf()
 #include <stdlib.h> //rand()
 #include <math.h> //mod() and -lm
 //#include <fftw3.h>
@@ -66,9 +67,25 @@ void init_grain_micro_2d(int Nx, int Ny,
 	//----- ----- ----- -----
 	//generate polycrystal microstructure
 	//----- ----- ----- -----
-	//if(iflag==2){
-	//	FILE *in=fopen("grain_25.inp","r");
-	//}
+	
+	if(iflag==2){
+		FILE *in=fopen("grain_25.inp","r");
+	
+		int rNx, rNy, rngrain;
+		fscanf(in,"%5d %5d %5d ",&rNx,&rNy,&rngrain);
+		if( rNx != Nx ){ printf("Don't match data, Nx"); }
+		if( rNy != Ny ){ printf("Don't match data, Ny"); }
+		if( rngrain != ngrain ){ printf("Don't match data, ngrain"); }
+		//
+		int ri, rj, rigrain;
+		double reta;
+		for(int i=0;i<Nx;i++){
+			for(int j=0;j<Ny;j++){
+				fscanf(in,"%5d %5d %5d %lf",&ri,&rj,&rigrain,&reta);
+				etas[(ri*Ny+rj)*rngrain+rigrain]=reta;
+			}
+		}
+	}
 	
 	//initialize glist
 	for(int igrain=0;igrain<ngrain;igrain++){

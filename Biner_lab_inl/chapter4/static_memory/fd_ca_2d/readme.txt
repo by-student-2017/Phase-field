@@ -7,7 +7,8 @@ Windows11 and WSL2(Ubuntu-22.04)
 3. cmake -S . -B build/ -G"Unix Makefiles"
 4. cmake --build build/ --target fd_ca_2d.exe
 5. cd ./build
-6. ./fd_ca_2d.exe
+6. cp ../grain_25.inp ./
+7. ./fd_ca_2d.exe
 
 (On windows11)
 6. paraview
