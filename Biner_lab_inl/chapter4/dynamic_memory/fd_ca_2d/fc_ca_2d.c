@@ -73,14 +73,16 @@ int main(){
 		FILE *in=fopen("grain_25.inp","r");
 		fscanf(in,"%5d %5d %5d ",&Nx,&Ny,&ngrain);
 		//
+		int nline=1;
 		int ri, rj, rigrain;
 		double reta;
 		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
 				fscanf(in,"%5d %5d %5d %lf",&ri,&rj,&rigrain,&reta);
 				//----- ----- ----- -----
-				if( i != ri ){ printf("Don't match x data \n"); }
-				if( j != rj ){ printf("Don't match y data \n"); }
+				if( i != ri ){ printf("Don't match x data, Line %5d \n",nline); exit(1); }
+				if( j != rj ){ printf("Don't match y data, LIne %5d \n",nline); exit(1); }
+				nline = nline + 1;
 				//----- ----- ----- -----
 				ij=i*Ny+j;
 				etas[ij*ngrain+rigrain]=reta;
