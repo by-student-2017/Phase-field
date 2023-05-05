@@ -27,90 +27,20 @@ void Discrete_Voronoi_diagram_2d(
 		for(int j=0;j<Ny;j++){
 			ij=i*Ny+j;
 			//
-			min = Nx + Ny; //dummy
+			min = distance_x*Nx + distance_y*Ny; //dummy
 			f[ij]=99999;
 			for(int ipoint=0;ipoint<npoints;ipoint++){
 				//
-				//----- ----- ----- ---- ----- -----#0
-				// main area
-				dx = distance_x*i - x[ipoint];
-				dy = distance_y*j - y[ipoint];
-				distance = sqrt(dx*dx + dy*dy);
-				if(distance<=min){
-					min=distance;
-					f[ij]=ipoint;
-				}
-				//----- ----- ----- ---- ----- -----#1
-				// periodic boundary conditions
-				dx = distance_x*i - (x[ipoint]);
-				dy = distance_y*j - (y[ipoint]-Ny);
-				distance = sqrt(dx*dx + dy*dy);
-				if(distance<=min){
-					min=distance;
-					f[ij]=ipoint;
-				}
-				//----- ----- ----- ---- ----- -----#2
-				// periodic boundary conditions
-				dx = distance_x*i - (x[ipoint]+Nx);
-				dy = distance_y*j - (y[ipoint]-Ny);
-				distance = sqrt(dx*dx + dy*dy);
-				if(distance<=min){
-					min=distance;
-					f[ij]=ipoint;
-				}
-				//----- ----- ----- ---- ----- -----#3
-				// periodic boundary conditions
-				dx = distance_x*i - (x[ipoint]+Nx);
-				dy = distance_y*j - (y[ipoint]);
-				distance = sqrt(dx*dx + dy*dy);
-				if(distance<=min){
-					min=distance;
-					f[ij]=ipoint;
-				}
-				//----- ----- ----- ---- ----- -----#4
-				// periodic boundary conditions
-				dx = distance_x*i - (x[ipoint]+Nx);
-				dy = distance_y*j - (y[ipoint]+Ny);
-				distance = sqrt(dx*dx + dy*dy);
-				if(distance<=min){
-					min=distance;
-					f[ij]=ipoint;
-				}
-				//----- ----- ----- ---- ----- -----#5
-				// periodic boundary conditions
-				dx = distance_x*i - (x[ipoint]);
-				dy = distance_y*j - (y[ipoint]+Ny);
-				distance = sqrt(dx*dx + dy*dy);
-				if(distance<=min){
-					min=distance;
-					f[ij]=ipoint;
-				}
-				//----- ----- ----- ---- ----- -----#6
-				// periodic boundary conditions
-				dx = distance_x*i - (x[ipoint]-Nx);
-				dy = distance_y*j - (y[ipoint]+Ny);
-				distance = sqrt(dx*dx + dy*dy);
-				if(distance<=min){
-					min=distance;
-					f[ij]=ipoint;
-				}
-				//----- ----- ----- ---- ----- -----#7
-				// periodic boundary conditions
-				dx = distance_x*i - (x[ipoint]-Nx);
-				dy = distance_y*j - (y[ipoint]);
-				distance = sqrt(dx*dx + dy*dy);
-				if(distance<=min){
-					min=distance;
-					f[ij]=ipoint;
-				}
-				//----- ----- ----- ---- ----- -----#8
-				// periodic boundary conditions
-				dx = distance_x*i - (x[ipoint]-Nx);
-				dy = distance_y*j - (y[ipoint]-Ny);
-				distance = sqrt(dx*dx + dy*dy);
-				if(distance<=min){
-					min=distance;
-					f[ij]=ipoint;
+				for(int tx=-1;tx<=1;tx++){
+					for(int ty=-1;ty<=1;ty++){
+						dx = distance_x*i - (x[ipoint] + distance_x*Nx*tx);
+						dy = distance_y*j - (y[ipoint] + distance_y*Ny*ty);
+						distance = sqrt(dx*dx + dy*dy);
+						if(distance<=min){
+							min=distance;
+							f[ij]=ipoint;
+						}
+					}
 				}
 				//
 			}//end for(ipoint
