@@ -15,7 +15,6 @@
   dy: Grid spacing between two grid points in the y-direction
   iflag: If iflag=1 bicrystal simulation,
             iflag=2 polycrystal simulation
-        (in this case, iflag=1 only)
   isolve:(in this case, isolve=1 only)
   ngrain: Number of grains in the simulation
   glist[ngrain]: Flag for existing grains
