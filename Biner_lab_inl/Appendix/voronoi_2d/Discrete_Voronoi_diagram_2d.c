@@ -22,12 +22,13 @@ void Discrete_Voronoi_diagram_2d(
 	double dy;
 	double distance;
 	double min;
+	double min_start=distance_x*Nx + distance_y*Ny;
 	//
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Ny;j++){
 			ij=i*Ny+j;
 			//
-			min = distance_x*Nx + distance_y*Ny; //dummy
+			min = min_start; //dummy
 			f[ij]=99999;
 			for(int ipoint=0;ipoint<npoints;ipoint++){
 				//
