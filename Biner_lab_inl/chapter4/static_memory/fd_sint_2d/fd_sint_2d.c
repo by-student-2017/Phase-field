@@ -13,7 +13,7 @@
 
 #define Nx 100 //Number of grid points in the x-direction
 #define Ny 100 //Number of grid points in the y-direction
-#define npart 9 //Number of particles in the simulation, set to either 2 or 9
+#define npart 2 //Number of particles in the simulation, set to either 2 or 9
 
 	double       eta[Nx][Ny];
 	double   lap_eta[Nx][Ny]; //Laplacian
