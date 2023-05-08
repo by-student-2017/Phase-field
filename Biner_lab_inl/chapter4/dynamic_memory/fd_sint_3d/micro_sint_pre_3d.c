@@ -45,11 +45,11 @@ void micro_sint_pre_3d(int Nx, int Ny, int Nz,
 	
 	double R;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	//double xc[9];
-	double      *xc = (double *)malloc(sizeof(double)*( npart ));
+	double xc[9];
+	//double      *xc = (double *)malloc(sizeof(double)*( npart ));
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	//double yc[9];
-	double      *yc = (double *)malloc(sizeof(double)*( npart ));
+	double yc[9];
+	//double      *yc = (double *)malloc(sizeof(double)*( npart ));
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	double zc;
 	
@@ -57,7 +57,7 @@ void micro_sint_pre_3d(int Nx, int Ny, int Nz,
 	double xx1;
 	
 	// Place nine spherical particles into the simulation cell
-	if(npart != 3){
+	if(npart != 2){
 		//
 		//The radius of the first five large particles
 		R=10.0;
@@ -164,8 +164,8 @@ void micro_sint_pre_3d(int Nx, int Ny, int Nz,
 		//
 	}//end if
 	
-	free(xc);
-	free(yc);
+	//free(xc);
+	//free(yc);
 	
 	return;
 }
