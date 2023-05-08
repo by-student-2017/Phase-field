@@ -7,22 +7,9 @@
    explicit Euler scheme. */
 
 #include <stdio.h> //printf()
-#include <stdlib.h> //rand()
+#include <stdlib.h> //rand() and malloc
 #include <math.h> //mod() and -lm
 #include <time.h>
-
-#define Nx 100 //Number of grid points in the x-direction
-#define Ny 100 //Number of grid points in the y-direction
-#define npart 2 //Number of particles in the simulation, set to either 2 or 10 (bug fix: why not 9)
-
-	double       eta[Nx][Ny];
-	double   lap_eta[Nx][Ny]; //Laplacian
-	double       con[Nx][Ny];
-	double   lap_con[Nx][Ny]; //Laplacian
-	double     dummy[Nx][Ny];
-	double lap_dummy[Nx][Ny];
-	double      etas[Nx][Ny][npart];
-	double      phi2[Nx][Ny];
 
 void micro_sint_pre_2d();
 double free_energy_sint_2d_con();
@@ -37,9 +24,9 @@ int main(){
 	start = clock();
 	
 	//simulation cell parameters
-	//int Nx=64; //Number of grid points in the x-direction
-	//int Ny=64; //Number of grid points in the y-direction
-	//int NxNy=Nx*Ny; //Total number of grid points in the simulation cell
+	int Nx=100; //Number of grid points in the x-direction
+	int Ny=100; //Number of grid points in the y-direction
+	int NxNy=Nx*Ny; //Total number of grid points in the simulation cell
 	
 	//The distance between two grid points in x,y-direction
 	double dx=0.5; //Grid spacing between two grid pints in x-direction
@@ -51,7 +38,9 @@ int main(){
 	double dtime=1.0e-4; //Time increment for the numerical integration
 	double ttime=0.0;   //Total time
 	
-	//int npart=2; //Number of particles in the simulation, set to either 2 or 10
+	//Number of particles in the simulation, set to either 2 or 10 (bug fix: why not 9)
+	int npart=10; //"int npart=9" doesn't work for some reason.
+	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	/* Model-specific parameters (see Eqs.4.40,4.43,and Table 4.1) 
 	   non-dimensionalized parameters */
@@ -67,24 +56,64 @@ int main(){
 	/* Note
 	   where kappa_rho and kappa_eta are the gradient energy coefficients for
 	   concentration and grain boundary energies, respectively. */
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
-	// Generate initial grain microstructure
-	int iflag=1;
-	micro_sint_pre_2d(Nx,Ny,npart,iflag,etas,con); // iflag=1 only
+	//----- ----- ----- ---------- ----- ----- ----- ----- ----- ----- 
+	//double       con[Nx][Ny]; //concentraion
+	double       *con = (double *)malloc(sizeof(double)*( NxNy ));
+	//double   lap_con[Nx][Ny]; //Laplacian
+	double   *lap_con = (double *)malloc(sizeof(double)*( NxNy ));
+	//----- ----- ----- ---------- ----- ----- ----- ----- ----- ----- 
+	//double     dummy[Nx][Ny];
+	double     *dummy = (double *)malloc(sizeof(double)*( NxNy ));
+	//double lap_dummy[Nx][Ny]; //Laplacian
+	double *lap_dummy = (double *)malloc(sizeof(double)*( NxNy ));
+	//----- ----- ----- ---------- ----- ----- ----- ----- ----- ----- 
+	//double       eta[Nx][Ny]; //order parameter
+	double       *eta = (double *)malloc(sizeof(double)*( NxNy ));
+	//double   lap_eta[Nx][Ny]; //Laplacian
+	double   *lap_eta = (double *)malloc(sizeof(double)*( NxNy ));
+	//----- ----- ----- ---------- ----- ----- ----- ----- ----- ----- 
+	//double      etas[Nx][Ny][npart];
+	double      *etas = (double *)malloc(sizeof(double)*( NxNy*npart ));
+	//----- ----- ----- ---------- ----- ----- ----- ----- ----- ----- 
+	//double      phi2[Nx][Ny];
+	double      *phi2 = (double *)malloc(sizeof(double)*( NxNy ));
+	//----- ----- ----- ---------- ----- ----- ----- ----- ----- ----- 
+	
+	int ij; //ij=(i*Ny+j);
 	
 	/* initialize temporary array eta[Nx][Ny] for
 	   the time integration of the order parameters */
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Ny;j++){
-			eta[i][j]=0.0;
+			ij=(i*Ny+j);
+			//----- ----- -----
+			con[ij]=0.0;
+			dummy[ij]=0.0;
+			eta[ij]=0.0;
+			//----- ----- -----
+			lap_con[ij]=0.0;
+			lap_dummy[ij]=0.0;
+			lap_eta[ij]=0.0;
+			//----- ----- -----
+			for(int ipart=0;ipart<npart;ipart++){
+				etas[ij*npart+ipart]=0.0;
+			}
+			//----- ----- -----
 		}
 	}
+	
+	// Generate initial grain microstructure
+	int iflag=1;
+	micro_sint_pre_2d(Nx,Ny,npart,iflag,etas,con); // iflag=1 only
 	
 	//----- ----- ----- -----
 	int ip,im;
 	int jp,jm;
 	//
-	double hne,hnw,hns,hnn;
+	double hne,hnw;
+	double hns,hnn;
 	double hnc;
 	//----- ----- ----- -----
 	double dfdcon;
@@ -109,6 +138,7 @@ int main(){
 		/* Calculate the Laplacian of the term inside the parenthesis in Eq.4.40 */
 		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
+				ij=(i*Ny+j);
 				
 				ip=i+1;
 				im=i-1;
@@ -130,27 +160,28 @@ int main(){
 					jm=(Ny-1);
 				}
 				
-				hne=con[ip][j];
-				hnw=con[im][j];
-				hns=con[i][jm];
-				hnn=con[i][jp];
-				hnc=con[i][j];
+				hne=con[ip*Ny+j];
+				hnw=con[im*Ny+j];
+				hns=con[i*Ny+jm];
+				hnn=con[i*Ny+jp];
+				hnc=con[ij];
 				
 				// Calculate the Laplacian of concentration
-				lap_con[i][j] = (hne + hnw -2.0*hnc)/(dx*dx)
-							   +(hns + hnn -2.0*hnc)/(dy*dy);
+				lap_con[ij] = (hne + hnw -2.0*hnc)/(dx*dx)
+							 +(hns + hnn -2.0*hnc)/(dy*dy);
 				
 				//Calculate the derivative of free energy
 				dfdcon = free_energy_sint_2d_con(i,j,Nx,Ny,con,eta,etas,npart);
 				
 				// Calculate the terms inside parenthesis in Eq.4.40
 				//  coefm = kappa_rho, lap_con = Laplacian of the rho
-				dummy[i][j] = dfdcon - ( 0.5 * coefm * lap_con[i][j] );
+				dummy[ij] = dfdcon - ( 0.5 * coefm * lap_con[ij] );
 			}//end for(j
 		}//end for(i
 		
 		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
+				ij=(i*Ny+j);
 				
 				ip=i+1;
 				im=i-1;
@@ -172,15 +203,15 @@ int main(){
 					jm=(Ny-1);
 				}
 				
-				hne=dummy[ip][j];
-				hnw=dummy[im][j];
-				hns=dummy[i][jm];
-				hnn=dummy[i][jp];
-				hnc=dummy[i][j];
+				hne=dummy[ip*Ny+j];
+				hnw=dummy[im*Ny+j];
+				hns=dummy[i*Ny+jm];
+				hnn=dummy[i*Ny+jp];
+				hnc=dummy[ij];
 				
 				// Calculate the laplacian of the terms inside parenthesis in Eq.4.40
-				lap_dummy[i][j] = (hne + hnw -2.0*hnc)/(dx*dx)
-							 	 +(hns + hnn -2.0*hnc)/(dy*dy);
+				lap_dummy[ij] = (hne + hnw -2.0*hnc)/(dx*dx)
+							   +(hns + hnn -2.0*hnc)/(dy*dy);
 				
 				//Mobility
 				/* Calculate the diffusivity/mobility parameter for
@@ -188,8 +219,8 @@ int main(){
 				
 				//Calculate the value of interpolation function, Eq.4.42
 				// phi = rho^3 * (10 - 15*rho + 6*rho^2) (Eq.4.42)
-				phi = con[i][j]*con[i][j]*con[i][j]*(
-						10.0 - 15.0*con[i][j] + 6.0*con[i][j]*con[i][j]
+				phi = con[ij]*con[ij]*con[ij]*(
+						10.0 - 15.0*con[ij] + 6.0*con[ij]*con[ij]
 						);
 				
 				//Calculate the summations in Eq.4.41
@@ -198,7 +229,7 @@ int main(){
 					for(int jpart=0;jpart<npart;jpart++){
 						if(ipart != jpart){
 							//Not eta^2, but eta_i*eta_j
-							sum = sum + etas[i][j][ipart]*etas[i][j][jpart];
+							sum = sum + etas[ij*npart+ipart]*etas[ij*npart+jpart];
 						}
 					}
 				}
@@ -207,21 +238,21 @@ int main(){
 				   the grid point */
 				mobil = dvol*phi
 					  + dvap*(1.0-phi)
-					  + dsur*con[i][j]*(1.0-con[i][j])
+					  + dsur*con[ij]*(1.0-con[ij])
 					  + dgrb*sum;
 				
 				/* Explicit Euler time integration of
 				   concentration field, Eq.4.40 for
 				   the current grid point*/
-				con[i][j] = con[i][j] + ( dtime * mobil * lap_dummy[i][j] );
+				con[ij] = con[ij] + ( dtime * mobil * lap_dummy[ij] );
 				
 				/* If there are small variations, 
 				   set the max and min values to the limits */
-				if(con[i][j]>=0.9999){
-				   con[i][j]=0.9999;
+				if(con[ij]>=0.9999){
+				   con[ij]=0.9999;
 				}
-				if(con[i][j]<0.0001){
-				   con[i][j]=0.0001;
+				if(con[ij]<0.0001){
+				   con[ij]=0.0001;
 				}//Not 0, but 0.00001
 			}//end for(j
 		}//end for(i
@@ -239,7 +270,8 @@ int main(){
 			   common array etas[Nx][Ny][npart] to eta[Nx][Ny] */
 			for(int i=0;i<Nx;i++){
 				for(int j=0;j<Ny;j++){
-					eta[i][j]=etas[i][j][ipart];
+					ij=(i*Ny+j);
+					eta[ij]=etas[ij*npart+ipart];
 				}
 			}
 			//
@@ -247,6 +279,7 @@ int main(){
 			   five-point finite difference stencil */
 			for(int i=0;i<Nx;i++){
 				for(int j=0;j<Ny;j++){
+					ij=(i*Ny+j);
 					
 					ip=i+1;
 					im=i-1;
@@ -268,15 +301,15 @@ int main(){
 						jm=(Ny-1);
 					}
 					
-					hne=eta[ip][j];
-					hnw=eta[im][j];
-					hns=eta[i][jm];
-					hnn=eta[i][jp];
-					hnc=eta[i][j];
+					hne=eta[ip*Ny+j];
+					hnw=eta[im*Ny+j];
+					hns=eta[i*Ny+jm];
+					hnn=eta[i*Ny+jp];
+					hnc=eta[ij];
 					
 					// The Laplacian of the order parameter, Eq.4.43
-					lap_eta[i][j] = (hne + hnw -2.0*hnc)/(dx*dx)
-								   +(hns + hnn -2.0*hnc)/(dy*dy);
+					lap_eta[ij] = (hne + hnw -2.0*hnc)/(dx*dx)
+								 +(hns + hnn -2.0*hnc)/(dy*dy);
 					
 					//Calculate the derivative of free energy
 					/* Functional derivative of the free energy for
@@ -286,15 +319,15 @@ int main(){
 					/* Explicit Euler time integration of the order parameter,
 					   Eq.4.43 for the current grid point */
 					//  coefk=kappa_eta, lap_eta=Laplacian of the eta
-					eta[i][j] = eta[i][j] - (dtime * coefl)*(dfdeta - (0.5 * coefk * lap_eta[i][j]));
+					eta[ij] = eta[ij] - (dtime * coefl)*(dfdeta - (0.5 * coefk * lap_eta[ij]));
 					
 					/* If there are small variations, 
 					   set the max and min values to the limits */
-					if(eta[i][j]>=0.9999){
-					   eta[i][j]=0.9999;
+					if(eta[ij]>=0.9999){
+					   eta[ij]=0.9999;
 					}
-					if(eta[i][j]<0.0001){
-					   eta[i][j]=0.0001;
+					if(eta[ij]<0.0001){
+					   eta[ij]=0.0001;
 					}//Not 0, but 0.00001
 				}//end for(j
 			}//end for(i
@@ -303,7 +336,8 @@ int main(){
 			   common array etas[Nx][Ny][npart] */
 			for(int i=0;i<Nx;i++){
 				for(int j=0;j<Ny;j++){
-					etas[i][j][ipart]=eta[i][j];
+					ij=(i*Ny+j);
+					etas[ij*npart+ipart]=eta[ij];
 				}
 			}
 			//
@@ -315,11 +349,11 @@ int main(){
 		// If print frequency reached, print the results to file
 		if(fmod(istep,nprint)==0){
 			
-			
 			//initialization
 			for(int i=0;i<Nx;i++){
 				for(int j=0;j<Ny;j++){
-					phi2[i][j]=0.0;
+					ij=(i*Ny+j);
+					phi2[ij]=0.0;
 				}
 			}
 			
@@ -327,8 +361,9 @@ int main(){
 				//
 				for(int i=0;i<Nx;i++){
 					for(int j=0;j<Ny;j++){
-						phi2[i][j] = phi2[i][j] + (etas[i][j][ipart] * etas[i][j][ipart]);
-						//phi2[i][j] = phi2[i][j] + (etas[i][j][ipart] * etas[i][j][ipart])*(ipart+1.0);
+						ij=(i*Ny+j);
+						phi2[ij] = phi2[ij] + (etas[ij*npart+ipart] * etas[ij*npart+ipart]);
+						//phi2[ij] = phi2[ij] + (etas[ij*npart+ipart] * etas[ij*npart+ipart])*(ipart+1.0);
 					}//end for(j
 				}//end for(i
 				//
@@ -350,4 +385,15 @@ int main(){
 	end = clock();
 	compute_time = ((double) (end - start)) / CLOCKS_PER_SEC;
 	printf("Compute Time: %lf \n", compute_time);
+	
+	//----- ----- ----- 
+	free(con);
+	free(lap_con);
+	free(dummy);
+	free(lap_dummy);
+	free(eta);
+	free(lap_eta);
+	free(etas);
+	free(phi2);
+	//----- ----- ----- 
 }
