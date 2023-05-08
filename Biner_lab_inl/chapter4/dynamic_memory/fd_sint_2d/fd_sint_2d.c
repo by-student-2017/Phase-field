@@ -11,9 +11,11 @@
    prioritizes code readability.
    ----- ----- ----- ----- ----- ---- ----- ----- ----- -----
    Row-major order: C, C++, Paskal, etc
+    (right side is faster)
     a[1][1] -> a[1][2] -> a[1][3] -> a[2][1] -> a[2][2] -> ...
    ----- ----- ----- ----- ----- ---- ----- ----- ----- -----
    Column-major order: Fortran, R, Matlab, etc
+    (left side is faster)
     a[1][1] -> a[2][1] -> a[3][1] -> a[1][2] -> a[2][2] -> ...
    ----- ----- ----- ----- ----- ---- ----- ----- ----- ----- */
 

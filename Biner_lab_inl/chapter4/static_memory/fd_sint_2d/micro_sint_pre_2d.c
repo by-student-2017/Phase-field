@@ -82,7 +82,8 @@ void micro_sint_pre_2d(int Nx, int Ny,
 		yc[8]=61.0;
 		
 		//Set the particle radius (first firve are the large ones)
-		for(int ipart=0;ipart<npart;ipart++){
+		//for(int ipart=0;ipart<npart;ipart++){
+		for(int ipart=0;ipart<9;ipart++){
 			//
 			Rx=R;
 			

@@ -11,31 +11,33 @@
 /* Variable and array list
   Nx: Number of grid points in the x-direction
   Ny: Number of grid points in the y-direction
+  Nz: Number of grid points in the z-direction
   npart: Number of grid points of the simulation
   iflag: iflag=1 for longhand code (iflag=1 only)
-  etas[Nx][Ny][npart]: Common array of non-conserved order
+  etas[Nx][Ny][Nz][npart]: Common array of non-conserved order
     parameters for the particles. In the optimized code,
-    this array is in the form of etas[NxNy][npart] where,
-    NxNy is total number of grid points in
-    the simulation cell.
-  con[Nx][Ny]: Concentration field in takes values of 
+    this array is in the form of etas[NxNyNz][npart] where,
+    NxNyNz is total number of grid points in the simulation cell.
+  con[Nx][Ny][Nz]: Concentration field in takes values of 
     one in the particles and zero elsewhere. In the optimized code,
-    this is one-dimensional array in the from of con[NxNy].
+    this is one-dimensional array in the from of con[NxNyNz].
 */
 
-void micro_sint_pre_2d(int Nx, int Ny, 
+void micro_sint_pre_3d(int Nx, int Ny, int Nz,
 	int npart, int iflag, 
 	double *etas, double *con){
 	
-	int ij; //ij=i*Ny+j;
+	int ijk; //ijk=(i*Ny+j)*Nz+k;
 	
 	//initialize
 	if(iflag==1){
 		for(int ipart=0;ipart<npart;ipart++){
 			for(int i=0;i<Nx;i++){
 				for(int j=0;j<Ny;j++){
-					ij=i*Ny+j;
-					etas[ij*npart+ipart]=0.0;
+					for(int k=0;k<Nz;k++){
+						ijk=(i*Ny+j)*Nz+k;
+						etas[ijk*npart+ipart]=0.0;
+					}
 				}
 			}
 		}
@@ -49,6 +51,7 @@ void micro_sint_pre_2d(int Nx, int Ny,
 	//double yc[9];
 	double      *yc = (double *)malloc(sizeof(double)*( npart ));
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+	double zc;
 	
 	double Rx;
 	double xx1;
@@ -87,6 +90,8 @@ void micro_sint_pre_2d(int Nx, int Ny,
 		xc[8]=61.0;
 		yc[8]=61.0;
 		
+		zc = (int)Nz/2;
+		
 		//Set the particle radius (first firve are the large ones)
 		//for(int ipart=0;ipart<npart;ipart++){
 		for(int ipart=0;ipart<9;ipart++){
@@ -99,13 +104,17 @@ void micro_sint_pre_2d(int Nx, int Ny,
 			
 			for(int i=0;i<Nx;i++){
 				for(int j=0;j<Ny;j++){
-					ij=i*Ny+j;
-					xx1=sqrt( (i-xc[ipart])*(i-xc[ipart])
-							 +(j-yc[ipart])*(j-yc[ipart]));
-					//
-					if(xx1 <= Rx){
-						con[ij]=0.999;
-						etas[ij*npart+ipart]=0.999;
+					for(int k=0;k<Nz;k++){
+						ijk=(i*Ny+j)*Nz+k;
+						xx1=sqrt( (i-xc[ipart])*(i-xc[ipart])
+								 +(j-yc[ipart])*(j-yc[ipart])
+							     +(k-zc       )*(k-zc       )
+								);
+						//
+						if(xx1 <= Rx){
+							con[ijk]=0.999;
+							etas[ijk*npart+ipart]=0.999;
+						}
 					}
 				}
 			}
@@ -114,7 +123,7 @@ void micro_sint_pre_2d(int Nx, int Ny,
 	}//end if
 	
 	double R1,R2;
-	double x1,y1,y2;
+	double x1,y1,y2,z1;
 	double xx2;
 	
 	//Place two particles into the simulation cell
@@ -128,24 +137,27 @@ void micro_sint_pre_2d(int Nx, int Ny,
 		x1=(int)Nx/2;
 		y1=40.0;
 		y2=70.0;
+		z1=(int)Nz/2;
 		
 		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
-				ij=i*Ny+j;
-				//
-				xx1=sqrt( (i-x1)*(i-x1) + (j-y1)*(j-y1) );
-				xx2=sqrt( (i-x1)*(i-x1) + (j-y2)*(j-y2) );
-				
-				if(xx1 <= R1){
-					con[ij]=0.999;
-					etas[ij*npart+0]=0.999;
-				}
-				
-				//Repeat the same procedure for the second particle
-				if(xx2 <= R2){
-					con[ij]=0.999;
-					etas[ij*npart+0]=0.0;
-					etas[ij*npart+1]=0.999;
+				for(int k=0;k<Nz;k++){
+					ijk=(i*Ny+j)*Nz+k;
+					//
+					xx1=sqrt( (i-x1)*(i-x1) + (j-y1)*(j-y1) + (k-z1)*(j-z1) );
+					xx2=sqrt( (i-x1)*(i-x1) + (j-y2)*(j-y2) + (k-z1)*(j-z1) );
+					
+					if(xx1 <= R1){
+						con[ijk]=0.999;
+						etas[ijk*npart+0]=0.999;
+					}
+					
+					//Repeat the same procedure for the second particle
+					if(xx2 <= R2){
+						con[ijk]=0.999;
+						etas[ijk*npart+0]=0.0;
+						etas[ijk*npart+1]=0.999;
+					}
 				}
 			}
 		}
