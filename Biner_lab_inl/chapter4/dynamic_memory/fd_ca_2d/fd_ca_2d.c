@@ -225,6 +225,7 @@ int main(){
 			/* Prepare the data to be written to vtk file and
 			   calculate the area fraction of each grain and
 			   print them to file area_fract.out. */
+			
 			for(int i=0;i<Nx;i++){
 				for(int j=0;j<Ny;j++){
 					ij=i*Ny+j;
@@ -239,7 +240,7 @@ int main(){
 					for(int j=0;j<Ny;j++){
 						ij=i*Ny+j;
 						//eta2[ij]=eta2[ij]+etas[ij*ngrain+igrain]*etas[ij*ngrain+igrain];
-						eta2[ij]=eta2[ij]+etas[ij*ngrain+igrain]*etas[ij*ngrain+igrain]*igrain;
+						eta2[ij]=eta2[ij]+etas[ij*ngrain+igrain]*etas[ij*ngrain+igrain]*(igrain+1.0);
 						if(etas[ij*ngrain+igrain]>=0.5){
 							ncount=ncount+1;
 						}//end if
