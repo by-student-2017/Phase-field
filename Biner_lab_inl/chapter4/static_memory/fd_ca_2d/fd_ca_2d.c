@@ -142,7 +142,7 @@ int main(){
 						eta[i][j] = eta[i][j] - dtime*mobil*(dfdeta-grcoef*lap_eta[i][j]);
 						
 						/* If there are small variations, 
-						   set the max and min values to file */
+						   set the max and min values to the limits */
 						if(eta[i][j]>=0.9999){
 						   eta[i][j]=0.9999;
 						}

@@ -165,7 +165,7 @@ int main(){
 				con[i][j] = con[i][j] + dtime*mobility*lap_dummy[i][j];
 				
 				/* If there are small variations, 
-				   set the max and min values to file */
+				   set the max and min values to the limits */
 				if(con[i][j]>=0.9999){
 				   con[i][j]=0.9999;
 				}

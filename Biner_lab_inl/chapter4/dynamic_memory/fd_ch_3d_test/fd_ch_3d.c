@@ -213,7 +213,7 @@ int main(){
 					con[ijk] = con[ijk] + dtime*mobility*lap_dummy[ijk];
 					
 					/* If there are small variations, 
-					   set the max and min values to file */
+					   set the max and min values to the limits */
 					if(con[ijk]>=0.9999){
 					   con[ijk]=0.9999;
 					}
