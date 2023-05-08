@@ -54,7 +54,7 @@ int main(){
 	double ttime=0.0;   //Total time
 	
 	//Number of particles in the simulation, set to either 2 or 10 (bug fix: why not 9)
-	int npart=10; //"int npart=9" doesn't work for some reason.
+	int npart=2; //"int npart=9" doesn't work for some reason.
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	/* Model-specific parameters (see Eqs.4.40,4.43,and Table 4.1) 
