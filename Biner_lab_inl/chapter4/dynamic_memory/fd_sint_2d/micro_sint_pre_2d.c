@@ -43,11 +43,11 @@ void micro_sint_pre_2d(int Nx, int Ny,
 	
 	double R;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	//double xc[9];
-	double      *xc = (double *)malloc(sizeof(double)*( npart ));
+	double xc[9];
+	//double      *xc = (double *)malloc(sizeof(double)*( npart ));
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	//double yc[9];
-	double      *yc = (double *)malloc(sizeof(double)*( npart ));
+	double yc[9];
+	//double      *yc = (double *)malloc(sizeof(double)*( npart ));
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	
 	double Rx;
@@ -152,8 +152,8 @@ void micro_sint_pre_2d(int Nx, int Ny,
 		//
 	}//end if
 	
-	free(xc);
-	free(yc);
+	//free(xc);
+	//free(yc);
 	
 	return;
 }
