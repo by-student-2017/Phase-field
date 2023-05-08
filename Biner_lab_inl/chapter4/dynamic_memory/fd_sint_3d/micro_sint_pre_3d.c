@@ -57,7 +57,7 @@ void micro_sint_pre_3d(int Nx, int Ny, int Nz,
 	double xx1;
 	
 	// Place nine spherical particles into the simulation cell
-	if(npart != 2){
+	if(npart != 3){
 		//
 		//The radius of the first five large particles
 		R=10.0;
@@ -144,8 +144,8 @@ void micro_sint_pre_3d(int Nx, int Ny, int Nz,
 				for(int k=0;k<Nz;k++){
 					ijk=(i*Ny+j)*Nz+k;
 					//
-					xx1=sqrt( (i-x1)*(i-x1) + (j-y1)*(j-y1) + (k-z1)*(j-z1) );
-					xx2=sqrt( (i-x1)*(i-x1) + (j-y2)*(j-y2) + (k-z1)*(j-z1) );
+					xx1=sqrt( (i-x1)*(i-x1) + (j-y1)*(j-y1) + (k-z1)*(k-z1) );
+					xx2=sqrt( (i-x1)*(i-x1) + (j-y2)*(j-y2) + (k-z1)*(k-z1) );
 					
 					if(xx1 <= R1){
 						con[ijk]=0.999;
