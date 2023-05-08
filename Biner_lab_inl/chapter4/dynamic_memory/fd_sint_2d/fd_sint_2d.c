@@ -226,13 +226,12 @@ int main(){
 				//Calculate the summations in Eq.4.41
 				sum=0.0;
 				for(int ipart=0;ipart<npart;ipart++){
-					for(int jpart=0;jpart<npart;jpart++){
-						if(ipart != jpart){
-							//Not eta^2, but eta_i*eta_j
-							sum = sum + etas[ij*npart+ipart]*etas[ij*npart+jpart];
-						}
+					for(int jpart=(ipart+1);jpart<npart;jpart++){
+						//Not eta^2, but eta_i*eta_j
+						sum = sum + etas[ij*npart+ipart]*etas[ij*npart+jpart];
 					}
 				}
+				sum = sum * 2.0;
 				
 				/* The value of the diffusivity/mobility parameter at
 				   the grid point */
