@@ -39,7 +39,7 @@ void micro_sint_pre_2d(int Nx, int Ny,
 				}
 			}
 		}
-	}
+	}//end if
 	
 	double R;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
