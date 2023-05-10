@@ -18,7 +18,7 @@ __global__ void Kernel
 	int j, jx, jy;
 	float fcc, fce, fcw, fcs, fcn, fcnw, fcne, fcsw, fcse, fcww, fcee, fcnn, fcss, 
 		  mu_chc, mu_chw, mu_che, mu_chn, mu_chs, mu_suc, mu_suw, mu_sue, mu_sun, 
-		  mu_sus, mu_c, mu_w, mu_e, mu_n, mu_s, 
+		  mu_sus, mu_c, mu_w, mu_e, mu_n, mu_s,  
 		  nab_mu, dfmdx, dfmdy, dab = db/da, mcc, dmc, dfdt ;
 	
 	jx = blockDim.y*blockIdx.y + threadIdx.y;
@@ -115,7 +115,7 @@ void write_vtk_grid_values_2D(int Nx, int Ny, float dx, float dy, int istep, flo
 int main(int argc, char** argv)
 {
 	float *f, *fn, *F;
-	int nx = NX, ny = NY;
+	int nx = NX, ny = NY, BS=32;
 	int j; //int j, jx, jy, nstep;
 	
 	int nend = 10000, nout = 1000;
@@ -152,8 +152,8 @@ int main(int argc, char** argv)
 	cudaMemcpy(f,F,nx*ny*sizeof(float),cudaMemcpyHostToDevice); //copy F(cpu) to f(cuda)
 	//free(F);
 	
-	dim3 blocks(nx/16,ny/16,1);
-	dim3 threads(16,16,1);
+	dim3 blocks(nx/BS,ny/BS,1);
+	dim3 threads(BS,BS,1); //BS*BS*1 <= 1024
 	
 	//unsigned int timer;
 	//cutCreateTimer(&timer);
