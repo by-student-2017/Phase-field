@@ -31,7 +31,7 @@
 11. ./main-gpu.exe
 12. (use ParaView for time_XX.vtk)
 
-## fft version
+## fft version (underconstracting)
 - nvcc -O2 main-gpu.cu write_vtk_grid_values_2D.cu -o main-gpu.exe -lcufft -arch=sm_86
 
 ## Reference
