@@ -109,7 +109,9 @@ void update(float **f, float **fn)
 	*f  = *fn;
 	*fn = tmp;
 }
+
 void write_vtk_grid_values_2D(int Nx, int Ny, float dx, float dy, int istep, float *data1);
+
 int main(int argc, char** argv)
 {
 	float *f, *fn, *F;
