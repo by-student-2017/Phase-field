@@ -8,6 +8,7 @@
 #define NX 256 //Number of grid points in the x-direction
 #define NY 256 //Number of grid points in the y-direction
 
+// Define subroutine "Kernel" for GPU (Device) calculation in detail
 __global__ void Kernel
 (
 	float *f,float *fn, int nx, int ny,
@@ -193,7 +194,7 @@ int main(int argc, char** argv)
 	//copy F_h(cpu,host) to f_d(cuda,device)
 	cudaMemcpy(f_d,F_h,nx*ny*sizeof(float),cudaMemcpyHostToDevice);
 	
-	int BS=32; // Number of threads
+	int BS=16; // Number of threads, 16 or 32
 	dim3 blocks(nx/BS,ny/BS,1); //nx*ny = blocks * threads
 	dim3 threads(BS,BS,1);      //BS*BS*1 <= 1024
 	
