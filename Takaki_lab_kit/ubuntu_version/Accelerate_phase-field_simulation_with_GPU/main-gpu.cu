@@ -81,21 +81,21 @@ __global__ void Kernel
 	else if(jx <  nx-1 && jy == 0)   { fcse = f[j+nx*ny -nx+1];}
 	else                             { fcse = f[j       -nx+1];}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #10
-		 if(jx == 0)     { fcww = f[j+nx-2];}
-	else if(jx == 1)     { fcww = f[j+nx-2];}
-	else                 { fcww = f[j   -2];}
+		 if(jx == 0)     { fcww = f[j+(nx-2)];}
+	else if(jx == 1)     { fcww = f[j+(nx-2)];}
+	else                 { fcww = f[j+(  -2)];}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #11
-		 if(jx == nx - 2){ fcee = f[j-nx+2];}
-	else if(jx == nx - 1){ fcee = f[j-nx+2];}
-	else                 { fcee = f[j   +2];}
+		 if(jx == nx - 2){ fcee = f[j-(nx-2)];}
+	else if(jx == nx - 1){ fcee = f[j-(nx-2)];}
+	else                 { fcee = f[j-(  -2)];}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #12
-		 if(jy == ny - 2){ fcnn = f[j-nx*ny+nx+nx];}
-	else if(jy == ny - 1){ fcnn = f[j-nx*ny+nx+nx];}
-	else                 { fcnn = f[j      +nx+nx];}
+		 if(jy == ny - 2){ fcnn = f[j-nx*(ny-2)];} 
+	else if(jy == ny - 1){ fcnn = f[j-nx*(ny-2)];} 
+	else                 { fcnn = f[j-nx*(  -2)];} 
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #13
-		 if(jy == 0)     { fcss = f[j+nx*ny-nx-nx];}
-	else if(jy == 1)     { fcss = f[j+nx*ny-nx-nx];}
-	else                 { fcss = f[j      -nx-nx];}
+		 if(jy == 0)     { fcss = f[j+nx*(ny-2)];}
+	else if(jy == 1)     { fcss = f[j+nx*(ny-2)];}
+	else                 { fcss = f[j+nx*(  -2)];}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
