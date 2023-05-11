@@ -68,4 +68,5 @@ For GPU (Shard memory): main-shared.cu
 
 [T1] http://www.cis.kit.ac.jp/~takaki/phase-field/ch22-23/ch22-23.html
 [T2] https://www.gsic.titech.ac.jp/supercon/main/attwiki/index.php?plugin=attach&refer=SupercomputingContest2018&openfile=SuperCon2018-GPU.pdf
+[T3] https://hpc-phys.kek.jp/workshop/workshop190318/aoyama_190318.pdf
 #--------------------------------------------------------

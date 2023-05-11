@@ -251,8 +251,6 @@ int main(int argc, char** argv)
 		  db = 2.0e-05*exp(-308000.0/rr/temp), // Self-diffusion coefficient [m^2/s] (Cr)
 		  dt = (dx*dx/da)*0.1; // Time increment for the numerical integration [dimensionless]
 	
-	//CUT_DEVICE_INIT(argc, argv);
-	
 	f_d  = (float *)malloc(nx*ny*sizeof(float)); //GPU, CUDA, device
 	fn_d = (float *)malloc(nx*ny*sizeof(float)); //GPU, CUDA, device
 	
