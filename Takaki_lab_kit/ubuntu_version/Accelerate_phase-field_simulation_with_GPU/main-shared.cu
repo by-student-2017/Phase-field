@@ -1,3 +1,15 @@
+/* Program : 2D Phase-Field Simulation for 
+   Spinodal Decomposition in Fe-Cr Alloy by GPU (shared memory version) Computation.
+   
+   Programmer : Akinori Yamanaka (original version)
+   Place : Depertment of Mechanical and Control Engineering Tokyo Institute of Technology
+   Date : 7th, July, 2010 
+   
+   Modified version: By Student
+   Place: 2-1 Hirosawa, Wako, Saitama, 351-0198, Japan
+   Date: 11th/May/2023
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
