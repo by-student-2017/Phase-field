@@ -8,6 +8,7 @@
 #define NX 256 //Number of grid points in the x-direction
 #define NY 256 //Number of grid points in the y-direction
 
+// Define subroutine "Kernel" for GPU (Device) calculation in detail
 __global__ void Kernel
 (
 	float *f, float *fn, int nx, int ny,
@@ -70,11 +71,11 @@ __global__ void Kernel
 	else if(blockIdx.x == 0 && blockIdx.y  > 0) { J10 =  j -1  ;}
 	else if(blockIdx.x == 0 && blockIdx.y == 0) { J10 = nx*blockDim.x*blockDim.y - 1 ;}
 	else                                        { J10 = j - nx - 1 ;}
-
-       if(blockIdx.x == gridDim.x -1 && blockIdx.y == 0) { J11 = nx*blockDim.x*blockDim.y -1 - nx + 1;}
-  else if(blockIdx.x  < gridDim.x -1 && blockIdx.y == 0) { J11 = J0 + 1  ;}
-  else if(blockIdx.x == gridDim.x -1 && blockIdx.y  > 0) { J11 =  j - nx - nx + 1 ;}
-  else                                                   { J11 = j - nx + 1 ;}
+	
+		 if(blockIdx.x == gridDim.x -1 && blockIdx.y == 0) { J11 = nx*blockDim.x*blockDim.y -1 - nx + 1;}
+	else if(blockIdx.x  < gridDim.x -1 && blockIdx.y == 0) { J11 = J0 + 1  ;}
+	else if(blockIdx.x == gridDim.x -1 && blockIdx.y  > 0) { J11 =  j - nx - nx + 1 ;}
+	else                                                   { J11 = j - nx + 1 ;}
 	
 	if(threadIdx.y ==  0){ fs[jx][ 1] = f[J0], fs[jx][ 0] = f[J4];}
 	if(threadIdx.y ==  1){ fs[ 1][jx] = f[J2], fs[ 0][jx] = f[J6];}
@@ -85,7 +86,7 @@ __global__ void Kernel
 	if(threadIdx.x ==  0 && threadIdx.y ==  0) {fs[ 1][ 1] = f[J10];}
 	if(threadIdx.x == 15 && threadIdx.y ==  0) {fs[18][ 1] = f[J11];}
 	
-	__syncthreads();
+	__syncthreads(); // Wait until all data is secured
 	
 	fcc  = fs[jx  ][jy  ];
 	fcw  = fs[jx-1][jy  ];
@@ -103,35 +104,63 @@ __global__ void Kernel
 	fcsw = fs[jx-1][jy-1];
 	fcse = fs[jx+1][jy-1];
 	
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	// term1 = Atomic_interaction*(1-2*f) + RT*{log(f) - log(1-f)}
 	mu_chc = L0*(1.0-2.0*fcc)+rr*temp*(log(fcc)-log(1.0-fcc));
 	mu_chw = L0*(1.0-2.0*fcw)+rr*temp*(log(fcw)-log(1.0-fcw));
 	mu_che = L0*(1.0-2.0*fce)+rr*temp*(log(fce)-log(1.0-fce));
 	mu_chn = L0*(1.0-2.0*fcn)+rr*temp*(log(fcn)-log(1.0-fcn));
 	mu_chs = L0*(1.0-2.0*fcs)+rr*temp*(log(fcs)-log(1.0-fcs));
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
-	mu_suc = -kapa_c*(fce +fcw +fcn +fcs -4.0*fcc)/dx/dx;  
-	mu_suw = -kapa_c*(fcc +fcww+fcnw+fcsw-4.0*fcw)/dx/dx;  
-	mu_sue = -kapa_c*(fcee+fcc +fcne+fcse-4.0*fce)/dx/dx;  
-	mu_sun = -kapa_c*(fcne+fcnw+fcnn+fcc -4.0*fcn)/dx/dx; 
-	mu_sus = -kapa_c*(fcse+fcsw+fcc +fcss-4.0*fcs)/dx/dx;  
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	// term2 = -gradient_energy_coefficient * Laplacian(f)
+	mu_suc = -kapa_c*(fce +fcw +fcn +fcs -4.0*fcc)/dx/dx;
+	mu_suw = -kapa_c*(fcc +fcww+fcnw+fcsw-4.0*fcw)/dx/dx;
+	mu_sue = -kapa_c*(fcee+fcc +fcne+fcse-4.0*fce)/dx/dx;
+	mu_sun = -kapa_c*(fcne+fcnw+fcnn+fcc -4.0*fcn)/dx/dx;
+	mu_sus = -kapa_c*(fcse+fcsw+fcc +fcss-4.0*fcs)/dx/dx;
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
-	mu_c = mu_chc + mu_suc; 
-	mu_w = mu_chw + mu_suw; 
-	mu_e = mu_che + mu_sue; 
-	mu_n = mu_chn + mu_sun; 
-	mu_s = mu_chs + mu_sus; 
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	// mu = dG/df = term1 + term2
+	mu_c = mu_chc + mu_suc; // at current (jx,jy) grid point
+	mu_w = mu_chw + mu_suw; // at (jx-1,jy) grid point
+	mu_e = mu_che + mu_sue; // at (jx+1,jy) grid point
+	mu_n = mu_chn + mu_sun; // at (jx,jy+1) grid point
+	mu_s = mu_chs + mu_sus; // at (jx,jy-1) grid point
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
-	nab_mu = (mu_w + mu_e + mu_n + mu_s -4.0*mu_c)/dx/dx;  
-	dfmdx = ((mu_w-mu_e)*(fcw-fce))/(4.0*dx*dx); 
-	dfmdy = ((mu_n-mu_s)*(fcn-fcs))/(4.0*dx*dx); 
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	// Laplacian(mu) = d^2(mu)/dx^2 + d^2(mu)/dy^2
+	nab_mu = (mu_w + mu_e + mu_n + mu_s -4.0*mu_c)/dx/dx;
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	// (df/dx) * d(mu)/dx
+	dfmdx = ((mu_w-mu_e)*(fcw-fce))/(4.0*dx*dx);
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	// (df/dy) * d(mu)/dy
+	dfmdy = ((mu_n-mu_s)*(fcn-fcs))/(4.0*dx*dx);
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	// Mobility, M = { (D_A/RT)*c + (D_B/RT)*(1-c) }*c*(1-c)
+	//             = (D_a/RT)*{f + (D_B/D_A)*(1-f)}*f*(1-f)
 	mcc = (da/rr/temp)*(fcc+dab*(1.0-fcc))*fcc*(1.0-fcc); 
-	dmc = (da/rr/temp)*((1.0-dab)*fcc*(1.0-fcc)
-					  +(fcc+dab*(1.0-fcc))*(1.0-2.0*fcc)); 
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	// dM/df
+	dmc = (da/rr/temp)*((1.0-dab)*fcc*(1.0-fcc)
+					  +(fcc+dab*(1.0-fcc))*(1.0-2.0*fcc));
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	// df/dt = M*Laplacian(f) + (dM/df)*( (df/dx) * d(mu)/dx + (df/dy) * d(mu)/dy )
 	dfdt = mcc*nab_mu + dmc*(dfmdx+dfmdy); 
 	fn[j] = f[j]+dfdt*dt;
-	
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 }
 
 void update(float **f, float **fn)
