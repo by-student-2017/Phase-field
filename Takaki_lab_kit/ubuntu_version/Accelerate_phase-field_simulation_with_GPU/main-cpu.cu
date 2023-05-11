@@ -264,6 +264,7 @@ int main(int argc, char** argv)
 	f  = (float *)malloc(nx*ny*sizeof(float));
 	fn = (float *)malloc(nx*ny*sizeof(float));
 	
+	// Initialize the concentration filed f with random modulation
 	for(int jy=0; jy<ny ; jy++){
 		for(int jx=0; jx<nx ; jx++){
 			int j = nx*jy + jx;
@@ -272,10 +273,17 @@ int main(int argc, char** argv)
 		}
 	}
 	
-	//unsigned int timer;
-	//cutCreateTimer(&timer);
-	//cutResetTimer(timer);
-	//cutStartTimer(timer);
+	//----- ----- ----- -----
+	//Set recording time
+	cudaEvent_t start, stop;
+	
+	//Initialization
+	cudaEventCreate(&start);
+	cudaEventCreate(&stop);
+	
+	//Start recording time
+	cudaEventRecord(start);
+	//----- ----- ----- -----
 	
 	for(int istep=0; istep<=nstep ; istep++){
 		//calculate subroutine "Kernel" on CPU
@@ -301,9 +309,24 @@ int main(int argc, char** argv)
 		}
 	}
 	
-	//cutStopTimer(timer);
-	//float calc_time = cutGetTimerValue(timer)*1.0e-03;
-	//printf("Calculation Time = %9.3e [sec]\n",calc_time);
+	//----- ----- ----- -----
+	//Stop recording time
+	cudaEventRecord(stop);
+	
+	//Wait all event
+	cudaEventSynchronize(stop);
+	
+	//calculate time. time is [ms] unit.
+	float milliseconds = 0;
+	cudaEventElapsedTime(&milliseconds, start, stop);
+	
+	//Show computing time
+	printf("Calculation Time = %9.3f [sec] \n",milliseconds*1.0e-03);
+	
+	//End processing
+	cudaEventDestroy(start);
+	cudaEventDestroy(stop);
+	//----- ----- ----- -----
 	
 	free(f);
 	free(fn);
