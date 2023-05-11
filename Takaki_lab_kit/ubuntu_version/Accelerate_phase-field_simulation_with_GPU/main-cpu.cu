@@ -20,9 +20,9 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
-#define TIMES 4
-#define NX 128*TIMES //Number of grid points in the x-direction
-#define NY 128*TIMES //Number of grid points in the y-direction
+#define TIMES 2
+#define NX 256*TIMES //Number of grid points in the x-direction
+#define NY 256*TIMES //Number of grid points in the y-direction
 
 void Kernel
 (
