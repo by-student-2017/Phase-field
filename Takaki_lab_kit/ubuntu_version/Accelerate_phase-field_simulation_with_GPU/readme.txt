@@ -19,9 +19,14 @@
 7. which nvcc
   (/usr/bin/nvcc)
 
-## Linux (ubuntu 22.04 lts)
+## Linux (ubuntu 22.04 lts) (GPU)
 8. nvcc -O2 main-gpu.cu write_vtk_grid_values_2D.cu -o main-gpu.exe -arch=native -lm --std 'c++17'
 9. ./main-gpu.exe
+10. (use ParaView for time_XX.vtk)
+
+## Linux (ubuntu 22.04 lts) (GPU, shared)
+8. nvcc -O2 main-shared.cu write_vtk_grid_values_2D.cu -o main-shared.exe -arch=native -lm --std 'c++17'
+9. ./main-shared.exe
 10. (use ParaView for time_XX.vtk)
 
 ## cmake version (ubuntu 22.04 lts) (failed)
@@ -57,4 +62,5 @@ For GPU (Global memory): main-gpu.cu
 For GPU (Shard memory): main-shared.cu
 
 [T1] http://www.cis.kit.ac.jp/~takaki/phase-field/ch22-23/ch22-23.html
+[T2] https://www.gsic.titech.ac.jp/supercon/main/attwiki/index.php?plugin=attach&refer=SupercomputingContest2018&openfile=SuperCon2018-GPU.pdf
 #--------------------------------------------------------
