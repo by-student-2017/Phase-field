@@ -277,10 +277,17 @@ int main(int argc, char** argv)
 	dim3 blocks(nx/bs,ny/bs,1); //nx*ny = blocks * threads
 	dim3 threads(bs,bs,1);      //bs*bs*1 <= 1024
 	
-	//unsigned int timer;
-	//cutCreateTimer(&timer);
-	//cutResetTimer(timer);
-	//cutStartTimer(timer);
+	//----- ----- ----- -----
+	//Set recording time
+	cudaEvent_t start, stop;
+	
+	//Initialization
+	cudaEventCreate(&start);
+	cudaEventCreate(&stop);
+	
+	//Start recording time
+	cudaEventRecord(start);
+	//----- ----- ----- -----
 	
 	for(int istep=0; istep<=nstep ; istep++){
 		//calculate subroutine "Kernel" on GPU
@@ -301,9 +308,25 @@ int main(int argc, char** argv)
 			fprintf(stderr,"nstep = %5d \n",istep);
 		}
 	}
-	//cutStopTimer(timer);
-	//float calc_time = cutGetTimerValue(timer)*1.0e-03;
-	//printf("Calculation Time = %9.3e [sec]\n",calc_time);
+	
+	//----- ----- ----- -----
+	//Stop recording time
+	cudaEventRecord(stop);
+	
+	//Wait all event
+	cudaEventSynchronize(stop);
+	
+	//calculate time. time is [ms] unit.
+	float milliseconds = 0;
+	cudaEventElapsedTime(&milliseconds, start, stop);
+	
+	//Show computing time
+	printf("Calculation Time = %9.3f [sec] \n",milliseconds*1.0e-03);
+	
+	//End processing
+	cudaEventDestroy(start);
+	cudaEventDestroy(stop);
+	//----- ----- ----- -----
 	
 	cudaFree(f_d);
 	cudaFree(fn_d);
