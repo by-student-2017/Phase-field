@@ -10,9 +10,9 @@
    Date: 11th/May/2023
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+#include <stdio.h>  //printf()
+#include <stdlib.h> //rand() and malloc()
+#include <math.h>   //mod() and -lm
 //#include <cuda.h>
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
