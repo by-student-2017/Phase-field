@@ -28,7 +28,7 @@ __global__ void Kernel
 		  nab_mu, dfmdx, dfmdy, dab = db/da, mcc, dmc, dfdt ;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	/* Consider up to the second nearest neighbor. Therefore, 
-	   13 difference grid points are used. 
+	13 difference grid points are used. (#1 to #13)
 	   The if statement is used because of periodic boundary conditions.*/
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #1
 	fcc = f[j]; // concentration at current point
