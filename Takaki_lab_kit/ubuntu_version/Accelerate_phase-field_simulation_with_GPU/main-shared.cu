@@ -238,17 +238,24 @@ int main(int argc, char** argv)
 	
 	int nstep=10000;    //Number of time integration steps
 	int nprint=1000;    //Output frequency to write the results to file
+	//----- ----- ----- -----
 	float Lx = 3.0e-07*times, // Simulation length in x-direction [micro m]
 		  Ly = 3.0e-07*times, // Simulation length in y-direction [micro m]
+		  //----- ----- ----- -----
 		  dx = Lx/(float)nx, // Grid spacing between two grid pints in x-direction [nm]
 		  dy = Ly/(float)ny, // Grid spacing between two grid pints in y-direction [nm]
+		  //----- ----- ----- -----
 		  c_0 = 0.4,    // Initial concentration (atomic fraction)
+		  //----- ----- ----- -----
 		  rr = 8.314,   // Gas constant [J/(mol*K)]
 		  temp = 673.0, // Temperature [K]
+		  //----- ----- ----- -----
 		  L0 = 21020.8-9.31889*temp, // Atomic interaction [J/mol]
 		  kapa_c = 1.2e-14,  // The value of gradient energy coefficients [J*m^2/mol]
+		  //----- ----- ----- -----
 		  da = 1.0e-04*exp(-294000.0/rr/temp), // Self-diffusion coefficient [m^2/s] (Fe)
 		  db = 2.0e-05*exp(-308000.0/rr/temp), // Self-diffusion coefficient [m^2/s] (Cr)
+		  //----- ----- ----- -----
 		  dt = (dx*dx/da)*0.1; // Time increment for the numerical integration [dimensionless]
 	
 	f_d  = (float *)malloc(nx*ny*sizeof(float)); //GPU, CUDA, device
