@@ -26,7 +26,9 @@ __global__ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Declare variables used when copying data from global memory to shared memory
 	int joff;
-	int J0,J1,J2,J3,J4,J5,J6,J7,J8,J9,J10,J11;
+	int J0, J1, J2, J3; // One inner edge
+	int J4, J5, J6, J7; // The most edge
+	int J8, J9, J10, J11; // Corner
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -114,8 +116,8 @@ __global__ void Kernel
 	//----- ----- ----- 
 	if(threadIdx.x ==  0 && threadIdx.y == 15) {fs[ 1][18] = f[J8];}  // Upper and Rgith sleeve area
 	if(threadIdx.x == 15 && threadIdx.y == 15) {fs[18][18] = f[J9];}  // Lower and Rgith sleeve area
-	if(threadIdx.x ==  0 && threadIdx.y ==  0) {fs[ 1][ 1] = f[J10];} // Upper and Left sleeve area
-	if(threadIdx.x == 15 && threadIdx.y ==  0) {fs[18][ 1] = f[J11];} // Lower and Left sleeve area
+	if(threadIdx.x ==  0 && threadIdx.y ==  0) {fs[ 1][ 1] = f[J10];} // Upper and Left  sleeve area
+	if(threadIdx.x == 15 && threadIdx.y ==  0) {fs[18][ 1] = f[J11];} // Lower and Left  sleeve area
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
