@@ -5,8 +5,8 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
-#define NX 256
-#define NY 256
+#define NX 256 //Number of grid points in the x-direction
+#define NY 256 //Number of grid points in the y-direction
 
 __global__ void Kernel
 (
@@ -144,72 +144,83 @@ void write_vtk_grid_values_2D(int Nx, int Ny, float dx, float dy, int istep, flo
 
 int main(int argc, char** argv)
 {
-	float *f, *fn, *F;
-	int nx = NX, ny = NY, BS=32;
-	int j; //int j, jx, jy, nstep;
+	float *f_d, *fn_d; // name of dynamic memory for GPU, CUDA, device
+	float *F_h;        // name of dynamic memory for CPU
+	int nx = NX, ny = NY;
 	
-	int nend = 10000, nout = 1000;
-	float Lx = 3.0e-07, 
-		  Ly = 3.0e-07,
-		  dx = Lx/(float)nx,
-		  dy = Ly/(float)ny,
-		  c_0 = 0.4,
-		  rr = 8.314, 
-		  temp = 673.0,
-		  L0 = 21020.8-9.31889*temp, 
-		  kapa_c = 1.2e-14, 
-		  da = 1.0e-04*exp(-294000.0/rr/temp), 
-		  db = 2.0e-05*exp(-308000.0/rr/temp), 
-		  dt = (dx*dx/da)*0.1;  
+	int nstep=10000;    //Number of time integration steps
+	int nprint=1000;    //Output frequency to write the results to file
+	float Lx = 3.0e-07, // Simulation length in x-direction [micro m]
+		  Ly = 3.0e-07, // Simulation length in y-direction [micro m]
+		  dx = Lx/(float)nx, // Grid spacing between two grid pints in x-direction [nm]
+		  dy = Ly/(float)ny, // Grid spacing between two grid pints in y-direction [nm]
+		  c_0 = 0.4,    // Initial concentration (atomic fraction)
+		  rr = 8.314,   // Gas constant [J/(mol*K)]
+		  temp = 673.0, // Temperature [K]
+		  L0 = 21020.8-9.31889*temp, // Atomic interaction [J/mol]
+		  kapa_c = 1.2e-14,  // The value of gradient energy coefficients [J*m^2/mol]
+		  da = 1.0e-04*exp(-294000.0/rr/temp), // Self-diffusion coefficient [m^2/s] (Fe)
+		  db = 2.0e-05*exp(-308000.0/rr/temp), // Self-diffusion coefficient [m^2/s] (Cr)
+		  dt = (dx*dx/da)*0.1; // Time increment for the numerical integration [dimensionless]
 	
 	//CUT_DEVICE_INIT(argc, argv);
 	
-	f  = (float *)malloc(nx*ny*sizeof(float)); //GPU, CUDA, device
-	fn = (float *)malloc(nx*ny*sizeof(float)); //GPU, CUDA, device
+	f_d  = (float *)malloc(nx*ny*sizeof(float)); //GPU, CUDA, device
+	fn_d = (float *)malloc(nx*ny*sizeof(float)); //GPU, CUDA, device
 	
-	cudaMalloc((void**)&f ,nx*ny*sizeof(float));
-	cudaMalloc((void**)&fn,nx*ny*sizeof(float));
+	cudaMalloc((void**)&f_d ,nx*ny*sizeof(float)); // define dynamic memory for GPU (device)
+	cudaMalloc((void**)&fn_d,nx*ny*sizeof(float)); // define dynamic memory for GPU (device)
 	
-	F  = (float *)malloc(nx*ny*sizeof(float)); //CPU, host
+	F_h  = (float *)malloc(nx*ny*sizeof(float));   // define dynamic memory for CPU (host)
+	
+	// Initialize the concentration filed F_h with random modulation
 	for(int jy=0; jy<ny ; jy++){
 		for(int jx=0; jx<nx ; jx++){
-			j = nx*jy + jx;
+			int j = nx*jy + jx;
 			float r = (float)rand()/(float)(RAND_MAX);
-			F[j] = c_0 + 0.01*r;
+			F_h[j] = c_0 + 0.01*r;
 		}
-	}
+	}//on CPU calculation
 	
-	cudaMemcpy(f,F,nx*ny*sizeof(float),cudaMemcpyHostToDevice);
-	//free(F);
+	//copy F_h(cpu,host) to f_d(cuda,device)
+	cudaMemcpy(f_d,F_h,nx*ny*sizeof(float),cudaMemcpyHostToDevice);
 	
-	dim3 blocks(nx/BS,ny/BS,1);
-	dim3 threads(BS,BS,1);
+	int BS=16; // Number of threads
+	dim3 blocks(nx/BS,ny/BS,1); //nx*ny = blocks * threads
+	dim3 threads(BS,BS,1);      //BS*BS*1 <= 1024
 	
 	//unsigned int timer;
 	//cutCreateTimer(&timer);
 	//cutResetTimer(timer);
 	//cutStartTimer(timer);
 	
-	for(int nstep=0; nstep<=nend ; nstep++){
-		//
-		Kernel<<<blocks, threads>>>(f,fn,nx,ny,rr,temp,L0,kapa_c,da,db,dt,dx,dy);
+	for(int istep=0; istep<=nstep ; istep++){
+		//calculate subroutine "Kernel" on GPU
+		Kernel<<<blocks, threads>>>(f_d,fn_d,nx,ny,rr,temp,L0,kapa_c,da,db,dt,dx,dy);
 		//cudaThreadSynchronize();
-		update(&f,&fn);
 		
-		if(nstep%nout == 0){
-			fprintf(stderr,"nstep = %5d \n",nstep);
-			cudaMemcpy(F,f,nx*ny*sizeof(float),cudaMemcpyDeviceToHost); //copy f(cuda) to F(cpu)
-			write_vtk_grid_values_2D(nx,ny,dx,dy,nstep,F);
+		// replace f_d with new f_d (=fn_d)
+		update(&f_d,&fn_d);
+		
+		if(istep%nprint == 0){
+			//copy f_d(cuda,device) to F_h(cpu,host)
+			cudaMemcpy(F_h,f_d,nx*ny*sizeof(float),cudaMemcpyDeviceToHost);
+			
+			//output vtk format
+			write_vtk_grid_values_2D(nx,ny,dx,dy,istep,F_h);
+			
+			//show current step
+			fprintf(stderr,"nstep = %5d \n",istep);
 		}
 	}
 	//cutStopTimer(timer);
 	//float calc_time = cutGetTimerValue(timer)*1.0e-03;
 	//printf("Calculation Time = %9.3e [sec]\n",calc_time);
 	
-	cudaFree(f);
-	cudaFree(fn);
+	cudaFree(f_d);
+	cudaFree(fn_d);
 	
-	free(F);
+	free(F_h);
 	
 	return 0;
 }

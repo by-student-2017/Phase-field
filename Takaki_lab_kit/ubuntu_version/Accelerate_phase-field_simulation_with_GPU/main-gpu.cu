@@ -117,7 +117,6 @@ int main(int argc, char** argv)
 	float *f_d, *fn_d; // name of dynamic memory for GPU, CUDA, device
 	float *F_h;        // name of dynamic memory for CPU
 	int nx = NX, ny = NY;
-	int BS=32; // Number of threads
 	
 	int nstep=10000;    //Number of time integration steps
 	int nprint=1000;    //Output frequency to write the results to file
@@ -153,9 +152,10 @@ int main(int argc, char** argv)
 		}
 	}//on CPU calculation
 	
-	//copy F(cpu) to f(cuda)
+	//copy F_h(cpu,host) to f_d(cuda,device)
 	cudaMemcpy(f_d,F_h,nx*ny*sizeof(float),cudaMemcpyHostToDevice);
 	
+	int BS=32; // Number of threads
 	dim3 blocks(nx/BS,ny/BS,1); //nx*ny = blocks * threads
 	dim3 threads(BS,BS,1);      //BS*BS*1 <= 1024
 	
@@ -169,11 +169,11 @@ int main(int argc, char** argv)
 		Kernel<<<blocks, threads>>>(f_d,fn_d,nx,ny,rr,temp,L0,kapa_c,da,db,dt,dx,dy);
 		//cudaThreadSynchronize();
 		
-		// replace f with new f (=fn)
+		// replace f_d with new f_d (=fn_d)
 		update(&f_d,&fn_d);
 		//
 		if(istep%nprint == 0){
-			//copy f(cuda) to F(cpu)
+			//copy f_d(cuda,device) to F_h(cpu,host)
 			cudaMemcpy(F_h,f_d,nx*ny*sizeof(float),cudaMemcpyDeviceToHost);
 			
 			//output vtk format
