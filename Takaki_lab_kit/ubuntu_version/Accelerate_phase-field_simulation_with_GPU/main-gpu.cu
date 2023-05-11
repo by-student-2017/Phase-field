@@ -32,7 +32,7 @@ __global__ void Kernel
 	13 difference grid points are used. (#1 to #13)
 	   The if statement is used because of periodic boundary conditions.*/
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #1
-	fcc = f[j]; // concentration at current point
+	fcc = f[j]; // The value of concentration at current (jx,jy) grid point
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #2
 	if(jx == 0)    fcw = f[j+nx-1];
 	else           fcw = f[j   -1];
