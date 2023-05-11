@@ -26,13 +26,11 @@ __global__ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Declare variables used when copying data from global memory to shared memory
 	int joff;
-	int J0, J1, J2, J3; // One inner edge
-	int J4, J5, J6, J7; // The most edge
-	int J8, J9, J10, J11; // Corner
+	int J0,J1,J2,J3,J4,J5,J6,J7,J8,J9,J10,J11;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	//int thread_x = 16, thread_y = 16; // 16=BS (16 kB before GF100 Core, 48 kB after GF100 Core)
+	//int thread_x = 16, thread_y = 16; // 16=BS (16 kB before GF100 Core)
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -87,37 +85,34 @@ __global__ void Kernel
 	else				{J3 = joff + nx*threadIdx.x + 16,
 						 J7 = J3 + 1;}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	//----- ----- ----- Upper and Rgith sleeve area
 		 if(blockIdx.x == 0 && blockIdx.y == gridDim.y - 1) { J8 = blockDim.x*16 -1;}
 	else if(blockIdx.x  > 0 && blockIdx.y == gridDim.y - 1) { J8 = J1 - 1 ;}
 	else if(blockIdx.x == 0 && blockIdx.y  < gridDim.y - 1) { J8 = j + nx + nx -1;}
 	else                                                    { J8 = j + nx -1 ;}
-	//----- ----- ----- Lower and Rgith sleeve area
+	//----- ----- ----- 
 		 if(blockIdx.x == gridDim.x - 1 && blockIdx.y == gridDim.y - 1) { J9 = 0 ;}
 	else if(blockIdx.x  < gridDim.x - 1 && blockIdx.y == gridDim.y - 1) { J9 = J1 + 1 ;}
 	else if(blockIdx.x == gridDim.x - 1 && blockIdx.y  < gridDim.y - 1) { J9 = j  + 1 ;}
 	else                                                                { J9 = j + nx +1 ;}
-	//----- ----- ----- Upper and Left sleeve area
+	//----- ----- ----- 
 		 if(blockIdx.x  > 0 && blockIdx.y == 0) { J10 = J0 - 1 ;}
 	else if(blockIdx.x == 0 && blockIdx.y  > 0) { J10 =  j -1  ;}
 	else if(blockIdx.x == 0 && blockIdx.y == 0) { J10 = nx*blockDim.x*blockDim.y - 1 ;}
 	else                                        { J10 = j - nx - 1 ;}
-	//----- ----- ----- Lower and Left sleeve area
+	//----- ----- ----- 
 		 if(blockIdx.x == gridDim.x -1 && blockIdx.y == 0) { J11 = nx*blockDim.x*blockDim.y -1 - nx + 1;}
 	else if(blockIdx.x  < gridDim.x -1 && blockIdx.y == 0) { J11 = J0 + 1  ;}
 	else if(blockIdx.x == gridDim.x -1 && blockIdx.y  > 0) { J11 =  j - nx - nx + 1 ;}
 	else                                                   { J11 = j - nx + 1 ;}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	// copy Global memory to Shared memory
-	if(threadIdx.y ==  0){ fs[jx][ 1] = f[J0], fs[jx][ 0] = f[J4];}   // Upper sleeve area
-	if(threadIdx.y ==  1){ fs[ 1][jx] = f[J2], fs[ 0][jx] = f[J6];}   // Left  sleeve area
-	if(threadIdx.y ==  2){ fs[18][jx] = f[J3], fs[19][jx] = f[J7];}   // Right sleeve area
-	if(threadIdx.y == 15){ fs[jx][18] = f[J1], fs[jx][19] = f[J5];}   // Lower sleeve area
-	//----- ----- ----- 
-	if(threadIdx.x ==  0 && threadIdx.y == 15) {fs[ 1][18] = f[J8];}  // Upper and Rgith sleeve area
-	if(threadIdx.x == 15 && threadIdx.y == 15) {fs[18][18] = f[J9];}  // Lower and Rgith sleeve area
-	if(threadIdx.x ==  0 && threadIdx.y ==  0) {fs[ 1][ 1] = f[J10];} // Upper and Left  sleeve area
-	if(threadIdx.x == 15 && threadIdx.y ==  0) {fs[18][ 1] = f[J11];} // Lower and Left  sleeve area
+	if(threadIdx.y ==  0){ fs[jx][ 1] = f[J0], fs[jx][ 0] = f[J4];}
+	if(threadIdx.y ==  1){ fs[ 1][jx] = f[J2], fs[ 0][jx] = f[J6];}
+	if(threadIdx.y ==  2){ fs[18][jx] = f[J3], fs[19][jx] = f[J7];}
+	if(threadIdx.y == 15){ fs[jx][18] = f[J1], fs[jx][19] = f[J5];}
+	if(threadIdx.x ==  0 && threadIdx.y == 15) {fs[ 1][18] = f[J8];}
+	if(threadIdx.x == 15 && threadIdx.y == 15) {fs[18][18] = f[J9];}
+	if(threadIdx.x ==  0 && threadIdx.y ==  0) {fs[ 1][ 1] = f[J10];}
+	if(threadIdx.x == 15 && threadIdx.y ==  0) {fs[18][ 1] = f[J11];}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -133,12 +128,12 @@ __global__ void Kernel
 	fce  = fs[jx+1][jy  ]; // #3
 	fcn  = fs[jx  ][jy+1]; // #4
 	fcs  = fs[jx  ][jy-1]; // #5
-	//
+	
 	fcww = fs[jx-2][jy  ]; // #6
 	fcee = fs[jx+2][jy  ]; // #7
 	fcnn = fs[jx  ][jy+2]; // #8
 	fcss = fs[jx  ][jy-2]; // #9
-	//
+	
 	fcnw = fs[jx-1][jy+1]; // #10
 	fcne = fs[jx+1][jy+1]; // #11
 	fcsw = fs[jx-1][jy-1]; // #12
