@@ -10,9 +10,9 @@
 
 __global__ void Kernel
 (
-	float *f,float *fn, int nx, int ny,
-	float  rr, float temp,float L0,
-	float kapa_c,float da,float db,float dt,float dx,float dy
+	float *f, float *fn, int nx, int ny,
+	float rr, float temp, float L0,
+	float kapa_c, float da, float db, float dt, float dx, float dy
 )
 {
 	int j, jx, jy;

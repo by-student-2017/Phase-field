@@ -24,8 +24,9 @@ __global__ void Kernel
 	
 	int joff;
 	int J0,J1,J2,J3,J4,J5,J6,J7,J8,J9,J10,J11;
+	//int thread_x = 16, thread_y = 16; // 16=BS (16 kB before GF100 Core)
 	
-	__shared__ float fs[20][20];
+	__shared__ float fs[16+4][16+4];
 	
 	jx = threadIdx.x + 2;
 	jy = threadIdx.y + 2;
