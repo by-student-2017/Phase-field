@@ -155,7 +155,7 @@ int main(int argc, char** argv)
 	//copy F_h(cpu,host) to f_d(cuda,device)
 	cudaMemcpy(f_d,F_h,nx*ny*sizeof(float),cudaMemcpyHostToDevice);
 	
-	int BS=32; // Number of threads
+	int BS=16; // Number of threads
 	dim3 blocks(nx/BS,ny/BS,1); //nx*ny = blocks * threads
 	dim3 threads(BS,BS,1);      //BS*BS*1 <= 1024
 	
