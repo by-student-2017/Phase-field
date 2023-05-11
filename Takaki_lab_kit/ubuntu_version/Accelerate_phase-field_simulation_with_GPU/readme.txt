@@ -29,6 +29,11 @@
 9. ./main-shared.exe
 10. (use ParaView for time_XX.vtk)
 
+## Linux (ubuntu 22.04 lts) (CPU only)
+8. nvcc -O2 main-cpu.cu write_vtk_grid_values_2D.cu -o main-cpu.exe -lm
+9. ./main-shared.exe
+10. (use ParaView for time_XX.vtk)
+
 ## cmake version (ubuntu 22.04 lts) (failed)
 8. cmake -S . -B build/ -G"Unix Makefiles"
 9. cmake --build build/ --target main-gpu.exe
