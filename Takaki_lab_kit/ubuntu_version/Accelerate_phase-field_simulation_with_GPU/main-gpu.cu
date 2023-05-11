@@ -20,8 +20,10 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
-#define NX 256 //Number of grid points in the x-direction
-#define NY 256 //Number of grid points in the y-direction
+#define BS 16        //Number of threads, 2^n, BS*BS*1 <= 1024
+#define TIMES 2
+#define NX 256*TIMES //Number of grid points in the x-direction
+#define NY 256*TIMES //Number of grid points in the y-direction
 
 // Define subroutine "Kernel" for GPU (Device) calculation in detail
 __global__ void Kernel
@@ -171,11 +173,12 @@ int main(int argc, char** argv)
 	float *f_d, *fn_d; // name of dynamic memory for GPU, CUDA, device
 	float *F_h;        // name of dynamic memory for CPU
 	int nx = NX, ny = NY;
+	int times = TIMES;
 	
 	int nstep=10000;    //Number of time integration steps
 	int nprint=1000;    //Output frequency to write the results to file
-	float Lx = 3.0e-07, // Simulation length in x-direction [micro m]
-		  Ly = 3.0e-07, // Simulation length in y-direction [micro m]
+	float Lx = 3.0e-07*times, // Simulation length in x-direction [micro m]
+		  Ly = 3.0e-07*times, // Simulation length in y-direction [micro m]
 		  dx = Lx/(float)nx, // Grid spacing between two grid pints in x-direction [nm]
 		  dy = Ly/(float)ny, // Grid spacing between two grid pints in y-direction [nm]
 		  c_0 = 0.4,    // Initial concentration (atomic fraction)
@@ -209,9 +212,9 @@ int main(int argc, char** argv)
 	//copy F_h(cpu,host) to f_d(cuda,device)
 	cudaMemcpy(f_d,F_h,nx*ny*sizeof(float),cudaMemcpyHostToDevice);
 	
-	int BS=16; // Number of threads, 16 or 32
-	dim3 blocks(nx/BS,ny/BS,1); //nx*ny = blocks * threads
-	dim3 threads(BS,BS,1);      //BS*BS*1 <= 1024
+	int bs=BS; // Number of threads, 16 or 32
+	dim3 blocks(nx/bs,ny/bs,1); //nx*ny = blocks * threads
+	dim3 threads(bs,bs,1);      //bs*bs*1 <= 1024
 	
 	//unsigned int timer;
 	//cutCreateTimer(&timer);
