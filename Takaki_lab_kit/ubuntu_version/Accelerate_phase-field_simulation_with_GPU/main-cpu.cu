@@ -20,8 +20,9 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
-#define NX 128 //Number of grid points in the x-direction
-#define NY 128 //Number of grid points in the y-direction
+#define TIMES 4
+#define NX 128*TIMES //Number of grid points in the x-direction
+#define NY 128*TIMES //Number of grid points in the y-direction
 
 void Kernel
 (
@@ -242,12 +243,13 @@ int main(int argc, char** argv)
 { 
 	float *f, *fn;
 	int nx = NX, ny = NY;
+	int times = TIMES;
 	char filename[] = "f000";
 	
 	int nstep=10000;    //Number of time integration steps
 	int nprint=1000;    //Output frequency to write the results to file
-	float Lx = 3.0e-07, // Simulation length in x-direction [micro m]
-		  Ly = 3.0e-07, // Simulation length in y-direction [micro m]
+	float Lx = 3.0e-07*times, // Simulation length in x-direction [micro m]
+		  Ly = 3.0e-07*times, // Simulation length in y-direction [micro m]
 		  dx = Lx/(float)nx, // Grid spacing between two grid pints in x-direction [nm]
 		  dy = Ly/(float)ny, // Grid spacing between two grid pints in y-direction [nm]
 		  c_0 = 0.4,    // Initial concentration (atomic fraction)
