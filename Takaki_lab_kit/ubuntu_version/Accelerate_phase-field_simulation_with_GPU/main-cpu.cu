@@ -60,51 +60,51 @@ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #1
 	fcc = f[j];
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #2
-	if(jx == 0)    fcw = f[j+nx-1];
-	else           fcw = f[j   -1];
+	if(jx == 0)    fcw = f[j+(nx-1)];
+	else           fcw = f[j+(  -1)];
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #3
-	if(jx == nx-1) fce = f[j-nx+1];
-	else           fce = f[j   +1];
+	if(jx == nx-1) fce = f[j-(nx-1)];
+	else           fce = f[j-(  -1)];
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #4
-	if(jy == 0)    fcs = f[j+nx*ny-nx];
-	else           fcs = f[j      -nx];
+	if(jy == 0)    fcs = f[j+nx*(ny-1)];
+	else           fcs = f[j+nx*(  -1)];
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #5
-	if(jy == ny-1) fcn = f[j-nx*ny+nx];
-	else           fcn = f[j      +nx];
+	if(jy == ny-1) fcn = f[j-nx*(ny-1)];
+	else           fcn = f[j-nx*(  -1)];
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #6
-	if(jx == 0 && jy == ny-1)        { fcnw = f[nx-1];}
+		 if(jx == 0 && jy == ny-1)   { fcnw = f[         nx-1];}
 	else if(jx == 0 && jy  < ny-1)   { fcnw = f[j+nx    +nx-1];}
 	else if(jx  > 0 && jy == ny-1)   { fcnw = f[j-nx*ny +nx-1];}
 	else                             { fcnw = f[j       +nx-1];}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #7
-	if(jx == nx-1 && jy  < ny-1)     { fcne = f[j-nx    +nx+1];}
+		 if(jx == nx-1 && jy  < ny-1){ fcne = f[j-nx    +nx+1];}
 	else if(jx  < nx-1 && jy == ny-1){ fcne = f[j-nx*ny +nx+1];}
-	else if(jx == nx-1 && jy == ny-1){ fcne = f[0];}
+	else if(jx == nx-1 && jy == ny-1){ fcne = f[            0];}
 	else                             { fcne = f[j       +nx+1];}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #8
-	if(jx == 0 && jy >  0)           { fcsw = f[j+nx    -nx-1];}
+		 if(jx == 0 && jy >  0)      { fcsw = f[j+nx    -nx-1];}
 	else if(jx  > 0 && jy == 0)      { fcsw = f[j+nx*ny -nx-1];}
-	else if(jx == 0 && jy == 0)      { fcsw = f[nx*ny-1];} 
+	else if(jx == 0 && jy == 0)      { fcsw = f[      nx*ny-1];} 
 	else                             { fcsw = f[j       -nx-1];}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #9
-	if(jx == nx-1 && jy == 0)        { fcse = f[nx*ny-1-nx+1];}
+		 if(jx == nx-1 && jy == 0)   { fcse = f[nx*ny-1 -nx+1];}
 	else if(jx == nx-1 && jy  > 0)   { fcse = f[j-nx    -nx+1];}
 	else if(jx <  nx-1 && jy == 0)   { fcse = f[j+nx*ny -nx+1];}
 	else                             { fcse = f[j       -nx+1];}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #10
-	if(jx == 0)          { fcww = f[j+nx-2];}
+		 if(jx == 0)     { fcww = f[j+nx-2];}
 	else if(jx == 1)     { fcww = f[j+nx-2];}
 	else                 { fcww = f[j   -2];}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #11
-	if(jx == nx - 2)     { fcee = f[j-nx+2];}
+		 if(jx == nx - 2){ fcee = f[j-nx+2];}
 	else if(jx == nx - 1){ fcee = f[j-nx+2];}
 	else                 { fcee = f[j   +2];}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #12
-	if(jy == ny - 2)     { fcnn = f[j-nx*ny+nx+nx];}
+		 if(jy == ny - 2){ fcnn = f[j-nx*ny+nx+nx];}
 	else if(jy == ny - 1){ fcnn = f[j-nx*ny+nx+nx];}
 	else                 { fcnn = f[j      +nx+nx];}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #13
-	if(jy == 0)          { fcss = f[j+nx*ny-nx-nx];}
+		 if(jy == 0)     { fcss = f[j+nx*ny-nx-nx];}
 	else if(jy == 1)     { fcss = f[j+nx*ny-nx-nx];}
 	else                 { fcss = f[j      -nx-nx];}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
