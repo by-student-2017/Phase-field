@@ -20,7 +20,7 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
-#define BS 16        //Number of threads, 2^n, BS*BS*1 <= 1024
+#define BS 32        //Number of threads, 2^n=<32, BS*BS*1 <= 1024
 #define TIMES 2
 #define NX 256*TIMES //Number of grid points in the x-direction
 #define NY 256*TIMES //Number of grid points in the y-direction

@@ -20,7 +20,6 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
-#define BS 16        //Number of threads, 2^n, BS*BS*1 <= 1024
 #define TIMES 2
 #define NX 256*TIMES //Number of grid points in the x-direction
 #define NY 256*TIMES //Number of grid points in the y-direction
@@ -274,7 +273,7 @@ int main(int argc, char** argv)
 	//copy F_h(cpu,host) to f_d(cuda,device)
 	cudaMemcpy(f_d,F_h,nx*ny*sizeof(float),cudaMemcpyHostToDevice);
 	
-	int bs=BS; // Number of threads, 16 or 32
+	int bs=16; // Number of threads, 16 only
 	dim3 blocks(nx/bs,ny/bs,1); //nx*ny = blocks * threads
 	dim3 threads(bs,bs,1);      //bs*bs*1 <= 1024
 	
