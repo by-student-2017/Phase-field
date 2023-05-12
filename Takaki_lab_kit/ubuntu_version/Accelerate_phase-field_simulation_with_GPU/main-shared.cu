@@ -83,17 +83,17 @@ __global__ void Kernel
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	const int nthreads = 16; //=BS, 16 kB before GF100 Core, 48 kB after GF100 Core
-	int thread_x = nthreads;
-	int thread_y = nthreads;
+	const int thread_x = nthreads;
+	const int thread_y = nthreads;
 	// int=4B, float=4B, double=8B
-	// float:16x16 matrix = 1024 B = 1.024 kB
+	// float: 16x16 matrix = 1024 B = 1.024 kB
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	/* blockDim.x * blockDim.y = 16 * 16. In addition, 
 	   add the necessary two adjacent difference grid points to
 	   both sides of the x-axis and y-axis, respectively. */
-	__shared__ float fs[2+nthreads+2][2+nthreads+2]; //fs is shared memory
+	__shared__ float fs[2+thread_x+2][2+thread_y+2]; //fs is shared memory
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	/* Note ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
