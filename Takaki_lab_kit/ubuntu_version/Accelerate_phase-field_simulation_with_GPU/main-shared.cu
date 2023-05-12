@@ -116,12 +116,12 @@ __global__ void Kernel
 	// Calculating sleeve area in shared memory
 	//----- ----- ----- Lower (south) sleeve area ----- ----- ----- 
 	if(blockIdx.y == 0) {J0 = nx*(ny-1)+blockDim.x*blockIdx.x + threadIdx.x,
-						 J4 = J0 - nx;} // boundary condition at north edge
+						 J4 = J0 - nx;} // boundary condition at south edge
 	else                {J0 =  j - nx, 
 						 J4 = J0 - nx;} // non edge
 	//----- ----- ----- Upper (north) sleeve area ----- ----- ----- 
 	if(blockIdx.y == gridDim.y - 1) {J1 = blockDim.x*blockIdx.x + threadIdx.x, 
-						 J5 = J1 + nx;} // boundary condition at south edge
+						 J5 = J1 + nx;} // boundary condition at north edge
 	else				{J1 =  j + nx, 
 						 J5 = J1 + nx;} // non edge
 	//----- ----- ----- Left (west) sleeve area ----- ----- ----- 
