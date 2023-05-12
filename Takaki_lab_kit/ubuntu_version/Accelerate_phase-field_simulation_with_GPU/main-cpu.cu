@@ -37,7 +37,8 @@ void Kernel
 	float  da,
 	float  db,
 	float  dt,
-	float  dx
+	float  dx,
+	float  dy
 )
 {
 	int j, jx, jy;
@@ -121,11 +122,11 @@ void Kernel
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// term2 = -gradient_energy_coefficient * Laplacian(f)
-	mu_suc = -kapa_c*(fce +fcw +fcn +fcs -4.0*fcc)/dx/dx;
-	mu_suw = -kapa_c*(fcc +fcww+fcnw+fcsw-4.0*fcw)/dx/dx;
-	mu_sue = -kapa_c*(fcee+fcc +fcne+fcse-4.0*fce)/dx/dx;
-	mu_sun = -kapa_c*(fcne+fcnw+fcnn+fcc -4.0*fcn)/dx/dx;
-	mu_sus = -kapa_c*(fcse+fcsw+fcc +fcss-4.0*fcs)/dx/dx;
+	mu_suc = -kapa_c*( (fce  + fcw  -2.0*fcc)/(dx*dx) + (fcn  + fcs  -2.0*fcc)/(dy*dy) ); //center: fcc
+	mu_suw = -kapa_c*( (fcc  + fcww -2.0*fcw)/(dx*dx) + (fcnw + fcsw -2.0*fcw)/(dy*dy) ); //fcc=fcwe, fcnw=fcwn, fcsw=fcws, //center: fcw
+	mu_sue = -kapa_c*( (fcee + fcc  -2.0*fce)/(dx*dx) + (fcne + fcse -2.0*fce)/(dy*dy) ); //fcc=fcew, fcne=fcen, fcse=fces, //center: fce
+	mu_sun = -kapa_c*( (fcne + fcnw -2.0*fcn)/(dx*dx) + (fcnn + fcc  -2.0*fcn)/(dy*dy) ); //fcc=fcns, //center: fcn
+	mu_sus = -kapa_c*( (fcse + fcsw -2.0*fcs)/(dx*dx) + (fcc  + fcss -2.0*fcs)/(dy*dy) ); //fcc=fcsn, //center: fcs
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -139,7 +140,8 @@ void Kernel
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Laplacian(mu) = d^2(mu)/dx^2 + d^2(mu)/dy^2
-	nab_mu = (mu_w + mu_e + mu_n + mu_s -4.0*mu_c)/dx/dx;
+	nab_mu = (mu_w + mu_e -2.0*mu_c)/(dx*dx)  // d^2(mu)/dx^2
+		   + (mu_n + mu_s -2.0*mu_c)/(dy*dy); // d^2(mu)/dy^2
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -147,7 +149,7 @@ void Kernel
 	dfmdx = ((mu_w-mu_e)*(fcw-fce))/(4.0*dx*dx);
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// (df/dy) * d(mu)/dy
-	dfmdy = ((mu_n-mu_s)*(fcn-fcs))/(4.0*dx*dx);
+	dfmdy = ((mu_n-mu_s)*(fcn-fcs))/(4.0*dy*dy);
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -159,13 +161,13 @@ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// dM/df
 	dmc = (da/rr/temp)*((1.0-dab)*fcc*(1.0-fcc)
-		+(fcc+dab*(1.0-fcc))*(1.0-2.0*fcc)); 
+		+ (fcc+dab*(1.0-fcc))*(1.0-2.0*fcc)); 
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// df/dt = M*Laplacian(f) + (dM/df)*( (df/dx) * d(mu)/dx + (df/dy) * d(mu)/dy )
-	dfdt = mcc*nab_mu + dmc*(dfmdx+dfmdy); 
-	fn[j] = f[j]+dfdt*dt;
+	dfdt = mcc*nab_mu + dmc*(dfmdx + dfmdy); 
+	fn[j] = f[j] + dfdt*dt;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	}//end for(jy
@@ -294,7 +296,7 @@ int main(int argc, char** argv)
 	
 	for(int istep=0; istep<=nstep ; istep++){
 		//calculate subroutine "Kernel" on CPU
-		Kernel(f,fn,nx,ny,rr,temp,L0,kapa_c,da,db,dt,dx);
+		Kernel(f,fn,nx,ny,rr,temp,L0,kapa_c,da,db,dt,dx,dy);
 		
 		// replace f with new f (=fn)
 		update(&f,&fn);
