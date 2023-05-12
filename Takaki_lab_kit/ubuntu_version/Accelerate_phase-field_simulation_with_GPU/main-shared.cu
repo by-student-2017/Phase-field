@@ -140,6 +140,7 @@ __global__ void Kernel
 						 J7 = J3 + 1;} // boundary condition at east edge
 	else				{J3 = joff + nx*threadIdx.x + 16,
 						 J7 = J3 + 1;} // non edge
+	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	//----- ----- ----- north and east sleeve area
 		 if(blockIdx.x == 0 && blockIdx.y == gridDim.y - 1) { J8 = blockDim.x*16 - 1 ;} // edge(west and north)
