@@ -101,23 +101,23 @@ __global__ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #5 (center: fcc)
 	if(jy == ny-1) fcn = f[j-nx*(ny-1)]; //boundary condition at north edge
 	else           fcn = f[j-nx*(  -1)]; //non edge
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #6 (center: fcnw)
-		 if(jx == 0 && jy == ny-1)   { fcnw = f[         nx-1];} // edge(west and north)
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #6 (center: fcn)
+		 if(jx == 0 && jy == ny-1)   { fcnw = f[         nx-1];} // edge(north and west)
 	else if(jx == 0 && jy  < ny-1)   { fcnw = f[j+nx    +nx-1];} // edge(west)
 	else if(jx  > 0 && jy == ny-1)   { fcnw = f[j-nx*ny +nx-1];} // edge(north)
 	else                             { fcnw = f[j       +nx-1];} // non edge
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #7 (center: fcne)
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #7 (center: fcn)
 		 if(jx == nx-1 && jy  < ny-1){ fcne = f[j-nx    +nx+1];} // edge(east)
 	else if(jx  < nx-1 && jy == ny-1){ fcne = f[j-nx*ny +nx+1];} // edge(north)
-	else if(jx == nx-1 && jy == ny-1){ fcne = f[            0];} // edge(east and north)
+	else if(jx == nx-1 && jy == ny-1){ fcne = f[            0];} // edge(north and east)
 	else                             { fcne = f[j       +nx+1];} // non edge
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #8 (center: fcsw)
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #8 (center: fcs)
 		 if(jx == 0 && jy >  0)      { fcsw = f[j+nx    -nx-1];} // edge(west)
 	else if(jx  > 0 && jy == 0)      { fcsw = f[j+nx*ny -nx-1];} // edge(south)
-	else if(jx == 0 && jy == 0)      { fcsw = f[      nx*ny-1];} // edge(west and south)
+	else if(jx == 0 && jy == 0)      { fcsw = f[      nx*ny-1];} // edge(south and west)
 	else                             { fcsw = f[j       -nx-1];} // non edge
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #9 (center: fcse)
-		 if(jx == nx-1 && jy == 0)   { fcse = f[nx*ny-1 -nx+1];} // edge(east and south)
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #9 (center: fcs)
+		 if(jx == nx-1 && jy == 0)   { fcse = f[nx*ny-1 -nx+1];} // edge(south and east)
 	else if(jx == nx-1 && jy  > 0)   { fcse = f[j-nx    -nx+1];} // edge(east)
 	else if(jx <  nx-1 && jy == 0)   { fcse = f[j+nx*ny -nx+1];} // edge(south)
 	else                             { fcse = f[j       -nx+1];} // non edge
