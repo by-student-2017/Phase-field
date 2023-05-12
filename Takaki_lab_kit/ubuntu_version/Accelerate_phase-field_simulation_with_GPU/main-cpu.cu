@@ -7,7 +7,7 @@
    
    Modified version: By Student
    Place: 2-1 Hirosawa, Wako, Saitama, 351-0198, Japan
-   Date: 11th/May/2023
+   Date: 12th/May/2023
    Test: Ubuntu 22.04 LTS
    
    Compiling: nvcc -O2 main-cpu.cu write_vtk_grid_values_2D.cu -o main-cpu.exe -lm
@@ -56,6 +56,8 @@ void Kernel
 		   fcsw, fcse,
 		   //----- ----- -----
 		   fcww, fcee, fcnn, fcss,
+		   //----- ----- ----- ----- ----- -----
+		   RT = rr*temp,
 		   //----- ----- ----- ----- ----- -----
 		   mu_chc,
 		   mu_chw, mu_che, mu_chn, mu_chs,
@@ -131,11 +133,11 @@ void Kernel
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// term1 = Atomic_interaction*(1-2*f) + RT*{log(f) - log(1-f)}
-	mu_chc = L0*(1.0-2.0*fcc) + (rr*temp)*( log(fcc) - log(1.0-fcc) ); //center: fcc
-	mu_chw = L0*(1.0-2.0*fcw) + (rr*temp)*( log(fcw) - log(1.0-fcw) ); //center: fcw
-	mu_che = L0*(1.0-2.0*fce) + (rr*temp)*( log(fce) - log(1.0-fce) ); //center: fce
-	mu_chn = L0*(1.0-2.0*fcn) + (rr*temp)*( log(fcn) - log(1.0-fcn) ); //center: fcn
-	mu_chs = L0*(1.0-2.0*fcs) + (rr*temp)*( log(fcs) - log(1.0-fcs) ); //center: fcs
+	mu_chc = L0*(1.0-2.0*fcc) + RT*( log(fcc) - log(1.0-fcc) ); //center: fcc
+	mu_chw = L0*(1.0-2.0*fcw) + RT*( log(fcw) - log(1.0-fcw) ); //center: fcw
+	mu_che = L0*(1.0-2.0*fce) + RT*( log(fce) - log(1.0-fce) ); //center: fce
+	mu_chn = L0*(1.0-2.0*fcn) + RT*( log(fcn) - log(1.0-fcn) ); //center: fcn
+	mu_chs = L0*(1.0-2.0*fcs) + RT*( log(fcs) - log(1.0-fcs) ); //center: fcs
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -173,12 +175,12 @@ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Mobility, M = { (D_A/RT)*c + (D_B/RT)*(1-c) }*c*(1-c)
 	//             = (D_a/RT)*{f + (D_B/D_A)*(1-f)}*f*(1-f)
-	mcc = (da/rr/temp)*(fcc+dab*(1.0-fcc))*fcc*(1.0-fcc); 
+	mcc = (da/RT)*(fcc+dab*(1.0-fcc))*fcc*(1.0-fcc); 
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// dM/df
-	dmc = (da/rr/temp)*((1.0-dab)*fcc*(1.0-fcc)
+	dmc = (da/RT)*((1.0-dab)*fcc*(1.0-fcc)
 		+ (fcc+dab*(1.0-fcc))*(1.0-2.0*fcc)); 
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
