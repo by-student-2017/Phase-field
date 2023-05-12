@@ -90,21 +90,27 @@ __global__ void Kernel
 	__shared__ float fs[2+16+2][2+16+2]; //fs is shared memory
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
-	/* Note ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	   Shared memory: (2+blockDim.x+2) * (2+blockDim.y+2)
+	/* Note ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	   Shared memory, fs = (2+blockDim.x+2) * (2+blockDim.y+2) matrix
 	     jx = threadIdx.x + 2; // +2 when counting from one end
 	     jy = threadIdx.y + 2; // +2 when counting from one end
-	   ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	   Global memory: (gridDim.x*blockDim.x) * (gridDim.y*blockDim.y)
-	     x = (blockIdx.x*blockDim.x + threadIdx.x)
-	     y = (blockIdx.y*blockDim.y + threadIdx.y)
-	----- ----- ----- ----- ----- ----- ----- ----- ----- -----   */
+	     ----- ----- ----- ---------- ----- -----
+	     threadId+2 (on (2+blockDim+2) * (2+blockDim+2) matrix): fine grid
+	   ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	   Global memory, f = (gridDim.x*blockDim.x) * (gridDim.y*blockDim.y) matrix
+	     x = (blockDim.x*blockIdx.x + threadIdx.x)
+	     y = (blockDim.y*blockIdx.y + threadIdx.y)
+	     ----- ----- ----- ---------- ----- -----
+	     blockId  (on gridDim  * gridDim  matrix): coarse grid
+	       (blockId -(more detail)-> theadId)
+	     threadId (on blockDim * blockDim matrix): fine grid
+	----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----  */
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	jx = threadIdx.x + 2; // +2 when counting from one end
 	jy = threadIdx.y + 2; // +2 when counting from one end
-	joff = nx*(blockDim.y*blockIdx.y) + blockDim.x*blockIdx.x;
-	j = joff + nx*threadIdx.y + threadIdx.x;
+	joff = nx*(blockDim.y*blockIdx.y) + blockDim.x*blockIdx.x; // blockId matrix
+	j = joff + nx*threadIdx.y + threadIdx.x; // f matrix
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -114,58 +120,58 @@ __global__ void Kernel
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Calculating sleeve area in shared memory
-	//----- ----- ----- Lower (south) sleeve area ----- ----- ----- 
+	//----- ----- ----- south sleeve area ----- ----- ----- 
 	if(blockIdx.y == 0) {J0 = nx*(ny-1)+blockDim.x*blockIdx.x + threadIdx.x,
 						 J4 = J0 - nx;} // boundary condition at south edge
 	else                {J0 =  j - nx, 
 						 J4 = J0 - nx;} // non edge
-	//----- ----- ----- Upper (north) sleeve area ----- ----- ----- 
+	//----- ----- ----- north sleeve area ----- ----- ----- 
 	if(blockIdx.y == gridDim.y - 1) {J1 = blockDim.x*blockIdx.x + threadIdx.x, 
 						 J5 = J1 + nx;} // boundary condition at north edge
 	else				{J1 =  j + nx, 
 						 J5 = J1 + nx;} // non edge
-	//----- ----- ----- Left (west) sleeve area ----- ----- ----- 
+	//----- ----- ----- west sleeve area ----- ----- ----- 
 	if(blockIdx.x == 0) {J2 = joff + nx*threadIdx.x + (nx - 1),
 						 J6 = J2 - 1;} // boundary condition at west edge
 	else				{J2 = joff + nx*threadIdx.x - 1, 
 						 J6 = J2 - 1;} // non edge
-	//----- ----- ----- Right (east) sleeve area ----- ----- ----- 
+	//----- ----- ----- east sleeve area ----- ----- ----- 
 	if(blockIdx.x == gridDim.x - 1) {J3 = joff + nx*threadIdx.x + 15 - (nx - 1),
 						 J7 = J3 + 1;} // boundary condition at east edge
 	else				{J3 = joff + nx*threadIdx.x + 16,
 						 J7 = J3 + 1;} // non edge
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	//----- ----- ----- Lower (south) and Rgith (east) sleeve area
-		 if(blockIdx.x == 0 && blockIdx.y == gridDim.y - 1) { J8 = blockDim.x*16 - 1;}
-	else if(blockIdx.x  > 0 && blockIdx.y == gridDim.y - 1) { J8 = J1 - 1 ;}
-	else if(blockIdx.x == 0 && blockIdx.y  < gridDim.y - 1) { J8 = j + nx + (nx - 1);}
-	else                                                    { J8 = j + (nx - 1) ;}
-	//----- ----- ----- Upper (north) and Rgith (east) sleeve area
-		 if(blockIdx.x == gridDim.x - 1 && blockIdx.y == gridDim.y - 1) { J9 = 0 ;}
-	else if(blockIdx.x  < gridDim.x - 1 && blockIdx.y == gridDim.y - 1) { J9 = J1 + 1 ;}
-	else if(blockIdx.x == gridDim.x - 1 && blockIdx.y  < gridDim.y - 1) { J9 = j  + 1 ;}
-	else                                                                { J9 = j + nx + 1 ;}
-	//----- ----- ----- Lower (north) and Left (east) sleeve area
-		 if(blockIdx.x  > 0 && blockIdx.y == 0) { J10 = J0 - 1 ;}
-	else if(blockIdx.x == 0 && blockIdx.y  > 0) { J10 = j - 1  ;}
-	else if(blockIdx.x == 0 && blockIdx.y == 0) { J10 = nx*blockDim.x*blockDim.y - 1 ;}
-	else                                        { J10 = j - nx - 1 ;}
-	//----- ----- ----- Upper (north) and Left (east) sleeve area
-		 if(blockIdx.x == gridDim.x -1 && blockIdx.y == 0) { J11 = nx*blockDim.x*blockDim.y - 1 - (nx - 1);}
-	else if(blockIdx.x  < gridDim.x -1 && blockIdx.y == 0) { J11 = J0 + 1  ;}
-	else if(blockIdx.x == gridDim.x -1 && blockIdx.y  > 0) { J11 = j - nx - (nx - 1) ;}
-	else                                                   { J11 = j - (nx - 1) ;}
+	//----- ----- ----- north and east sleeve area
+		 if(blockIdx.x == 0 && blockIdx.y == gridDim.y - 1) { J8 = blockDim.x*16 - 1 ;} // edge(west and north)
+	else if(blockIdx.x  > 0 && blockIdx.y == gridDim.y - 1) { J8 = J1 - 1 ;}            // edge(north)
+	else if(blockIdx.x == 0 && blockIdx.y  < gridDim.y - 1) { J8 = j + nx + (nx - 1) ;} // edge(west)
+	else                                                    { J8 = j + (nx - 1) ;}      // non edge
+	//----- ----- ----- north and east sleeve area
+		 if(blockIdx.x == gridDim.x - 1 && blockIdx.y == gridDim.y - 1) { J9 = 0 ;}          // edge(east and north)
+	else if(blockIdx.x  < gridDim.x - 1 && blockIdx.y == gridDim.y - 1) { J9 = J1 + 1 ;}     // edge(north)
+	else if(blockIdx.x == gridDim.x - 1 && blockIdx.y  < gridDim.y - 1) { J9 = j  + 1 ;}     // edge(east)
+	else                                                                { J9 = j + nx + 1 ;} // non edge
+	//----- ----- ----- south and west sleeve area
+		 if(blockIdx.x  > 0 && blockIdx.y == 0) { J10 = J0 - 1 ;}                       // edge(south)
+	else if(blockIdx.x == 0 && blockIdx.y  > 0) { J10 = j - 1  ;}                       // edge(west)
+	else if(blockIdx.x == 0 && blockIdx.y == 0) { J10 = nx*blockDim.x*blockDim.y - 1 ;} // edge(west and south)
+	else                                        { J10 = j - nx - 1 ;}                   // non edge
+	//----- ----- ----- south and west sleeve area
+		 if(blockIdx.x == gridDim.x -1 && blockIdx.y == 0) { J11 = nx*blockDim.x*blockDim.y - 1 - (nx - 1);} // edge(east and south)
+	else if(blockIdx.x  < gridDim.x -1 && blockIdx.y == 0) { J11 = J0 + 1  ;}           // edge(south)
+	else if(blockIdx.x == gridDim.x -1 && blockIdx.y  > 0) { J11 = j - nx - (nx - 1) ;} // edge(east)
+	else                                                   { J11 = j - (nx - 1) ;}      // non edge
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	// copy Global memory to Shared memory
-	if(threadIdx.y ==  0){ fs[jx][ 1] = f[J0], fs[jx][ 0] = f[J4];}   // Lower (south) sleeve area
-	if(threadIdx.y ==  1){ fs[ 1][jx] = f[J2], fs[ 0][jx] = f[J6];}   // Left  (west)  sleeve area
-	if(threadIdx.y ==  2){ fs[18][jx] = f[J3], fs[19][jx] = f[J7];}   // Right (east)  sleeve area
-	if(threadIdx.y == 15){ fs[jx][18] = f[J1], fs[jx][19] = f[J5];}   // Upper (north) sleeve area
-	//----- ----- ----- 
-	if(threadIdx.x ==  0 && threadIdx.y == 15) {fs[ 1][18] = f[J8];}  // Lower (south) and Rgith (east) sleeve area
-	if(threadIdx.x == 15 && threadIdx.y == 15) {fs[18][18] = f[J9];}  // Upper (north) and Rgith (east) sleeve area
-	if(threadIdx.x ==  0 && threadIdx.y ==  0) {fs[ 1][ 1] = f[J10];} // Lower (south) and Left  (west) sleeve area
-	if(threadIdx.x == 15 && threadIdx.y ==  0) {fs[18][ 1] = f[J11];} // Upper (north) and Left  (west) sleeve area
+	// copy Global memory to Shared memory {one inside, edge}
+	if(threadIdx.y ==  0){ fs[jx][ 1] = f[J0], fs[jx][ 0] = f[J4];}   // south sleeve area
+	if(threadIdx.y ==  1){ fs[ 1][jx] = f[J2], fs[ 0][jx] = f[J6];}   // west  sleeve area
+	if(threadIdx.y ==  2){ fs[18][jx] = f[J3], fs[19][jx] = f[J7];}   // east  sleeve area
+	if(threadIdx.y == 15){ fs[jx][18] = f[J1], fs[jx][19] = f[J5];}   // north sleeve area
+	//----- ----- ----- {one inside}
+	if(threadIdx.x ==  0 && threadIdx.y == 15) {fs[ 1][18] = f[J8];}  // south and east sleeve area
+	if(threadIdx.x == 15 && threadIdx.y == 15) {fs[18][18] = f[J9];}  // north and east sleeve area
+	if(threadIdx.x ==  0 && threadIdx.y ==  0) {fs[ 1][ 1] = f[J10];} // south and west sleeve area
+	if(threadIdx.x == 15 && threadIdx.y ==  0) {fs[18][ 1] = f[J11];} // north and west sleeve area
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
