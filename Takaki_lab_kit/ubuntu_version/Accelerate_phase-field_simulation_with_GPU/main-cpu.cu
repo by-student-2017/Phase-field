@@ -48,13 +48,22 @@ void Kernel
 	j  = nx*jy + jx;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
-	float  fcc,  fce,  fcw,  fcs,  fcn, 
-		   fcnw, fcne, fcsw, fcse, fcww, 
-		   fcee, fcnn, fcss, 
-		   mu_chc, mu_chw, mu_che, mu_chn, mu_chs,
-		   mu_suc, mu_suw, mu_sue, mu_sun, mu_sus, 
-		   mu_c, mu_w, mu_e, mu_n, mu_s, 
-		   nab_mu, dfmdx, dfmdy, dab = db/da, mcc, dmc, dfdt ;
+	float  fcc,
+		   fce,  fcw,  fcs,  fcn,
+		   fcnw, fcne,
+		   fcsw, fcse,
+		   fcww, fcee, fcnn, fcss,
+		   mu_chc,
+		   mu_chw, mu_che, mu_chn, mu_chs,
+		   mu_suc,
+		   mu_suw, mu_sue, mu_sun, mu_sus, 
+		   mu_c,
+		   mu_w, mu_e, mu_n, mu_s, 
+		   nab_mu, 
+		   dfmdx, dfmdy, 
+		   dab = db/da, 
+		   mcc, dmc,
+		   dfdt ;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	/* Consider up to the second nearest neighbor. Therefore, 
 	13 difference grid points are used. (#1 to #13)
