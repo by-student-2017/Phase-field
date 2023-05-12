@@ -21,6 +21,7 @@
 #include "device_launch_parameters.h"
 
 #define TIMES 2
+//----- ----- -----
 #define NX 256*TIMES //Number of grid points in the x-direction
 #define NY 256*TIMES //Number of grid points in the y-direction
 
