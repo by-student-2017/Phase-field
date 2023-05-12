@@ -145,11 +145,11 @@ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	// (df/dx) * d(mu)/dx
-	dfmdx = ((mu_w-mu_e)*(fcw-fce))/(4.0*dx*dx);
+	// (df/dx) * d(mu)/dx, (x is related with w and e), (the center is fc.)
+	dfmdx = ( (fcw - fce)/(2.0*dx) * (mu_w - mu_e)/(2.0*dx) );
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	// (df/dy) * d(mu)/dy
-	dfmdy = ((mu_n-mu_s)*(fcn-fcs))/(4.0*dy*dy);
+	// (df/dy) * d(mu)/dy, (y is related with n and s), (the center is fc.)
+	dfmdy = ( (fcn - fcs)/(2.0*dy) * (mu_n - mu_s)/(2.0*dy) );
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
