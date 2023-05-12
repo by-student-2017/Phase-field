@@ -127,7 +127,7 @@ __global__ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Calculating sleeve area in shared memory
 	//----- ----- ----- south sleeve area ----- ----- ----- 
-	if(blockIdx.y == 0) {J0 = nx*(ny-1)+blockDim.x*blockIdx.x + threadIdx.x,
+	if(blockIdx.y == 0) {J0 = nx*(ny-1) + blockDim.x*blockIdx.x + threadIdx.x,
 						 J4 = J0 - nx;} // boundary condition at south edge
 	else                {J0 =  j - nx, 
 						 J4 = J0 - nx;} // non edge
@@ -170,7 +170,7 @@ __global__ void Kernel
 	//----- ----- ----- east and north sleeve area
 		 if(blockIdx.x == gridDim.x - 1 && blockIdx.y == gridDim.y - 1) { J9 = 0 ;}          // edge(east and north)
 	else if(blockIdx.x  < gridDim.x - 1 && blockIdx.y == gridDim.y - 1) { J9 = J1 + 1 ;}     // edge(north)
-	else if(blockIdx.x == gridDim.x - 1 && blockIdx.y  < gridDim.y - 1) { J9 = j  + 1 ;}     // edge(east)
+	else if(blockIdx.x == gridDim.x - 1 && blockIdx.y  < gridDim.y - 1) { J9 = j +  0 + 1 ;}     // edge(east)
 	else                                                                { J9 = j + nx + 1 ;} // non edge
 	//----- ----- copy Global memory to Shared memory {one inside, edge}
 	if(threadIdx.x == (thread_x-1) && threadIdx.y == (thread_y-1)) {fs[thread_x+2][thread_y+2] = f[J9];}  // east and north sleeve area
