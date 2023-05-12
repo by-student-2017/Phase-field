@@ -108,20 +108,20 @@ __global__ void Kernel
 	else if(jx  > 0 && jy == ny-1)   { fcnw = f[j-nx*ny +nx-1];} // =f[j + nx*(-ny+1) +    -1] = f[j-nx*ny +nx-1]
 	else                             { fcnw = f[j       +nx-1];} // =f[j + nx*(   +1) +    -1] = f[j       +nx-1]
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #7 (center: fcc, and + n + e)
-		 if(jx == nx-1 && jy  < ny-1){ fcne = f[j-nx    +nx+1];} // =f[j + nx*(   +1) + -nx+1] = f[j+nx-nx+1]
-	else if(jx  < nx-1 && jy == ny-1){ fcne = f[j-nx*ny +nx+1];} // =f[j + nx*(-ny+1) +     1] = f[j-nx*ny+nx+1]
+		 if(jx == nx-1 && jy  < ny-1){ fcne = f[j+nx    -nx+1];} // =f[j + nx*(   +1) + -nx+1] = f[j+nx    -nx+1]
+	else if(jx  < nx-1 && jy == ny-1){ fcne = f[j-nx*ny +nx+1];} // =f[j + nx*(-ny+1) +     1] = f[j-nx*ny +nx+1]
 	else if(jx == nx-1 && jy == ny-1){ fcne = f[            0];} // =f[j + nx*(-ny+1) + -nx+1] = f[nx*(ny-1)+nx-1+nx*(-ny+1)-(nx-1)]=f[0]
-	else                             { fcne = f[j       +nx+1];} // =f[j + nx*(   +1) +     1] = f[j+nx+1]
+	else                             { fcne = f[j       +nx+1];} // =f[j + nx*(   +1) +     1] = f[j       +nx+1]
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #8 (center: fcc, and + s + w)
-		 if(jx == 0 && jy >  0)      { fcsw = f[j+nx    -nx-1];} // =f[j + nx*(   -1) +  nx-1] = f[j-nx+nx-1]
-	else if(jx  > 0 && jy == 0)      { fcsw = f[j+nx*ny -nx-1];} // =f[j + nx*(+ny-1) +    -1] = f[j+nx*ny-nx-1]
-	else if(jx == 0 && jy == 0)      { fcsw = f[      nx*ny-1];} // =f[j + nx-1       + nx*(+ny-1)] = f[j+nx-1+nx*ny-nx]
-	else                             { fcsw = f[j       -nx-1];} // =f[j + nx*(   -1) +    -1] = f[j-nx-1]
+		 if(jx == 0 && jy >  0)      { fcsw = f[j-nx    +nx-1];} // =f[j + nx*(   -1) +  nx-1] = f[j-nx    +nx-1]
+	else if(jx  > 0 && jy == 0)      { fcsw = f[j+nx*ny -nx-1];} // =f[j + nx*(+ny-1) +    -1] = f[j+nx*ny -nx-1]
+	else if(jx == 0 && jy == 0)      { fcsw = f[      nx*ny-1];} // =f[j + nx-1       + nx*(+ny-1)] = f[j+nx-1+nx*ny-nx] (and j= nx*jy + jx= nx*0 + 0 = 0)
+	else                             { fcsw = f[j       -nx-1];} // =f[j + nx*(   -1) +    -1] = f[j       -nx-1]
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #9 (center: fcc, and + s + e)
 		 if(jx == nx-1 && jy == 0)   { fcse = f[nx*ny-1 -nx+1];} // =f[j + nx*(+ny-1) + -nx+1] = f[nx-1+nx*ny-nx-nx+1]
-	else if(jx == nx-1 && jy  > 0)   { fcse = f[j-nx    -nx+1];} // =f[j + nx*(   -1) + -nx+1] = f[j-nx-nx+1]
-	else if(jx <  nx-1 && jy == 0)   { fcse = f[j+nx*ny -nx+1];} // =f[j + nx*(+ny-1) +     1] = f[j+nx*ny-nx+1]
-	else                             { fcse = f[j       -nx+1];} // =f[j + nx*(   -1) +     1] = f[j-nx+1]
+	else if(jx == nx-1 && jy  > 0)   { fcse = f[j-nx    -nx+1];} // =f[j + nx*(   -1) + -nx+1] = f[j-nx    -nx+1]
+	else if(jx <  nx-1 && jy == 0)   { fcse = f[j+nx*ny -nx+1];} // =f[j + nx*(+ny-1) +     1] = f[j+nx*ny -nx+1]
+	else                             { fcse = f[j       -nx+1];} // =f[j + nx*(   -1) +     1] = f[j       -nx+1]
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #10 (center: fcc)
 		 if(jx == 0)     { fcww = f[j+nx-2];}    // edge(west)
 	else if(jx == 1)     { fcww = f[j+nx-2];}    // edge(west,one inside)
