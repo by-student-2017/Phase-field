@@ -131,11 +131,11 @@ void Kernel
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// term1 = Atomic_interaction*(1-2*f) + RT*{log(f) - log(1-f)}
-	mu_chc = L0*(1.0-2.0*fcc)+rr*temp*(log(fcc)-log(1.0-fcc));
-	mu_chw = L0*(1.0-2.0*fcw)+rr*temp*(log(fcw)-log(1.0-fcw));
-	mu_che = L0*(1.0-2.0*fce)+rr*temp*(log(fce)-log(1.0-fce));
-	mu_chn = L0*(1.0-2.0*fcn)+rr*temp*(log(fcn)-log(1.0-fcn));
-	mu_chs = L0*(1.0-2.0*fcs)+rr*temp*(log(fcs)-log(1.0-fcs));
+	mu_chc = L0*(1.0-2.0*fcc)+rr*temp*(log(fcc)-log(1.0-fcc)); //center: fcc
+	mu_chw = L0*(1.0-2.0*fcw)+rr*temp*(log(fcw)-log(1.0-fcw)); //center: fcw
+	mu_che = L0*(1.0-2.0*fce)+rr*temp*(log(fce)-log(1.0-fce)); //center: fce
+	mu_chn = L0*(1.0-2.0*fcn)+rr*temp*(log(fcn)-log(1.0-fcn)); //center: fcn
+	mu_chs = L0*(1.0-2.0*fcs)+rr*temp*(log(fcs)-log(1.0-fcs)); //center: fcs
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -149,11 +149,11 @@ void Kernel
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// mu = dG/df = term1 + term2
-	mu_c = mu_chc + mu_suc; // at current (jx,jy) grid point
-	mu_w = mu_chw + mu_suw; // at (jx-1,jy) grid point
-	mu_e = mu_che + mu_sue; // at (jx+1,jy) grid point
-	mu_n = mu_chn + mu_sun; // at (jx,jy+1) grid point
-	mu_s = mu_chs + mu_sus; // at (jx,jy-1) grid point
+	mu_c = mu_chc + mu_suc; // at current (jx,jy) grid point, //center: fcc
+	mu_w = mu_chw + mu_suw; // at (jx-1,jy) grid point, //center: fcw
+	mu_e = mu_che + mu_sue; // at (jx+1,jy) grid point, //center: fce
+	mu_n = mu_chn + mu_sun; // at (jx,jy+1) grid point, //center: fcn
+	mu_s = mu_chs + mu_sus; // at (jx,jy-1) grid point, //center: fcs
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
