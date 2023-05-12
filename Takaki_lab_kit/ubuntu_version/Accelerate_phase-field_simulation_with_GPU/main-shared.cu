@@ -20,7 +20,7 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
-#define BS 16        //Number of threads, 2^n =< 16 in this code
+#define BS 16        //Number of threads, 2^n =< 16 in this code (shared memory = (2+BS+2)^2)
 #define TIMES 2
 //----- ----- -----
 #define NX 256*TIMES //Number of grid points in the x-direction
@@ -332,6 +332,22 @@ int main(int argc, char** argv)
 		  db = 2.0e-05*exp(-308000.0/rr/temp), // Self-diffusion coefficient [m^2/s] (Cr)
 		  //----- ----- ----- -----
 		  dt = (dx*dx/da)*0.1; // Time increment for the numerical integration [dimensionless]
+	
+	//----- ----- ----- -----
+	int nDevices;
+	cudaGetDeviceCount(&nDevices);
+	for (int i = 0; i < nDevices; i++){
+		cudaDeviceProp prop;
+		cudaGetDeviceProperties(&prop, i);
+		printf("--------------------------------------------------\n");
+		printf("Device Number: %d\n", i);
+		printf("  Device name: %s\n", prop.name);
+		printf("  Memory Clock Rate (KHz): %d\n",prop.memoryClockRate);
+		printf("  Memory Bus Width (bits): %d\n",prop.memoryBusWidth);
+		printf("  Peak Memory Bandwidth (GB/s): %f\n",2.0*prop.memoryClockRate*(prop.memoryBusWidth/8)/1.0e6);
+		printf("--------------------------------------------------\n");
+	}
+	//----- ----- ----- -----
 	
 	f_d  = (float *)malloc(nx*ny*sizeof(float)); //GPU, CUDA, device
 	fn_d = (float *)malloc(nx*ny*sizeof(float)); //GPU, CUDA, device
