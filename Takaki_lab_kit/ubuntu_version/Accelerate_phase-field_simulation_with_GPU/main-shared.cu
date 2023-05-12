@@ -126,12 +126,12 @@ __global__ void Kernel
 						 J5 = J1 + nx;} // non edge
 	//----- ----- ----- Left (west) sleeve area ----- ----- ----- 
 	if(blockIdx.x == 0) {J2 = joff + nx*threadIdx.x + (nx - 1),
-						 J6 = J2 - 1;}
+						 J6 = J2 - 1;} // boundary condition at west edge
 	else				{J2 = joff + nx*threadIdx.x - 1, 
 						 J6 = J2 - 1;} // non edge
 	//----- ----- ----- Right (east) sleeve area ----- ----- ----- 
-		if(blockIdx.x == gridDim.x - 1) {J3 = joff + nx*threadIdx.x + 15 - (nx - 1),
-						 J7 = J3 + 1;}
+	if(blockIdx.x == gridDim.x - 1) {J3 = joff + nx*threadIdx.x + 15 - (nx - 1),
+						 J7 = J3 + 1;} // boundary condition at east edge
 	else				{J3 = joff + nx*threadIdx.x + 16,
 						 J7 = J3 + 1;} // non edge
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
