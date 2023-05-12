@@ -11,14 +11,19 @@
    Test: Ubuntu 22.04 LTS
    
    Compiling: nvcc -O2 main-cpu.cu write_vtk_grid_values_2D.cu -o main-cpu.exe -lm
+   Run: ./main-cpu.exe
+   ParaView: time_XX.vtk
 */
 
 #include <stdio.h>  //printf()
 #include <stdlib.h> //rand() and malloc()
 #include <math.h>   //mod() and -lm
-//#include <cuda.h>
-#include "cuda_runtime.h"
-#include "device_launch_parameters.h"
+//----- ----- -----
+#include <cuda.h>   //GPU
+/* #include <cuda.h> or
+  #include "cuda_runtime.h"
+  #include "device_launch_parameters.h" */
+//----- ----- -----
 
 #define TIMES 2
 //----- ----- -----
