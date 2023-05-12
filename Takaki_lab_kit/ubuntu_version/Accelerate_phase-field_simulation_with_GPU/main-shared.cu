@@ -27,17 +27,49 @@
 // Define subroutine "Kernel" for GPU (Device) calculation in detail
 __global__ void Kernel
 (
-	float *f, float *fn, int nx, int ny,
-	float  rr, float temp, float L0,
-	float  kapa_c, float da, float db, float dt, float dx, float dy
+	float *f,
+	float *fn,
+	int    nx,
+	int    ny,
+	float  rr,
+	float  temp,
+	float  L0,
+	float  kapa_c,
+	float  da,
+	float  db,
+	float  dt,
+	float  dx,
+	float  dy
 )
 {
 	int j, jx, jy;
-	float  fcc, fce, fcw, fcs, fcn, fcnw, fcne, fcsw, fcse, fcww, fcee, fcnn, fcss, 
-		   mu_chc, mu_chw, mu_che, mu_chn, mu_chs,
-		   mu_suc, mu_suw, mu_sue, mu_sun, mu_sus, 
-		   mu_c, mu_w, mu_e, mu_n, mu_s, 
-		   nab_mu, dfmdx, dfmdy, dab = db/da, mcc, dmc, dfdt ;
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	float  fcc,
+		   fce, fcw, fcs, fcn,
+		   //----- ----- -----
+		   fcnw, fcne,
+		   fcsw, fcse,
+		   //----- ----- -----
+		   fcww, fcee, fcnn, fcss,
+		   //----- ----- ----- ----- ----- -----
+		   RT = rr*temp,
+		   //----- ----- ----- ----- ----- -----
+		   mu_chc,
+		   mu_chw, mu_che, mu_chn, mu_chs,
+		   //----- ----- -----
+		   mu_suc,
+		   mu_suw, mu_sue, mu_sun, mu_sus, 
+		   //----- ----- -----
+		   mu_c,
+		   mu_w, mu_e, mu_n, mu_s, 
+		   //----- ----- -----
+		   nab_mu,
+		   dfmdx, dfmdy,
+		   //----- ----- -----
+		   dab = db/da,
+		   mcc, dmc,
+		   //----- ----- -----
+		   dfdt ;
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Declare variables used when copying data from global memory to shared memory
@@ -163,60 +195,61 @@ __global__ void Kernel
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// term1 = Atomic_interaction*(1-2*f) + RT*{log(f) - log(1-f)}
-	mu_chc = L0*(1.0-2.0*fcc)+rr*temp*(log(fcc)-log(1.0-fcc));
-	mu_chw = L0*(1.0-2.0*fcw)+rr*temp*(log(fcw)-log(1.0-fcw));
-	mu_che = L0*(1.0-2.0*fce)+rr*temp*(log(fce)-log(1.0-fce));
-	mu_chn = L0*(1.0-2.0*fcn)+rr*temp*(log(fcn)-log(1.0-fcn));
-	mu_chs = L0*(1.0-2.0*fcs)+rr*temp*(log(fcs)-log(1.0-fcs));
+	mu_chc = L0*(1.0-2.0*fcc) + RT*( log(fcc) - log(1.0-fcc) ); //center: fcc
+	mu_chw = L0*(1.0-2.0*fcw) + RT*( log(fcw) - log(1.0-fcw) ); //center: fcw
+	mu_che = L0*(1.0-2.0*fce) + RT*( log(fce) - log(1.0-fce) ); //center: fce
+	mu_chn = L0*(1.0-2.0*fcn) + RT*( log(fcn) - log(1.0-fcn) ); //center: fcn
+	mu_chs = L0*(1.0-2.0*fcs) + RT*( log(fcs) - log(1.0-fcs) ); //center: fcs
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// term2 = -gradient_energy_coefficient * Laplacian(f)
-	mu_suc = -kapa_c*(fce +fcw +fcn +fcs -4.0*fcc)/dx/dx;
-	mu_suw = -kapa_c*(fcc +fcww+fcnw+fcsw-4.0*fcw)/dx/dx;
-	mu_sue = -kapa_c*(fcee+fcc +fcne+fcse-4.0*fce)/dx/dx;
-	mu_sun = -kapa_c*(fcne+fcnw+fcnn+fcc -4.0*fcn)/dx/dx;
-	mu_sus = -kapa_c*(fcse+fcsw+fcc +fcss-4.0*fcs)/dx/dx;
+	mu_suc = -kapa_c*( (fce  + fcw  -2.0*fcc)/(dx*dx) + (fcn  + fcs  -2.0*fcc)/(dy*dy) ); //center: fcc
+	mu_suw = -kapa_c*( (fcc  + fcww -2.0*fcw)/(dx*dx) + (fcnw + fcsw -2.0*fcw)/(dy*dy) ); //fcc=fcwe, fcnw=fcwn, fcsw=fcws, //center: fcw
+	mu_sue = -kapa_c*( (fcee + fcc  -2.0*fce)/(dx*dx) + (fcne + fcse -2.0*fce)/(dy*dy) ); //fcc=fcew, fcne=fcen, fcse=fces, //center: fce
+	mu_sun = -kapa_c*( (fcne + fcnw -2.0*fcn)/(dx*dx) + (fcnn + fcc  -2.0*fcn)/(dy*dy) ); //fcc=fcns, //center: fcn
+	mu_sus = -kapa_c*( (fcse + fcsw -2.0*fcs)/(dx*dx) + (fcc  + fcss -2.0*fcs)/(dy*dy) ); //fcc=fcsn, //center: fcs
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// mu = dG/df = term1 + term2
-	mu_c = mu_chc + mu_suc; // at current (jx,jy) grid point
-	mu_w = mu_chw + mu_suw; // at (jx-1,jy) grid point
-	mu_e = mu_che + mu_sue; // at (jx+1,jy) grid point
-	mu_n = mu_chn + mu_sun; // at (jx,jy+1) grid point
-	mu_s = mu_chs + mu_sus; // at (jx,jy-1) grid point
+	mu_c = mu_chc + mu_suc; // at current (jx,jy) grid point, //center: fcc
+	mu_w = mu_chw + mu_suw; // at (jx-1,jy) grid point, //center: fcw
+	mu_e = mu_che + mu_sue; // at (jx+1,jy) grid point, //center: fce
+	mu_n = mu_chn + mu_sun; // at (jx,jy+1) grid point, //center: fcn
+	mu_s = mu_chs + mu_sus; // at (jx,jy-1) grid point, //center: fcs
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Laplacian(mu) = d^2(mu)/dx^2 + d^2(mu)/dy^2
-	nab_mu = (mu_w + mu_e + mu_n + mu_s -4.0*mu_c)/dx/dx;
+	nab_mu = (mu_w + mu_e -2.0*mu_c)/(dx*dx)  // d^2(mu)/dx^2
+		   + (mu_n + mu_s -2.0*mu_c)/(dy*dy); // d^2(mu)/dy^2
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	// (df/dx) * d(mu)/dx
-	dfmdx = ((mu_w-mu_e)*(fcw-fce))/(4.0*dx*dx);
+	// (df/dx) * d(mu)/dx, (x is related with w and e), (the center is fc.)
+	dfmdx = ( (fcw - fce)/(2.0*dx) * (mu_w - mu_e)/(2.0*dx) );
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	// (df/dy) * d(mu)/dy
-	dfmdy = ((mu_n-mu_s)*(fcn-fcs))/(4.0*dx*dx);
+	// (df/dy) * d(mu)/dy, (y is related with n and s), (the center is fc.)
+	dfmdy = ( (fcn - fcs)/(2.0*dy) * (mu_n - mu_s)/(2.0*dy) );
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Mobility, M = { (D_A/RT)*c + (D_B/RT)*(1-c) }*c*(1-c)
 	//             = (D_a/RT)*{f + (D_B/D_A)*(1-f)}*f*(1-f)
-	mcc = (da/rr/temp)*(fcc+dab*(1.0-fcc))*fcc*(1.0-fcc); 
+	mcc = (da/RT)*(fcc+dab*(1.0-fcc))*fcc*(1.0-fcc); 
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// dM/df
-	dmc = (da/rr/temp)*((1.0-dab)*fcc*(1.0-fcc)
-					  +(fcc+dab*(1.0-fcc))*(1.0-2.0*fcc));
+	dmc = (da/RT)*((1.0-dab)*fcc*(1.0-fcc)
+		+ (fcc+dab*(1.0-fcc))*(1.0-2.0*fcc)); 
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// df/dt = M*Laplacian(f) + (dM/df)*( (df/dx) * d(mu)/dx + (df/dy) * d(mu)/dy )
-	dfdt = mcc*nab_mu + dmc*(dfmdx+dfmdy); 
-	fn[j] = f[j]+dfdt*dt;
+	dfdt = mcc*nab_mu + dmc*(dfmdx + dfmdy); 
+	fn[j] = f[j] + dfdt*dt;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 }
 
