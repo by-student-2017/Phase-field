@@ -93,7 +93,9 @@ __global__ void Kernel
 	/* blockDim.x * blockDim.y = 16 * 16. In addition, 
 	   add the necessary two adjacent difference grid points to
 	   both sides of the x-axis and y-axis, respectively. */
-	__shared__ float fs[2+thread_x+2][2+thread_y+2]; //fs is shared memory
+	const int fs_thread_x = 2+thread_x+2;
+	const int fs_thread_y = 2+thread_y+2;
+	__shared__ float fs[fs_thread_x][fs_thread_y]; //fs is shared memory
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	/* Note ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -140,7 +142,7 @@ __global__ void Kernel
 	else				{J1 =  j + nx, 
 						 J5 = J1 + nx;} // non edge
 	//----- ----- copy Global memory to Shared memory {one inside, edge}
-	if(threadIdx.y == (thread_y-1)){ fs[jx][thread_y+2] = f[J1], fs[jx][thread_y+3] = f[J5];}   // north sleeve area
+	if(threadIdx.y == (thread_y-1)){ fs[jx][fs_thread_y-2] = f[J1], fs[jx][fs_thread_y-1] = f[J5];}   // north sleeve area
 	//
 	//----- ----- ----- west sleeve area ----- ----- ----- 
 	if(blockIdx.x == 0) {J2 =  j + (nx-1),
@@ -156,7 +158,7 @@ __global__ void Kernel
 	else				{J3 =  j + 1,
 						 J7 = J3 + 1;} // non edge
 	//----- ----- copy Global memory to Shared memory {one inside, edge}
-	if(threadIdx.x == (thread_x-1)){ fs[thread_x+2][jy] = f[J3], fs[thread_x+3][jy] = f[J7];}   // east  sleeve area
+	if(threadIdx.x == (thread_x-1)){ fs[fs_thread_x-2][jy] = f[J3], fs[fs_thread_x-1][jy] = f[J7];}   // east  sleeve area
 	//
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	//----- ----- ----- east and north sleeve area
@@ -196,8 +198,8 @@ __global__ void Kernel
 	  copy Global memory to Shared memory {one inside, edge}
 	  if(threadIdx.y ==  0)          { fs[jx][ 1] = f[J0], fs[jx][ 0] = f[J4];}   // south sleeve area
 	  if(threadIdx.x ==  0)          { fs[ 1][jy] = f[J2], fs[ 0][jy] = f[J6];}   // west  sleeve area
-	  if(threadIdx.x == (thread_x-1)){ fs[thread_x+2][jy] = f[J3], fs[thread_x+3][jy] = f[J7];}   // east  sleeve area
-	  if(threadIdx.y == (thread_y-1)){ fs[jx][thread_y+2] = f[J1], fs[jx][thread_y+3] = f[J5];}   // north sleeve area
+	  if(threadIdx.x == (thread_x-1)){ fs[fs_thread_x-2][jy] = f[J3], fs[fs_thread_x-1][jy] = f[J7];}   // east  sleeve area
+	  if(threadIdx.y == (thread_y-1)){ fs[jx][fs_thread_y-2] = f[J1], fs[jx][fs_thread_y-1] = f[J5];}   // north sleeve area
 	//----- ----- ----- {one inside}
 	  if(threadIdx.x == 0            && threadIdx.y == (thread_y-1)) {fs[         1][thread_y+2] = f[J8];}  // east and south sleeve area
 	  if(threadIdx.x == (thread_x-1) && threadIdx.y == (thread_y-1)) {fs[thread_x+2][thread_y+2] = f[J9];}  // east and north sleeve area
