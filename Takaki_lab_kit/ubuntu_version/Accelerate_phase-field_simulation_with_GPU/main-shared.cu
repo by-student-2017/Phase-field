@@ -93,8 +93,8 @@ __global__ void Kernel
 	/* blockDim.x * blockDim.y = 16 * 16. In addition, 
 	   add the necessary two adjacent difference grid points to
 	   both sides of the x-axis and y-axis, respectively. */
-	const int fs_thread_x = 2+thread_x+2;
-	const int fs_thread_y = 2+thread_y+2;
+	const int fs_thread_x = (2+thread_x+2);
+	const int fs_thread_y = (2+thread_y+2);
 	__shared__ float fs[fs_thread_x][fs_thread_y]; //fs is shared memory
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
