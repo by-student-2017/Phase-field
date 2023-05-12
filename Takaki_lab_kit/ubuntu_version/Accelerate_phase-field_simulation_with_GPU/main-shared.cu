@@ -75,13 +75,13 @@ __global__ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Declare variables used when copying data from global memory to shared memory
 	int joff;
-	int J0, J1, J2, J3; // One inner edge
-	int J4, J5, J6, J7; // The most edge
+	int J0, J1, J2, J3;   // One inner edge
+	int J4, J5, J6, J7;   // The most edge
 	int J8, J9, J10, J11; // Corner
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	int nthreads = 16; // 16 kB before GF100 Core, 48 kB after GF100 Core
+	int nthreads = 16; //=BS, 16 kB before GF100 Core, 48 kB after GF100 Core
 	int thread_x = nthreads;
 	int thread_y = nthreads;
 	// int=4B, float=4B, double=8B
