@@ -20,7 +20,7 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
-#define BS 16        //Number of threads (=nthreads), 2^n=<32, BS*BS*1 <= 1024
+#define BS 16        //Number of threads, 2^n=<32, BS*BS*1 <= 1024
 #define TIMES 2
 //----- ----- -----
 #define NX 256*TIMES //Number of grid points in the x-direction
@@ -82,7 +82,7 @@ __global__ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	const int nthreads = 16; //=BS, 16 kB before GF100 Core, 48 kB after GF100 Core
+	const int nthreads = BS; // 16 kB before GF100 Core, 48 kB after GF100 Core
 	const int thread_x = nthreads;
 	const int thread_y = nthreads;
 	// int=4B, float=4B, double=8B
