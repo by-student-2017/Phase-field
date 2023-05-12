@@ -7,7 +7,7 @@
    
    Modified version: By Student
    Place: 2-1 Hirosawa, Wako, Saitama, 351-0198, Japan
-   Date: 11th/May/2023
+   Date: 12th/May/2023
    Test: Ubuntu 22.04 LTS
    
    Compling: nvcc -O2 main-shared.cu write_vtk_grid_values_2D.cu -o main-shared.exe -arch=native -lm --std 'c++17'
