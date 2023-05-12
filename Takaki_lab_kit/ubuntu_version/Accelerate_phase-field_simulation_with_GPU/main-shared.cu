@@ -114,58 +114,58 @@ __global__ void Kernel
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Calculating sleeve area in shared memory
-	//----- ----- ----- Upper sleeve area
+	//----- ----- ----- Lower (south) sleeve area ----- ----- ----- 
 	if(blockIdx.y == 0) {J0 = nx*(ny-1)+blockDim.x*blockIdx.x + threadIdx.x,
-						 J4 = J0 - nx;} 
+						 J4 = J0 - nx;} // boundary condition at north edge
 	else                {J0 =  j - nx, 
-						 J4 = J0 - nx;}
-	//----- ----- ----- Lower sleeve area
+						 J4 = J0 - nx;} // non edge
+	//----- ----- ----- Upper (north) sleeve area ----- ----- ----- 
 	if(blockIdx.y == gridDim.y - 1) {J1 = blockDim.x*blockIdx.x + threadIdx.x, 
-						 J5 = J1 + nx;} 
+						 J5 = J1 + nx;} // boundary condition at south edge
 	else				{J1 =  j + nx, 
-						 J5 = J1 + nx;}
-	//----- ----- ----- Left sleeve area
-	if(blockIdx.x == 0) {J2 = joff + nx*threadIdx.x + nx - 1,
+						 J5 = J1 + nx;} // non edge
+	//----- ----- ----- Left (west) sleeve area ----- ----- ----- 
+	if(blockIdx.x == 0) {J2 = joff + nx*threadIdx.x + (nx - 1),
 						 J6 = J2 - 1;}
 	else				{J2 = joff + nx*threadIdx.x - 1, 
-						 J6 = J2 - 1;}
-	//----- ----- ----- Right sleeve area
-	if(blockIdx.x == gridDim.x - 1) {J3 = joff + nx*threadIdx.x + 15 - nx + 1,
+						 J6 = J2 - 1;} // non edge
+	//----- ----- ----- Right (east) sleeve area ----- ----- ----- 
+		if(blockIdx.x == gridDim.x - 1) {J3 = joff + nx*threadIdx.x + 15 - (nx - 1),
 						 J7 = J3 + 1;}
 	else				{J3 = joff + nx*threadIdx.x + 16,
-						 J7 = J3 + 1;}
+						 J7 = J3 + 1;} // non edge
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	//----- ----- ----- Upper and Rgith sleeve area
-		 if(blockIdx.x == 0 && blockIdx.y == gridDim.y - 1) { J8 = blockDim.x*16 -1;}
+	//----- ----- ----- Lower (south) and Rgith (east) sleeve area
+		 if(blockIdx.x == 0 && blockIdx.y == gridDim.y - 1) { J8 = blockDim.x*16 - 1;}
 	else if(blockIdx.x  > 0 && blockIdx.y == gridDim.y - 1) { J8 = J1 - 1 ;}
-	else if(blockIdx.x == 0 && blockIdx.y  < gridDim.y - 1) { J8 = j + nx + nx -1;}
-	else                                                    { J8 = j + nx -1 ;}
-	//----- ----- ----- Lower and Rgith sleeve area
+	else if(blockIdx.x == 0 && blockIdx.y  < gridDim.y - 1) { J8 = j + nx + (nx - 1);}
+	else                                                    { J8 = j + (nx - 1) ;}
+	//----- ----- ----- Upper (north) and Rgith (east) sleeve area
 		 if(blockIdx.x == gridDim.x - 1 && blockIdx.y == gridDim.y - 1) { J9 = 0 ;}
 	else if(blockIdx.x  < gridDim.x - 1 && blockIdx.y == gridDim.y - 1) { J9 = J1 + 1 ;}
 	else if(blockIdx.x == gridDim.x - 1 && blockIdx.y  < gridDim.y - 1) { J9 = j  + 1 ;}
-	else                                                                { J9 = j + nx +1 ;}
-	//----- ----- ----- Upper and Left sleeve area
+	else                                                                { J9 = j + nx + 1 ;}
+	//----- ----- ----- Lower (north) and Left (east) sleeve area
 		 if(blockIdx.x  > 0 && blockIdx.y == 0) { J10 = J0 - 1 ;}
-	else if(blockIdx.x == 0 && blockIdx.y  > 0) { J10 =  j -1  ;}
+	else if(blockIdx.x == 0 && blockIdx.y  > 0) { J10 = j - 1  ;}
 	else if(blockIdx.x == 0 && blockIdx.y == 0) { J10 = nx*blockDim.x*blockDim.y - 1 ;}
 	else                                        { J10 = j - nx - 1 ;}
-	//----- ----- ----- Lower and Left sleeve area
-		 if(blockIdx.x == gridDim.x -1 && blockIdx.y == 0) { J11 = nx*blockDim.x*blockDim.y -1 - nx + 1;}
+	//----- ----- ----- Upper (north) and Left (east) sleeve area
+		 if(blockIdx.x == gridDim.x -1 && blockIdx.y == 0) { J11 = nx*blockDim.x*blockDim.y - 1 - (nx - 1);}
 	else if(blockIdx.x  < gridDim.x -1 && blockIdx.y == 0) { J11 = J0 + 1  ;}
-	else if(blockIdx.x == gridDim.x -1 && blockIdx.y  > 0) { J11 =  j - nx - nx + 1 ;}
-	else                                                   { J11 = j - nx + 1 ;}
+	else if(blockIdx.x == gridDim.x -1 && blockIdx.y  > 0) { J11 = j - nx - (nx - 1) ;}
+	else                                                   { J11 = j - (nx - 1) ;}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// copy Global memory to Shared memory
-	if(threadIdx.y ==  0){ fs[jx][ 1] = f[J0], fs[jx][ 0] = f[J4];}   // Upper sleeve area
-	if(threadIdx.y ==  1){ fs[ 1][jx] = f[J2], fs[ 0][jx] = f[J6];}   // Left  sleeve area
-	if(threadIdx.y ==  2){ fs[18][jx] = f[J3], fs[19][jx] = f[J7];}   // Right sleeve area
-	if(threadIdx.y == 15){ fs[jx][18] = f[J1], fs[jx][19] = f[J5];}   // Lower sleeve area
+	if(threadIdx.y ==  0){ fs[jx][ 1] = f[J0], fs[jx][ 0] = f[J4];}   // Lower (south) sleeve area
+	if(threadIdx.y ==  1){ fs[ 1][jx] = f[J2], fs[ 0][jx] = f[J6];}   // Left  (west)  sleeve area
+	if(threadIdx.y ==  2){ fs[18][jx] = f[J3], fs[19][jx] = f[J7];}   // Right (east)  sleeve area
+	if(threadIdx.y == 15){ fs[jx][18] = f[J1], fs[jx][19] = f[J5];}   // Upper (north) sleeve area
 	//----- ----- ----- 
-	if(threadIdx.x ==  0 && threadIdx.y == 15) {fs[ 1][18] = f[J8];}  // Upper and Rgith sleeve area
-	if(threadIdx.x == 15 && threadIdx.y == 15) {fs[18][18] = f[J9];}  // Lower and Rgith sleeve area
-	if(threadIdx.x ==  0 && threadIdx.y ==  0) {fs[ 1][ 1] = f[J10];} // Upper and Left  sleeve area
-	if(threadIdx.x == 15 && threadIdx.y ==  0) {fs[18][ 1] = f[J11];} // Lower and Left  sleeve area
+	if(threadIdx.x ==  0 && threadIdx.y == 15) {fs[ 1][18] = f[J8];}  // Lower (south) and Rgith (east) sleeve area
+	if(threadIdx.x == 15 && threadIdx.y == 15) {fs[18][18] = f[J9];}  // Upper (north) and Rgith (east) sleeve area
+	if(threadIdx.x ==  0 && threadIdx.y ==  0) {fs[ 1][ 1] = f[J10];} // Lower (south) and Left  (west) sleeve area
+	if(threadIdx.x == 15 && threadIdx.y ==  0) {fs[18][ 1] = f[J11];} // Upper (north) and Left  (west) sleeve area
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -176,21 +176,23 @@ __global__ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	/* Consider up to the second nearest neighbor. Therefore, 
 	   13 difference grid points are used. (#1 to #13) */
-	fcc  = fs[jx  ][jy  ]; // #1
-	fcw  = fs[jx-1][jy  ]; // #2
-	fce  = fs[jx+1][jy  ]; // #3
-	fcn  = fs[jx  ][jy+1]; // #4
-	fcs  = fs[jx  ][jy-1]; // #5
+	/* Array data is put in the argument so that 
+	   the code on the CPU can be used as it is. */
+	fcc  = fs[jx  ][jy  ]; // #1 (center: fc)
+	fcw  = fs[jx-1][jy  ]; // #2 (center: fc)
+	fce  = fs[jx+1][jy  ]; // #3 (center: fc)
+	fcn  = fs[jx  ][jy+1]; // #4 (center: fc)
+	fcs  = fs[jx  ][jy-1]; // #5 (center: fc)
 	//
-	fcww = fs[jx-2][jy  ]; // #6
-	fcee = fs[jx+2][jy  ]; // #7
-	fcnn = fs[jx  ][jy+2]; // #8
-	fcss = fs[jx  ][jy-2]; // #9
+	fcww = fs[jx-2][jy  ]; // #6 (center: fcw)
+	fcee = fs[jx+2][jy  ]; // #7 (center: fce)
+	fcnn = fs[jx  ][jy+2]; // #8 (center: fcn)
+	fcss = fs[jx  ][jy-2]; // #9 (center: fcs)
 	//
-	fcnw = fs[jx-1][jy+1]; // #10
-	fcne = fs[jx+1][jy+1]; // #11
-	fcsw = fs[jx-1][jy-1]; // #12
-	fcse = fs[jx+1][jy-1]; // #13
+	fcnw = fs[jx-1][jy+1]; // #10 (center: fcn)
+	fcne = fs[jx+1][jy+1]; // #11 (center: fcn)
+	fcsw = fs[jx-1][jy-1]; // #12 (center: fcs)
+	fcse = fs[jx+1][jy-1]; // #13 (center: fcs)
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
