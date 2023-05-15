@@ -267,7 +267,7 @@ int main(int argc, char** argv)
 	for(int jy=0; jy<ny ; jy++){
 		for(int jx=0; jx<nx ; jx++){
 			int j = nx*jy + jx;
-			float r = (float)rand()/(float)(RAND_MAX);
+			float r = (float)rand()/(float)(RAND_MAX)-0.5;
 			F_h[j] = c_0 + 0.01*r;
 		}
 	}//on CPU calculation

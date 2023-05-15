@@ -377,7 +377,7 @@ int main(int argc, char** argv)
 		for(int jy=0; jy<ny ; jy++){
 			for(int jx=0; jx<nx ; jx++){
 				int j = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
-				float r = (float)rand()/(float)(RAND_MAX);
+				float r = (float)rand()/(float)(RAND_MAX)-0.5;
 				F_h[j] = c_0 + 0.01*r;
 			}
 		}
@@ -417,8 +417,20 @@ int main(int argc, char** argv)
 			//output vtk format
 			write_vtk_grid_values_3D(nx,ny,nz,dx,dy,dz,istep,F_h);
 			
+			//check average concentration
+			float tc = 0.0; //average concentration
+			for(int jz=0; jz<nz ; jz++){
+				for(int jy=0; jy<ny ; jy++){
+					for(int jx=0; jx<nx ; jx++){
+						int j = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
+						tc = tc + F_h[j];
+					}
+				}
+			}
+			tc = tc/(nx*ny*nz);
+			
 			//show current step
-			fprintf(stderr,"istep = %5d \n",istep);
+			fprintf(stderr,"istep = %5d, average constration = %f \n",istep,tc);
 		}
 	}
 	

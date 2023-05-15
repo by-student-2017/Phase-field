@@ -372,7 +372,7 @@ int main(int argc, char** argv)
 		for(int jy=0; jy<ny ; jy++){
 			for(int jx=0; jx<nx ; jx++){
 				int j = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
-				float r = (float)rand()/(float)(RAND_MAX);
+				float r = (float)rand()/(float)(RAND_MAX)-0.5;
 				f[j] = c_0 + 0.01*r;
 			}
 		}
