@@ -293,7 +293,7 @@ int main(int argc, char** argv)
 	for(int istep=0; istep<=nstep ; istep++){
 		//calculate subroutine "Kernel" on GPU
 		Kernel<<<blocks, threads>>>(f_d,fn_d,nx,ny,rr,temp,L0,kapa_c,da,db,dt,dx,dy);
-		//cudaThreadSynchronize();
+		cudaDeviceSynchronize(); //<-new version|old version -> cudaThreadSynchronize();
 		
 		// replace f_d with new f_d (=fn_d)
 		update(&f_d,&fn_d);
