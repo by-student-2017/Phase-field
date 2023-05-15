@@ -397,6 +397,30 @@ int main(int argc, char** argv)
 		// replace f with new f (=fn)
 		update(&f,&fn);
 		//
+		if(istep%(nprint/10) == 0){
+			//check average concentration
+			tc = 0.0; //average concentration
+			for(int jz=0; jz<nz ; jz++){
+				for(int jy=0; jy<ny ; jy++){
+					for(int jx=0; jx<nx ; jx++){
+						int j = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
+						tc = tc + f[j];
+					}
+				}
+			}
+			tc = tc/(nx*ny*nz);
+			
+			//correct concentration
+			for(int jz=0; jz<nz ; jz++){
+				for(int jy=0; jy<ny ; jy++){
+					for(int jx=0; jx<nx ; jx++){
+						int j = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
+						f[j] = f[j] * (c_0/tc);
+					}
+				}
+			}
+		}
+		//
 		if(istep%nprint == 0){
 			sprintf(filename,"f%03d",istep/nprint);
 			

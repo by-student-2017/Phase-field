@@ -402,6 +402,7 @@ int main(int argc, char** argv)
 	cudaEventRecord(start);
 	//----- ----- ----- -----end:(This part is not really needed.)----- ----- ----- ----
 	
+	float tc = 0.0; //average concentration
 	for(int istep=0; istep<=nstep ; istep++){
 		//calculate subroutine "Kernel" on GPU
 		Kernel<<<blocks, threads>>>(f_d,fn_d,nx,ny,nz,rr,temp,L0,kapa_c,Da,Db,dt,dx,dy,dz);
@@ -410,15 +411,12 @@ int main(int argc, char** argv)
 		// replace f_d with new f_d (=fn_d)
 		update(&f_d,&fn_d);
 		//
-		if(istep%nprint == 0){
+		if(istep%(nprint/10) == 0){
 			//copy f_d(cuda,device) to F_h(cpu,host)
 			cudaMemcpy(F_h,f_d,nx*ny*nz*sizeof(float),cudaMemcpyDeviceToHost);
 			
-			//output vtk format
-			write_vtk_grid_values_3D(nx,ny,nz,dx,dy,dz,istep,F_h);
-			
 			//check average concentration
-			float tc = 0.0; //average concentration
+			tc = 0.0; //average concentration
 			for(int jz=0; jz<nz ; jz++){
 				for(int jy=0; jy<ny ; jy++){
 					for(int jx=0; jx<nx ; jx++){
@@ -428,6 +426,27 @@ int main(int argc, char** argv)
 				}
 			}
 			tc = tc/(nx*ny*nz);
+			
+			//correct concentration
+			for(int jz=0; jz<nz ; jz++){
+				for(int jy=0; jy<ny ; jy++){
+					for(int jx=0; jx<nx ; jx++){
+						int j = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
+						F_h[j] = F_h[j] * (c_0/tc);
+					}
+				}
+			}
+			
+			//copy F_h(cpu,host) to f_d(cuda,device)
+			cudaMemcpy(f_d,F_h,nx*ny*nz*sizeof(float),cudaMemcpyHostToDevice);
+		}
+		//
+		if(istep%nprint == 0){
+			//copy f_d(cuda,device) to F_h(cpu,host)
+			//cudaMemcpy(F_h,f_d,nx*ny*nz*sizeof(float),cudaMemcpyDeviceToHost);
+			
+			//output vtk format
+			write_vtk_grid_values_3D(nx,ny,nz,dx,dy,dz,istep,F_h);
 			
 			//show current step
 			fprintf(stderr,"istep = %5d, average constration = %f \n",istep,tc);
