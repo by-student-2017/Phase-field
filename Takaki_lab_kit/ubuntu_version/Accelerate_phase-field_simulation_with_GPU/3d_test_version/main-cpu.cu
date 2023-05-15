@@ -328,7 +328,7 @@ int main(int argc, char** argv)
 	//----- ----- ----- -----
 	float Lx = 3.0e-07*times, // Simulation length in x-direction [micro m]
 		  Ly = 3.0e-07*times, // Simulation length in y-direction [micro m]
-		  Lz = 3.0e-07*times*((nz/nx)*(nz/ny)), // Simulation length in z-direction [micro m]
+		  Lz = 3.0e-07*times*(nz*nz)/(nx*ny), // Simulation length in z-direction [micro m]
 		  //----- ----- ----- -----
 		  dx = Lx/(float)nx, // Grid spacing between two grid pints in x-direction [nm]
 		  dy = Ly/(float)ny, // Grid spacing between two grid pints in y-direction [nm]
