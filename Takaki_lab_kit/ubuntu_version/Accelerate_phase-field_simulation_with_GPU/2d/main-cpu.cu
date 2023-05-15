@@ -298,7 +298,7 @@ int main(int argc, char** argv)
 		  //----- ----- ----- -----
 		  dt = (dx*dx/Da)*0.1; // Time increment for the numerical integration [dimensionless]
 	
-	//----- ----- ----- -----
+	//----- ----- ----- -----start:(This part is not really needed.)----- ----- ----- ----
 	int nDevices;
 	cudaGetDeviceCount(&nDevices);
 	for (int i = 0; i < nDevices; i++){
@@ -312,7 +312,7 @@ int main(int argc, char** argv)
 		printf("  Peak Memory Bandwidth (GB/s): %f\n",2.0*prop.memoryClockRate*(prop.memoryBusWidth/8)/1.0e6);
 		printf("--------------------------------------------------\n");
 	}
-	//----- ----- ----- -----
+	//----- ----- ----- -----end:(This part is not really needed.)----- ----- ----- ----
 	
 	f  = (float *)malloc(nx*ny*sizeof(float));
 	fn = (float *)malloc(nx*ny*sizeof(float));
@@ -326,7 +326,7 @@ int main(int argc, char** argv)
 		}
 	}
 	
-	//----- ----- ----- -----
+	//----- ----- ----- -----start:(This part is not really needed.)----- ----- ----- ----
 	//Set recording time
 	cudaEvent_t start, stop;
 	
@@ -336,7 +336,7 @@ int main(int argc, char** argv)
 	
 	//Start recording time
 	cudaEventRecord(start);
-	//----- ----- ----- -----
+	//----- ----- ----- -----end:(This part is not really needed.)----- ----- ----- ----
 	
 	for(int istep=0; istep<=nstep ; istep++){
 		//calculate subroutine "Kernel" on CPU
@@ -362,7 +362,7 @@ int main(int argc, char** argv)
 		}
 	}
 	
-	//----- ----- ----- -----
+	//----- ----- ----- -----start:(This part is not really needed.)----- ----- ----- ----
 	//Stop recording time
 	cudaEventRecord(stop);
 	
@@ -379,7 +379,7 @@ int main(int argc, char** argv)
 	//End processing
 	cudaEventDestroy(start);
 	cudaEventDestroy(stop);
-	//----- ----- ----- -----
+	//----- ----- ----- -----end:(This part is not really needed.)----- ----- ----- ----
 	
 	free(f);
 	free(fn);
