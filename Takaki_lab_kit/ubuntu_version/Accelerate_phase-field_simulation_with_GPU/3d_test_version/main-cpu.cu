@@ -10,7 +10,7 @@
    Date: 15th/May/2023
    Test: Ubuntu 22.04 LTS
    
-   Compiling: nvcc -O2 main-cpu.cu write_vtk_grid_values_3D.cu -o main-cpu.exe -lm
+   Compiling: nvcc -O2 main-cpu.cu write_vtk_grid_values_3D.cu -o main-cpu.exe -lm -Wall
    Run: ./main-cpu.exe
    ParaView: time_XX.vtk
 */
@@ -29,7 +29,7 @@
 //----- ----- -----
 #define NX 128*TIMES //Number of grid points in the x-direction
 #define NY 128*TIMES //Number of grid points in the y-direction
-#define NZ   8*TIMES //Number of grid points in the z-direction
+#define NZ  16*TIMES //Number of grid points in the z-direction
 
 void Kernel
 (
@@ -266,7 +266,7 @@ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Laplacian(mu) = d^2(mu)/dx^2 + d^2(mu)/dy^2 + d^2(mu)/dz^2
 	nab_mu = (mu_w + mu_e -2.0*mu_c)/(dx*dx)  // d^2(mu)/dx^2
-		   + (mu_n + mu_s -2.0*mu_c)/(dy*dy); // d^2(mu)/dy^2
+		   + (mu_n + mu_s -2.0*mu_c)/(dy*dy)  // d^2(mu)/dy^2
 		   + (mu_u + mu_d -2.0*mu_c)/(dz*dz); // d^2(mu)/dz^2
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
