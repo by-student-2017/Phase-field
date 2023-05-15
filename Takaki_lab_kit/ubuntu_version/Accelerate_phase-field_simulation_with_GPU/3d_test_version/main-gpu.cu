@@ -10,8 +10,8 @@
    Date: 15th/May/2023
    Test: Ubuntu 22.04 LTS
    
-   Compiling: nvcc -O2 main-cpu.cu write_vtk_grid_values_3D.cu -o main-cpu.exe -lm
-   Run: ./main-cpu.exe
+   Compling: nvcc -O2 main-gpu.cu write_vtk_grid_values_3D.cu -o main-gpu.exe -arch=native -lm --std 'c++17'
+   Run: ./main-gpu.exe
    ParaView: time_XX.vtk
 */
 
@@ -25,13 +25,17 @@
   #include "device_launch_parameters.h" */
 //----- ----- -----
 
+#define BSX 16        //Number of threads, 2^n=<32, BSX*BSY*BSZ <= 1024
+#define BSY 16
+#define BSZ  4
 #define TIMES 1
 //----- ----- -----
 #define NX 128*TIMES //Number of grid points in the x-direction
 #define NY 128*TIMES //Number of grid points in the y-direction
-#define NZ  16*TIMES //Number of grid points in the z-direction
+#define NZ   4*TIMES //Number of grid points in the z-direction
 
-void Kernel
+// Define subroutine "Kernel" for GPU (Device) calculation in detail
+__global__ void Kernel
 (
 	float *f, 
 	float *fn,
@@ -52,9 +56,9 @@ void Kernel
 {
 	int j, jx, jy, jz;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	for(jx=0; jx<nx; jx++){ //<-CPU | GPU-> jx = blockDim.z*blockIdx.z + threadIdx.z;
-	for(jy=0; jy<ny; jy++){ //<-CPU | GPU-> jy = blockDim.y*blockIdx.y + threadIdx.y;
-	for(jz=0; jz<nz; jz++){ //<-CPU | GPU-> jz = blockDim.x*blockIdx.x + threadIdx.x;
+	jx = blockDim.z*blockIdx.z + threadIdx.z; //<-GPU | CPU -> for(jx=0; jx<nx; jx++){
+	jy = blockDim.y*blockIdx.y + threadIdx.y; //<-GPU | CPU -> for(jy=0; jy<ny; jy++){
+	jz = blockDim.x*blockIdx.x + threadIdx.x; //<-GPU | CPU -> for(jy=0; jz<nz; jz++){
 	j  = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
@@ -266,7 +270,7 @@ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Laplacian(mu) = d^2(mu)/dx^2 + d^2(mu)/dy^2 + d^2(mu)/dz^2
 	nab_mu = (mu_w + mu_e -2.0*mu_c)/(dx*dx)  // d^2(mu)/dx^2
-		   + (mu_n + mu_s -2.0*mu_c)/(dy*dy); // d^2(mu)/dy^2
+		   + (mu_n + mu_s -2.0*mu_c)/(dy*dy)  // d^2(mu)/dy^2
 		   + (mu_u + mu_d -2.0*mu_c)/(dz*dz); // d^2(mu)/dz^2
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
@@ -297,10 +301,6 @@ void Kernel
 	dfdt = mcc*nab_mu + dmc*(dfmdx + dfmdy + dfmdz); 
 	fn[j] = f[j] + dfdt*dt;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	
-	}//end for(jz
-	}//end for(jy
-	}//end for(jx
 }
 
 void update(float **f, float **fn)
@@ -314,10 +314,10 @@ void write_vtk_grid_values_3D(int Nx, int Ny, int Nz, float dx, float dy, float 
 
 int main(int argc, char** argv)
 { 
-	float *f, *fn;
+	float *f_d, *fn_d; // name of dynamic memory for GPU, CUDA, device
+	float *F_h;        // name of dynamic memory for CPU
 	int nx = NX, ny = NY, nz = NZ;
 	int times = TIMES;
-	char filename[] = "f000";
 	
 	int nstep=10000;    //Number of time integration steps
 	int nprint=1000;    //Output frequency to write the results to file
@@ -360,8 +360,13 @@ int main(int argc, char** argv)
 	}
 	//----- ----- ----- -----end:(This part is not really needed.)----- ----- ----- ----
 	
-	f  = (float *)malloc(nx*ny*nz*sizeof(float));
-	fn = (float *)malloc(nx*ny*nz*sizeof(float));
+	f_d  = (float *)malloc(nx*ny*nz*sizeof(float)); //GPU, CUDA, device
+	fn_d = (float *)malloc(nx*ny*nz*sizeof(float)); //GPU, CUDA, device
+	
+	cudaMalloc((void**)&f_d ,nx*ny*nz*sizeof(float)); // define dynamic memory for GPU (device)
+	cudaMalloc((void**)&fn_d,nx*ny*nz*sizeof(float)); // define dynamic memory for GPU (device)
+	
+	F_h  = (float *)malloc(nx*ny*nz*sizeof(float));   // define dynamic memory for CPU (host)
 	
 	// Initialize the concentration filed f with random modulation
 	for(int jz=0; jz<nz ; jz++){
@@ -369,10 +374,17 @@ int main(int argc, char** argv)
 			for(int jx=0; jx<nx ; jx++){
 				int j = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
 				float r = (float)rand()/(float)(RAND_MAX);
-				f[j] = c_0 + 0.01*r;
+				F_h[j] = c_0 + 0.01*r;
 			}
 		}
-	}
+	}//on CPU calculation
+	
+	//copy F_h(cpu,host) to f_d(cuda,device)
+	cudaMemcpy(f_d,F_h,nx*ny*sizeof(float),cudaMemcpyHostToDevice);
+	
+	int bsx=BSX, bsy=BSY, bsz=BSZ;     //Number of threads
+	dim3 blocks(nx/bsx,ny/bsy,nz/bsz); //nx*ny*nz = blocks * threads
+	dim3 threads(bsx,bsy,bsz);         //bsx*bsy*bsz <= 1024
 	
 	//----- ----- ----- -----start:(This part is not really needed.)----- ----- ----- ----
 	//Set recording time
@@ -387,17 +399,19 @@ int main(int argc, char** argv)
 	//----- ----- ----- -----end:(This part is not really needed.)----- ----- ----- ----
 	
 	for(int istep=0; istep<=nstep ; istep++){
-		//calculate subroutine "Kernel" on CPU
-		Kernel(f,fn,nx,ny,nz,rr,temp,L0,kapa_c,Da,Db,dt,dx,dy,dz);
+		//calculate subroutine "Kernel" on GPU
+		Kernel<<<blocks, threads>>>(f_d,fn_d,nx,ny,nz,rr,temp,L0,kapa_c,Da,Db,dt,dx,dy,dz);
+		cudaDeviceSynchronize(); //<- new version | old version -> cudaThreadSynchronize();
 		
-		// replace f with new f (=fn)
-		update(&f,&fn);
+		// replace f_d with new f_d (=fn_d)
+		update(&f_d,&fn_d);
 		//
 		if(istep%nprint == 0){
-			sprintf(filename,"f%03d",istep/nprint);
+			//copy f_d(cuda,device) to F_h(cpu,host)
+			cudaMemcpy(F_h,f_d,nx*ny*nz*sizeof(float),cudaMemcpyDeviceToHost);
 			
 			//output vtk format
-			write_vtk_grid_values_3D(nx,ny,nz,dx,dy,dz,istep,f);
+			write_vtk_grid_values_3D(nx,ny,nz,dx,dy,dz,istep,F_h);
 			
 			//show current step
 			fprintf(stderr,"istep = %5d \n",istep);
@@ -423,8 +437,10 @@ int main(int argc, char** argv)
 	cudaEventDestroy(stop);
 	//----- ----- ----- -----end:(This part is not really needed.)----- ----- ----- ----
 	
-	free(f);
-	free(fn);
+	cudaFree(f_d);
+	cudaFree(fn_d);
+	
+	free(F_h);
 	
 	return 0;
 }
