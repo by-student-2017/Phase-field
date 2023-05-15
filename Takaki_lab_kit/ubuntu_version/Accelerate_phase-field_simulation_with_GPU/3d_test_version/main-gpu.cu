@@ -140,7 +140,7 @@ __global__ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #11 (center: fcc, and + s + e)(#4 and #3)
 		 if(jy == 0 && jx == nx-1)   { fcse = f[j+nx*(ny-1) -(nx-1)];}
 	else if(jy  > 0 && jx == nx-1)   { fcse = f[j+nx*(  -1) -(nx-1)];}
-	else if(jy == 0 && jx <  nx-1)   { fcse = f[j+nx*(  -1) -(  -1)];}
+	else if(jy == 0 && jx <  nx-1)   { fcse = f[j+nx*(ny-1) -(  -1)];}
 	else                             { fcse = f[j+nx*(  -1) -(  -1)];}
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----ZX = XZ
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #12 (center: fcc, and + u + w)(#7 and #2)
@@ -301,6 +301,10 @@ __global__ void Kernel
 	dfdt = mcc*nab_mu + dmc*(dfmdx + dfmdy + dfmdz); 
 	fn[j] = f[j] + dfdt*dt;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	
+	// If there are small variations, set the max and min values to the limits
+	//if(fn[j]>0.999999){ fn[j]=0.999999; }
+	//if(fn[j]<1.0e-6)  { fn[j]=1.0e-6; }
 }
 
 void update(float **f, float **fn)
@@ -324,7 +328,7 @@ int main(int argc, char** argv)
 	//----- ----- ----- -----
 	float Lx = 3.0e-07*times, // Simulation length in x-direction [micro m]
 		  Ly = 3.0e-07*times, // Simulation length in y-direction [micro m]
-		  Lz = 3.0e-07/8.0, // Simulation length in y-direction [micro m]
+		  Lz = 3.0e-07*times*(nz*nz)/(nx*ny), // Simulation length in z-direction [micro m]
 		  //----- ----- ----- -----
 		  dx = Lx/(float)nx, // Grid spacing between two grid pints in x-direction [nm]
 		  dy = Ly/(float)ny, // Grid spacing between two grid pints in y-direction [nm]
