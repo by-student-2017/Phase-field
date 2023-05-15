@@ -51,8 +51,8 @@ __global__ void Kernel
 {
 	int j, jx, jy;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	jx = blockDim.y*blockIdx.y + threadIdx.y; //<-GPU | CPU -> for(jx=0; jx<nx; jx++){
-	jy = blockDim.x*blockIdx.x + threadIdx.x; //<-GPU | CPU -> for(jy=0; jy<ny; jy++){
+	jx = blockDim.x*blockIdx.x + threadIdx.x; //<-GPU | CPU -> for(jx=0; jx<nx; jx++){
+	jy = blockDim.y*blockIdx.y + threadIdx.y; //<-GPU | CPU -> for(jy=0; jy<ny; jy++){
 	j  = nx*jy + jx;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	

@@ -49,8 +49,8 @@ void Kernel
 {
 	int j, jx, jy;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	for(jx=0; jx<nx; jx++){ //<-CPU | GPU-> jx = blockDim.y*blockIdx.y + threadIdx.y;
-	for(jy=0; jy<ny; jy++){ //<-CPU | GPU-> jy = blockDim.x*blockIdx.x + threadIdx.x;
+	for(jx=0; jx<nx; jx++){ //<-CPU | GPU-> jx = blockDim.x*blockIdx.x + threadIdx.x;
+	for(jy=0; jy<ny; jy++){ //<-CPU | GPU-> jy = blockDim.y*blockIdx.y + threadIdx.y;
 	j  = nx*jy + jx;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
