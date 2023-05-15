@@ -10,7 +10,7 @@
    Date: 15th/May/2023
    Test: Ubuntu 22.04 LTS
    
-   Compiling: nvcc -O2 main-cpu.cu write_vtk_grid_values_2D.cu -o main-cpu.exe -lm
+   Compiling: nvcc -O2 main-cpu.cu write_vtk_grid_values_3D.cu -o main-cpu.exe -lm
    Run: ./main-cpu.exe
    ParaView: time_XX.vtk
 */
@@ -25,10 +25,11 @@
   #include "device_launch_parameters.h" */
 //----- ----- -----
 
-#define TIMES 2
+#define TIMES 1
 //----- ----- -----
-#define NX 256*TIMES //Number of grid points in the x-direction
-#define NY 256*TIMES //Number of grid points in the y-direction
+#define NX 128*TIMES //Number of grid points in the x-direction
+#define NY 128*TIMES //Number of grid points in the y-direction
+#define NZ   8*TIMES //Number of grid points in the z-direction
 
 void Kernel
 (
@@ -36,6 +37,7 @@ void Kernel
 	float *fn,
 	int    nx,
 	int    ny,
+	int    nz,
 	float  rr,
 	float  temp,
 	float  L0,
@@ -44,38 +46,46 @@ void Kernel
 	float  Db,
 	float  dt,
 	float  dx,
-	float  dy
+	float  dy,
+	float  dz
 )
 {
-	int j, jx, jy;
+	int j, jx, jy, jz;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	for(jx=0; jx<nx; jx++){ //<-CPU | GPU-> jx = blockDim.y*blockIdx.y + threadIdx.y;
-	for(jy=0; jy<ny; jy++){ //<-CPU | GPU-> jy = blockDim.x*blockIdx.x + threadIdx.x;
-	j  = nx*jy + jx;
+	for(jx=0; jx<nx; jx++){ //<-CPU | GPU-> jx = blockDim.z*blockIdx.z + threadIdx.z;
+	for(jy=0; jy<ny; jy++){ //<-CPU | GPU-> jy = blockDim.y*blockIdx.y + threadIdx.y;
+	for(jz=0; jz<nz; jz++){ //<-CPU | GPU-> jz = blockDim.x*blockIdx.x + threadIdx.x;
+	j  = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	float  fcc,
-		   fce,  fcw,  fcs,  fcn,
-		   //----- ----- -----
+		   fce,  fcw,  fcs,  fcn,  fcu,  fcd,
+		   //----- ----- -----XY
 		   fcnw, fcne,
 		   fcsw, fcse,
+		   //----- ----- -----XZ
+		   fcuw, fcue,
+		   fcdw, fcde,
+		   //----- ----- -----YZ
+		   fcun, fcus,
+		   fcdn, fcds,
 		   //----- ----- -----
-		   fcww, fcee, fcnn, fcss,
+		   fcww, fcee, fcnn, fcss, fcuu, fcdd,
 		   //----- ----- ----- ----- ----- -----
 		   RT = rr*temp,
 		   //----- ----- ----- ----- ----- -----
 		   mu_chc,
-		   mu_chw, mu_che, mu_chn, mu_chs,
+		   mu_chw, mu_che, mu_chn, mu_chs, mu_chu, mu_chd,
 		   //----- ----- -----
 		   mu_suc,
-		   mu_suw, mu_sue, mu_sun, mu_sus, 
+		   mu_suw, mu_sue, mu_sun, mu_sus, mu_suu, mu_sud,
 		   //----- ----- -----
 		   mu_c,
-		   mu_w, mu_e, mu_n, mu_s, 
+		   mu_w, mu_e, mu_n, mu_s, mu_u, mu_d, 
 		   //----- ----- ----- ----- ----- -----
 		   nab_mu, 
-		   dfmdx, dfmdy, 
+		   dfmdx, dfmdy, dfmdz, 
 		   //----- ----- -----
 		   Dab = Db/Da, 
 		   mcc, dmc,
@@ -87,89 +97,177 @@ void Kernel
 	   The if statement is used because of periodic boundary conditions. */
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #1 (center: fcc)
 	fcc = f[j];
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #2 (center: fcc, and + w)
-	if(jx == 0)    fcw = f[j+nx-1];    //boundary condition at west edge
-	else           fcw = f[j   -1];    //non edge
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #3 (center: fcc, and + e)
-	if(jx == nx-1) fce = f[j-nx+1];    //boundary condition at east edge
-	else           fce = f[j   +1];    //non edge
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #4 (center: fcc, and + s)
-	if(jy == 0)    fcs = f[j+nx*(+ny-1)]; //boundary condition at south edge
-	else           fcs = f[j+nx*(   -1)]; //non edge
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #5 (center: fcc, and + n)
-	if(jy == ny-1) fcn = f[j+nx*(-ny+1)]; //boundary condition at north edge
-	else           fcn = f[j+nx*(   +1)]; //non edge
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #6 (center: fcc, and + n + w)(#5 and #2)
-	/* e.g., "if(jx == 0 && jy == ny-1)" is f[ (j+nx*(-ny+1)) + (j+nx-1) - j] = f[j + nx*(-ny+1) +  nx-1] using above #5 and #2 condition.
-	         "if(jx == 0 && jy  < ny-1)" is f[ j+nx*(   +1) + (j+nx-1) - j]   = f[j + nx*(   +1) +  nx-1] using above #5 and #2 condition. */
-		 if(jx == 0 && jy == ny-1)   { fcnw = f[         nx-1];} // =f[j + nx*(-ny+1) +  nx-1] = f[nx*(ny-1)-nx*(ny-1)+nx-1] = f[nx-1]
-	else if(jx == 0 && jy  < ny-1)   { fcnw = f[j+nx    +nx-1];} // =f[j + nx*(   +1) +  nx-1] = f[j+nx    +nx-1]
-	else if(jx  > 0 && jy == ny-1)   { fcnw = f[j-nx*ny +nx-1];} // =f[j + nx*(-ny+1) +    -1] = f[j-nx*ny +nx-1]
-	else                             { fcnw = f[j       +nx-1];} // =f[j + nx*(   +1) +    -1] = f[j       +nx-1]
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #7 (center: fcc, and + n + e)(#5 and #3)
-		 if(jx == nx-1 && jy  < ny-1){ fcne = f[j+nx    -nx+1];} // =f[j + nx*(   +1) + -nx+1] = f[j+nx    -nx+1]
-	else if(jx  < nx-1 && jy == ny-1){ fcne = f[j-nx*ny +nx+1];} // =f[j + nx*(-ny+1) +     1] = f[j-nx*ny +nx+1]
-	else if(jx == nx-1 && jy == ny-1){ fcne = f[            0];} // =f[j + nx*(-ny+1) + -nx+1] = f[nx*(ny-1)+nx-1+nx*(-ny+1)-(nx-1)]=f[0]
-	else                             { fcne = f[j       +nx+1];} // =f[j + nx*(   +1) +     1] = f[j       +nx+1]
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #8 (center: fcc, and + s + w)(#4 and #2)
-		 if(jx == 0 && jy >  0)      { fcsw = f[j-nx    +nx-1];} // =f[j + nx*(   -1) +  nx-1] = f[j-nx    +nx-1]
-	else if(jx  > 0 && jy == 0)      { fcsw = f[j+nx*ny -nx-1];} // =f[j + nx*(+ny-1) +    -1] = f[j+nx*ny -nx-1]
-	else if(jx == 0 && jy == 0)      { fcsw = f[      nx*ny-1];} // =f[j + nx-1       + nx*(+ny-1)] = f[j+nx-1+nx*ny-nx] (and j= nx*jy + jx= nx*0 + 0 = 0)
-	else                             { fcsw = f[j       -nx-1];} // =f[j + nx*(   -1) +    -1] = f[j       -nx-1]
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #9 (center: fcc, and + s + e)(#4 and #3)
-		 if(jx == nx-1 && jy == 0)   { fcse = f[nx*ny-1 -nx+1];} // =f[j + nx*(+ny-1) + -nx+1] = f[nx-1+nx*ny-nx -nx+1]
-	else if(jx == nx-1 && jy  > 0)   { fcse = f[j-nx    -nx+1];} // =f[j + nx*(   -1) + -nx+1] = f[j-nx    -nx+1]
-	else if(jx <  nx-1 && jy == 0)   { fcse = f[j+nx*ny -nx+1];} // =f[j + nx*(+ny-1) +     1] = f[j+nx*ny -nx+1]
-	else                             { fcse = f[j       -nx+1];} // =f[j + nx*(   -1) +     1] = f[j       -nx+1]
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #10 (center: fcc, and + w + w)
-		 if(jx == 0)     { fcww = f[j+nx-2];}    // edge(west)
-	else if(jx == 1)     { fcww = f[j+nx-2];}    // edge(west,one inside)
-	else                 { fcww = f[j   -2];}    // non edge
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #11 (center: fcc, and + e + e)
-		 if(jx == nx - 2){ fcee = f[j-nx+2];}    // edge(east)
-	else if(jx == nx - 1){ fcee = f[j-nx+2];}    // edge(east, one inside)
-	else                 { fcee = f[j   +2];}    // non edge
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #12 (center: fcc, and + n + n)
-		 if(jy == ny - 2){ fcnn = f[j+nx*(-ny+2)];} // edge(north)
-	else if(jy == ny - 1){ fcnn = f[j+nx*(-ny+2)];} // edge(north, one inside)
-	else                 { fcnn = f[j+nx*(   +2)];} // non edge
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #13 (center: fcc, and + s + s)
-		 if(jy == 0)     { fcss = f[j+nx*(+ny-2)];} // edge(south)
-	else if(jy == 1)     { fcss = f[j+nx*(+ny-2)];} // edge(south, one inside)
-	else                 { fcss = f[j+nx*(   -2)];} // non edge
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #2 (center: fcc)
+	if(jx == 0)    fcw = f[j+(nx-1)];    //boundary condition at west edge
+	else           fcw = f[j+(  -1)];    //non edge    [if(jx  > 0)]
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #3 (center: fcc)
+	if(jx == nx-1) fce = f[j-(nx-1)];    //boundary condition at east edge
+	else           fce = f[j-(  -1)];    //non edge    [if(jx  < nx-1)]
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #4 (center: fcc)
+	if(jy == 0)    fcs = f[j+nx*(ny-1)]; //boundary condition at south edge
+	else           fcs = f[j+nx*(  -1)]; //non edge    [if(jy  > 0)]
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #5 (center: fcc)
+	if(jy == ny-1) fcn = f[j-nx*(ny-1)]; //boundary condition at north edge
+	else           fcn = f[j-nx*(  -1)]; //non edge    [if(jy  < ny-1)]
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #6 (center: fcc)
+	if(jz == 0)    fcu = f[j+nx*ny*(nz-1)]; //boundary condition at edge (down)
+	else           fcu = f[j+nx*ny*(  -1)]; //non edge [if(jz  > 0)]
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #7 (center: fcc)
+	if(jz == nz-1) fcd = f[j-nx*ny*(nz-1)]; //boundary condition at edge (up)
+	else           fcd = f[j-nx*ny*(  -1)]; //non edge [if(jz  < nz-1)]
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----YX = XY
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #8 (center: fcc, and + n + w)(#5 and #2)
+	/* e.g., "if(jy == ny-1 && jx == 0)" is f[ (j+nx*(-ny+1)) + (j+nx-1) - j] = f[j + nx*(-ny+1) +  nx-1] using above #5 and #2 condition.
+	         "if(jy  < ny-1 && jx == 0)" is f[ j+nx*(   +1) + (j+nx-1) - j]   = f[j + nx*(   +1) +  nx-1] using above #5 and #2 condition. */
+		 if(jy == ny-1 && jx == 0)   { fcnw = f[j-nx*(ny-1) +(nx-1)];}
+	else if(jy  < ny-1 && jx == 0)   { fcnw = f[j-nx*(  -1) +(nx-1)];}
+	else if(jy == ny-1 && jx  > 0)   { fcnw = f[j-nx*(ny-1) +(  -1)];}
+	else                             { fcnw = f[j-nx*(  -1) +(  -1)];}
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #9 (center: fcc, and + n + e)(#5 and #3)
+		 if(jy  < ny-1 && jx == nx-1){ fcne = f[j-nx*(  -1) -(nx-1)];}
+	else if(jy == ny-1 && jx  < nx-1){ fcne = f[j-nx*(ny-1) -(  -1)];}
+	else if(jy == ny-1 && jx == nx-1){ fcne = f[j-nx*(ny-1) -(nx-1)];}
+	else                             { fcne = f[j-nx*(  -1) -(  -1)];}
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #10 (center: fcc, and + s + w)(#4 and #2)
+		 if(jy >  0 && jx == 0)      { fcsw = f[j+nx*(  -1) +(nx-1)];}
+	else if(jy == 0 && jx  > 0)      { fcsw = f[j+nx*(ny-1) +(  -1)];}
+	else if(jy == 0 && jx == 0)      { fcsw = f[j+nx*(ny-1) +(nx-1)];}
+	else                             { fcsw = f[j+nx*(  -1) +(  -1)];}
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #11 (center: fcc, and + s + e)(#4 and #3)
+		 if(jy == 0 && jx == nx-1)   { fcse = f[j+nx*(ny-1) -(nx-1)];}
+	else if(jy  > 0 && jx == nx-1)   { fcse = f[j+nx*(  -1) -(nx-1)];}
+	else if(jy == 0 && jx <  nx-1)   { fcse = f[j+nx*(  -1) -(  -1)];}
+	else                             { fcse = f[j+nx*(  -1) -(  -1)];}
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----ZX = XZ
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #12 (center: fcc, and + u + w)(#7 and #2)
+		 if(jz == nz-1 && jx == 0)   { fcuw = f[j-nx*ny*(nz-1) +(nx-1)];}
+	else if(jz  < nz-1 && jx == 0)   { fcuw = f[j-nx*ny*(  -1) +(nx-1)];}
+	else if(jz == nz-1 && jx  > 0)   { fcuw = f[j-nx*ny*(nz-1) +(  -1)];}
+	else                             { fcuw = f[j-nx*ny*(  -1) +(  -1)];}
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #9 (center: fcc, and + u + e)(#7 and #3)
+		 if(jz  < nz-1 && jx == nx-1){ fcue = f[j-nx*ny*(  -1) -(nx-1)];}
+	else if(jz == nz-1 && jx  < nx-1){ fcue = f[j-nx*ny*(nz-1) -(  -1)];}
+	else if(jz == nz-1 && jx == nx-1){ fcue = f[j-nx*ny*(nz-1) -(nx-1)];}
+	else                             { fcue = f[j-nx*ny*(  -1) -(  -1)];}
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #10 (center: fcc, and + d + w)(#6 and #2)
+		 if(jz >  0 && jx == 0)      { fcdw = f[j+nx*ny*(  -1) +(nx-1)];}
+	else if(jz == 0 && jx  > 0)      { fcdw = f[j+nx*ny*(nz-1) +(  -1)];}
+	else if(jz == 0 && jx == 0)      { fcdw = f[j+nx*ny*(nz-1) +(nx-1)];}
+	else                             { fcdw = f[j+nx*ny*(  -1) +(  -1)];}
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #11 (center: fcc, and + d + e)(#6 and #3)
+		 if(jz == 0 && jx == nx-1)   { fcde = f[j+nx*ny*(nz-1) -(nx-1)];}
+	else if(jz  > 0 && jx == nx-1)   { fcde = f[j+nx*ny*(  -1) -(nx-1)];}
+	else if(jz == 0 && jx <  nx-1)   { fcde = f[j+nx*ny*(nz-1) -(  -1)];}
+	else                             { fcde = f[j+nx*ny*(  -1) -(  -1)];}
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----ZY = YZ
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #12 (center: fcc, and + u + s)(#7 and #4)
+		 if(jz == nz-1 && jy == 0)   { fcus = f[j-nx*ny*(nz-1) +nx*(ny-1)];}
+	else if(jz  < nz-1 && jy == 0)   { fcus = f[j-nx*ny*(  -1) +nx*(ny-1)];}
+	else if(jz == nz-1 && jy  > 0)   { fcus = f[j-nx*ny*(nz-1) +nx*(  -1)];}
+	else                             { fcus = f[j-nx*ny*(  -1) +nx*(  -1)];}
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #13 (center: fcc, and + u + n)(#7 and #5)
+		 if(jz  < nz-1 && jy == ny-1){ fcun = f[j-nx*ny*(  -1) -nx*(ny-1)];}
+	else if(jz == nz-1 && jy  < ny-1){ fcun = f[j-nx*ny*(nz-1) -nx*(  -1)];}
+	else if(jz == nz-1 && jy == ny-1){ fcun = f[j-nx*ny*(nz-1) -nx*(ny-1)];}
+	else                             { fcun = f[j-nx*ny*(  -1) -nx*(  -1)];}
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #14 (center: fcc, and + d + s)(#6 and #4)
+		 if(jz >  0 && jy == 0)      { fcds = f[j+nx*ny*(  -1) +nx*(ny-1)];}
+	else if(jz == 0 && jy  > 0)      { fcds = f[j+nx*ny*(nz-1) +nx*(  -1)];}
+	else if(jz == 0 && jy == 0)      { fcds = f[j+nx*ny*(nz-1) +nx*(ny-1)];}
+	else                             { fcds = f[j+nx*ny*(  -1) +nx*(  -1)];}
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #15 (center: fcc, and + d + n)(#6 and #5)
+		 if(jz == 0 && jy == ny-1)   { fcdn = f[j+nx*ny*(nz-1) -nx*(ny-1)];}
+	else if(jz  > 0 && jy == ny-1)   { fcdn = f[j+nx*ny*(  -1) -nx*(ny-1)];}
+	else if(jz == 0 && jy <  ny-1)   { fcdn = f[j+nx*ny*(nz-1) -nx*(  -1)];}
+	else                             { fcdn = f[j+nx*ny*(  -1) -nx*(  -1)];}
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #20 (center: fcw)
+		 if(jx == 0)     { fcww = f[j+(nx-2)];}    // edge(west)
+	else if(jx == 1)     { fcww = f[j+(nx-2)];}    // edge(west,one inside)
+	else                 { fcww = f[j+(  -2)];}    // non edge
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #21 (center: fce)
+		 if(jx == nx - 2){ fcee = f[j-(nx-2)];}    // edge(east)
+	else if(jx == nx - 1){ fcee = f[j-(nx-2)];}    // edge(east, one inside)
+	else                 { fcee = f[j-(  -2)];}    // non edge
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #22 (center: fcn)
+		 if(jy == ny - 2){ fcnn = f[j-nx*(ny-2)];} // edge(north)
+	else if(jy == ny - 1){ fcnn = f[j-nx*(ny-2)];} // edge(north, one inside)
+	else                 { fcnn = f[j-nx*(  -2)];} // non edge
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #23 (center: fcs)
+		 if(jy == 0)     { fcss = f[j+nx*(ny-2)];} // edge(south)
+	else if(jy == 1)     { fcss = f[j+nx*(ny-2)];} // edge(south, one inside)
+	else                 { fcss = f[j+nx*(  -2)];} // non edge
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #24 (center: fcu)
+		 if(jz == nz - 2){ fcuu = f[j-nx*ny*(nz-2)];} // edge(up)
+	else if(jz == nz - 1){ fcuu = f[j-nx*ny*(nz-2)];} // edge(down, one inside)
+	else                 { fcuu = f[j-nx*ny*(  -2)];} // non edge
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #25 (center: fcd)
+		 if(jz == 0)     { fcdd = f[j+nx*ny*(nz-2)];} // edge(up)
+	else if(jz == 1)     { fcdd = f[j+nx*ny*(nz-2)];} // edge(down, one inside)
+	else                 { fcdd = f[j+nx*ny*(  -2)];} // non edge
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// term1 = Atomic_interaction*(1-2*f) + RT*{log(f) - log(1-f)}
 	mu_chc = L0*(1.0-2.0*fcc) + RT*( log(fcc) - log(1.0-fcc) ); //center: fcc
+	//
 	mu_chw = L0*(1.0-2.0*fcw) + RT*( log(fcw) - log(1.0-fcw) ); //center: fcw
 	mu_che = L0*(1.0-2.0*fce) + RT*( log(fce) - log(1.0-fce) ); //center: fce
+	//
 	mu_chn = L0*(1.0-2.0*fcn) + RT*( log(fcn) - log(1.0-fcn) ); //center: fcn
 	mu_chs = L0*(1.0-2.0*fcs) + RT*( log(fcs) - log(1.0-fcs) ); //center: fcs
+	//
+	mu_chu = L0*(1.0-2.0*fcu) + RT*( log(fcu) - log(1.0-fcu) ); //center: fcu
+	mu_chd = L0*(1.0-2.0*fcd) + RT*( log(fcd) - log(1.0-fcd) ); //center: fcd
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// term2 = -gradient_energy_coefficient * Laplacian(f)
-	mu_suc = -kapa_c*( (fce  + fcw  -2.0*fcc)/(dx*dx) + (fcn  + fcs  -2.0*fcc)/(dy*dy) ); //center: fcc
-	mu_suw = -kapa_c*( (fcc  + fcww -2.0*fcw)/(dx*dx) + (fcnw + fcsw -2.0*fcw)/(dy*dy) ); //fcc=fcwe, fcnw=fcwn, fcsw=fcws, //center: fcw
-	mu_sue = -kapa_c*( (fcee + fcc  -2.0*fce)/(dx*dx) + (fcne + fcse -2.0*fce)/(dy*dy) ); //fcc=fcew, fcne=fcen, fcse=fces, //center: fce
-	mu_sun = -kapa_c*( (fcne + fcnw -2.0*fcn)/(dx*dx) + (fcnn + fcc  -2.0*fcn)/(dy*dy) ); //fcc=fcns, //center: fcn
-	mu_sus = -kapa_c*( (fcse + fcsw -2.0*fcs)/(dx*dx) + (fcc  + fcss -2.0*fcs)/(dy*dy) ); //fcc=fcsn, //center: fcs
+	mu_suc = -kapa_c*( (fce  + fcw  -2.0*fcc)/(dx*dx)
+					 + (fcn  + fcs  -2.0*fcc)/(dy*dy)
+					 + (fcu  + fcd  -2.0*fcc)/(dz*dz) ); //center: fcc
+	//
+	mu_suw = -kapa_c*( (fcc  + fcww -2.0*fcw)/(dx*dx)
+					 + (fcnw + fcsw -2.0*fcw)/(dy*dy)
+					 + (fcuw + fcdw -2.0*fcw)/(dz*dz) ); //fcc=fcwe, fcnw=fcwn, fcsw=fcws, //center: fcw
+	mu_sue = -kapa_c*( (fcee + fcc  -2.0*fce)/(dx*dx)
+					 + (fcne + fcse -2.0*fce)/(dy*dy)
+					 + (fcue + fcde -2.0*fce)/(dz*dz) ); //fcc=fcew, fcne=fcen, fcse=fces, //center: fce
+	//
+	mu_sun = -kapa_c*( (fcne + fcnw -2.0*fcn)/(dx*dx)
+					 + (fcnn + fcc  -2.0*fcn)/(dy*dy)
+					 + (fcun + fcdn -2.0*fcn)/(dz*dz) ); //fcc=fcns, fcun=fcnu, fcdn=fcnd, //center: fcn
+	mu_sus = -kapa_c*( (fcse + fcsw -2.0*fcs)/(dx*dx)
+					 + (fcc  + fcss -2.0*fcs)/(dy*dy)
+					 + (fcus + fcds -2.0*fcs)/(dz*dz) ); //fcc=fcsn, fcsu=fcus, fcds=fcsd, //center: fcs
+	//
+	mu_suu = -kapa_c*( (fcue + fcuw -2.0*fcu)/(dx*dx)
+					 + (fcun + fcus -2.0*fcu)/(dy*dy)
+					 + (fcuu + fcc  -2.0*fcu)/(dz*dz) ); //fcc=fcud, //center: fcu
+	mu_sud = -kapa_c*( (fcde + fcdw -2.0*fcd)/(dx*dx)
+					 + (fcdn + fcds -2.0*fcd)/(dy*dy)
+					 + (fcc  + fcdd -2.0*fcd)/(dz*dz) ); //fcc=fcdu, //center: fcd
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// mu = dG/df = term1 + term2
-	mu_c = mu_chc + mu_suc; // at current (jx,jy) grid point, //center: fcc
-	mu_w = mu_chw + mu_suw; // at (jx-1,jy) grid point, //center: fcw
-	mu_e = mu_che + mu_sue; // at (jx+1,jy) grid point, //center: fce
-	mu_n = mu_chn + mu_sun; // at (jx,jy+1) grid point, //center: fcn
-	mu_s = mu_chs + mu_sus; // at (jx,jy-1) grid point, //center: fcs
+	mu_c = mu_chc + mu_suc; // at current (jx,jy,jz) grid point, //center: fcc
+	//
+	mu_w = mu_chw + mu_suw; // at (jx-1,jy,jz) grid point, //center: fcw
+	mu_e = mu_che + mu_sue; // at (jx+1,jy,jz) grid point, //center: fce
+	//
+	mu_n = mu_chn + mu_sun; // at (jx,jy+1,jz) grid point, //center: fcn
+	mu_s = mu_chs + mu_sus; // at (jx,jy-1,jz) grid point, //center: fcs
+	//
+	mu_u = mu_chu + mu_suu; // at (jx,jy,jz+1) grid point, //center: fcu
+	mu_d = mu_chd + mu_sud; // at (jx,jy,jz-1) grid point, //center: fcd
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	// Laplacian(mu) = d^2(mu)/dx^2 + d^2(mu)/dy^2
+	// Laplacian(mu) = d^2(mu)/dx^2 + d^2(mu)/dy^2 + d^2(mu)/dz^2
 	nab_mu = (mu_w + mu_e -2.0*mu_c)/(dx*dx)  // d^2(mu)/dx^2
 		   + (mu_n + mu_s -2.0*mu_c)/(dy*dy); // d^2(mu)/dy^2
+		   + (mu_u + mu_d -2.0*mu_c)/(dz*dz); // d^2(mu)/dz^2
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -178,6 +276,9 @@ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// (df/dy) * d(mu)/dy, (y is related with n and s), (the center is fc.)
 	dfmdy = ( (fcn - fcs)/(2.0*dy) * (mu_n - mu_s)/(2.0*dy) );
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	// (df/dz) * d(mu)/dz, (z is related with u and d), (the center is fc.)
+	dfmdz = ( (fcu - fcd)/(2.0*dz) * (mu_u - mu_d)/(2.0*dz) );
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -192,11 +293,12 @@ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	// df/dt = M*Laplacian(f) + (dM/df)*( (df/dx) * d(mu)/dx + (df/dy) * d(mu)/dy )
-	dfdt = mcc*nab_mu + dmc*(dfmdx + dfmdy); 
+	// df/dt = M*Laplacian(f) + (dM/df)*( (df/dx) * d(mu)/dx + (df/dy) * d(mu)/dy + (df/dz) * d(mu)/dz )
+	dfdt = mcc*nab_mu + dmc*(dfmdx + dfmdy + dfmdz); 
 	fn[j] = f[j] + dfdt*dt;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
+	}//end for(jz
 	}//end for(jy
 	}//end for(jx
 }
@@ -208,70 +310,12 @@ void update(float **f, float **fn)
 	*fn = tmp;
 }
 
-void micro_avs(int nx, int ny, float dx, float dy, float *f, char *fileBodyName){
-	FILE *fp;
-	char fName[256];
-	int j,k;
-	
-	sprintf(fName,"%s.inp",fileBodyName);
-	fp = fopen(fName,"w");
-	
-	fprintf(fp,"%5d %5d %5d %5d %5d\n",nx*ny,(nx-1)*(ny-1),1,0,0);
-	
-	k=0;
-	for(int jy=1; jy<=ny; jy++){
-		for(int jx=1; jx<=nx; jx++){
-			k=k+1;
-			fprintf(fp,"%5d %5d %5d %5d\n",k,jx,jy,0);
-		}
-	}
-	k=0;
-	for(int jy=1; jy<=ny-1; jy++){
-		for(int jx=1; jx<=nx-1; jx++){
-			k=k+1;
-			fprintf(fp,"%5d %5d quad %5d %5d %5d %5d\n",k,0,
-			nx*(jy-1)+jx,nx*(jy-1)+jx+1,nx*jy+jx+1,nx*jy+jx);
-		}
-	}
-	
-	fprintf(fp,"1 1\n");
-	fprintf(fp,"phase\n");
-	
-	k=0;
-	for(int jy=0; jy<ny; jy++){
-		for(int jx=0; jx<nx; jx++){
-			j = nx*jy + jx;
-			k=k+1;
-			fprintf(fp,"%5d %16.8f\n",k,f[j]);
-		}
-	}
-	fclose(fp);;
-}
-
-void gnuplot(int nx, int ny, float dx, float dy, float *f, char *fileBodyName){
-	FILE *fp;
-	char fName[256];
-	int   j;
-	
-	sprintf(fName,"%s.dat",fileBodyName);
-	fp = fopen(fName,"w");
-	
-	for(int jx=0; jx<nx; jx++){
-		for(int jy=0; jy<ny; jy++){
-			j = nx*jy + jx;
-			fprintf(fp,"%5d %5d %16.8f\n",jx,jy,f[j]);
-		}
-		fprintf(fp,"\n");
-	}
-	fclose(fp);;
-}
-
-void write_vtk_grid_values_2D(int Nx, int Ny, float dx, float dy, int istep, float *data1);
+void write_vtk_grid_values_3D(int Nx, int Ny, int Nz, float dx, float dy, float dz, int istep, float *data1);
 
 int main(int argc, char** argv)
 { 
 	float *f, *fn;
-	int nx = NX, ny = NY;
+	int nx = NX, ny = NY, nz = NZ;
 	int times = TIMES;
 	char filename[] = "f000";
 	
@@ -280,9 +324,11 @@ int main(int argc, char** argv)
 	//----- ----- ----- -----
 	float Lx = 3.0e-07*times, // Simulation length in x-direction [micro m]
 		  Ly = 3.0e-07*times, // Simulation length in y-direction [micro m]
+		  Lz = 3.0e-07*times*((nz/nx)*(nz/ny)), // Simulation length in y-direction [micro m]
 		  //----- ----- ----- -----
 		  dx = Lx/(float)nx, // Grid spacing between two grid pints in x-direction [nm]
 		  dy = Ly/(float)ny, // Grid spacing between two grid pints in y-direction [nm]
+		  dz = Lz/(float)nz, // Grid spacing between two grid pints in z-direction [nm]
 		  //----- ----- ----- -----
 		  c_0 = 0.4,    // Initial concentration (atomic fraction)
 		  //----- ----- ----- -----
@@ -314,15 +360,17 @@ int main(int argc, char** argv)
 	}
 	//----- ----- ----- -----end:(This part is not really needed.)----- ----- ----- ----
 	
-	f  = (float *)malloc(nx*ny*sizeof(float));
-	fn = (float *)malloc(nx*ny*sizeof(float));
+	f  = (float *)malloc(nx*ny*nz*sizeof(float));
+	fn = (float *)malloc(nx*ny*nz*sizeof(float));
 	
 	// Initialize the concentration filed f with random modulation
-	for(int jy=0; jy<ny ; jy++){
-		for(int jx=0; jx<nx ; jx++){
-			int j = nx*jy + jx;
-			float r = (float)rand()/(float)(RAND_MAX);
-			f[j] = c_0 + 0.01*r;
+	for(int jz=0; jz<nz ; jz++){
+		for(int jy=0; jy<ny ; jy++){
+			for(int jx=0; jx<nx ; jx++){
+				int j = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
+				float r = (float)rand()/(float)(RAND_MAX);
+				f[j] = c_0 + 0.01*r;
+			}
 		}
 	}
 	
@@ -340,7 +388,7 @@ int main(int argc, char** argv)
 	
 	for(int istep=0; istep<=nstep ; istep++){
 		//calculate subroutine "Kernel" on CPU
-		Kernel(f,fn,nx,ny,rr,temp,L0,kapa_c,Da,Db,dt,dx,dy);
+		Kernel(f,fn,nx,ny,nz,rr,temp,L0,kapa_c,Da,Db,dt,dx,dy,dz);
 		
 		// replace f with new f (=fn)
 		update(&f,&fn);
@@ -348,14 +396,8 @@ int main(int argc, char** argv)
 		if(istep%nprint == 0){
 			sprintf(filename,"f%03d",istep/nprint);
 			
-			//output
-			//micro_avs(nx,ny,dx,dy,f,filename);
-			
-			//output gnuplot format
-			//gnuplot(nx,ny,dx,dy,f,filename);
-			
 			//output vtk format
-			write_vtk_grid_values_2D(nx,ny,dx,dy,istep,f);
+			write_vtk_grid_values_3D(nx,ny,nz,dx,dy,dz,istep,f);
 			
 			//show current step
 			fprintf(stderr,"istep = %5d \n",istep);
