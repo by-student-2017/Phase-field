@@ -7,7 +7,7 @@
    
    Modified version: By Student
    Place: 2-1 Hirosawa, Wako, Saitama, 351-0198, Japan
-   Date: 12th/May/2023
+   Date: 15th/May/2023
    Test: Ubuntu 22.04 LTS
    
    Compiling: nvcc -O2 main-cpu.cu write_vtk_grid_values_3D.cu -o main-cpu.exe -lm
@@ -42,8 +42,8 @@ void Kernel
 	float  temp,
 	float  L0,
 	float  kapa_c,
-	float  da,
-	float  db,
+	float  Da,
+	float  Db,
 	float  dt,
 	float  dx,
 	float  dy,
@@ -87,7 +87,7 @@ void Kernel
 		   nab_mu, 
 		   dfmdx, dfmdy, dfmdz, 
 		   //----- ----- -----
-		   dab = db/da, 
+		   Dab = Db/Da, 
 		   mcc, dmc,
 		   //----- ----- -----
 		   dfdt ;
@@ -284,13 +284,12 @@ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Mobility, M = { (D_A/RT)*c + (D_B/RT)*(1-c) }*c*(1-c)
 	//             = (D_a/RT)*{f + (D_B/D_A)*(1-f)}*f*(1-f)
-	mcc = (da/RT)*(fcc+dab*(1.0-fcc))*fcc*(1.0-fcc); 
+	mcc = (Da/RT)*(fcc+Dab*(1.0-fcc))*fcc*(1.0-fcc); 
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// dM/df
-	dmc = (da/RT)*((1.0-dab)*fcc*(1.0-fcc)
-		+ (fcc+dab*(1.0-fcc))*(1.0-2.0*fcc)); 
+	dmc = (Da/RT)*((1.0-Dab)*fcc*(1.0-fcc) + (fcc+Dab*(1.0-fcc))*(1.0-2.0*fcc)); 
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -335,16 +334,17 @@ int main(int argc, char** argv)
 		  //----- ----- ----- -----
 		  rr = 8.314,   // Gas constant [J/(mol*K)]
 		  temp = 673.0, // Temperature [K]
+		  RT = rr*temp,
 		  //----- ----- ----- -----
 		  L0 = 21020.8-9.31889*temp, // Atomic interaction [J/mol]
 		  kapa_c = 1.2e-14,  // The value of gradient energy coefficients [J*m^2/mol]
 		  //----- ----- ----- -----
-		  da = 1.0e-04*exp(-294000.0/rr/temp), // Self-diffusion coefficient [m^2/s] (Fe)
-		  db = 2.0e-05*exp(-308000.0/rr/temp), // Self-diffusion coefficient [m^2/s] (Cr)
+		  Da = 1.0e-04*exp(-294000.0/RT), // Self-diffusion coefficient [m^2/s] (Fe)
+		  Db = 2.0e-05*exp(-308000.0/RT), // Self-diffusion coefficient [m^2/s] (Cr)
 		  //----- ----- ----- -----
-		  dt = (dx*dx/da)*0.1; // Time increment for the numerical integration [dimensionless]
+		  dt = (dx*dx/Da)*0.1; // Time increment for the numerical integration [dimensionless]
 	
-	//----- ----- ----- -----
+	//----- ----- ----- -----start:(This part is not really needed.)----- ----- ----- ----
 	int nDevices;
 	cudaGetDeviceCount(&nDevices);
 	for (int i = 0; i < nDevices; i++){
@@ -358,7 +358,7 @@ int main(int argc, char** argv)
 		printf("  Peak Memory Bandwidth (GB/s): %f\n",2.0*prop.memoryClockRate*(prop.memoryBusWidth/8)/1.0e6);
 		printf("--------------------------------------------------\n");
 	}
-	//----- ----- ----- -----
+	//----- ----- ----- -----end:(This part is not really needed.)----- ----- ----- ----
 	
 	f  = (float *)malloc(nx*ny*nz*sizeof(float));
 	fn = (float *)malloc(nx*ny*nz*sizeof(float));
@@ -374,7 +374,7 @@ int main(int argc, char** argv)
 		}
 	}
 	
-	//----- ----- ----- -----
+	//----- ----- ----- -----start:(This part is not really needed.)----- ----- ----- ----
 	//Set recording time
 	cudaEvent_t start, stop;
 	
@@ -384,12 +384,12 @@ int main(int argc, char** argv)
 	
 	//Start recording time
 	cudaEventRecord(start);
-	//----- ----- ----- -----
+	//----- ----- ----- -----end:(This part is not really needed.)----- ----- ----- ----
 	
 	for(int istep=0; istep<=nstep ; istep++){
 		//calculate subroutine "Kernel" on CPU
-		Kernel(f,fn,nx,ny,nz,rr,temp,L0,kapa_c,da,db,dt,dx,dy,dz);
-		cudaDeviceSynchronize();
+		Kernel(f,fn,nx,ny,nz,rr,temp,L0,kapa_c,Da,Db,dt,dx,dy,dz);
+		cudaDeviceSynchronize(); //<- new version | old version -> cudaThreadSynchronize();
 		
 		// replace f with new f (=fn)
 		update(&f,&fn);
@@ -405,7 +405,7 @@ int main(int argc, char** argv)
 		}
 	}
 	
-	//----- ----- ----- -----
+	//----- ----- ----- -----start:(This part is not really needed.)----- ----- ----- ----
 	//Stop recording time
 	cudaEventRecord(stop);
 	
@@ -422,7 +422,7 @@ int main(int argc, char** argv)
 	//End processing
 	cudaEventDestroy(start);
 	cudaEventDestroy(stop);
-	//----- ----- ----- -----
+	//----- ----- ----- -----end:(This part is not really needed.)----- ----- ----- ----
 	
 	free(f);
 	free(fn);
