@@ -384,7 +384,7 @@ int main(int argc, char** argv)
 	}//on CPU calculation
 	
 	//copy F_h(cpu,host) to f_d(cuda,device)
-	cudaMemcpy(f_d,F_h,nx*ny*sizeof(float),cudaMemcpyHostToDevice);
+	cudaMemcpy(f_d,F_h,nx*ny*nz*sizeof(float),cudaMemcpyHostToDevice);
 	
 	int bsx=BSX, bsy=BSY, bsz=BSZ;     //Number of threads
 	dim3 blocks(nx/bsx,ny/bsy,nz/bsz); //nx*ny*nz = blocks * threads
