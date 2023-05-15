@@ -265,14 +265,14 @@ void Kernel
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Laplacian(mu) = d^2(mu)/dx^2 + d^2(mu)/dy^2 + d^2(mu)/dz^2
-	nab_mu = (mu_w + mu_e -2.0*mu_c)/(dx*dx)  // d^2(mu)/dx^2
+	nab_mu = (mu_e + mu_w -2.0*mu_c)/(dx*dx)  // d^2(mu)/dx^2
 		   + (mu_n + mu_s -2.0*mu_c)/(dy*dy)  // d^2(mu)/dy^2
 		   + (mu_u + mu_d -2.0*mu_c)/(dz*dz); // d^2(mu)/dz^2
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	// (df/dx) * d(mu)/dx, (x is related with w and e), (the center is fc.)
-	dfmdx = ( (fcw - fce)/(2.0*dx) * (mu_w - mu_e)/(2.0*dx) );
+	// (df/dx) * d(mu)/dx, (x is related with e and w), (the center is fc.)
+	dfmdx = ( (fce - fcw)/(2.0*dx) * (mu_e - mu_w)/(2.0*dx) );
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// (df/dy) * d(mu)/dy, (y is related with n and s), (the center is fc.)
 	dfmdy = ( (fcn - fcs)/(2.0*dy) * (mu_n - mu_s)/(2.0*dy) );
