@@ -30,9 +30,9 @@
 #define BSZ  4        //Number of threads, 2^n=<32, BSX*BSY*BSZ <= 1024
 #define TIMES 1
 //----- ----- -----
-#define NX 128*TIMES //Number of grid points in the x-direction
-#define NY 128*TIMES //Number of grid points in the y-direction
-#define NZ   8*TIMES //Number of grid points in the z-direction
+#define NX 256*TIMES //Number of grid points in the x-direction
+#define NY 256*TIMES //Number of grid points in the y-direction
+#define NZ  32*TIMES //Number of grid points in the z-direction
 
 // Define subroutine "Kernel" for GPU (Device) calculation in detail
 __global__ void Kernel
@@ -56,9 +56,9 @@ __global__ void Kernel
 {
 	int j, jx, jy, jz;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	jx = blockDim.z*blockIdx.z + threadIdx.z; //<-GPU | CPU -> for(jx=0; jx<nx; jx++){
+	jx = blockDim.x*blockIdx.x + threadIdx.x; //<-GPU | CPU -> for(jx=0; jx<nx; jx++){
 	jy = blockDim.y*blockIdx.y + threadIdx.y; //<-GPU | CPU -> for(jy=0; jy<ny; jy++){
-	jz = blockDim.x*blockIdx.x + threadIdx.x; //<-GPU | CPU -> for(jy=0; jz<nz; jz++){
+	jz = blockDim.z*blockIdx.z + threadIdx.z; //<-GPU | CPU -> for(jy=0; jz<nz; jz++){
 	j  = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	

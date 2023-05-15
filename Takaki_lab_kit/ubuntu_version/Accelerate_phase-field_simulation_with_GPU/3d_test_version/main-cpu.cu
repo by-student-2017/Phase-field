@@ -27,8 +27,8 @@
 
 #define TIMES 1
 //----- ----- -----
-#define NX 128*TIMES //Number of grid points in the x-direction
-#define NY 128*TIMES //Number of grid points in the y-direction
+#define NX 256*TIMES //Number of grid points in the x-direction
+#define NY 256*TIMES //Number of grid points in the y-direction
 #define NZ  16*TIMES //Number of grid points in the z-direction
 
 void Kernel
@@ -52,9 +52,9 @@ void Kernel
 {
 	int j, jx, jy, jz;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	for(jx=0; jx<nx; jx++){ //<-CPU | GPU-> jx = blockDim.z*blockIdx.z + threadIdx.z;
+	for(jx=0; jx<nx; jx++){ //<-CPU | GPU-> jx = blockDim.x*blockIdx.x + threadIdx.x;
 	for(jy=0; jy<ny; jy++){ //<-CPU | GPU-> jy = blockDim.y*blockIdx.y + threadIdx.y;
-	for(jz=0; jz<nz; jz++){ //<-CPU | GPU-> jz = blockDim.x*blockIdx.x + threadIdx.x;
+	for(jz=0; jz<nz; jz++){ //<-CPU | GPU-> jz = blockDim.z*blockIdx.z + threadIdx.z;
 	j  = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
