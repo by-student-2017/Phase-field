@@ -52,9 +52,9 @@ void Kernel
 {
 	int j, jx, jy, jz;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	for(jx=0; jx<nx; jx++){ //<-CPU | GPU-> jx = blockDim.x*blockIdx.x + threadIdx.x;
+	for(jx=0; jx<nx; jx++){ //<-CPU | GPU-> jx = blockDim.z*blockIdx.z + threadIdx.z;
 	for(jy=0; jy<ny; jy++){ //<-CPU | GPU-> jy = blockDim.y*blockIdx.y + threadIdx.y;
-	for(jz=0; jz<nz; jz++){ //<-CPU | GPU-> jz = blockDim.z*blockIdx.z + threadIdx.z;
+	for(jz=0; jz<nz; jz++){ //<-CPU | GPU-> jz = blockDim.x*blockIdx.x + threadIdx.x;
 	j  = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
@@ -346,7 +346,7 @@ int main(int argc, char** argv)
 		  Da = 1.0e-04*exp(-294000.0/RT), // Self-diffusion coefficient [m^2/s] (Fe)
 		  Db = 2.0e-05*exp(-308000.0/RT), // Self-diffusion coefficient [m^2/s] (Cr)
 		  //----- ----- ----- -----
-		  dt = (dx*dx/Da)*0.1*(4.0/6.0); // Time increment for the numerical integration [dimensionless] (2D -> 3D; n=4 -> n=6)
+		  dt = (dx*dx/Da)*0.1*(4.0/6.0)*0.1; // Time increment for the numerical integration [dimensionless] (2D -> 3D; n=4 -> n=6)
 	
 	//----- ----- ----- -----start:(This part is not really needed.)----- ----- ----- ----
 	int nDevices;

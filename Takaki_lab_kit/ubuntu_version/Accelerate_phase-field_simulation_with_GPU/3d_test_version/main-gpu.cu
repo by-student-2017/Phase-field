@@ -30,8 +30,8 @@
 #define BSZ  4        //Number of threads, 2^n=<32, BSX*BSY*BSZ <= 1024
 #define TIMES 1
 //----- ----- -----
-#define NX 256*TIMES //Number of grid points in the x-direction
-#define NY 256*TIMES //Number of grid points in the y-direction
+#define NX 128*TIMES //Number of grid points in the x-direction
+#define NY 128*TIMES //Number of grid points in the y-direction
 #define NZ  32*TIMES //Number of grid points in the z-direction
 
 // Define subroutine "Kernel" for GPU (Device) calculation in detail
@@ -346,7 +346,7 @@ int main(int argc, char** argv)
 		  Da = 1.0e-04*exp(-294000.0/RT), // Self-diffusion coefficient [m^2/s] (Fe)
 		  Db = 2.0e-05*exp(-308000.0/RT), // Self-diffusion coefficient [m^2/s] (Cr)
 		  //----- ----- ----- -----
-		  dt = (dx*dx/Da)*0.1*(4.0/6.0); // Time increment for the numerical integration [dimensionless] (2D -> 3D; n=4 -> n=6)
+		  dt = (dx*dx/Da)*0.1*(4.0/6.0)*0.1; // Time increment for the numerical integration [dimensionless] (2D -> 3D; n=4 -> n=6)
 	
 	//----- ----- ----- -----start:(This part is not really needed.)----- ----- ----- ----
 	int nDevices;
