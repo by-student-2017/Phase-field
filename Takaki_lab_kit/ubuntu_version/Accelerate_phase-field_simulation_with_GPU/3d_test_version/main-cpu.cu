@@ -10,7 +10,7 @@
    Date: 15th/May/2023
    Test: Ubuntu 22.04 LTS
    
-   Compiling: nvcc -O2 main-cpu.cu write_vtk_grid_values_3D.cu -o main-cpu.exe -lm -Wall
+   Compiling: nvcc -O2 main-cpu.cu write_vtk_grid_values_3D.cu -o main-cpu.exe -lm
    Run: ./main-cpu.exe
    ParaView: time_XX.vtk
 */
