@@ -102,7 +102,8 @@ __global__ void Kernel
 	if(jy == ny-1) fcn = f[j+nx*(-ny+1)]; //boundary condition at north edge
 	else           fcn = f[j+nx*(   +1)]; //non edge
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- #6 (center: fcc, and + n + w)
-	// e.g., "if(jx == 0 && jy == ny-1)" is f[ (j+nx*(-ny+1)) + (j+nx-1) - j] = f[j + nx*(-ny+1) +  nx-1] using above #5 and #2 condition.
+	/* e.g., "if(jx == 0 && jy == ny-1)" is f[ (j+nx*(-ny+1)) + (j+nx-1) - j] = f[j + nx*(-ny+1) +  nx-1] using above #5 and #2 condition.
+	         "if(jx == 0 && jy  < ny-1)" is f[ j+nx*(   +1) + (j+nx-1) - j]   = f[j + nx*(   +1) +  nx-1] using above #5 and #2 condition. */
 		 if(jx == 0 && jy == ny-1)   { fcnw = f[         nx-1];} // =f[j + nx*(-ny+1) +  nx-1] = f[nx*(ny-1)-nx*(ny-1)+nx-1] = f[nx-1]
 	else if(jx == 0 && jy  < ny-1)   { fcnw = f[j+nx    +nx-1];} // =f[j + nx*(   +1) +  nx-1] = f[j+nx    +nx-1]
 	else if(jx  > 0 && jy == ny-1)   { fcnw = f[j-nx*ny +nx-1];} // =f[j + nx*(-ny+1) +    -1] = f[j-nx*ny +nx-1]
