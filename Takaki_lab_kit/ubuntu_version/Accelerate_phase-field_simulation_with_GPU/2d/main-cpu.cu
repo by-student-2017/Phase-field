@@ -293,7 +293,7 @@ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	// df/dt = M*Laplacian(f) + (dM/df)*( (df/dx) * d(mu)/dx + (df/dy) * d(mu)/dy + (df/dz) * d(mu)/dz )
+	// df/dt = M*Laplacian(mu) + (dM/df)*( (df/dx) * d(mu)/dx + (df/dy) * d(mu)/dy + (df/dz) * d(mu)/dz )
 	dfdt = mcc*nab_mu + dmc*(dfmdx + dfmdy + dfmdz); 
 	fn[j] = f[j] + dfdt*dt;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 

@@ -194,7 +194,7 @@ __global__ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	// df/dt = M*Laplacian(f) + (dM/df)*( (df/dx) * d(mu)/dx + (df/dy) * d(mu)/dy )
+	// df/dt = M*Laplacian(mu) + (dM/df)*( (df/dx) * d(mu)/dx + (df/dy) * d(mu)/dy )
 	dfdt = mcc*nab_mu + dmc*(dfmdx + dfmdy); 
 	fn[j] = f[j] + dfdt*dt;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
