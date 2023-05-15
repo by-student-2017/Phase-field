@@ -46,7 +46,7 @@ void write_vtk_grid_values_3D(int nx, int ny, int nz,
 	for(int k=0;k<nz;k++){
 		for(int j=0;j<ny;j++){
 			for(int i=0;i<nx;i++){
-				fprintf(out,"%14.6e \n",data1[(k*ny+j)*nx+i;]);
+				fprintf(out,"%14.6e \n",data1[(k*ny+j)*nx+i]);
 			}
 		}
 	}
