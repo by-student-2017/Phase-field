@@ -319,11 +319,11 @@ int main(int argc, char** argv)
 	int nstep=10000;    //Number of time integration steps
 	int nprint=1000;    //Output frequency to write the results to file
 	//----- ----- ----- -----
-	float Lx = 3.0e-07*times, // Simulation length in x-direction [micro m]
-		  Ly = 3.0e-07*times, // Simulation length in y-direction [micro m]
+	float Lx = 3.0e-07*times, // Simulation length in x-direction [m]
+		  Ly = 3.0e-07*times, // Simulation length in y-direction [m]
 		  //----- ----- ----- -----
-		  dx = Lx/(float)nx, // Grid spacing between two grid pints in x-direction [nm]
-		  dy = Ly/(float)ny, // Grid spacing between two grid pints in y-direction [nm]
+		  dx = Lx/(float)nx, // Grid spacing between two grid pints in x-direction [m]
+		  dy = Ly/(float)ny, // Grid spacing between two grid pints in y-direction [m]
 		  //----- ----- ----- -----
 		  c_0 = 0.4,    // Initial concentration of Cr (atomic fraction)
 		  //----- ----- ----- -----

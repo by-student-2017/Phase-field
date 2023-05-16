@@ -327,21 +327,19 @@ int main(int argc, char** argv)
 	int nstep=10000;    //Number of time integration steps
 	int nprint=1000;    //Output frequency to write the results to file
 	//----- ----- ----- -----
-	float Lx = 3.0e-07*times, // Simulation length in x-direction [micro m]
-		  Ly = 3.0e-07*times, // Simulation length in y-direction [micro m]
-		  Lz = 3.0e-07*times*nz/sqrt(nx*ny), // Simulation length in z-direction [micro m]
+	float Lx = 3.0e-07*times, // Simulation length in x-direction [m]
+		  Ly = 3.0e-07*times, // Simulation length in y-direction [m]
+		  Lz = 3.0e-07*times*nz/sqrt(nx*ny), // Simulation length in z-direction [m]
 		  //----- ----- ----- -----
-		  dx = Lx/(float)nx, // Grid spacing between two grid pints in x-direction [nm]
-		  dy = Ly/(float)ny, // Grid spacing between two grid pints in y-direction [nm]
-		  dz = Lz/(float)nz, // Grid spacing between two grid pints in z-direction [nm]
+		  dx = Lx/(float)nx, // Grid spacing between two grid pints in x-direction [m]
+		  dy = Ly/(float)ny, // Grid spacing between two grid pints in y-direction [m]
+		  dz = Lz/(float)nz, // Grid spacing between two grid pints in z-direction [m]
 		  //----- ----- ----- -----
 		  c_0 = 0.4,    // Initial concentration of Cr (atomic fraction)
 		  //----- ----- ----- -----
 		  rr = 8.314,   // Gas constant [J/(mol*K)]
 		  temp = 673.0, // Temperature [K]
 		  RT = rr*temp,
-		  //----- ----- ----- -----
-		  vm0 = 1.0, // molar volume [m^3/mol]
 		  //----- ----- ----- -----
 		  L0 = 21020.8-9.31889*temp, // Atomic interaction [J/mol]
 		  kapa_c = 1.2e-14,  // The value of gradient energy coefficients [J*m^2/mol]
@@ -350,13 +348,6 @@ int main(int argc, char** argv)
 		  Db = 2.0e-05*exp(-308000.0/RT), // Self-diffusion coefficient [m^2/s] (Cr)
 		  //----- ----- ----- -----
 		  dt = (dx*dx/Da)*0.1; // Time increment for the numerical integration (2D -> 3D; n=4 -> n=6)
-	
-	//----- ----- ----- -----
-	//[dimensionless]
-	L0 = (L0/vm0) / RT; // Atomic interaction
-	kapa_c = (kapa_c/vm0) / (dx*dx) / RT; // gradient energy coefficients
-	dt = 1.0e-5;
-//----- ----- ----- -----
 	
 	//----- ----- ----- -----start:(This part is not really needed.)----- ----- ----- ----
 	int nDevices;
@@ -459,7 +450,7 @@ int main(int argc, char** argv)
 			write_vtk_grid_values_3D(nx,ny,nz,dx,dy,dz,istep,F_h);
 			
 			//show current step
-			fprintf(stderr,"istep = %5d, average constration = %f \n",istep,tc);
+			fprintf(stderr,"istep = %5d, average constration = %f, time= %e \n",istep,tc,(dt*istep));
 		}
 	}
 	
