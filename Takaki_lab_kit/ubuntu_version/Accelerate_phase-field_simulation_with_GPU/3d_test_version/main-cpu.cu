@@ -334,7 +334,7 @@ int main(int argc, char** argv)
 		  dy = Ly/(float)ny, // Grid spacing between two grid pints in y-direction [nm]
 		  dz = Lz/(float)nz, // Grid spacing between two grid pints in z-direction [nm]
 		  //----- ----- ----- -----
-		  c_0 = 0.4,    // Initial concentration (atomic fraction)
+		  c_0 = 0.4,    // Initial concentration of Cr (atomic fraction)
 		  //----- ----- ----- -----
 		  rr = 8.314,   // Gas constant [J/(mol*K)]
 		  temp = 673.0, // Temperature [K]
