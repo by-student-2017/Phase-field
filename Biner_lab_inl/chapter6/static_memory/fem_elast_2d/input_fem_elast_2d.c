@@ -2,6 +2,8 @@
    two-dimensional elasticity using three-,four-,and eight-node
    isoparametric elements. */
 
+#include <stdio.h> //printf()
+
 /* Variable and array list
   npoin: Total number of nodes in the solution
   nelem: Total number of elements
@@ -23,7 +25,7 @@
   props[nmats][nprops]: For each different material, the properties of that material
 */
 
-double input_fem_elast_2d(int npoin, int nelem, int nvfix, int ntype,
+void input_fem_elast_2d(int npoin, int nelem, int nvfix, int ntype,
 	int nnode, int ndofn, int ndime, int ngaus, int nmats, int nstre, int nprop,
 	int *matno, int *nofix, int *lnods, double *coord, int *iffix, double *fixed, double *props,
 	FILE *in, FILE *out){

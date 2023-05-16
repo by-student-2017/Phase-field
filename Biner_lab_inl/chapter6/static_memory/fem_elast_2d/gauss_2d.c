@@ -8,9 +8,11 @@
   weigp[ngaus]: Weighting factors at the sampling points
 */
 
-double gauss_2d(int ngaus, int nnode,
+void gauss_2d(int ngaus, int nnode,
 	double *posgp, double *weigp){
 	
+	/* For three-node isoparametric triangular elements,
+	   the position of sampling points and weights Radau rule. */
 	if(nnode == 3){
 		//
 		if(ngaus == 1){
@@ -61,6 +63,9 @@ double gauss_2d(int ngaus, int nnode,
 		//
 	}//end if(nnode
 	
+	/* For four- and eight-node isoparametric elements,
+	   the position of sampling points and weights by using
+	   Gauss-Legendre rule. */
 	if(nnode != 3){
 		//
 		if(ngaus == 2){
