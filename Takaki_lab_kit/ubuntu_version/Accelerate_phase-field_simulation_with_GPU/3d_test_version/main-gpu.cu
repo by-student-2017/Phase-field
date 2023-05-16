@@ -347,7 +347,7 @@ int main(int argc, char** argv)
 		  Da = 1.0e-04*exp(-294000.0/RT), // Self-diffusion coefficient [m^2/s] (Fe)
 		  Db = 2.0e-05*exp(-308000.0/RT), // Self-diffusion coefficient [m^2/s] (Cr)
 		  //----- ----- ----- -----
-		  dt = (dx*dx/Da)*(4.0/6.0)*0.1; // Time increment for the numerical integration (2D -> 3D; n=4 -> n=6)
+		  dt = (dx*dx/Da)*(4.0/6.0)*0.01; // Time increment for the numerical integration (2D -> 3D; n=4 -> n=6)
 	
 	//----- ----- ----- -----start:(This part is not really needed.)----- ----- ----- ----
 	int nDevices;
@@ -450,7 +450,7 @@ int main(int argc, char** argv)
 			write_vtk_grid_values_3D(nx,ny,nz,dx,dy,dz,istep,F_h);
 			
 			//show current step
-			fprintf(stderr,"istep = %5d, average constration = %f, time= %e \n",istep,tc,(dt*istep));
+			fprintf(stderr,"istep = %5d, average constration = %f, time= %e [s] \n",istep,tc,(dt*istep));
 		}
 	}
 	
