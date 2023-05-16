@@ -5,16 +5,16 @@
 #include <stdio.h> //printf()
 
 /* Variable and array list
-  npoin: Total number of nodes in the solution
-  nelem: Total number of elements in the solution
+npoin: Total number of nodes in the solution (int)
+  nelem: Total number of elements in the solution (int)
   nnode: Number of nodes per element
-  cont1[npin]: Number of nodes per element
-  lnods[nelem][nnode]: Nodal connectivity list of elements
-  coord[npoin][ndime]: Cartesian coordinates of the nodes
+  cont1[npin]: Number of nodes per element (int)
+  lnods[nelem][nnode]: Nodal connectivity list of elements (int)
+  coord[npoin][ndime]: Cartesian coordinates of the nodes (double)
 */
 
-void write_vtk_fem_2d(int npion, int nelem, int nnode, int lnode,
-	double *coord, int istep, int cont1){
+void write_vtk_fem_2d(int npion, int nelem, int nnode,
+	int *lnods, double *coord, int istep, int cont1){
 	
 	//open output file
 	char fname[256];

@@ -5,23 +5,23 @@
 #include <stdio.h> //printf()
 
 /* Variable and array list
-  nelem: Total number of elements in the solution
-  npoin: total number of the nodes in the solution
-  nnode: Number of nodes per element
-  ngaus: The order of numerical integration
-  nstre: Number of stress components
+  nelem: Total number of elements in the solution (int)
+  npoin: total number of the nodes in the solution (int)
+  nnode: Number of nodes per element (int)
+  ngaus: The order of numerical integration (int)
+  nstre: Number of stress components (int)
   ntype: Solution type (ntype=1 for plane-stress,
-    ntype=2 for plane-strain)
-  ndofn: Number of DOF per node
-  ndime: Number of global Cartesian coordinate components
-  asdis[ntotv]: Global displacement vector (ntotv = npoin * ndofn)
-  matno[nelem]: Material types for the elements
-  posgp[ngaus]: Position of sampling points for numerical integration
-  weigp[ngaus]: Weights of sampling points for numerical integration
-  lnode[nelem][nnode]: Element nodal connectivity list
-  props[nmats][nprop]: For each different material the properties of that material
-  coord[npoin][dnime]: Cartesian coordinates of nodes
-  elem_stres[nelem][mgaus][nstre]: stress componennts at element gauss points
+    ntype=2 for plane-strain) (int)
+  ndofn: Number of DOF per node (int)
+  ndime: Number of global Cartesian coordinate components (int)
+  asdis[ntotv]: Global displacement vector (ntotv = npoin * ndofn) (double)
+  matno[nelem]: Material types for the elements (int)
+  posgp[ngaus]: Position of sampling points for numerical integration (double)
+  weigp[ngaus]: Weights of sampling points for numerical integration (double)
+  lnods[nelem][nnode]: Element nodal connectivity list (int)
+  props[nmats][nprop]: For each different material the properties of that material (double)
+  coord[npoin][dnime]: Cartesian coordinates of nodes (double)
+  elem_stres[nelem][mgaus][nstre]: stress componennts at element gauss points (double)
 */
 
 void modps_2d();
@@ -32,7 +32,7 @@ void bmats_2d();
 void stress_2d(int asdis, int nelem, int npoin, int nnode,
 	int ngaus, int nstre,
 	double *props, int ntype, int ndofn, int ndime,
-	int lnode, int *matno, 
+	int lnods, int *matno, 
 	double *coord, double *posgp, double *weigp,
 	double elem_stres){
 	

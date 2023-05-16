@@ -11,6 +11,7 @@
 
 void input_fem_elast_2d();
 void gauss_2d();
+void stiffness_2d();
 void loads_2d();
 void boundary_cond_2d();
 void stress_2d();

@@ -7,13 +7,15 @@ add_executable(fem_elast_2d.exe
 	fem_elast_2d.c
 	input_fem_elast_2d.c
 	gauss_2d.c
-	loads_2d.c
+	stiffness_2d .c
 		sfr2_2d.c
+		jacob2_2d.c
+		modps_2d.c
+		bmats_2d.c
+		dbe_2d.c
+	loads_2d.c
 	boundary_cond_2d.c
 	stress_2d.c
-		modps_2d.c
-		jacob2_2d.c
-		bmats_2d.c
 	output_fem_2d.c
 		write_vtk_fem_2d.c
 	)

@@ -2,12 +2,12 @@
    their derivatives in local coordinates. */
 
 /* Variable and array list
-  exisp: x-coordinate of sampling point in local coordinates
-  etasp: y-coordinate of sampling point in local coordinates
-  nnode: Number of nodes per element
-  shape[nnode]: Shape functions values for each node in an element
+  exisp: x-coordinate of sampling point in local coordinates (double)
+  etasp: y-coordinate of sampling point in local coordinates (double)
+  nnode: Number of nodes per element (int)
+  shape[nnode]: Shape functions values for each node in an element (double)
   deriv[ndime][nnode]: Derivatives of shape functions for
-    each local coordinate direction.
+  each local coordinate direction. (double)
 */
 
 void sfr2_2d(double exisp, double etasp, int nnode,

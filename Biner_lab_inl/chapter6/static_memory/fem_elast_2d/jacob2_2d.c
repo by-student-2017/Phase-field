@@ -4,22 +4,21 @@
    the integration points within elements. */
 
 /* Variable and array list
-  ielem: Current element number
-  kgasp: The current integration point number
-  ndime: Number of global coordinate components
-  nnode: Number of nodes per element
+  ielem: Current element number (int)
+  kgasp: The current integration point number (int)
+  ndime: Number of global coordinate components (int)
+  nnode: Number of nodes per element (int)
   djacb: The determinate of the Jacobian matrix sampled within
     the element (ielem) at the integration points and
-    used in calculation of area/volume of the elements
-  shape[nnode]: Shape function values
-  elcod[ndime][nnode]: Global coordinates of current element (ielem) nodes.
-  derive[ndime][nnode]: Derivatives of shape functions is local coordinates
-  gpcod[ndime][kgasp]: Cartesian coordinates of the integration points within
-    the elemet (ielem).
+    used in calculation of area/volume of the elements (double)
+  shape[nnode]: Shape function values (double)
+  elcod[ndime][nnode]: Global coordinates of current element (ielem) nodes. (double)
+  deriv[ndime][nnode]: Derivatives of shape functions is local coordinates. (double)
+  gpcod[ndime][kgasp]: Cartesian coordinates of the integration points within the elemet (ielem). (double)
 */
 
 void jacob2_2d(int ielem, int elcod, int kgasp, int shape
-	double *derive, int nnode, int ndime
+	double *deriv, int nnode, int ndime
 	double *cartd, double *djacb, double *gpcod){
 	
 	//Gauss point coordinates

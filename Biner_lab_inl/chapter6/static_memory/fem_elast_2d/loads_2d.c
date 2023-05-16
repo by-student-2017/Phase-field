@@ -5,17 +5,17 @@
 #include <stdio.h> //printf()
 
 /* Variable and array list
-  npoin: Total number of nodes in the solution
-  nelem: Total number of element in the solution
-  ndofn: Number of DOFs per node
-  ngaus: The order of numerical integration
-  ndime: Number of global Cartesian coordinates
-  eload[nelem][nevab]: Element force vector (nevab = nnode * ndofn).
-  lnods[nelem][nnode]: Element nodal connectivity list
-  coord[npoin][ndime]: Cartesian coordinates of nodes
-  posgp[ngaus]: Position of sampling points for numerical integration
-  weigp[ngaus]: Weight of sampling points for numerical integration
-  gforce[ntotv]: Global force vecotr (ntotv = npoin * ndofn).
+  npoin: Total number of nodes in the solution (int)
+  nelem: Total number of element in the solution (int)
+  ndofn: Number of DOFs per node (int)
+  ngaus: The order of numerical integration (int)
+  ndime: Number of global Cartesian coordinates (int)
+  eload[nelem][nevab]: Element force vector (nevab = nnode * ndofn). (double)
+  lnods[nelem][nnode]: Element nodal connectivity list (int)
+  coord[npoin][ndime]: Cartesian coordinates of nodes (double)
+  posgp[ngaus]: Position of sampling points for numerical integration (double)
+  weigp[ngaus]: Weight of sampling points for numerical integration (double)
+  gforce[ntotv]: Global force vector (ntotv = npoin * ndofn). (double)
 */
 
 void sfr2_2d();

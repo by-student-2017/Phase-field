@@ -2,12 +2,12 @@
    the Cartesian derivatives of the shape functions. */
 
 /* Variable and array list
-  nnode: Number of node per element.
-  shape[nnode]: Shape function values.
+  nnode: Number of node per element. (int)
+  shape[nnode]: Shape function values. (double)
   cartd[ndime][nnode]: cartesian derivatives of
-    shape functions at the current integration point.
+    shape functions at the current integration point. (double)
   bmatx[nstre][nevab]: Strain matrix at the current integration point
-    (nevab = nnode * ndofn ).
+    (nevab = nnode * ndofn ). (double)
 */
 
 void modps_2d(double *cartd, double *shape,

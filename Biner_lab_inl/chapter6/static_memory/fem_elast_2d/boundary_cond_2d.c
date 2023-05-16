@@ -4,14 +4,14 @@
 #include <stdio.h> //printf()
 
 /* Variable and array list
-  npoin: Total number of nodes in the solution
-  nvfix: Total number of nodes with prescribed boundary conditions
-  ndofn: Number of DOF per node
-  nofix[nvfix]: Node numbers of which onw or more DOF are constrained
-  fixed[nvfix]: The values of prescribed DOFs
-  gforce[ntotv]: Global force vector, ntotv = npoin * ndofn
-  iffix[nvfix][ndofn]: List of constrained DOFs
-  gstif[ntotv][ntotv]: Global stiffness matrix
+  npoin: Total number of nodes in the solution (int)
+  nvfix: Total number of nodes with prescribed boundary conditions (int)
+  ndofn: Number of DOF per node (int)
+  nofix[nvfix]: Node numbers of which onw or more DOF are constrained (int)
+  fixed[nvfix]: The values of prescribed DOFs (double)
+  gforce[ntotv]: Global force vector, ntotv = npoin * ndofn (double)
+  iffix[nvfix][ndofn]: List of constrained DOFs (int)
+  gstif[ntotv][ntotv]: Global stiffness matrix (double)
 */
 
 void boundary_cond_2d(int npoin, int nvfix,

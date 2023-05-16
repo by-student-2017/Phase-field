@@ -2,10 +2,10 @@
    the associated weights for chosen order of numerical integration. */
 
 /* Variable and array list
-  ngaus: The order of numerical integration
-  nnode: Number of nodes per element
-  posgp[ngaus]: Position of sampling points
-  weigp[ngaus]: Weighting factors at the sampling points
+  ngaus: The order of numerical integration (int)
+  nnode: Number of nodes per element (int)
+  posgp[ngaus]: Position of sampling points (double)
+  weigp[ngaus]: Weighting factors at the sampling points (double)
 */
 
 void gauss_2d(int ngaus, int nnode,

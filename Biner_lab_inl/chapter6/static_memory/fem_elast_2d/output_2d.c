@@ -5,22 +5,23 @@
 #include <stdio.h> //printf()
 
 /* Variable and array list
-  npoin: Total number of nodes in the solution
-  nelem: total number of elements in the solution
-  nnode: Number of nodes per element
-  ndofn: Number of dgree of freedom per node
-  ngaus: The order of numerical integration
-  nstre: Number of stress components
-  asdis[ntotv]: Global displacement vector, ntotv = npoin * ndofn
-  lnods[nelem][nnode]: Element connectivity list
-  coord[npoin][ndime]: Cartesian coordinates of the nodes
-  elem_stres[nelem][mgaus][nstre]: Element stress values at integration points
+  npoin: Total number of nodes in the solution (int)
+  nelem: total number of elements in the solution (int)
+  nnode: Number of nodes per element (int)
+  ndofn: Number of dgree of freedom per node (int)
+  ngaus: The order of numerical integration (int)
+  nstre: Number of stress components (int)
+  asdis[ntotv]: Global displacement vector, ntotv = npoin * ndofn. (double)
+  lnods[nelem][nnode]: Element connectivity list (int)
+  coord[npoin][ndime]: Cartesian coordinates of the nodes (double)
+  elem_stres[nelem][mgaus][nstre]: Element stress values at integration points (double)
 */
 
 void write_vtk_fem_2d();
 
-void output_fem_2d(int npoin, int nelem, int nnode, int lnode,
-	double *coord, int ndofn, int ngaus, int nstre,
+void output_fem_2d(int npoin, int nelem, int nnode,
+	int *lnods, double *coord, int ndofn, 
+	int ngaus, int nstre,
 	double *asdis, double elem_stres,
 	FILE *out){
 	
