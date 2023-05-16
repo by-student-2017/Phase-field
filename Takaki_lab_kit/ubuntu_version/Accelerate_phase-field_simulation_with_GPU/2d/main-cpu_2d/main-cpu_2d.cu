@@ -198,8 +198,8 @@ void Kernel
 	fn[j] = f[j] + dfdt*dt;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
-	}//end for(jy <-CPU | GPU -> //}//end for(jy
-	}//end for(jx <-CPU | GPU -> //}//end for(jx
+	}//end for(jy <-CPU | GPU-> //}//end for(jy
+	}//end for(jx <-CPU | GPU-> //}//end for(jx
 }
 
 void update(float **f, float **fn)

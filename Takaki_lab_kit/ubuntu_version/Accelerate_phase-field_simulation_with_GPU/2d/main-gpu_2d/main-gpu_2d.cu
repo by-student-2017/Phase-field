@@ -199,6 +199,9 @@ __global__ void Kernel
 	dfdt = mcc*nab_mu + dmc*(dfmdx + dfmdy); 
 	fn[j] = f[j] + dfdt*dt;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	
+	//}//end for(jy <-GPU | CPU-> }//end for(jy
+	//}//end for(jx <-GPU | CPU-> }//end for(jx
 }
 
 void update(float **f, float **fn)
