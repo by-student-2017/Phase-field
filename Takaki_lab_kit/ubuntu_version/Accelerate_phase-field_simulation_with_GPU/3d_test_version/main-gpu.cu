@@ -1,6 +1,7 @@
 /* Program : 2D Phase-Field Simulation for 
    Spinodal Decomposition in Fe-Cr Alloy by GPU Computation.
    (e.g., Fe-Cr, Fe-Mo, Al-Zn, etc)
+   (Cahn-Hilliard equation)(G = G_chem + G_grad + G_elast, but G_elast is omitted.)
    
    Programmer : Akinori Yamanaka (original version)
    Place : Depertment of Mechanical and Control Engineering Tokyo Institute of Technology
@@ -341,7 +342,7 @@ int main(int argc, char** argv)
 		  temp = 623.0, // Temperature [K]
 		  RT = rr*temp, // RT [J/mol]
 		  //----- ----- ----- -----
-		  L0 = 21020.8-9.31889*temp, // Atomic interaction [J/mol]
+		  L0 = 21020.8-9.31889*temp, // Atomic interaction [J/mol] (Magnetism is omitted)
 		  kapa_c = 1.2e-14,  // The value of gradient energy coefficients [J*m^2/mol]
 		  //----- ----- ----- -----
 		  Da = 1.0e-04*exp(-294000.0/RT), // Self-diffusion coefficient [m^2/s] (Fe)
@@ -379,7 +380,7 @@ int main(int argc, char** argv)
 			for(int jx=0; jx<nx ; jx++){
 				int j = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
 				float r = (float)rand()/(float)(RAND_MAX)-0.5;
-				F_h[j] = c_0 + 0.01*r;
+				F_h[j] = c_0 + 0.01*r; //Initial fluctuation is assumed to be 1%.
 			}
 		}
 	}//on CPU calculation
