@@ -32,9 +32,9 @@
 #define BSZ  4        //Number of threads, 2^n=<32, BSX*BSY*BSZ <= 1024
 #define TIMES 1
 //----- ----- -----
-#define NX 128*TIMES //Number of grid points in the x-direction
-#define NY 128*TIMES //Number of grid points in the y-direction
-#define NZ  32*TIMES //Number of grid points in the z-direction
+#define NX 256*TIMES //Number of grid points in the x-direction
+#define NY 256*TIMES //Number of grid points in the y-direction
+#define NZ  16*TIMES //Number of grid points in the z-direction
 
 // Define subroutine "Kernel" for GPU (Device) calculation in detail
 __global__ void Kernel
