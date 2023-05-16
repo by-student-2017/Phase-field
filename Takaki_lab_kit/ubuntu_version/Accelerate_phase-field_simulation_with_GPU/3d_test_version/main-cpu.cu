@@ -347,7 +347,7 @@ int main(int argc, char** argv)
 		  Da = 1.0e-04*exp(-294000.0/RT), // Self-diffusion coefficient [m^2/s] (Fe)
 		  Db = 2.0e-05*exp(-308000.0/RT), // Self-diffusion coefficient [m^2/s] (Cr)
 		  //----- ----- ----- -----
-		  dt = (dx*dx/Da)*(4.0/6.0)*0.01; // Time increment for the numerical integration (2D -> 3D; n=4 -> n=6)
+		  dt = (dx*dx/Da)*(4.0/6.0)*0.01; // Time increment for the numerical integration [s] (2D -> 3D; n=4 -> n=6)
 	
 	//----- ----- ----- -----start:(This part is not really needed.)----- ----- ----- ----
 	int nDevices;
@@ -391,6 +391,7 @@ int main(int argc, char** argv)
 	cudaEventRecord(start);
 	//----- ----- ----- -----end:(This part is not really needed.)----- ----- ----- ----
 	
+	float tc = 0.0; //average concentration
 	for(int istep=0; istep<=nstep ; istep++){
 		//calculate subroutine "Kernel" on CPU
 		Kernel(f,fn,nx,ny,nz,rr,temp,L0,kapa_c,Da,Db,dt,dx,dy,dz);
@@ -429,7 +430,7 @@ int main(int argc, char** argv)
 			write_vtk_grid_values_3D(nx,ny,nz,dx,dy,dz,istep,f);
 			
 			//show current step
-			fprintf(stderr,"istep = %5d \n",istep);
+			fprintf(stderr,"istep = %5d, average constration = %f, total annealing time= %e [s] at %f [K] \n",istep,tc,(dt*istep),temp);
 		}
 	}
 	

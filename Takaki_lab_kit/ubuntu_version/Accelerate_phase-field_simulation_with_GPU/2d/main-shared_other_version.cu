@@ -304,7 +304,7 @@ int main(int argc, char** argv)
 		  da = 1.0e-04*exp(-294000.0/rr/temp), // Self-diffusion coefficient [m^2/s] (Fe)
 		  db = 2.0e-05*exp(-308000.0/rr/temp), // Self-diffusion coefficient [m^2/s] (Cr)
 		  //----- ----- ----- -----
-		  dt = (dx*dx/da)*0.1; // Time increment for the numerical integration [dimensionless]
+		  dt = (dx*dx/da)*0.1; // Time increment for the numerical integration [s]
 	
 	//----- ----- ----- -----
 	int nDevices;
