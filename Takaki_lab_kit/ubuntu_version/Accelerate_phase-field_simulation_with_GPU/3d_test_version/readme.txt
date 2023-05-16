@@ -20,29 +20,14 @@
   (/usr/bin/nvcc)
 
 ## Linux (ubuntu 22.04 lts) (GPU)
-8. nvcc -O2 main-gpu.cu write_vtk_grid_values_3D.cu -o main-gpu.exe -arch=native -lm --std 'c++17'
+8. nvcc -O2 main-gpu_3d.cu write_vtk_grid_values_3D.cu -o main-gpu_3d.exe -arch=native -lm --std 'c++17'
 9. ./main-gpu.exe
 10. (use ParaView for time_XX.vtk)
 
-## Linux (ubuntu 22.04 lts) (GPU, using shared memory)
-8. nvcc -O2 main-shared.cu write_vtk_grid_values_3D.cu -o main-shared.exe -arch=native -lm --std 'c++17'
-9. ./main-shared.exe
-10. (use ParaView for time_XX.vtk)
-
 ## Linux (ubuntu 22.04 lts) (CPU only)
-8. nvcc -O2 main-cpu.cu write_vtk_grid_values_3D.cu -o main-cpu.exe -lm
+8. nvcc -O2 main-cpu_3d.cu write_vtk_grid_values_3D.cu -o main-cpu_3d.exe -lm
 9. ./main-shared.exe
 10. (use ParaView for time_XX.vtk)
-
-## cmake version (ubuntu 22.04 lts) (failed)
-8. cmake -S . -B build/ -G"Unix Makefiles"
-9. cmake --build build/ --target main-gpu.exe
-10. cd ./build
-11. ./main-gpu.exe
-12. (use ParaView for time_XX.vtk)
-
-## fft version (underconstracting)
-- nvcc -O2 main-gpu.cu write_vtk_grid_values_3D.cu -o main-gpu.exe -lcufft -arch=sm_86
 
 ## Reference
 [T2] http://www.measlab.kit.ac.jp/nvcc.html

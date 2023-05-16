@@ -1,4 +1,4 @@
-/* Program : 2D Phase-Field Simulation for 
+/* Program : 3D Phase-Field Simulation for 
    Spinodal Decomposition in Fe-Cr Alloy by GPU Computation.
    (e.g., Fe-Cr, Fe-Mo, Al-Zn, etc)
    (Cahn-Hilliard equation)(G = G_chem + G_grad + G_elast, but G_elast is omitted.)
@@ -12,8 +12,8 @@
    Date: 15th/May/2023
    Test: Ubuntu 22.04 LTS
    
-   Compling: nvcc -O2 main-gpu.cu write_vtk_grid_values_3D.cu -o main-gpu.exe -arch=native -lm --std 'c++17'
-   Run: ./main-gpu.exe
+   Compling: nvcc -O2 main-gpu_3d.cu write_vtk_grid_values_3D.cu -o main-gpu_3d.exe -arch=native -lm --std 'c++17'
+   Run: ./main-gpu_3d.exe
    ParaView: time_XX.vtk
 */
 
