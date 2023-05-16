@@ -20,18 +20,18 @@
   (/usr/bin/nvcc)
 
 ## Linux (ubuntu 22.04 lts) (GPU)
-8. nvcc -O2 main-gpu.cu write_vtk_grid_values_2D.cu -o main-gpu.exe -arch=native -lm --std 'c++17'
-9. ./main-gpu.exe
+8. nvcc -O2 main-gpu_2d.cu write_vtk_grid_values_2D.cu -o main-gpu_2d.exe -arch=native -lm --std 'c++17'
+9. ./main-gpu_2d.exe
 10. (use ParaView for time_XX.vtk)
 
 ## Linux (ubuntu 22.04 lts) (GPU, using shared memory)
-8. nvcc -O2 main-shared.cu write_vtk_grid_values_2D.cu -o main-shared.exe -arch=native -lm --std 'c++17'
-9. ./main-shared.exe
+8. nvcc -O2 main-shared_2d.cu write_vtk_grid_values_2D.cu -o main-shared_2d.exe -arch=native -lm --std 'c++17'
+9. ./main-shared_2d.exe
 10. (use ParaView for time_XX.vtk)
 
 ## Linux (ubuntu 22.04 lts) (CPU only)
-8. nvcc -O2 main-cpu.cu write_vtk_grid_values_2D.cu -o main-cpu.exe -lm
-9. ./main-shared.exe
+8. nvcc -O2 main-cpu_2d.cu write_vtk_grid_values_2D.cu -o main-cpu_2d.exe -lm
+9. ./main-cpu_2d.exe
 10. (use ParaView for time_XX.vtk)
 
 ## cmake version (ubuntu 22.04 lts) (failed)
@@ -42,7 +42,8 @@
 12. (use ParaView for time_XX.vtk)
 
 ## fft version (underconstracting)
-- nvcc -O2 main-gpu.cu write_vtk_grid_values_2D.cu -o main-gpu.exe -lcufft -arch=sm_86
+- nvcc -O2 main-gpu_2d_cufft.cu write_vtk_grid_values_2D.cu -o main-gpu_2d_cufft.exe -lcufft -arch=sm_86
+- ./main-gpu_2d_cufft.exe
 
 ## Reference
 [T2] http://www.measlab.kit.ac.jp/nvcc.html

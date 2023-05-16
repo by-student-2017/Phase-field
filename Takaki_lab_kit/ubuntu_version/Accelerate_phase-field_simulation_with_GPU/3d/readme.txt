@@ -21,12 +21,12 @@
 
 ## Linux (ubuntu 22.04 lts) (GPU)
 8. nvcc -O2 main-gpu_3d.cu write_vtk_grid_values_3D.cu -o main-gpu_3d.exe -arch=native -lm --std 'c++17'
-9. ./main-gpu.exe
+9. ./main-gpu_3d.exe
 10. (use ParaView for time_XX.vtk)
 
 ## Linux (ubuntu 22.04 lts) (CPU only)
-8. nvcc -O2 main-cpu_3d.cu write_vtk_grid_values_3D.cu -o main-cpu_3d.exe -lm
-9. ./main-shared.exe
+8. nvcc -O2 main-cpu_2d.cu write_vtk_grid_values_2D.cu -o main-cpu_2d.exe -lm
+9. ./main-cpu_2d.exe
 10. (use ParaView for time_XX.vtk)
 
 ## Reference

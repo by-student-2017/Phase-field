@@ -11,8 +11,8 @@
    Date: 15th/May/2023
    Test: Ubuntu 22.04 LTS
    
-   Compling: nvcc -O2 main-gpu.cu write_vtk_grid_values_2D.cu -o main-gpu.exe -arch=native -lm --std 'c++17'
-   Run: ./main-gpu.exe
+   Compling: nvcc -O2 main-gpu_2d.cu write_vtk_grid_values_2D.cu -o main-gpu_2d.exe -arch=native -lm --std 'c++17'
+   Run: ./main-gpu_2d.exe
    ParaView: time_XX.vtk
 */
 

@@ -11,8 +11,8 @@
    Date: 15th/May/2023
    Test: Ubuntu 22.04 LTS
    
-   Compling: nvcc -O2 main-shared.cu write_vtk_grid_values_2D.cu -o main-shared.exe -arch=native -lm --std 'c++17'
-   Run: ./main-shared.exe
+   Compling: nvcc -O2 main-shared_2d.cu write_vtk_grid_values_2D.cu -o main-shared_2d.exe -arch=native -lm --std 'c++17'
+   Run: ./main-shared_2d.exe
    ParaView: time_XX.vtk
 */
 
