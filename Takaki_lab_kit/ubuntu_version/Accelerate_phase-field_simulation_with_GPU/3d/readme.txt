@@ -29,7 +29,7 @@
 9. ./main-cpu_3d.exe
 10. (use ParaView for time_XX.vtk)
 
-## cmake version (ubuntu 22.04 lts) (failed)
+## cmake version (ubuntu 22.04 lts)
 8. cmake -S . -B build/ -G"Unix Makefiles"
 9. cmake --build build/ --target main-gpu.exe
 10. cd ./build
