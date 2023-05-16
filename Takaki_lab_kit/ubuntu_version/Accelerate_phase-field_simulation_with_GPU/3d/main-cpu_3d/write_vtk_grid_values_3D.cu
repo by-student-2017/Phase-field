@@ -8,7 +8,7 @@ void write_vtk_grid_values_3D(int nx, int ny, int nz,
 	
 	//open output file
 	char fname[256];
-	sprintf(fname,"time_%06d.vtk",istep);
+	sprintf(fname,"time_%d.vtk",istep);
 	FILE *out=fopen(fname,"w");
 	
 	int npoin=nx*ny*nz;
