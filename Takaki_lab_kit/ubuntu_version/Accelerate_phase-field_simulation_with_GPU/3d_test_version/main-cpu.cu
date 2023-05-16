@@ -1,5 +1,6 @@
 /* Program : 2D Phase-Field Simulation for 
    Spinodal Decomposition in Fe-Cr Alloy by GPU Computation.
+   (e.g., Fe-Cr, Fe-Mo, Al-Zn, etc)
    
    Programmer : Akinori Yamanaka (original version)
    Place : Depertment of Mechanical and Control Engineering Tokyo Institute of Technology
@@ -334,7 +335,7 @@ int main(int argc, char** argv)
 		  dy = Ly/(float)ny, // Grid spacing between two grid pints in y-direction [nm]
 		  dz = Lz/(float)nz, // Grid spacing between two grid pints in z-direction [nm]
 		  //----- ----- ----- -----
-		  c_0 = 0.4,    // Initial concentration of Cr (atomic fraction)
+		  c_0 = 0.4,    // Initial concentration (atomic fraction)
 		  //----- ----- ----- -----
 		  rr = 8.314,   // Gas constant [J/(mol*K)]
 		  temp = 673.0, // Temperature [K]
@@ -346,7 +347,7 @@ int main(int argc, char** argv)
 		  Da = 1.0e-04*exp(-294000.0/RT), // Self-diffusion coefficient [m^2/s] (Fe)
 		  Db = 2.0e-05*exp(-308000.0/RT), // Self-diffusion coefficient [m^2/s] (Cr)
 		  //----- ----- ----- -----
-		  dt = (dx*dx/Da)*0.1*(4.0/6.0)*0.1; // Time increment for the numerical integration [dimensionless] (2D -> 3D; n=4 -> n=6)
+		  dt = (dx*dx/Da)*0.1; // Time increment for the numerical integration (2D -> 3D; n=4 -> n=6)
 	
 	//----- ----- ----- -----start:(This part is not really needed.)----- ----- ----- ----
 	int nDevices;

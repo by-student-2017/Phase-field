@@ -1,5 +1,6 @@
 /* Program : 2D Phase-Field Simulation for 
    Spinodal Decomposition in Fe-Cr Alloy by GPU Computation.
+   (e.g., Fe-Cr, Fe-Mo, Al-Zn, etc)
    
    Programmer : Akinori Yamanaka (original version)
    Place : Depertment of Mechanical and Control Engineering Tokyo Institute of Technology
@@ -340,13 +341,22 @@ int main(int argc, char** argv)
 		  temp = 673.0, // Temperature [K]
 		  RT = rr*temp,
 		  //----- ----- ----- -----
+		  vm0 = 1.0, // molar volume [m^3/mol]
+		  //----- ----- ----- -----
 		  L0 = 21020.8-9.31889*temp, // Atomic interaction [J/mol]
 		  kapa_c = 1.2e-14,  // The value of gradient energy coefficients [J*m^2/mol]
 		  //----- ----- ----- -----
 		  Da = 1.0e-04*exp(-294000.0/RT), // Self-diffusion coefficient [m^2/s] (Fe)
 		  Db = 2.0e-05*exp(-308000.0/RT), // Self-diffusion coefficient [m^2/s] (Cr)
 		  //----- ----- ----- -----
-		  dt = (dx*dx/Da)*0.1*(4.0/6.0)*0.1; // Time increment for the numerical integration [dimensionless] (2D -> 3D; n=4 -> n=6)
+		  dt = (dx*dx/Da)*0.1; // Time increment for the numerical integration (2D -> 3D; n=4 -> n=6)
+	
+	//----- ----- ----- -----
+	//[dimensionless]
+	L0 = (L0/vm0) / RT; // Atomic interaction
+	kapa_c = (kapa_c/vm0) / (dx*dx) / RT; // gradient energy coefficients
+	dt = 1.0e-5;
+//----- ----- ----- -----
 	
 	//----- ----- ----- -----start:(This part is not really needed.)----- ----- ----- ----
 	int nDevices;
