@@ -29,6 +29,13 @@
 9. ./main-cpu_2d.exe
 10. (use ParaView for time_XX.vtk)
 
+## cmake version (ubuntu 22.04 lts) (failed)
+8. cmake -S . -B build/ -G"Unix Makefiles"
+9. cmake --build build/ --target main-gpu.exe
+10. cd ./build
+11. ./main-gpu.exe
+12. (use ParaView for time_XX.vtk)
+
 ## Reference
 [T2] http://www.measlab.kit.ac.jp/nvcc.html
 #--------------------------------------------------------
