@@ -8,7 +8,7 @@ void write_vtk_grid_values_2D(int nx, int ny,
 	
 	//open output file
 	char fname[256];
-	sprintf(fname,"time_%d.vtk",istep);
+	sprintf(fname,"time_%06d.vtk",istep);
 	FILE *out=fopen(fname,"w");
 	
 	int nz=1;
