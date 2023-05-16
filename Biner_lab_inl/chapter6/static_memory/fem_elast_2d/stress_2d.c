@@ -36,7 +36,81 @@ void stress_2d(int asdis, int nelem, int npoin, int nnode,
 	double *coord, double *posgp, double *weigp,
 	double elem_stres){
 	
+	//Number of integration
+	int ngaus2 = ngaus;
+	if(nnode == 3){
+		ngaus2 = 1;
+	}
+	mgaus = ngaus * ngaus2;
 	
+	for(int ielem=0;ielem<nelem;ielem++){
+		//
+		//Material Parameters and Elasticity Matrix
+		mtype = matno[ielem];
+		modps_2d(mtype,ntype,nstre,props,dmatx);
+		poiss = props[mtype][2];
+		
+		//Nodal displacements
+		for(int inode=0;inode<nnode;inode++){
+			lnode = lnods[ielem][inode];
+			for(int idofn=0;idofn<ndofn;idofn++){
+				nposn = lnode*ndofn + idofn;
+				eldis[idofn][inode] = asdis[nposn];
+				elcod[idofn][inode] = coord[lnode][idofn];
+			}
+		}
+		
+		//Integrate Stresses
+		kgasp = 0;
+		for(int igaus=0;igaus<ngaus;igaus++){
+			for(int jgaus=0;jgaus<ngaus;jgaus++){
+				//
+				kgasp = kgasp + 1;
+				exisp = posgp[igaus];
+				etasp = posgp[jgaus];
+				
+				if(ngaus2 == 1){
+					etasp = posgp[ngaus+igaus];
+				}
+				
+				sfr2_2d(exisp,stasp,nnode,shape,deriv);
+				jacob2_2d(ielem,elcod,kgasp,shape,deriv,nnode,ndime,cartd,djacb,gpcod);
+				bmats_2d(cartd,shape,inode,bmatx);
+				
+				//calculate the strains
+				for(int istre=0;istre<nstre;istre++){
+					strain[istre] = 0.0;
+					for(int inode=0;inode<nnode;inode++){
+						for(int idofn=0;idofn<ndofn;idofn++){
+							ievab = lnode*ndofn + idofn;
+							strain[istre] = strain[istre] + bmatx[istre][ievab] * eldis[idofn][inode];
+						}
+					}
+				}
+				
+				//calculate stresses
+				for(int istre=0;istre<nstre;istre++){
+					stres[istre] = 0.0;
+					for(int jstre=0;jstre<nstre;jstre++){
+						stres[istre] = stres[istre] + dmatx[istre][jstre] * strain[jstre];
+					}
+				}
+				
+				if(ntype == 1){
+					stres[3] = 0.0;
+				}
+				if(ntype ==2){
+					stres[3] = poiss*(stres[0]+stres[1]);
+				}
+				
+				for(int istre=0;istre<nstre+1;istre++){
+					elem_stres[ielem][kgasp][istre] = stres[istre];
+				}
+				//
+			}//end for(igaus
+		}//end for(jgaus
+		//
+	}//end for(ielem
 	
 	return;
 }

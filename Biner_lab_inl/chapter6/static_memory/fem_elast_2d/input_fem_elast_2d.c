@@ -109,5 +109,7 @@ void input_fem_elast_2d(int npoin, int nelem, int nvfix, int ntype,
 		fprintf(out, "Plane-strain elasticity solution \n");
 	}
 	
+	
+	
 	return;
 }
