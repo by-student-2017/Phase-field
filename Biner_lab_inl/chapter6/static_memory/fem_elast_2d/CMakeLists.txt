@@ -3,9 +3,20 @@ cmake_minimum_required(VERSION 3.22.1 FATAL_ERROR)
 # set the project name and version
 project(MyProject VERSION 1.0)
 
-add_executable(fem_elast_2d.exe fc_ca_2d.c
-	init_grain_micro_2d.c free_energy_fd_ca_2d.c
-	write_vtk_grid_values_2D.c)
+add_executable(fem_elast_2d.exe
+	fem_elast_2d.c
+	input_fem_elast_2d.c
+	gauss_2d.c
+	loads_2d.c
+		sfr2_2d.c
+	boundary_cond_2d.c
+	stress_2d.c
+		modps_2d.c
+		jacob2_2d.c
+		bmats_2d.c
+	output_fem_2d.c
+		write_vtk_fem_2d.c
+	)
 
 target_compile_options(fem_elast_2d.exe PUBLIC -O2 -Wall)
 
