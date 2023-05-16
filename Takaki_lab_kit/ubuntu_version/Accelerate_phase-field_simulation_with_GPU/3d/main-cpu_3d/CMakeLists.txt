@@ -6,16 +6,19 @@ find_package( CUDA REQUIRED )
 set( CUDA_NVCC_FLAGS "-O2 -arch=native -lm" )
 if(CUDA_FOUND)
 	message("Cuda version: " ${CUDA_VERSION})
-	CUDA_ADD_EXECUTABLE(main-gpu_3d.exe
-		main-gpu_3d.cu
+	CUDA_ADD_EXECUTABLE(main-cpu_3d.exe
+		main-cpu_3d.cu
 		write_vtk_grid_values_3D.cu
 	)
 	include_directories( ${CUDA_INCLUDE_DIRS} )
 endif()
 
-# usage
-# cmake -S . -B build/ -G"Unix Makefiles"
-# cmake --build build/ --target main-gpu_3d.exe
+# Usage
+# 1. cmake -S . -B build/ -G"Unix Makefiles"
+# 2. cmake --build build/ --target main-cpu_3d.exe
+# 3. cd ./build
+# 4. ./main-cpu_3d.exe
+# 5. (show time_XX.vtk on ParaView)
 
-# help
+# Help
 # cmake --help-module FindCUDA
