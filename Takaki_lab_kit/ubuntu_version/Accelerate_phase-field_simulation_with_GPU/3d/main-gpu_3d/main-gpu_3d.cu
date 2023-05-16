@@ -60,7 +60,7 @@ __global__ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	jx = blockDim.x*blockIdx.x + threadIdx.x; //<-GPU | CPU -> for(jx=0; jx<nx; jx++){
 	jy = blockDim.y*blockIdx.y + threadIdx.y; //<-GPU | CPU -> for(jy=0; jy<ny; jy++){
-	jz = blockDim.z*blockIdx.z + threadIdx.z; //<-GPU | CPU -> for(jy=0; jz<nz; jz++){
+	jz = blockDim.z*blockIdx.z + threadIdx.z; //<-GPU | CPU -> for(jz=0; jz<nz; jz++){
 	j  = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
@@ -307,6 +307,10 @@ __global__ void Kernel
 	// If there are small variations, set the max and min values to the limits
 	//if(fn[j]>0.999999){ fn[j]=0.999999; }
 	//if(fn[j]<1.0e-6)  { fn[j]=1.0e-6; }
+	
+	//}//end for(jz <-GPU | CPU -> }//end for(jz
+	//}//end for(jy <-GPU | CPU -> }//end for(jy
+	//}//end for(jx <-GPU | CPU -> }//end for(jx
 }
 
 void update(float **f, float **fn)

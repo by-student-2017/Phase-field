@@ -54,9 +54,9 @@ void Kernel
 {
 	int j, jx, jy, jz;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	for(jx=0; jx<nx; jx++){ //<-CPU | GPU-> jx = blockDim.z*blockIdx.z + threadIdx.z;
+	for(jx=0; jx<nx; jx++){ //<-CPU | GPU-> jx = blockDim.x*blockIdx.x + threadIdx.x;
 	for(jy=0; jy<ny; jy++){ //<-CPU | GPU-> jy = blockDim.y*blockIdx.y + threadIdx.y;
-	for(jz=0; jz<nz; jz++){ //<-CPU | GPU-> jz = blockDim.x*blockIdx.x + threadIdx.x;
+	for(jz=0; jz<nz; jz++){ //<-CPU | GPU-> jz = blockDim.z*blockIdx.z + threadIdx.z;
 	j  = (jz*ny + jy)*nx + jx; //j = nx*ny*jz + nx*jy + jx;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	
@@ -304,9 +304,9 @@ void Kernel
 	//f(fn[j]>0.999999){ fn[j]=0.999999; }
 	//if(fn[j]<1.0e-6)  { fn[j]=1.0e-6; }
 	
-	}//end for(jz
-	}//end for(jy
-	}//end for(jx
+	}//end for(jz <-CPU | GPU-> //}//end for(jz
+	}//end for(jy <-CPU | GPU-> //}//end for(jy
+	}//end for(jx <-CPU | GPU-> //}//end for(jx
 }
 
 void update(float **f, float **fn)
