@@ -1,5 +1,6 @@
 -----------------------------------------------------------------------
 Windows11 and WSL2(Ubuntu-22.04)
+(underconstructing)
 
 (On WSL2(Ubuntu-22.04)
 1. sudo apt update
@@ -7,7 +8,7 @@ Windows11 and WSL2(Ubuntu-22.04)
 3. cmake -S . -B build/ -G"Unix Makefiles"
 4. cmake --build build/ --target fem_elast_2d.exe
 5. cd ./build
-6. cp ../grain_25.inp ./
+6. cp ../mesh_1.inp ./
 7. ./fem_elast_2d.exe
 
 (On windows11)
