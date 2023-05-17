@@ -52,11 +52,7 @@
   export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
 [S2] https://misoji-engineer.com/archives/ubuntu20-04-cuda.html
 #--------------------------------------------------------
-nvcc main-cpu.cu -o main-cpu
-
-For CPU: main-cpu.cu
-For GPU (Global memory): main-gpu.cu
-For GPU (Shard memory): main-shared.cu
+## References
 
 [T1] http://www.cis.kit.ac.jp/~takaki/phase-field/ch22-23/ch22-23.html
 [T2] https://www.gsic.titech.ac.jp/supercon/main/attwiki/index.php?plugin=attach&refer=SupercomputingContest2018&openfile=SuperCon2018-GPU.pdf
