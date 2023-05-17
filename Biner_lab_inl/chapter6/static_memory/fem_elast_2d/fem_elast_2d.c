@@ -52,51 +52,54 @@ int main(){
 	double coord[npoin][ndime]; //Cartesian coordinates of each node
 	int    iffix[nvfix][ndofn]; //List of constrained DOFs
 	double fixed[nvfix][ndofn]; //Prescribed value of any constrained DOFs
-	double props[nmats][nprops]; //For each different material, the properties of that material
+	double props[nmats][nprop]; //For each different material, the properties of that material
 	
 	//----- ----- ----- ----- ----- -----
 	// Input FEM data
 	//----- ----- ----- ----- ----- -----
-	input_fem_elast(npoin,nelem,nvfix,ntype,nnode,ndofn,ndime,ngaus,nmats,nstre,nprop,
+	input_fem_elast_2d(npoin,nelem,nvfix,ntype,nnode,ndofn,ndime,ngaus,nmats,nstre,nprop,
 		matno,nofix,lnods,coord,iffix,fixed,props,
 		in,out); // Input solution variables and FEM mesh
-	ntotv = npoin * ndofn;
-	gauss(ngaus,nnode,posgp,weigp); // Get the values for the numerical integration
+	int ntotv = npoin * ndofn;
+	double posgp[ngaus];
+	double weigp[ngaus];
+	gauss_2d(ngaus,nnode,posgp,weigp); // Get the values for the numerical integration
 	
 	//----- ----- ----- ----- ----- -----
 	// From global stifnes matrix (lhs)
 	//----- ----- ----- ----- ----- -----
 	// From the global stifness matrix
-	stifness(npoin,nelem,nnode,nstre,ndime,ndofn,ngaus,
+	double gstif[ntotv][ntotv];
+	stiffness_2d(npoin,nelem,nnode,nstre,ndime,ndofn,ngaus,
 		ntype,lnods,matno,coord,props,posgp,weigp,gstif);
 	
 	//----- ----- ----- ----- ----- -----
 	// Force vector & Boundary Conditions
 	//----- ----- ----- ----- ----- -----
-	loads(npoin,nelem,ndofn,nnode,ngaus,
+	double gforce[ntotv];
+	loads_2d(npoin,nelem,ndofn,nnode,ngaus,
 		ndime,posgp,weigp,lnods,coord,gforce); // Form the global force vector from the loading information
-	boundary_cond(npoin,nvfix,nofix,iffix,fixed,
-		ndofn,gstif,gforce); // Apply boundary conditions
+	boundary_cond_2d(npoin,nvfix,nofix,iffix,fixed,ndofn,gstif,gforce); // Apply boundary conditions
 	
 	//----- ----- ----- ----- ----- -----
 	// Solve displacements (asdis = gstif\gforce)
 	//----- ----- ----- ----- ----- -----
 	// Solve the resulting system of equation for the nodal displacements
-	asdis = ldiv(gstif,gforce):
+	double asdis = ldiv(gstif,gforce);
 	
 	//----- ----- ----- ----- ----- -----
 	// Calculate stresses
 	//----- ----- ----- ----- ----- -----
 	// Calculate stress values
-	stress(asdis,nelem,npoin,nnode,ngaus,
+	stress_2d(asdis,nelem,npoin,nnode,ngaus,
 		nstre,props,ntype,ndofn,ndime,lnods,matno,coord,posgp,weigp);
 	
 	//----- ----- ----- ----- ----- -----
 	// Output results
 	//----- ----- ----- ----- ----- -----
 	// Output displacements and stress values to files
-	output_fem(npoin,nelem,nnode,lnods,coord,ndofn,ngaus,
-		nstre,asdis,elem_stres);
+	double elem_stres[nelem][ngaus][nstre];
+	output_fem_2d(npoin,nelem,nnode,lnods,coord,ndofn,ngaus,nstre,asdis,elem_stres);
 	
 	//end of execution
 	printf("Done \n");

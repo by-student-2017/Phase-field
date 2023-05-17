@@ -14,7 +14,7 @@
   asdis[ntotv]: Global displacement vector, ntotv = npoin * ndofn. (double)
   lnods[nelem][nnode]: Element connectivity list (int)
   coord[npoin][ndime]: Cartesian coordinates of the nodes (double)
-  elem_stres[nelem][mgaus][nstre]: Element stress values at integration points (double)
+  elem_stres[nelem][ngaus][nstre]: Element stress values at integration points (double)
 */
 
 void write_vtk_fem_2d();
