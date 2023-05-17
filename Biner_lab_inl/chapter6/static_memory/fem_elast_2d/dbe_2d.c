@@ -1,12 +1,12 @@
 /* This function multiplies the elasticity matrix and the strain matrix */
 
 /* Variable and array list
-  nevab: Total number of element variables (nevab = nnode * ndofn).
-  nstre: Number of stress components
+  nevab: Total number of element variables (nevab = nnode * ndofn).(int)
+nstre: Number of stress components (int)
   bmatx[nstre][nevab]: Strain matrix at the current integration point
-    (nevab = nnode * ndofn ).
-  dmatx[nstre][nstre]: Elasticity matrix
-  dbmat[nstre][nevab]: Multiplication results of bmatx and dmatx.
+    (nevab = nnode * ndofn ). (double)
+  dmatx[nstre][nstre]: Elasticity matrix (double)
+  dbmat[nstre][nevab]: Multiplication results of bmatx and dmatx. (double)
 */
 
 void dbe_2d(int nevab, int nstre,

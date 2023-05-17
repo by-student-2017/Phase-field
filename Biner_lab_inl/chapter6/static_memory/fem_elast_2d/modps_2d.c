@@ -2,12 +2,12 @@
    plane-stress or plane-strain. */
 
 /* Variable and array list
-  mtype: Material type, for the current element
+  mtype: Material type, for the current element (int)
   ntype: solution type, ntype=1 for plane-stress,
-    ntype=2 for plane-strain
-  nstre: Number of stress components
-  posgp[ngaus]: Position of sampling points
-  dmatx[nstre][nstre]: Elasticity matrix
+  ntype=2 for plane-strain (int)
+  nstre: Number of stress components (int)
+  posgp[ngaus]: Position of sampling points (double)
+  dmatx[nstre][nstre]: Elasticity matrix (double)
 */
 
 void modps_2d(int mtype, int ntype, int nstre,

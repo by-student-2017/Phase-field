@@ -5,24 +5,24 @@
 #include <stdio.h> //printf()
 
 /* Variable and array list
-  npoin: Total number of nodes in the solution
-  nelem: Total number of elements
-  nvfix: Total number of constrained nodes
-  ntype: Solution type (ntyep=1, plane-stress and ntype=2 plane-strain)
-  nnode: Number of nodes per element
-  ndofn: Number of degree of freedom (DOF) per node
-  ndime: Number of spatial dimensions
-  ngaus: The order of numerical integration
-  nmats: Total number of different materials in the solution
-  nstre: Number of stress components
-  nprop: Number of material properties
-  matno[nelem]: Material types for the elements
-  nofix[nvfix]: Node numbers at which one or more DOFs are constrained
-  lnods[nelem][nnode]: Element nodal connectivity list
-  coord[npoin][ndime]: Cartesian coordinates of each node
-  iffix[nvfix][ndofn]: List of constrained DOFs
-  fixed[nvfix][ndofn]: Prescribed value of any constrained DOFs
-  props[nmats][nprops]: For each different material, the properties of that material
+  npoin: Total number of nodes in the solution (int)
+  nelem: Total number of elements (int)
+  nvfix: Total number of constrained nodes (int)
+  ntype: Solution type (ntyep=1, plane-stress and ntype=2 plane-strain) (int)
+  nnode: Number of nodes per element (int)
+  ndofn: Number of degree of freedom (DOF) per node (int)
+  ndime: Number of spatial dimensions (int)
+  ngaus: The order of numerical integration (int)
+  nmats: Total number of different materials in the solution (int)
+  nstre: Number of stress components (int)
+  nprop: Number of material properties (int)
+  matno[nelem]: Material types for the elements (int)
+  nofix[nvfix]: Node numbers at which one or more DOFs are constrained (int)
+  lnods[nelem][nnode]: Element nodal connectivity list (int)
+  coord[npoin][ndime]: Cartesian coordinates of each node (double)
+  iffix[nvfix][ndofn]: List of constrained DOFs (int)
+  fixed[nvfix][ndofn]: Prescribed value of any constrained DOFs (double)
+  props[nmats][nprops]: For each different material, the properties of that material (double)
 */
 
 void input_fem_elast_2d(int npoin, int nelem, int nvfix, int ntype,

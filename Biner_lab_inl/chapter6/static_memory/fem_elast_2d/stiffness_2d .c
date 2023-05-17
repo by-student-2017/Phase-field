@@ -3,23 +3,23 @@
    the global stiffness matrix. */
 
 /* Variable and array list
-  npoin: Total number of nodes in the solution
-  nelem: Total number of elements in the solution
-  nnode: Number of nodes per element
-  nstre: Number of stress components
-  ndime: Number of global Cartesian components
-  ndofn: Number of degrees of feedom per node
-  ngaus: The order of Gaussian integration
+  npoin: Total number of nodes in the solution (int)
+  nelem: Total number of elements in the solution (int)
+  nnode: Number of nodes per element (int)
+  nstre: Number of stress components (int)
+  ndime: Number of global Cartesian components (int)
+  ndofn: Number of degrees of feedom per node (int)
+  ngaus: The order of Gaussian integration (int)
   ntype: solution type, ntype=1 for plane-stress,
-    ntype=2 for plane-strain
-  matno[nelem]: Material types for elements
-  posgp[ngaus]: Position of sampling points for numerical integration.
-  weigp[ngaus]: Weights of sampling points for numerical integration.
-  lnods[nelem][nnode]: Element nodal connectivity list
-  coord[npoin][ndime]: Cartesian coordinates of nodes
-  props[matno][ndime]: For each different material, 
-    the properties of that material
-  gstif[ntotv][ntotv]: Global stiffness matrix (ntotv = npoin * ndofn).
+    ntype=2 for plane-strain (int)
+  matno[nelem]: Material types for elements (int)
+  posgp[ngaus]: Position of sampling points for numerical integration. (double)
+  weigp[ngaus]: Weights of sampling points for numerical integration. (double)
+  lnods[nelem][nnode]: Element nodal connectivity list (int)
+  coord[npoin][ndime]: Cartesian coordinates of nodes (double)
+  props[matno][ndime]: For each different material,
+    the properties of that material (double)
+  gstif[ntotv][ntotv]: Global stiffness matrix (ntotv = npoin * ndofn). (double)
 */
 
 void sfr2_2d();
