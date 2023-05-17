@@ -50,9 +50,9 @@ void input_fem_elast_2d(int npoin, int nelem, int nvfix, int ntype,
 	for(int ielem=0;ielem<nelem;ielem++){
 		fscanf(in,"%5d",&jelem);
 		for(int inode=0;inode<nnode;inode++){
-			fscanf(in,"%5d",&lnods[jelem][inods]);
+			fscanf(in,"%5d",&lnods[jelem*nnode+inode]);
 		}
-		fscanf(in,"%5d",&natno[jelem]);
+		fscanf(in,"%5d",&matno[jelem]);
 	}
 	
 	//Nodal coordinates
@@ -61,7 +61,7 @@ void input_fem_elast_2d(int npoin, int nelem, int nvfix, int ntype,
 	for(int ipoin=0;ipoin<npoin;ipoin++){
 		fscanf(in,"%5d",&jpoin);
 		for(int idime=0;idime<ndime;idime++){
-			fscanf(in,"%lf",&coord[ipoin][idime]);
+			fscanf(in,"%lf",&coord[ipoin*ndime+idime]);
 		}
 	}
 	
@@ -71,8 +71,8 @@ void input_fem_elast_2d(int npoin, int nelem, int nvfix, int ntype,
 	for(int ivfix=0;ivfix<nvfix;ivfix++){
 		fscanf(in,"%5d",&nofix[ivfix]);
 		for(int idofn=0;idofn<ndofn;idofn++){
-			fscanf(in,"%5d",&iffix[ivfix][idofn]);
-			fscanf(in,"%lf",&fixed[ivfix][idofn]);
+			fscanf(in,"%5d",&iffix[ivfix*ndofn+idofn]);
+			fscanf(in,"%lf",&fixed[ivfix*ndofn+idofn]);
 		}
 	}
 	
@@ -82,7 +82,7 @@ void input_fem_elast_2d(int npoin, int nelem, int nvfix, int ntype,
 	for(int imats=0;imats<nmats;imats++){
 		fscanf(in,"%5d",&jmats);
 		for(int iprop=0;iprop<nprop;iprop++){
-			fscanf(in,"%lf",&props[jmats][iprop]);
+			fscanf(in,"%lf",&props[jmats*nprop+iprop]);
 		}
 	}
 	

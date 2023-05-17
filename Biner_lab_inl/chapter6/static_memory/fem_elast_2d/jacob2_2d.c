@@ -17,9 +17,12 @@
   gpcod[ndime][kgasp]: Cartesian coordinates of the integration points within the elemet (ielem). (double)
 */
 
-void jacob2_2d(int ielem, int elcod, int kgasp, int shape
-	double *deriv, int nnode, int ndime
-	double *cartd, double *djacb, double *gpcod){
+void jacob2_2d(int ielem, 
+	double *elcod,
+	int kgasp,
+	double *shape, double *deriv,
+	int nnode, int ndime,
+	double *cartd, double djacb, double *gpcod){
 	
 	//Gauss point coordinates
 	/* Calculate the Cartesian coordinates of
@@ -28,25 +31,26 @@ void jacob2_2d(int ielem, int elcod, int kgasp, int shape
 		gpcod[idime][kgasp]=0.0;
 		for(int inode=0;inode<nnode;inode++){
 			gpcod[idime][kgasp] = gpcod[idime][kgasp]
-								+ elcod[idime][inode] * shape[inode];
+								+ elcod[idime*nnode+inode] * shape[inode];
 		}
 	}
 	
 	//Jacobian
+	double xjacm[ndime][ndime];
 	// Form the Jacobian Matrix (Eq.6.5)
 	for(int idime=0;idime<ndime;idime++){
 		for(int jdime=0;jdime<ndime;jdime++){
 			xjacm[idime][jdime]=0.0;
 			for(int inode=0;inode<nnode;inode++){
 				xjacm[idime][jdime] = xjacm[idime][jdime]
-									+ deriv[idime][inode] * elcod[jdime][inode];
+									+ deriv[idime*nnode+inode] * elcod[jdime*nnode+inode];
 			}
 		}
 	}
 	
 	/* Calculate the determinant of the Jacobian materix.
 	   If its values is zero or negative, terminate the overall solution. */
-	djacb = xjacm[0,0] * xjacm[1][1] - xjacm[0][1] * xjacm[1][0];
+	djacb = xjacm[0][0] * xjacm[1][1] - xjacm[0][1] * xjacm[1][0];
 	
 	if(djacb <= 0.0){
 		printf("Program Terminated \n");
@@ -56,6 +60,7 @@ void jacob2_2d(int ielem, int elcod, int kgasp, int shape
 	
 	//Cartesian derivatives
 	// Calculate the inverse of the Jacobian matrix (Eq.6.6)
+	double xjaci[ndime][ndime];
 	xjaci[0][0] = xjacm[1][1]/djacb;
 	xjaci[1][1] = xjacm[0][0]/djacb;
 	xjaci[0][1] = xjacm[0][1]/djacb;
@@ -65,10 +70,10 @@ void jacob2_2d(int ielem, int elcod, int kgasp, int shape
 	   shape functions using chain rule (Eq.6.3). */
 	for(int idime=0;idime<ndime;idime++){
 		for(int inode=0;inode<nnode;inode++){
-			cartd[idime][inode]=0.0;
+			cartd[idime*nnode+inode]=0.0;
 			for(int jdime=0;jdime<ndime;jdime++){
-				cartd[idime][inode] = cartd[idime][inode]
-									+ xjaci[idime][jdime] * deriv[jdime][inode];
+				cartd[idime*nnode+inode] = cartd[idime*nnode+inode]
+										 + xjaci[idime][jdime] * deriv[jdime*nnode+inode];
 			}
 		}
 	}

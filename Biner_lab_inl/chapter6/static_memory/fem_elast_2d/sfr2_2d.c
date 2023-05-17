@@ -7,11 +7,13 @@
   nnode: Number of nodes per element (int)
   shape[nnode]: Shape functions values for each node in an element (double)
   deriv[ndime][nnode]: Derivatives of shape functions for
-  each local coordinate direction. (double)
+    each local coordinate direction. (double)
 */
 
 void sfr2_2d(double exisp, double etasp, int nnode,
 	double *shape, double *deriv){
+	
+	double s, t, p;
 	
 	if(nnode == 3){
 		//3 nodes elements
@@ -26,14 +28,16 @@ void sfr2_2d(double exisp, double etasp, int nnode,
 		shape[1] = s;
 		shape[2] = t;
 		
-		deriv[0][0] = -1.0;
-		deriv[0][1] =  1.0;
-		deriv[0][2] =  0.0;
+		deriv[0*nnode+0] = -1.0;
+		deriv[0*nnode+1] =  1.0;
+		deriv[0*nnode+2] =  0.0;
 		
-		deriv[1][0] = -1.0;
-		deriv[1][1] =  0.0;
-		deriv[1][2] =  1.0;
+		deriv[1*nnode+0] = -1.0;
+		deriv[1*nnode+1] =  0.0;
+		deriv[1*nnode+2] =  1.0;
 	}
+	
+	double st;
 	
 	if(nnode == 4){
 		//4 nodes elements
@@ -49,16 +53,21 @@ void sfr2_2d(double exisp, double etasp, int nnode,
 		shape[2] = (1.0 + t + s + st)*0.25;
 		shape[3] = (1.0 + t - s - st)*0.25;
 		
-		deriv[0][0] = (-1.0 + t)*0.25;
-		deriv[0][1] = ( 1.0 - t)*0.25;
-		deriv[0][2] = ( 1.0 + t)*0.25;
-		deriv[0][3] = (-1.0 - t)*0.25;
+		deriv[0*nnode+0] = (-1.0 + t)*0.25;
+		deriv[0*nnode+1] = ( 1.0 - t)*0.25;
+		deriv[0*nnode+2] = ( 1.0 + t)*0.25;
+		deriv[0*nnode+3] = (-1.0 - t)*0.25;
 		
-		deriv[1][0] = (-1.0 + s)*0.25;
-		deriv[1][1] = (-1.0 - s)*0.25;
-		deriv[1][2] = ( 1.0 + s)*0.25;
-		deriv[1][3] = ( 1.0 - s)*0.25;
+		deriv[1*nnode+0] = (-1.0 + s)*0.25;
+		deriv[1*nnode+1] = (-1.0 - s)*0.25;
+		deriv[1*nnode+2] = ( 1.0 + s)*0.25;
+		deriv[1*nnode+3] = ( 1.0 - s)*0.25;
 	}
+	
+	double s2, t2;
+	double ss, tt;
+	double sst, stt;
+	double st2;
 	
 	if(nnode == 8){
 		//8 nodes elements
@@ -85,23 +94,23 @@ void sfr2_2d(double exisp, double etasp, int nnode,
 		shape[6] = (-1.0 - st + ss + tt + sst - stt)*0.25;
 		shape[7] = ( 1.0 -  s +    - tt       + stt)*0.25;
 		
-		deriv[0][0] = ( t + s2 - st2 - tt)*0.25;
-		deriv[0][1] = (-s + st);
-		deriv[0][2] = (-t + s2 - st2 + tt)*0.25;
-		deriv[0][3] = ( 1.0 - tt)*0.5;
-		deriv[0][4] = ( t + s2 + st2 + tt)*0.25;
-		deriv[0][5] = (-s - st);
-		deriv[0][6] = (-t + s2 + st2 -tt)*0.25;
-		deriv[0][7] = (-1.0 + tt)*0.5;
+		deriv[0*nnode+0] = ( t + s2 - st2 - tt)*0.25;
+		deriv[0*nnode+1] = (-s + st);
+		deriv[0*nnode+2] = (-t + s2 - st2 + tt)*0.25;
+		deriv[0*nnode+3] = ( 1.0 - tt)*0.5;
+		deriv[0*nnode+4] = ( t + s2 + st2 + tt)*0.25;
+		deriv[0*nnode+5] = (-s - st);
+		deriv[0*nnode+6] = (-t + s2 + st2 -tt)*0.25;
+		deriv[0*nnode+7] = (-1.0 + tt)*0.5;
 		
-		deriv[1][0] = ( s + t2 - ss2 - st2)*0.25;
-		deriv[1][1] = (-1.0 + ss)*0.5;
-		deriv[1][2] = (-s + t2 - ss  + st2)*0.25;
-		deriv[1][3] = (-t - st);
-		deriv[1][4] = ( s + t2 + ss  + st2)*0.25;
-		deriv[1][5] = ( 1.0 - ss)*0.5;
-		deriv[1][6] = (-s + t2 + ss  - st2)*0.25;
-		deriv[1][7] = (-t + st);
+		deriv[1*nnode+0] = ( s + t2 - ss  - st2)*0.25;
+		deriv[1*nnode+1] = (-1.0 + ss)*0.5;
+		deriv[1*nnode+2] = (-s + t2 - ss  + st2)*0.25;
+		deriv[1*nnode+3] = (-t - st);
+		deriv[1*nnode+4] = ( s + t2 + ss  + st2)*0.25;
+		deriv[1*nnode+5] = ( 1.0 - ss)*0.5;
+		deriv[1*nnode+6] = (-s + t2 + ss  - st2)*0.25;
+		deriv[1*nnode+7] = (-t + st);
 	}
 	
 	return;

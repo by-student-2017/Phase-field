@@ -76,16 +76,30 @@ int main(){
 	//----- ----- ----- ----- ----- -----
 	// Force vector & Boundary Conditions
 	//----- ----- ----- ----- ----- -----
-	double gforce[ntotv];
+	double gforce[ntotv]; // ntotv = npoin * ndofn;
 	loads_2d(npoin,nelem,ndofn,nnode,ngaus,
 		ndime,posgp,weigp,lnods,coord,gforce); // Form the global force vector from the loading information
 	boundary_cond_2d(npoin,nvfix,nofix,iffix,fixed,ndofn,gstif,gforce); // Apply boundary conditions
 	
 	//----- ----- ----- ----- ----- -----
 	// Solve displacements (asdis = gstif\gforce)
+	//  left division: inverse(gstif)*gforce
+	// http://www.eccse.kobe-u.ac.jp/assets/files/2020/Kobe_HPC_Spring_terao.pdf
+	// https://ist.ksc.kwansei.ac.jp/~nishitani/Lectures/2005/NumRecipeEx/Lapack.pdf
 	//----- ----- ----- ----- ----- -----
 	// Solve the resulting system of equation for the nodal displacements
-	double asdis = ldiv(gstif,gforce);
+	//
+	// Transpose
+	double gstif_t[ntotv][ntotv];
+	for(int x=0;x<ntotv;x++){
+		for(int y=0;y<ntotv;y++){
+			gstif_t[y][x] = gstif[x][y];
+		}
+	}
+	//
+	double asdis[ntotv];
+	int n=ntotv, nrhs=1, lda=ntotv, ldb=ntotv, info=0;
+	dgesv_(&n, &nrhs, gstif_t, &lda, asdis, gforce, &ldb, &info); //x=A\B for Ax=B, C language -> Fortran library
 	
 	//----- ----- ----- ----- ----- -----
 	// Calculate stresses

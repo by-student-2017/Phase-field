@@ -25,7 +25,7 @@ target_compile_options(fem_elast_2d.exe PUBLIC -O2 -Wall)
 #set(CMAKE_CXX_STANDARD 17)
 target_compile_features(fem_elast_2d.exe PUBLIC cxx_std_17)
 
-target_link_libraries(fem_elast_2d.exe -lm)
+target_link_libraries(fem_elast_2d.exe -lm -llapack)
 
 # usage
 # cmake -S . -B build/ -G"Unix Makefiles"

@@ -6,7 +6,7 @@
   ntype: solution type, ntype=1 for plane-stress,
   ntype=2 for plane-strain (int)
   nstre: Number of stress components (int)
-  posgp[ngaus]: Position of sampling points (double)
+  props[ngaus]: Position of sampling points (double)
   dmatx[nstre][nstre]: Elasticity matrix (double)
 */
 

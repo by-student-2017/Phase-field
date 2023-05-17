@@ -79,7 +79,8 @@ void gauss_2d(int ngaus, int nnode,
 			weigp[1]=0.88888888888889;
 		}
 		
-		kgaus = ngaus / 2;
+		int kgaus = ngaus / 2;
+		int jgash;
 		for(int igash=0;igash<kgaus;igash++){
 			jgash = ngaus + 1 - igash;
 			posgp[jgash] = -posgp[igash];

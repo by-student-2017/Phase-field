@@ -10,7 +10,7 @@
     (nevab = nnode * ndofn ). (double)
 */
 
-void modps_2d(double *cartd, double *shape,
+void bmats_2d(double *cartd, double *shape,
 	int nnode, double *bmatx){
 	
 	int ngash=0;
@@ -22,14 +22,14 @@ void modps_2d(double *cartd, double *shape,
 		ngash = mgash + 1;
 		
 		// Evalutate the strain matrix (Eq.6.37)
-		bmatx[0][mgash] = cartd[0][inode];
-		bmatx[0][ngash] = 0.0;
+		bmatx[0*nevab+mgash] = cartd[0*nnode+inode];
+		bmatx[0*nevab+ngash] = 0.0;
 		//
-		bmatx[1][mgash] = 0.0;
-		bmatx[1][ngash] = cartd[1][inode];
+		bmatx[1*nevab+mgash] = 0.0;
+		bmatx[1*nevab+ngash] = cartd[1*nnode+inode];
 		//
-		bmatx[2][mgash] = cartd[1][inode];
-		bmatx[2][ngash] = cartd[0][inode];
+		bmatx[2*nevab+mgash] = cartd[1*nnode+inode];
+		bmatx[2*nevab+ngash] = cartd[0*nnode+inode];
 	}
 	
 	return;
