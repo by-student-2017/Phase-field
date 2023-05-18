@@ -135,18 +135,28 @@ __global__ void Kernel
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	// Calculating sleeve area in shared memory
 	//----- ----- ----- south sleeve area ----- ----- ----- 
-	if(blockIdx.y == 0) {J0 = nx*(ny-1) + blockDim.x*blockIdx.x + threadIdx.x,
-						 J4 = J0 - nx;} // boundary condition at south edge
-	else                {J0 =  j - nx, 
-						 J4 = J0 - nx;} // non edge
+	/* e.g., if(blockIdx.y == 0) {J0 = j+nx*(+ny-1) = nx*(blockDim.y*blockIdx.y) + blockDim.x*blockIdx.x + nx*threadIdx.y + threadIdx.x +nx*(+ny-1)
+	                                 = nx*(blockDim.y*0) + blockDim.x*blockIdx.x + nx*threadIdx.y + threadIdx.x +nx*(+ny-1)
+	   and if(threadIdx.y ==  0) case: J0 = nx*(blockDim.y*0) + blockDim.x*blockIdx.x + nx*0+ threadIdx.x +nx*(+ny-1)
+	                                      = blockDim.x*blockIdx.x + threadIdx.x + nx*(+ny-1)*/
+	if(blockIdx.y == 0) {J0 = blockDim.x*blockIdx.x + threadIdx.x +nx*(ny-1),
+						 J4 = J0 +nx*(   -1);} // boundary condition at south edge
+	else                {J0 =  j +nx*(   -1) 
+						 J4 = J0 +nx*(   -1);} // non edge (J0=j+nx*(0-1),J4=j+nx(-1-1)=J0+nx*(   -1))
 	//----- ----- copy Global memory to Shared memory {one inside, edge}
 	if(threadIdx.y ==  0)          { fs[jx][ 1] = f[J0], fs[jx][ 0] = f[J4];}   // south sleeve area
 	//
 	//----- ----- ----- north sleeve area ----- ----- ----- 
+	/* if(blockIdx.y == gridDim.y - 1) and if(threadIdx.y == (thread_y-1)) case
+	   J1 = j-nx*(ny-1)
+	      = nx*(blockDim.y*(gridDim.y - 1)) + blockDim.x*blockIdx.x + nx*(thread_y-1) + threadIdx.x -nx*(ny-1)
+	      = nx*(blockDim.y*(gridDim.y - 1)+(thread_y-1)) -nx*(ny-1) + blockDim.x*blockIdx.x + threadIdx.x
+	      = nx*(ny-1) -nx*(ny-1) + blockDim.x*blockIdx.x + threadIdx.x 
+	      = blockDim.x*blockIdx.x + threadIdx.x  */
 	if(blockIdx.y == gridDim.y - 1) {J1 = blockDim.x*blockIdx.x + threadIdx.x, 
-						 J5 = J1 + nx;} // boundary condition at north edge
-	else				{J1 =  j + nx, 
-						 J5 = J1 + nx;} // non edge
+						 J5 = J1 -nx*(   -1);} // boundary condition at north edge
+	else				{J1 =  j -nx*(   -1), 
+						 J5 = J1 -nx*(   -1);} // non edge
 	//----- ----- copy Global memory to Shared memory {one inside, edge}
 	if(threadIdx.y == (thread_y-1)){ fs[jx][fs_thread_y-2] = f[J1], fs[jx][fs_thread_y-1] = f[J5];}   // north sleeve area
 	//
