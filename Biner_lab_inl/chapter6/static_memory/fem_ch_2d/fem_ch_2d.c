@@ -90,10 +90,15 @@ int main(){
 			/* Form the global stiffness matrix for only in
 			   first iteration and form rhs, load, vector in
 			   every following iterations. */
-			chem_stiff_2d(npoin,nelem,nnode,nstre,ndime,gstif,gforce,
-				ndofn,ngaus,ntype,lnods,coord,
-				mobil,grcoef,con,con_old,dtime,
-				posgp,weigp,istep,iter,gstif);
+			chem_stiff_2d(npoin,nelem,nnode,nstre,ndime
+				ndofn,ngaus,ntype,
+				lnods,coord,
+				mobil,grcoef,
+				con,con_old,
+				dtime,
+				posgp,weigp,
+				istep,iter,
+				gstif,gforce);
 			
 			//----- -----
 			// Rearrange gstif & gforce for PBC
