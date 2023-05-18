@@ -19,7 +19,7 @@ void dbe_2d(int nevab, int nstre,
 			dbmat[istre*nevab+ievab]=0.0;
 			for(int jstre=0;jstre<nstre;jstre++){
 				dbmat[istre*nevab+ievab] = dbmat[istre*nevab+ievab]
-										  dmatx[istre*nstre+jstre] * bmatx[jstre*nevab+ievab];
+										 + dmatx[istre*nstre+jstre] * bmatx[jstre*nevab+ievab];
 			}
 		}
 	}

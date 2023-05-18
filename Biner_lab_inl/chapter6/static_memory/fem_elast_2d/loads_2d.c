@@ -26,13 +26,14 @@ void loads_2d(int npoin, int nelem, int ndofn,
 	double *gforce, FILE *in, FILE *out){
 	
 	//Initilize global force vector (rhs) & element loads
-	nevab = nnode * ndofn;
-	ntotv = npoin * ndofn;
+	int nevab = nnode * ndofn;
+	int ntotv = npoin * ndofn;
 	
 	for(int itotv=0;itotv<ntotv;itotv++){
 		gforce[itotv] = 0.0;
 	}
 	
+	double eload[nelem][nevab];
 	for(int ielem=0;ielem<nelem;ielem++){
 		for(int ievab=0;ievab<nevab;ievab++){
 			eload[ielem][ievab] = 0.0;
@@ -40,9 +41,13 @@ void loads_2d(int npoin, int nelem, int ndofn,
 	}
 	
 	//Loading types
+	int iplod, nedge;
 	fscanf(in,"%5d %5d",&iplod,&nedge);
 	
 	//Point forces
+	int nplod, lodpt;
+	double point[ndofn];
+	int nloca, nposi;
 	if(iplod != 0){
 		fscanf(in,"%5d",&nplod);
 		for(int jplod=0;jplod<nplod;jplod++){
@@ -54,7 +59,7 @@ void loads_2d(int npoin, int nelem, int ndofn,
 			//
 			for(int ielem=0;ielem<nelem;ielem++){
 				for(int inode=0;inode<nnode;inode++){
-					nloca = lnods[ielem][inode];
+					nloca = lnods[ielem*nnode+inode];
 					if(lodpt == nloca){
 						for(int idofn=0;idofn<ndofn;idofn++){
 							nposi = (inode * ndofn) + idofn;
@@ -68,6 +73,7 @@ void loads_2d(int npoin, int nelem, int ndofn,
 	}//end if(iplod
 	
 	//Distributed Forces
+	double press[nodeg][ndofn];
 	if(nedge != 0){
 		fprintf(out, "Number of loaded edges: %5d \n",nedge);
 		fprintf(out, "List of loaded edges and applied loads:\n");

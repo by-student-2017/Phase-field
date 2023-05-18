@@ -11,15 +11,16 @@
 */
 
 void bmats_2d(double *cartd, double *shape,
-	int nnode, double *bmatx){
+	int nnode, double *bmatx,
+	int nevab){
 	
 	int ngash=0;
 	
 	for(int inode=0;inode<nnode;inode++){
 		
 		// Counter for the elements of the strain matrix
-		mgash = ngash + 1;
-		ngash = mgash + 1;
+		int mgash = ngash + 1;
+		int ngash = mgash + 1;
 		
 		// Evalutate the strain matrix (Eq.6.37)
 		bmatx[0*nevab+mgash] = cartd[0*nnode+inode];

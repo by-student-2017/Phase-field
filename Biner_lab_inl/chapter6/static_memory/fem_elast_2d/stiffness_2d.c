@@ -17,7 +17,7 @@
   weigp[ngaus]: Weights of sampling points for numerical integration. (double)
   lnods[nelem][nnode]: Element nodal connectivity list (int)
   coord[npoin][ndime]: Cartesian coordinates of nodes (double)
-  props[matno][ndime]: For each different material,
+  props[nelem][ndime]: For each different material,
     the properties of that material (double)
   gstif[ntotv][ntotv]: Global stiffness matrix (ntotv = npoin * ndofn). (double)
 */
@@ -88,7 +88,7 @@ void stiffness_2d(int npoin, int nelem, int nnode,
 		/* Depending upon the material type of
 		   current element form the elasticity matrix Eqs.6.39 or 6.40. */
 		mtype = matno[ielem];
-		modps_2d(mtype,ntype,nstre,props,dmatx);
+		modps_2d(mtype,ntype,nstre,props,dmatx,nelem,ndime);
 		
 		//Coordinates of element nodes
 		/* define coordinates of the nodes of 
@@ -122,10 +122,10 @@ void stiffness_2d(int npoin, int nelem, int nnode,
 				/* Calculate the Cartesian derivatives of the shape functions,
 				   the determinant of the Jacobian, and the cartesian coordinates of
 				   the integration points (Eq.6.6). */
-				jacob2_2d(ielem,elcod,kgasp,shape,deriv,nnode,ndime,cartd,djacb,gpcod);
+				jacob2_2d(ielem,elcod,kgasp,shape,deriv,nnode,ndime,cartd,djacb,gpcod,ngaus);
 				
 				// Calculate the strain matrix (Eq.6.37)
-				bmats_2d(cartd,shape,nnode,bmatx);  //inode ?
+				bmats_2d(cartd,shape,nnode,bmatx,nevab);  //inode ?
 				
 				// Multiply the elasticity matrix with strain matrix
 				dbe_2d(nevab,nstre,bmatx,dmatx,dbmat);

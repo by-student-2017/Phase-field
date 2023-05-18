@@ -14,7 +14,7 @@
   shape[nnode]: Shape function values (double)
   elcod[ndime][nnode]: Global coordinates of current element (ielem) nodes. (double)
   deriv[ndime][nnode]: Derivatives of shape functions is local coordinates. (double)
-  gpcod[ndime][kgasp]: Cartesian coordinates of the integration points within the elemet (ielem). (double)
+  gpcod[ndime][ngaus*ngaus]: Cartesian coordinates of the integration points within the elemet (ielem). (double)
 */
 
 void jacob2_2d(int ielem, 
@@ -22,15 +22,16 @@ void jacob2_2d(int ielem,
 	int kgasp,
 	double *shape, double *deriv,
 	int nnode, int ndime,
-	double *cartd, double djacb, double *gpcod){
+	double *cartd, double djacb, double *gpcod,
+	int ngaus){
 	
 	//Gauss point coordinates
 	/* Calculate the Cartesian coordinates of
 	   the integration points within the elements. */
 	for(int idime=0;idime<ndime;idime++){
-		gpcod[idime][kgasp]=0.0;
+		gpcod[idime*(ngaus*ngaus)+kgasp]=0.0;
 		for(int inode=0;inode<nnode;inode++){
-			gpcod[idime][kgasp] = gpcod[idime][kgasp]
+			gpcod[idime*(ngaus*ngaus)+kgasp] = gpcod[idime*(ngaus*ngaus)+kgasp]
 								+ elcod[idime*nnode+inode] * shape[inode];
 		}
 	}
