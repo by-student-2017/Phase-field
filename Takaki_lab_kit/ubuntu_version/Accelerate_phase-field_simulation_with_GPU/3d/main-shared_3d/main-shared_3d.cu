@@ -203,7 +203,7 @@ __global__ void Kernel
 	//----- ----- copy Global memory to Shared memory {one inside, edge}
 	if(threadIdx.x == (thread_x-1)){ fs[fs_thread_x-2][jy][jz] = f[J3], fs[fs_thread_x-1][jy][jz] = f[J7];}   // east  sleeve area
 	//
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- XY
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- XY = YX
 	//----- ----- ----- east and north sleeve area
 		 if(blockIdx.y == (gridDim.y - 1) && blockIdx.x == 0) { J8 = j-nx*(ny-1) +(nx-1) ;}
 	else if(blockIdx.y == (gridDim.y - 1) && blockIdx.x  > 0) { J8 = j-nx*(ny-1) +(  -1) ;}
@@ -236,7 +236,7 @@ __global__ void Kernel
 	//----- ----- copy Global memory to Shared memory {one inside, edge}
 	if(threadIdx.x == (thread_x-1) && threadIdx.y ==  0          ) {fs[thread_x+2][         1][jz] = f[J11];} // west and north sleeve area
 	//
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- XZ
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- XZ = ZX
 	//----- ----- ----- up and east sleeve area
 		 if(blockIdx.z == (gridDim.z - 1) && blockIdx.x == 0) { J8xz = j-nx*ny*(nz-1) +(nx-1) ;}
 	else if(blockIdx.z == (gridDim.z - 1) && blockIdx.x  > 0) { J8xz = j-nx*ny*(nz-1) +(  -1) ;}
@@ -269,7 +269,7 @@ __global__ void Kernel
 	//----- ----- copy Global memory to Shared memory {one inside, edge}
 	if(threadIdx.x == (thread_x-1) && threadIdx.z ==  0          ) {fs[thread_x+2][jy][         1] = f[J11xz];} // west and north sleeve area
 	//
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- YZ
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- YZ = ZY
 	//----- ----- ----- up and south sleeve area
 		 if(blockIdx.z == (gridDim.z - 1) && blockIdx.y == 0) { J8yz = j-nx*ny*(nz-1) +nx*(ny-1) ;}
 	else if(blockIdx.z == (gridDim.z - 1) && blockIdx.y  > 0) { J8yz = j-nx*ny*(nz-1) +nx*(  -1) ;}
