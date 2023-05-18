@@ -1,4 +1,4 @@
-/* Program : 2D Phase-Field Simulation for 
+/* Program : 3D Phase-Field Simulation for 
    Spinodal Decomposition in Fe-Cr Alloy by GPU (shared memory version) Computation.
    (e.g., Fe-Cr, Fe-Mo, Al-Zn, etc)
    
@@ -11,8 +11,8 @@
    Date: 15th/May/2023
    Test: Ubuntu 22.04 LTS
    
-   Compling: nvcc -O2 main-shared_2d.cu write_vtk_grid_values_2D.cu -o main-shared_2d.exe -arch=native -lm --std 'c++17'
-   Run: ./main-shared_2d.exe
+   Compling: nvcc -O2 main-shared_3d.cu write_vtk_grid_values_3D.cu -o main-shared_3d.exe -arch=native -lm --std 'c++17'
+   Run: ./main-shared_3d.exe
    ParaView: time_XX.vtk
 */
 
