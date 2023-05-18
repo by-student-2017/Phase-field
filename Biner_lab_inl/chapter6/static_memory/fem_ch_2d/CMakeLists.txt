@@ -7,9 +7,11 @@ add_executable(fem_ch_2d.exe
 	fem_ch_2d.c
 	periodic_boundary_2d.c
 	gauss_2d.c
-	cart_deriv_2d.c
 	init_micro_ch_fem_2d.c
 	chem_stiff_2d.c
+		sfr2_2d.c
+		jacob2_2d.c
+		free_energy_fem_2d.c
 	apply_periodic_bc_2d.c
 	recover_slave_dof_2d.c
 	write_vtk_fem_2d.c
