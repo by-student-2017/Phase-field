@@ -230,8 +230,6 @@ int main(){
 	//Greens tensor
 	green_tensor_2d(Nx,Ny,kx,ky,cm11,cm12,cm44,cp11,cp12,cp44,tmatx); //Calculate Green's tensor
 	
-	//float numer, denom;
-	
 	//float *dfdcon = (float *)malloc(sizeof(float)*( Nx*Ny ));
 	float *delsdc = (float *)malloc(sizeof(float)*( Nx*Ny ));
 	//
@@ -242,6 +240,8 @@ int main(){
 	float __complex__ *conk    = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
 	float __complex__ *dfdconk = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
 	float __complex__ *delsdck = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
+	//
+	//float numer, denom;
 	//
 	float denom;
 	float __complex__ numer;
