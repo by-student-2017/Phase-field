@@ -88,7 +88,6 @@ __global__ void Kernel_semi_implicit_time_integration(
 	//
 	denom = 1.0 + dtime*coefA*mobility*grad_coef*k4_d[j];
 	conk_d[j].x = ( conk_d[j].x - (dtime*mobility*k2_d[j]*(dfdconk_d[j].x + delsdck_d[j].x)) )/denom;
-	//conk_d[j].y = ( conk_d[j].y - (dtime*mobility*k2_d[j]*(dfdconk_d[j].y + delsdck_d[j].y)) )/denom;
 }
 
 int main(){
@@ -162,12 +161,7 @@ int main(){
 	cudaMalloc((void**)&dfdconk_d, sizeof(cufftComplex)*Nx*Ny);
 	cudaMalloc((void**)&delsdck_d, sizeof(cufftComplex)*Nx*Ny);
 	//
-	//cufftComplex *conc_d;
-	//cudaMalloc((void**)&conc_d,    sizeof(cufftComplex)*Nx*Ny);
-	//
 	cufftHandle plan, iplan;
-	//cufftPlan2d(&plan,  Nx, Ny, CUFFT_R2C);
-	//cufftPlan2d(&iplan, Nx, Ny, CUFFT_C2R);
 	cufftPlan2d(&plan,  Nx, Ny, CUFFT_C2C);
 	cufftPlan2d(&iplan, Nx, Ny, CUFFT_C2C);
 	//----- ----- ----- ----- ----- -----
@@ -257,21 +251,9 @@ int main(){
 	//Greens tensor
 	green_tensor_2d(Nx,Ny,kx,ky,cm11,cm12,cm44,cp11,cp12,cp44,tmatx); //Calculate Green's tensor
 	
-	//float *dfdcon = (float *)malloc(sizeof(float)*( Nx*Ny ));
-	//float *delsdc = (float *)malloc(sizeof(float)*( Nx*Ny ));
-	//
 	float __complex__ *conc    = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
 	float __complex__ *dfdconc = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
 	float __complex__ *delsdcc = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
-	//
-	//float __complex__ *conk    = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
-	//float __complex__ *dfdconk = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
-	//float __complex__ *delsdck = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
-	//
-	//float numer, denom;
-	//
-	//float denom;
-	//float __complex__ numer;
 	
 	int bs=BS; // Number of threads, 16 or 32
 	dim3 blocks(Nx/bs,Ny/bs,1); //nx*ny = blocks * threads
@@ -305,8 +287,6 @@ int main(){
 				//dfdcon[ii] = free_energy_ch_2d(con[ii]);
 				dfdconc[ii] = free_energy_ch_2d(con[ii]);
 				//----- ------ ------ ------
-				//replace cuda array with host array
-				//delsdcc[ii] = delsdc[ii];
 				conc[ii] = con[ii];
 			}
 		}
@@ -317,65 +297,18 @@ int main(){
 		/* Take the values of concentration, derivative of free energy and
 		   derivative of elastic energy from real space to Fourier space (forward FFT) */
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//conk=fft2(con);
-		//fftw_execute(plan_con);
-		//----- ----- ----- -----
-		//cufftExecR2C(plan, con_d, conk_d); //FFT
-		//cudaDeviceSynchronize();
-		//----- ----- ----- -----
 		cufftExecC2C(plan, con_d, conk_d, CUFFT_FORWARD); //FFT
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//dfdconk=fft2(dfdcon);
-		//fftw_execute(plan_dfdcon);
-		//----- ----- ----- -----
-		//cufftExecR2C(plan, dfdcon_d, dfdconk_d); //FFT
-		//cudaDeviceSynchronize();
-		//----- ----- ----- -----
 		cufftExecC2C(plan, dfdcon_d, dfdconk_d, CUFFT_FORWARD); //FFT
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//delsdck=fft2(delsdc);
-		//fftw_execute(plan_delsdc);
-		//----- ----- ----- -----
-		//cufftExecR2C(plan, delsdc_d, delsdck_d); //FFT
-		//cudaDeviceSynchronize();
-		//----- ----- ----- -----
 		cufftExecC2C(plan, delsdc_d, delsdck_d, CUFFT_FORWARD); //FFT
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 		
-		//cudaMemcpy(conk,conk_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //conk = conk_h
-		//cudaMemcpy(dfdconk,dfdconk_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //dfdconk = dfdconk_h
-		//cudaMemcpy(delsdck,delsdck_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //delsdck = delsdck_h
-		
 		/* Semi-implicit time integration of concentration field at
 		   Fourier space (Eq.5.50) */
-		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- from fftw3
-		//for(int i=0;i<Nx;i++){
-		//	for(int j=0;j<Ny;j++){
-		//		ii=i*Ny+j;
-		//		//
-		//		denom=1.0+dtime*coefA*mobility*grad_coef*k4[ii];
-		//		//
-		//		numer=dtime*mobility*k2[ii]*(dfdconk[ii][0]+delsdck[ii][0]);
-		//		conk[ii][0]=(conk[ii][0]-numer)/denom;
-		//		//
-		//		numer=dtime*mobility*k2[ii]*(dfdconk[ii][1]+delsdck[ii][1]);
-		//		conk[ii][1]=(conk[ii][1]-numer)/denom;
-		//	}
-		//}
-		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- from cufft
-		//for(int i=0;i<Nx;i++){
-		//	for(int j=0;j<Ny;j++){
-		//		ii = i*Ny+j;
-		//		//
-		//		denom=1.0+dtime*coefA*mobility*grad_coef*k4[ii];
-		//		numer=dtime*mobility*k2[ii]*(dfdconk[ii]+delsdck[ii]);
-		//		conk[ii]=(conk[ii]-numer)/denom;
-		//	}
-		//}
-		//cudaMemcpy(conk_d,conk,Nx*Ny*sizeof(float __complex__),cudaMemcpyHostToDevice); //conk = conk_h
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- on cuda
 		Kernel_semi_implicit_time_integration<<<blocks, threads>>>(Nx,Ny,
 			dtime,coefA,mobility,grad_coef,
@@ -387,12 +320,6 @@ int main(){
 		/* Take concentration field from Fourier space back to
 		   real space (inverse FFT) */
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//con=real(ifft2(conk));
-		//fftw_execute(iplan_conk);
-		//----- ----- ----- -----
-		//cufftExecC2R(iplan, conk_d, con_d); //IFFT
-		//cudaDeviceSynchronize();
-		//----- ----- ----- -----
 		cufftExecC2C(iplan, conk_d, con_d, CUFFT_INVERSE); //IFFT
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -475,9 +402,5 @@ int main(){
 	free(conc);
 	free(dfdconc);
 	free(delsdcc);
-	//
-	//free(conk);
-	//free(dfdconk);
-	//free(delsdck);
 	//----- ----- ----- ----- ----- -----
 }
