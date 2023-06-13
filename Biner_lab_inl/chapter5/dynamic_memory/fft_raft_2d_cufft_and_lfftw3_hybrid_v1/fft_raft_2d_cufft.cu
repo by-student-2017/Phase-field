@@ -19,7 +19,7 @@
 //#include <mpi.h> //mpi version
 //#include <fftw3-mpi.h> //mpi version
 
-//#include <complex.h>
+#include <complex.h>
 //#include <cuComplex.h>
 
 #include <cuda.h>   //GPU
@@ -28,6 +28,9 @@
   #include "device_launch_parameters.h" */
 //----- ----- -----
 #include <cufft.h> //FFT (GPU)
+
+typedef float cufftReal;
+//typedef cuComplex cufftComplex;
 
 //----- ----- ----- ----- ----- ----- -----
 void micro_ch_pre_2d(int Nx, int Ny, float c0, float *con);
@@ -60,36 +63,6 @@ void write_vtk_grid_values_2D(int nx, int ny,
 	float dx, float dy,
 	int istep, float *data1);
 //----- ----- ----- ----- ----- ----- -----
-
-// Define subroutine "Kernel" for GPU (Device) calculation in detail
-__global__ void Kernel_semi_implicit_time_integration(
-	int   Nx,
-	int   Ny,
-	float dtime,
-	float coefA,
-	float mobility,
-	float grad_coef,
-	float *k2_d,
-	float *k4_d,
-	cufftComplex *conk_d,
-	cufftComplex *dfdconk_d,
-	cufftComplex *delsdck_d
-){
-	int j, jx, jy;
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	jx = blockDim.x*blockIdx.x + threadIdx.x; //<-GPU | CPU -> for(jx=0; jx<nx; jx++){
-	jy = blockDim.y*blockIdx.y + threadIdx.y; //<-GPU | CPU -> for(jy=0; jy<ny; jy++){
-	j  = Nx*jy + jx;
-	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-	float denom;
-	cufftComplex numer;
-	//
-	denom = 1.0 + dtime*coefA*mobility*grad_coef*k4_d[j];
-	numer.x = dtime*mobility*k2_d[j]*(dfdconk_d[j].x + delsdck_d[j].x);
-	numer.y = dtime*mobility*k2_d[j]*(dfdconk_d[j].y + delsdck_d[j].y);
-	conk_d[j].x = (conk_d[j].x - numer.x)/denom;
-	conk_d[j].y = (conk_d[j].y - numer.y)/denom;
-}
 
 int main(){
 	clock_t start, end;
@@ -152,19 +125,24 @@ int main(){
 	//----- ----- ----- ----- ----- -----
 	const int fftsizex = Nx, fftsizey = Ny;
 	//
-	cufftReal *con_d, *dfdcon_d, *delsdc_d;
-	cudaMalloc((void**)&con_d,     sizeof(cufftReal)*Nx*Ny);
-	cudaMalloc((void**)&dfdcon_d,  sizeof(cufftReal)*Nx*Ny);
-	cudaMalloc((void**)&delsdc_d,  sizeof(cufftReal)*Nx*Ny);
+	cufftComplex *con_d, *dfdcon_d, *delsdc_d;
+	cudaMalloc((void**)&con_d,     sizeof(cufftComplex)*Nx*Ny);
+	cudaMalloc((void**)&dfdcon_d,  sizeof(cufftComplex)*Nx*Ny);
+	cudaMalloc((void**)&delsdc_d,  sizeof(cufftComplex)*Nx*Ny);
 	//
 	cufftComplex *conk_d, *dfdconk_d, *delsdck_d;
 	cudaMalloc((void**)&conk_d,    sizeof(cufftComplex)*Nx*Ny);
 	cudaMalloc((void**)&dfdconk_d, sizeof(cufftComplex)*Nx*Ny);
 	cudaMalloc((void**)&delsdck_d, sizeof(cufftComplex)*Nx*Ny);
 	//
+	//cufftComplex *conc_d;
+	//cudaMalloc((void**)&conc_d,    sizeof(cufftComplex)*Nx*Ny);
+	//
 	cufftHandle plan, iplan;
-	cufftPlan2d(&plan,  Nx, Ny, CUFFT_R2C);
-	cufftPlan2d(&iplan, Nx, Ny, CUFFT_C2R);
+	//cufftPlan2d(&plan,  Nx, Ny, CUFFT_R2C);
+	//cufftPlan2d(&iplan, Nx, Ny, CUFFT_C2R);
+	cufftPlan2d(&plan,  Nx, Ny, CUFFT_C2C);
+	cufftPlan2d(&iplan, Nx, Ny, CUFFT_C2C);
 	//----- ----- ----- ----- ----- -----
 	
 	//----- ----- ----- -----
@@ -254,8 +232,19 @@ int main(){
 	
 	//float numer, denom;
 	
-	float *dfdcon = (float *)malloc(sizeof(float)*( Nx*Ny ));
+	//float *dfdcon = (float *)malloc(sizeof(float)*( Nx*Ny ));
 	float *delsdc = (float *)malloc(sizeof(float)*( Nx*Ny ));
+	//
+	float __complex__ *conc    = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
+	float __complex__ *dfdconc = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
+	float __complex__ *delsdcc = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
+	//
+	float __complex__ *conk    = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
+	float __complex__ *dfdconk = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
+	float __complex__ *delsdck = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
+	//
+	float denom;
+	float __complex__ numer;
 	
 	int bs=BS; // Number of threads, 16 or 32
 	dim3 blocks(Nx/bs,Ny/bs,1); //nx*ny = blocks * threads
@@ -272,10 +261,11 @@ int main(){
 			for(int j=0;j<Ny;j++){
 				ii=i*Ny+j;
 				//Calculate derivative of free energy
-				dfdcon[ii] = free_energy_ch_2d(con[ii]);
+				//dfdcon[ii] = free_energy_ch_2d(con[ii]);
+				dfdconc[ii] = free_energy_ch_2d(con[ii]);
 			}
 		}
-		cudaMemcpy(dfdcon_d,dfdcon,Nx*Ny*sizeof(float),cudaMemcpyHostToDevice); //dfdcon = dfdcon_h
+		cudaMemcpy(dfdcon_d,dfdconc,Nx*Ny*sizeof(float __complex__),cudaMemcpyHostToDevice); //dfdconc = dfdconc_h
 		
 		//derivative of elastic energy
 		//Calculate the derivative of elastic energy
@@ -289,25 +279,56 @@ int main(){
 			ea,
 			ei0,
 			con, delsdc); // Note: tmatx is real part only
-		cudaMemcpy(delsdc_d,delsdc,Nx*Ny*sizeof(float),cudaMemcpyHostToDevice); //delsdc = delsdc_h
+		//----- ----- ----- -----
+		for(int i=0;i<Nx;i++){
+			for(int j=0;j<Ny;j++){
+				ii=i*Ny+j;
+				//replace cuda array with host array
+				delsdcc[ii] = delsdc[ii];
+				conc[ii] = con[ii];
+			}
+		}
+		cudaMemcpy(delsdc_d,delsdcc,Nx*Ny*sizeof(float __complex__),cudaMemcpyHostToDevice); //delsdc = delsdc_h
+		cudaMemcpy(con_d,conc,Nx*Ny*sizeof(float __complex__),cudaMemcpyHostToDevice); //con = con_h
 		
 		/* Take the values of concentration, derivative of free energy and
 		   derivative of elastic energy from real space to Fourier space (forward FFT) */
+		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 		//conk=fft2(con);
 		//fftw_execute(plan_con);
-		cufftExecR2C(plan, con_d, conk_d); //FFT
+		//----- ----- ----- -----
+		//cufftExecR2C(plan, con_d, conk_d); //FFT
+		//cudaDeviceSynchronize();
+		//----- ----- ----- -----
+		cufftExecC2C(plan, con_d, conk_d, CUFFT_FORWARD); //FFT
 		cudaDeviceSynchronize();
+		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 		//dfdconk=fft2(dfdcon);
 		//fftw_execute(plan_dfdcon);
-		cufftExecR2C(plan, dfdcon_d, dfdconk_d); //FFT
+		//----- ----- ----- -----
+		//cufftExecR2C(plan, dfdcon_d, dfdconk_d); //FFT
+		//cudaDeviceSynchronize();
+		//----- ----- ----- -----
+		cufftExecC2C(plan, dfdcon_d, dfdconk_d, CUFFT_FORWARD); //FFT
 		cudaDeviceSynchronize();
+		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 		//delsdck=fft2(delsdc);
 		//fftw_execute(plan_delsdc);
-		cufftExecR2C(plan, delsdc_d, delsdck_d); //FFT
+		//----- ----- ----- -----
+		//cufftExecR2C(plan, delsdc_d, delsdck_d); //FFT
+		//cudaDeviceSynchronize();
+		//----- ----- ----- -----
+		cufftExecC2C(plan, delsdc_d, delsdck_d, CUFFT_FORWARD); //FFT
 		cudaDeviceSynchronize();
+		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+		
+		cudaMemcpy(conk,conk_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //conk = conk_h
+		cudaMemcpy(dfdconk,dfdconk_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //dfdconk = dfdconk_h
+		cudaMemcpy(delsdck,delsdck_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //delsdck = delsdck_h
 		
 		/* Semi-implicit time integration of concentration field at
 		   Fourier space (Eq.5.50) */
+		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- from fftw3
 		//for(int i=0;i<Nx;i++){
 		//	for(int j=0;j<Ny;j++){
 		//		ii=i*Ny+j;
@@ -321,21 +342,35 @@ int main(){
 		//		conk[ii][1]=(conk[ii][1]-numer)/denom;
 		//	}
 		//}
-		Kernel_semi_implicit_time_integration<<<blocks, threads>>>(Nx,Ny,
-			dtime,coefA,mobility,grad_coef,
-			k2_d,k4_d,
-			conk_d,dfdconk_d,delsdck_d);
-		cudaDeviceSynchronize();
+		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- from cufft
+		for(int i=0;i<Nx;i++){
+			for(int j=0;j<Ny;j++){
+				ii = i*Ny+j;
+				//
+				denom=1.0+dtime*coefA*mobility*grad_coef*k4[ii];
+				numer=dtime*mobility*k2[ii]*(dfdconk[ii]+delsdck[ii]);
+				conk[ii]=(conk[ii]-numer)/denom;
+			}
+		}
+		cudaMemcpy(conk_d,conk,Nx*Ny*sizeof(float __complex__),cudaMemcpyHostToDevice); //conk = conk_h
+		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 		
 		/* Take concentration field from Fourier space back to
 		   real space (inverse FFT) */
+		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 		//con=real(ifft2(conk));
 		//fftw_execute(iplan_conk);
-		cufftExecC2R(iplan, conk_d, con_d); //IFFT
+		//----- ----- ----- -----
+		//cufftExecC2R(iplan, conk_d, con_d); //IFFT
+		//cudaDeviceSynchronize();
+		//----- ----- ----- -----
+		cufftExecC2C(iplan, conk_d, con_d, CUFFT_INVERSE); //IFFT
 		cudaDeviceSynchronize();
+		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 		
 		//copy f_d(cuda,device) to F_h(cpu,host)
-		cudaMemcpy(con,con_d,Nx*Ny*sizeof(float),cudaMemcpyDeviceToHost); //con = con_h
+		//cudaMemcpy(con,con_d,Nx*Ny*sizeof(float),cudaMemcpyDeviceToHost); //con = con_h
+		cudaMemcpy(conc,con_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //conc = conc_h
 		
 		//for small deviations
 		// For small deviations from max and min values, reset the limits
@@ -343,7 +378,8 @@ int main(){
 			for(int j=0;j<Ny;j++){
 				ii=i*Ny+j;
 				//----- ----- ----- -----
-				 con[ii] =  con[ii]/(Nx*Ny);
+				//con[ii] =  con[ii]/(Nx*Ny);
+				con[ii] =  creal(conc[ii])/(Nx*Ny);
 				//----- ----- ----- -----
 				if(con[ii]>=0.9999){
 					con[ii]=0.9999;
@@ -351,7 +387,6 @@ int main(){
 				if(con[ii]<=0.0001){
 					con[ii]=0.0001;
 				}
-				con[ii]=0.0;
 				//----- ----- ----- -----
 			}
 		}
@@ -379,9 +414,13 @@ int main(){
 	cufftDestroy(plan);
 	cufftDestroy(iplan);
 	//----- ----- ----- ----- ----- -----
-	cudaFree(con);
-	cudaFree(dfdcon);
-	cudaFree(delsdc);
+	cudaFree(con_d);
+	cudaFree(dfdcon_d);
+	cudaFree(delsdc_d);
+	//
+	cudaFree(conk_d);
+	cudaFree(dfdconk_d);
+	cudaFree(delsdck_d);
 	//
 	fftw_free(s11);
 	fftw_free(s22);
@@ -403,5 +442,13 @@ int main(){
 	free(tmatx);
 	//
 	free(con);
+	//
+	free(conc);
+	free(dfdconc);
+	free(delsdcc);
+	//
+	free(conk);
+	free(dfdconk);
+	free(delsdck);
 	//----- ----- ----- ----- ----- -----
 }
