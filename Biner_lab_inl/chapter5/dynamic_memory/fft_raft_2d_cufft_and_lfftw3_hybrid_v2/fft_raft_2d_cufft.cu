@@ -264,9 +264,9 @@ int main(){
 	float __complex__ *dfdconc = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
 	float __complex__ *delsdcc = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
 	//
-	float __complex__ *conk    = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
-	float __complex__ *dfdconk = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
-	float __complex__ *delsdck = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
+	//float __complex__ *conk    = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
+	//float __complex__ *dfdconk = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
+	//float __complex__ *delsdck = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
 	//
 	//float numer, denom;
 	//
@@ -345,9 +345,9 @@ int main(){
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 		
-		cudaMemcpy(conk,conk_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //conk = conk_h
-		cudaMemcpy(dfdconk,dfdconk_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //dfdconk = dfdconk_h
-		cudaMemcpy(delsdck,delsdck_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //delsdck = delsdck_h
+		//cudaMemcpy(conk,conk_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //conk = conk_h
+		//cudaMemcpy(dfdconk,dfdconk_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //dfdconk = dfdconk_h
+		//cudaMemcpy(delsdck,delsdck_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //delsdck = delsdck_h
 		
 		/* Semi-implicit time integration of concentration field at
 		   Fourier space (Eq.5.50) */
@@ -476,8 +476,8 @@ int main(){
 	free(dfdconc);
 	free(delsdcc);
 	//
-	free(conk);
-	free(dfdconk);
-	free(delsdck);
+	//free(conk);
+	//free(dfdconk);
+	//free(delsdck);
 	//----- ----- ----- ----- ----- -----
 }
