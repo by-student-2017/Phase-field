@@ -251,9 +251,9 @@ int main(){
 	//Greens tensor
 	green_tensor_2d(Nx,Ny,kx,ky,cm11,cm12,cm44,cp11,cp12,cp44,tmatx); //Calculate Green's tensor
 	
-	float __complex__ *conc    = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
-	float __complex__ *dfdconc = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
 	float __complex__ *delsdcc = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
+	float __complex__ *dfdconc = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
+	float __complex__ *conc    = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
 	
 	int bs=BS; // Number of threads, 16 or 32
 	dim3 blocks(Nx/bs,Ny/bs,1); //nx*ny = blocks * threads
