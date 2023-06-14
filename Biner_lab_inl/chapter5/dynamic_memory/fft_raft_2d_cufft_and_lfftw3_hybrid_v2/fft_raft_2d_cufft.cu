@@ -24,7 +24,10 @@
   "float _Complex " is new version */
 //#include <complex.h>
 //#include <cuComplex.h>
-#define _Complex_I (1.0iF) //For i of "Z = X + Yi"
+#define _Complex_I (1.0iF)
+#define I i
+#undef i
+#undef j
 //Ref: http://nalab.mind.meiji.ac.jp/~mk/labo/text/complex-c.pdf (Japanese)
 
 #include <cuda.h>   //GPU
@@ -308,7 +311,7 @@ int main(){
 				ii=i*Ny+j;
 				//Calculate derivative of free energy
 				//dfdcon[ii] = free_energy_ch_2d(con[ii]);
-				dfdconc[ii] = free_energy_ch_2d(con[ii]);
+				dfdconc[ii] = free_energy_ch_2d(con[ii]) + 0.0*I;
 				//----- ------ ------ ------
 				//replace cuda array with host array
 				delsdcc[ii] = delsdc[ii];
