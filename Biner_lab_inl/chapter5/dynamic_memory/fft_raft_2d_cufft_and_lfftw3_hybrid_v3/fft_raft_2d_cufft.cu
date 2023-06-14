@@ -14,13 +14,21 @@
 #include <math.h> //mod() and -lm
 #include <time.h>
 
-#include <fftw3.h>
+//#include <fftw3.h>
 //gcc test.c -lfftw3
 //#include <mpi.h> //mpi version
 //#include <fftw3-mpi.h> //mpi version
 
-#include <complex.h>
+/* Memo for complex type
+  "float __complex__ " is old version
+  "float _Complex " is new version */
+//#include <complex.h>
 //#include <cuComplex.h>
+//#define _Complex_I (1.0iF)
+//#define I i
+//#undef i
+//#undef j
+//Ref: http://nalab.mind.meiji.ac.jp/~mk/labo/text/complex-c.pdf (Japanese)
 
 #include <cuda.h>   //GPU
 /* #include <cuda.h> or
@@ -29,8 +37,8 @@
 //----- ----- -----
 #include <cufft.h> //FFT (GPU)
 
-typedef float cufftReal;
-//typedef cuComplex cufftComplex;
+//typedef float cufftReal;
+//typedef cu_Complex cufftComplex;
 
 //----- ----- ----- ----- ----- ----- -----
 void micro_ch_pre_2d(int Nx, int Ny, float c0, float *con);
@@ -50,14 +58,14 @@ float free_energy_ch_2d(float con_ij);
 //----- ----- -----
 void solve_elasticity_2d(int Nx, int Ny,
 	float *tmatx,
-	fftw_complex *s11, fftw_complex *s22, fftw_complex *s12,
-	fftw_complex *e11, fftw_complex *e22, fftw_complex *e12,
+	float _Complex *s11, float _Complex *s22, float _Complex *s12,
+	float _Complex *e11, float _Complex *e22, float _Complex *e12,
 	float *ed11, float *ed22, float *ed12,
 	float cm11, float cm12, float cm44,
 	float cp11, float cp12, float cp44,
 	float *ea,
 	float ei0,
-	float *con, float __complex__ *delsdc);
+	float *con, float _Complex *delsdc);
 //----- ----- -----
 void write_vtk_grid_values_2D(int nx, int ny, 
 	float dx, float dy,
@@ -149,7 +157,7 @@ int main(){
 	int ii;
 	
 	//----- ----- ----- ----- ----- -----
-	const int fftsizex = Nx, fftsizey = Ny;
+	//const int fftsizex = Nx, fftsizey = Ny;
 	//
 	cufftComplex *con_d, *dfdcon_d, *delsdc_d;
 	cudaMalloc((void**)&con_d,     sizeof(cufftComplex)*Nx*Ny);
@@ -167,16 +175,15 @@ int main(){
 	//----- ----- ----- ----- ----- -----
 	
 	//----- ----- ----- -----
-	fftw_complex *s11, *s22, *s12;
-	 s11 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
-	 s22 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
-	 s12 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	//fftw_Complex *s11, *s22, *s12;
+	// s11 = (fftw_Complex *)fftw_malloc(sizeof(fftw_Complex) * fftsizex*fftsizey);
+	// s22 = (fftw_Complex *)fftw_malloc(sizeof(fftw_Complex) * fftsizex*fftsizey);
+	// s12 = (fftw_Complex *)fftw_malloc(sizeof(fftw_Complex) * fftsizex*fftsizey);
 	//----- ----- ----- -----
-	
-	fftw_complex *e11, *e22, *e12;
-	 e11 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
-	 e22 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
-	 e12 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	//fftw_Complex *e11, *e22, *e12;
+	// e11 = (fftw_Complex *)fftw_malloc(sizeof(fftw_Complex) * fftsizex*fftsizey);
+	// e22 = (fftw_Complex *)fftw_malloc(sizeof(fftw_Complex) * fftsizex*fftsizey);
+	// e12 = (fftw_Complex *)fftw_malloc(sizeof(fftw_Complex) * fftsizex*fftsizey);
 	//----- ----- ----- ----- ----- -----
 	
 	//float ed11[Nx][Ny];
@@ -186,26 +193,26 @@ int main(){
 	//float ed12[Nx][Ny];
 	float *ed12 = (float *)malloc(sizeof(float)*( Nx*Ny ));
 	
+	float _Complex *s11  = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
+	float _Complex *s22  = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
+	float _Complex *s12  = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
+	//
+	float _Complex *e11  = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
+	float _Complex *e22  = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
+	float _Complex *e12  = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
+	
 	//Initialize stress & strain componentes
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Ny;j++){
 			ii=i*Ny+j;
 			//----- ----- ----- -----
-			s11[ii][0] = 0.0;
-			s22[ii][0] = 0.0;
-			s12[ii][0] = 0.0;
-			//
-			s11[ii][1] = 0.0;
-			s22[ii][1] = 0.0;
-			s12[ii][1] = 0.0;
+			s11[ii] = 0.0;
+			s22[ii] = 0.0;
+			s12[ii] = 0.0;
 			//----- ----- ----- -----
-			e11[ii][0] = 0.0;
-			e22[ii][0] = 0.0;
-			e12[ii][0] = 0.0;
-			//
-			e11[ii][1] = 0.0;
-			e22[ii][1] = 0.0;
-			e12[ii][1] = 0.0;
+			e11[ii] = 0.0;
+			e22[ii] = 0.0;
+			e12[ii] = 0.0;
 			//----- ----- ----- -----
 			//----- ----- ----- -----
 			//Strain components due to lattice defects
@@ -251,9 +258,9 @@ int main(){
 	//Greens tensor
 	green_tensor_2d(Nx,Ny,kx,ky,cm11,cm12,cm44,cp11,cp12,cp44,tmatx); //Calculate Green's tensor
 	
-	float __complex__ *delsdcc = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
-	float __complex__ *dfdconc = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
-	float __complex__ *conc    = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
+	float _Complex *delsdcc = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
+	float _Complex *dfdconc = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
+	float _Complex *conc    = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
 	
 	int bs=BS; // Number of threads, 16 or 32
 	dim3 blocks(Nx/bs,Ny/bs,1); //nx*ny = blocks * threads
@@ -290,9 +297,9 @@ int main(){
 				conc[ii] = con[ii];
 			}
 		}
-		cudaMemcpy(dfdcon_d,dfdconc,Nx*Ny*sizeof(float __complex__),cudaMemcpyHostToDevice); //dfdconc = dfdconc_h
-		cudaMemcpy(delsdc_d,delsdcc,Nx*Ny*sizeof(float __complex__),cudaMemcpyHostToDevice); //delsdc = delsdc_h
-		cudaMemcpy(con_d,conc,Nx*Ny*sizeof(float __complex__),cudaMemcpyHostToDevice); //con = con_h
+		cudaMemcpy(dfdcon_d,dfdconc,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //dfdconc = dfdconc_h
+		cudaMemcpy(delsdc_d,delsdcc,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //delsdc = delsdc_h
+		cudaMemcpy(con_d,conc,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //con = con_h
 		
 		/* Take the values of concentration, derivative of free energy and
 		   derivative of elastic energy from real space to Fourier space (forward FFT) */
@@ -326,7 +333,7 @@ int main(){
 		
 		//copy f_d(cuda,device) to F_h(cpu,host)
 		//cudaMemcpy(con,con_d,Nx*Ny*sizeof(float),cudaMemcpyDeviceToHost); //con = con_h
-		cudaMemcpy(conc,con_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //conc = conc_h
+		cudaMemcpy(conc,con_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //conc = conc_h
 		
 		//for small deviations
 		// For small deviations from max and min values, reset the limits
@@ -335,7 +342,8 @@ int main(){
 				ii=i*Ny+j;
 				//----- ----- ----- -----
 				//con[ii] =  con[ii]/(Nx*Ny);
-				con[ii] =  creal(conc[ii])/(Nx*Ny);
+				con[ii] = ( __real__ conc[ii] )/(Nx*Ny);
+				//con[ii] =  creal(conc[ii])/(Nx*Ny); //For #include <_Complex.h>
 				//----- ----- ----- -----
 				if(con[ii]>=0.9999){
 					con[ii]=0.9999;
@@ -378,13 +386,13 @@ int main(){
 	cudaFree(dfdconk_d);
 	cudaFree(delsdck_d);
 	//
-	fftw_free(s11);
-	fftw_free(s22);
-	fftw_free(s12);
+	free(s11);
+	free(s22);
+	free(s12);
 	//
-	fftw_free(e11);
-	fftw_free(e22);
-	fftw_free(e12);
+	free(e11);
+	free(e22);
+	free(e12);
 	//----- ----- ----- ----- ----- -----
 	free(ed11);
 	free(ed22);
