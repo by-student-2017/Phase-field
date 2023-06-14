@@ -153,13 +153,13 @@ int main(){
 	cufftPlan2d(&iplan, Nx, Ny, CUFFT_C2C);
 	//----- ----- ----- ----- ----- -----
 	
-	//----- ----- ----- -----
+	//----- ----- ----- -----fftw3
 	fftw_complex *s11, *s22, *s12;
 	 s11 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
 	 s22 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
 	 s12 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
 	//----- ----- ----- -----
-	
+	//----- ----- ----- -----fftw3
 	fftw_complex *e11, *e22, *e12;
 	 e11 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
 	 e22 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);

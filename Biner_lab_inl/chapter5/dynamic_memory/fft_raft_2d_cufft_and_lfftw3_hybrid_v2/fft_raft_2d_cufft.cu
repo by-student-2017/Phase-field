@@ -180,13 +180,13 @@ int main(){
 	cufftPlan2d(&iplan, Nx, Ny, CUFFT_C2C);
 	//----- ----- ----- ----- ----- -----
 	
-	//----- ----- ----- -----
+	//----- ----- ----- -----fftw3
 	fftw_complex *s11, *s22, *s12;
 	 s11 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
 	 s22 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
 	 s12 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
 	//----- ----- ----- -----
-	
+	//----- ----- ----- -----fftw3
 	fftw_complex *e11, *e22, *e12;
 	 e11 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
 	 e22 = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
@@ -325,8 +325,9 @@ int main(){
 		/* Take the values of concentration, derivative of free energy and
 		   derivative of elastic energy from real space to Fourier space (forward FFT) */
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//conk=fft2(con);
-		//fftw_execute(plan_con);
+		//conk=fft2(con);         //Octave or Matlab
+		//----- ----- ----- -----
+		//fftw_execute(plan_con); //fftw3
 		//----- ----- ----- -----
 		//cufftExecR2C(plan, con_d, conk_d); //FFT
 		//cudaDeviceSynchronize();
@@ -334,8 +335,9 @@ int main(){
 		cufftExecC2C(plan, con_d, conk_d, CUFFT_FORWARD); //FFT
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//dfdconk=fft2(dfdcon);
-		//fftw_execute(plan_dfdcon);
+		//dfdconk=fft2(dfdcon);      //Octave or Matlab
+		//----- ----- ----- -----
+		//fftw_execute(plan_dfdcon); //fftw3
 		//----- ----- ----- -----
 		//cufftExecR2C(plan, dfdcon_d, dfdconk_d); //FFT
 		//cudaDeviceSynchronize();
@@ -343,8 +345,9 @@ int main(){
 		cufftExecC2C(plan, dfdcon_d, dfdconk_d, CUFFT_FORWARD); //FFT
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//delsdck=fft2(delsdc);
-		//fftw_execute(plan_delsdc);
+		//delsdck=fft2(delsdc);      //Octave or Matlab
+		//----- ----- ----- -----
+		//fftw_execute(plan_delsdc); //fftw3
 		//----- ----- ----- -----
 		//cufftExecR2C(plan, delsdc_d, delsdck_d); //FFT
 		//cudaDeviceSynchronize();
@@ -395,8 +398,9 @@ int main(){
 		/* Take concentration field from Fourier space back to
 		   real space (inverse FFT) */
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//con=real(ifft2(conk));
-		//fftw_execute(iplan_conk);
+		//con=real(ifft2(conk));    //Octave or Matlab
+		//----- ----- ----- -----
+		//fftw_execute(iplan_conk); //fftw3
 		//----- ----- ----- -----
 		//cufftExecC2R(iplan, conk_d, con_d); //IFFT
 		//cudaDeviceSynchronize();
