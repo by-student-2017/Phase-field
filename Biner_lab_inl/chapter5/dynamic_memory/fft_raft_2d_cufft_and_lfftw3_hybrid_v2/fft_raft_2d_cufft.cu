@@ -96,7 +96,7 @@ __global__ void Kernel_semi_implicit_time_integration(
 	//
 	denom = 1.0 + dtime*coefA*mobility*grad_coef*k4_d[j];
 	conk_d[j].x = ( conk_d[j].x - (dtime*mobility*k2_d[j]*(dfdconk_d[j].x + delsdck_d[j].x)) )/denom;
-	//conk_d[j].y = ( conk_d[j].y - (dtime*mobility*k2_d[j]*(dfdconk_d[j].y + delsdck_d[j].y)) )/denom;
+	conk_d[j].y = ( conk_d[j].y - (dtime*mobility*k2_d[j]*(dfdconk_d[j].y + delsdck_d[j].y)) )/denom;
 }
 
 int main(){
