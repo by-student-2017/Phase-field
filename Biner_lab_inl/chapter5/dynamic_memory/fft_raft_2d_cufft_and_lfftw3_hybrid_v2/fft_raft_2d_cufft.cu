@@ -37,7 +37,7 @@
 //----- ----- -----
 #include <cufft.h> //FFT (GPU)
 
-typedef float cufftReal;
+//typedef float cufftReal;
 //typedef cuComplex cufftComplex;
 
 //----- ----- ----- ----- ----- ----- -----
