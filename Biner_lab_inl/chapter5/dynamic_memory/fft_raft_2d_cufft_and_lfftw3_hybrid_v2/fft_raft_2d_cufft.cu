@@ -24,6 +24,8 @@
   "float _Complex " is new version */
 //#include <complex.h>
 //#include <cuComplex.h>
+#define _Complex_I (1.0iF) //For i of "Z = X + Yi"
+//Ref: http://nalab.mind.meiji.ac.jp/~mk/labo/text/complex-c.pdf (Japanese)
 
 #include <cuda.h>   //GPU
 /* #include <cuda.h> or
