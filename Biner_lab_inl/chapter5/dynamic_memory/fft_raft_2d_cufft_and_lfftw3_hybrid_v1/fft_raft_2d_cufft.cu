@@ -19,7 +19,10 @@
 //#include <mpi.h> //mpi version
 //#include <fftw3-mpi.h> //mpi version
 
-#include <complex.h>
+/* Memo for complex type
+  "float __complex__ " is old version
+  "float _Complex " is new version */
+//#include <complex.h>
 //#include <cuComplex.h>
 
 #include <cuda.h>   //GPU
@@ -223,18 +226,18 @@ int main(){
 	//float *dfdcon = (float *)malloc(sizeof(float)*( Nx*Ny ));
 	float *delsdc = (float *)malloc(sizeof(float)*( Nx*Ny ));
 	//
-	float __complex__ *conc    = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
-	float __complex__ *dfdconc = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
-	float __complex__ *delsdcc = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
+	float _Complex *conc    = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
+	float _Complex *dfdconc = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
+	float _Complex *delsdcc = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
 	//
-	float __complex__ *conk    = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
-	float __complex__ *dfdconk = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
-	float __complex__ *delsdck = (float __complex__ *)malloc(sizeof(float __complex__)*( Nx*Ny ));
+	float _Complex *conk    = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
+	float _Complex *dfdconk = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
+	float _Complex *delsdck = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
 	//
 	//float numer, denom;
 	//
 	float denom;
-	float __complex__ numer;
+	float _Complex numer;
 	
 	int bs=BS; // Number of threads, 16 or 32
 	dim3 blocks(Nx/bs,Ny/bs,1); //nx*ny = blocks * threads
@@ -255,7 +258,7 @@ int main(){
 				dfdconc[ii] = free_energy_ch_2d(con[ii]);
 			}
 		}
-		cudaMemcpy(dfdcon_d,dfdconc,Nx*Ny*sizeof(float __complex__),cudaMemcpyHostToDevice); //dfdconc = dfdconc_h
+		cudaMemcpy(dfdcon_d,dfdconc,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //dfdconc = dfdconc_h
 		
 		//derivative of elastic energy
 		//Calculate the derivative of elastic energy
@@ -278,8 +281,8 @@ int main(){
 				conc[ii] = con[ii];
 			}
 		}
-		cudaMemcpy(delsdc_d,delsdcc,Nx*Ny*sizeof(float __complex__),cudaMemcpyHostToDevice); //delsdc = delsdc_h
-		cudaMemcpy(con_d,conc,Nx*Ny*sizeof(float __complex__),cudaMemcpyHostToDevice); //con = con_h
+		cudaMemcpy(delsdc_d,delsdcc,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //delsdc = delsdc_h
+		cudaMemcpy(con_d,conc,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //con = con_h
 		
 		/* Take the values of concentration, derivative of free energy and
 		   derivative of elastic energy from real space to Fourier space (forward FFT) */
@@ -312,9 +315,9 @@ int main(){
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 		
-		cudaMemcpy(conk,conk_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //conk = conk_h
-		cudaMemcpy(dfdconk,dfdconk_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //dfdconk = dfdconk_h
-		cudaMemcpy(delsdck,delsdck_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //delsdck = delsdck_h
+		cudaMemcpy(conk,conk_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //conk = conk_h
+		cudaMemcpy(dfdconk,dfdconk_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //dfdconk = dfdconk_h
+		cudaMemcpy(delsdck,delsdck_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //delsdck = delsdck_h
 		
 		/* Semi-implicit time integration of concentration field at
 		   Fourier space (Eq.5.50) */
@@ -342,7 +345,7 @@ int main(){
 				conk[ii]=(conk[ii]-numer)/denom;
 			}
 		}
-		cudaMemcpy(conk_d,conk,Nx*Ny*sizeof(float __complex__),cudaMemcpyHostToDevice); //conk = conk_h
+		cudaMemcpy(conk_d,conk,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //conk = conk_h
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 		
 		/* Take concentration field from Fourier space back to
@@ -360,7 +363,7 @@ int main(){
 		
 		//copy f_d(cuda,device) to F_h(cpu,host)
 		//cudaMemcpy(con,con_d,Nx*Ny*sizeof(float),cudaMemcpyDeviceToHost); //con = con_h
-		cudaMemcpy(conc,con_d,Nx*Ny*sizeof(float __complex__),cudaMemcpyDeviceToHost); //conc = conc_h
+		cudaMemcpy(conc,con_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //conc = conc_h
 		
 		//for small deviations
 		// For small deviations from max and min values, reset the limits
@@ -369,7 +372,8 @@ int main(){
 				ii=i*Ny+j;
 				//----- ----- ----- -----
 				//con[ii] =  con[ii]/(Nx*Ny);
-				con[ii] =  creal(conc[ii])/(Nx*Ny);
+				con[ii] = ( __real__ conc[ii] )/(Nx*Ny);
+				//con[ii] =  creal(conc[ii])/(Nx*Ny); //For #include <complex.h>
 				//----- ----- ----- -----
 				if(con[ii]>=0.9999){
 					con[ii]=0.9999;
