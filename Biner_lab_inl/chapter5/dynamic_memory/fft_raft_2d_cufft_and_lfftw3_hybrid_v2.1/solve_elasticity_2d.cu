@@ -293,12 +293,12 @@ void solve_elasticity_2d(int Nx, int Ny,
 				//
 				smatx[(ii*2+0)*2+0] = s11k[ii];
 				smatx[(ii*2+0)*2+1] = s12k[ii];
-				//smatx[(ii*2+1)*2+0] = s12k[ii];
+				smatx[(ii*2+1)*2+0] = s12k[ii];
 				smatx[(ii*2+1)*2+1] = s22k[ii];
 				//
 				ematx[(ii*2+0)*2+0] = e11k[ii];
 				ematx[(ii*2+0)*2+1] = e12k[ii];
-				//ematx[(ii*2+1)*2+0] = e12k[ii];
+				ematx[(ii*2+1)*2+0] = e12k[ii];
 				ematx[(ii*2+1)*2+1] = e22k[ii];
 			}
 		}
@@ -353,7 +353,7 @@ void solve_elasticity_2d(int Nx, int Ny,
 				//
 				e11k[ii] = ematx[(ii*2+0)*2+0];
 				e12k[ii] = ematx[(ii*2+0)*2+1];
-				//e12k[ii] = ematx[(ii*2+1)*2+0];
+				e12k[ii] = ematx[(ii*2+1)*2+0];
 				e22k[ii] = ematx[(ii*2+1)*2+1];
 			}
 		}
