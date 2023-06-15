@@ -53,7 +53,46 @@
   tmatx[Nx][Ny][2][2][2][2]: Values of Green's tensor at all grid points (real part only)
 */
 
-void solve_elasticity_2d(int Nx, int Ny,
+// Define subroutine "Kernel" for GPU (Device) calculation in detail
+__global__ void Kernel_calculate_stresses(
+	int   Nx, int   Ny,
+	cufftComplex *e11_d, cufftComplex *e22_d, cufftComplex *e12_d,
+	cufftComplex *s11_d, cufftComplex *s22_d, cufftComplex *s12_d,
+	float *c11_d,  float *c12_d,  float *c44_d,
+	float ea0,     float ea1,     float ea2,
+	float *ei11_d, float *ei22_d, float *ei12_d,
+	float *ed11_d, float *ed22_d, float *ed12_d
+){
+	int j, jx, jy;
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	jx = blockDim.x*blockIdx.x + threadIdx.x; //<-GPU | CPU -> for(jx=0; jx<nx; jx++){
+	jy = blockDim.y*blockIdx.y + threadIdx.y; //<-GPU | CPU -> for(jy=0; jy<ny; jy++){
+	j  = Ny*jx + jy;
+	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+	//
+	e11_d[j].x /= (Nx*Ny);
+	e22_d[j].x /= (Nx*Ny);
+	e12_d[j].x /= (Nx*Ny);
+	//
+	/* s11[ii][0]=c11[ii]*(ea[0]+e11[ii][0]-ei11[ii]-ed11[ii])
+			  +c12[ii]*(ea[1]+e22[ii][0]-ei22[ii]-ed22[ii]));
+	s22[ii][0]=c21[ii]*(ea[0]+e11[ii][0]-ei11[ii]-ed11[ii])
+			  +c22[ii]*(ea[1]+e22[ii][0]-ei22[ii]-ed22[ii]); */
+	// c21[ii]=c12[ii], c22[ii]=c11[ii], etc
+	//-----
+	s11_d[j].x = c11_d[j]*(ea0+e11_d[j].x-ei11_d[j]-ed11_d[j])
+				+c12_d[j]*(ea1+e22_d[j].x-ei22_d[j]-ed22_d[j]);
+	s22_d[j].x = c12_d[j]*(ea0+e11_d[j].x-ei11_d[j]-ed11_d[j])
+				+c11_d[j]*(ea1+e22_d[j].x-ei22_d[j]-ed22_d[j]);
+	//
+	/* s12[ii][0]=c44[ii]*(ea[3]+e12[ii][0]-ei12[ii]-ed12[ii])
+			  +c44[ii]*(ea[3]+e21[ii][0]-ei21[ii]-ed21[ii]); */
+	// e21[ii]=e12[ii], etc
+	//-----
+	s12_d[j].x = c44_d[j]*(ea2+e12_d[j].x-ei12_d[j]-ed12_d[j])*2.0;
+}
+
+void solve_elasticity_2d(int Nx, int Ny, int BS,
 	float *tmatx,
 	float _Complex *s11, float _Complex *s22, float _Complex *s12,
 	float _Complex *e11, float _Complex *e22, float _Complex *e12,
@@ -101,46 +140,7 @@ void solve_elasticity_2d(int Nx, int Ny,
 	float _Complex *e12k = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
 	
 	//----- ----- ----- -----
-	//const int fftsizex = Nx, fftsizey = Ny;
 	
-	//fftw_complex *s11k, *s22k, *s12k;
-	//s11k = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
-	//s22k = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
-	//s12k = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
-	
-	//fftw_plan plan_s11, plan_s22, plan_s12;
-	// plan_s11  = fftw_plan_dft_2d(fftsizex, fftsizey, s11, s11k, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
-	// plan_s22  = fftw_plan_dft_2d(fftsizex, fftsizey, s22, s22k, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
-	// plan_s12  = fftw_plan_dft_2d(fftsizex, fftsizey, s12, s12k, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
-	//----- ----- ----- -----
-	//fftw_complex *e11k, *e22k, *e12k;
-	//e11k = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
-	//e22k = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
-	//e12k = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
-	
-	//fftw_plan plan_e11, iplan_e11k;
-	// plan_e11  = fftw_plan_dft_2d(fftsizex, fftsizey, e11, e11k, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
-	//iplan_e11k = fftw_plan_dft_2d(fftsizex, fftsizey, e11k, e11, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
-	//
-	//fftw_plan plan_e22, iplan_e22k;
-	// plan_e22  = fftw_plan_dft_2d(fftsizex, fftsizey, e22, e22k, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
-	//iplan_e22k = fftw_plan_dft_2d(fftsizex, fftsizey, e22k, e22, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
-	//
-	//fftw_plan plan_e12, iplan_e12k;
-	// plan_e12  = fftw_plan_dft_2d(fftsizex, fftsizey, e12, e12k, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
-	//iplan_e12k = fftw_plan_dft_2d(fftsizex, fftsizey, e12k, e12, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
-	//----- ----- ----- -----
-	
-	//float smatx_real[Nx][Ny][2][2];
-	//float *smatx_real = (float *)malloc(sizeof(float)*( Nx*Ny*2*2 ));
-	//float ematx_real[Nx][Ny][2][2];
-	//float *ematx_real = (float *)malloc(sizeof(float)*( Nx*Ny*2*2 ));
-	//
-	//float smatx_imag[Nx][Ny][2][2];
-	//float *smatx_imag = (float *)malloc(sizeof(float)*( Nx*Ny*2*2 ));
-	//float ematx_imag[Nx][Ny][2][2];
-	//float *ematx_imag = (float *)malloc(sizeof(float)*( Nx*Ny*2*2 ));
-	//
 	float _Complex *smatx = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny*2*2 ));
 	float _Complex *ematx = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny*2*2 ));
 	
@@ -178,6 +178,10 @@ void solve_elasticity_2d(int Nx, int Ny,
 	//float c44[Nx][Ny];
 	float  *c44 = (float *)malloc(sizeof(float)*( Nx*Ny ));
 	
+	int bs=BS; // Number of threads, 16 or 32
+	dim3 blocks(Nx/bs,Ny/bs,1); //nx*ny = blocks * threads
+	dim3 threads(bs,bs,1);      //bs*bs*1 <= 1024
+	
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Ny;j++){
 			ii=i*Ny+j;
@@ -196,6 +200,45 @@ void solve_elasticity_2d(int Nx, int Ny,
 		}
 	}
 	
+	float *ei11_d, *ei22_d, *ei12_d; // name of dynamic memory for GPU, CUDA, device
+	ei11_d = (float *)malloc(Nx*Ny*sizeof(float)); //GPU, CUDA, device
+	ei22_d = (float *)malloc(Nx*Ny*sizeof(float)); //GPU, CUDA, device
+	ei12_d = (float *)malloc(Nx*Ny*sizeof(float)); //GPU, CUDA, device
+	//-----
+	cudaMalloc((void**)&ei11_d,Nx*Ny*sizeof(float)); // define dynamic memory for GPU (device)
+	cudaMalloc((void**)&ei22_d,Nx*Ny*sizeof(float)); // define dynamic memory for GPU (device)
+	cudaMalloc((void**)&ei12_d,Nx*Ny*sizeof(float)); // define dynamic memory for GPU (device)
+	//-----
+	cudaMemcpy(ei11_d,ei11,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //ei11 = ei11_h
+	cudaMemcpy(ei22_d,ei22,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //ei22 = ei22_h
+	cudaMemcpy(ei12_d,ei12,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //ei12 = ei12_h
+	//----- -----
+	float *c11_d, *c12_d, *c44_d; // name of dynamic memory for GPU, CUDA, device
+	c11_d = (float *)malloc(Nx*Ny*sizeof(float)); //GPU, CUDA, device
+	c12_d = (float *)malloc(Nx*Ny*sizeof(float)); //GPU, CUDA, device
+	c44_d = (float *)malloc(Nx*Ny*sizeof(float)); //GPU, CUDA, device
+	//-----
+	cudaMalloc((void**)&c11_d,Nx*Ny*sizeof(float)); // define dynamic memory for GPU (device)
+	cudaMalloc((void**)&c12_d,Nx*Ny*sizeof(float)); // define dynamic memory for GPU (device)
+	cudaMalloc((void**)&c44_d,Nx*Ny*sizeof(float)); // define dynamic memory for GPU (device)
+	//-----
+	cudaMemcpy(c11_d,c11,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //c11 = c11_h
+	cudaMemcpy(c12_d,c12,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //c12 = c12_h
+	cudaMemcpy(c44_d,c44,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //c44 = c44_h
+	//----- -----
+	float *ed11_d, *ed22_d, *ed12_d; // name of dynamic memory for GPU, CUDA, device
+	ed11_d = (float *)malloc(Nx*Ny*sizeof(float)); //GPU, CUDA, device
+	ed22_d = (float *)malloc(Nx*Ny*sizeof(float)); //GPU, CUDA, device
+	ed12_d = (float *)malloc(Nx*Ny*sizeof(float)); //GPU, CUDA, device
+	//-----
+	cudaMalloc((void**)&ed11_d,Nx*Ny*sizeof(float)); // define dynamic memory for GPU (device)
+	cudaMalloc((void**)&ed22_d,Nx*Ny*sizeof(float)); // define dynamic memory for GPU (device)
+	cudaMalloc((void**)&ed12_d,Nx*Ny*sizeof(float)); // define dynamic memory for GPU (device)
+	//-----
+	cudaMemcpy(ed11_d,ed11,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //ed11 = ed11_h
+	cudaMemcpy(ed22_d,ed22,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //ed22 = ed22_h
+	cudaMemcpy(ed12_d,ed12,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //ed12 = ed12_h
+	
 	/* Solve stress and strain field with 
 	   iterative algorithm given in the text */
 	for(int iter=0;iter<niter;iter++){
@@ -212,48 +255,24 @@ void solve_elasticity_2d(int Nx, int Ny,
 		   Fourier space (forward FFT). Step-a */
 		// stress
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//s11k=fft2(s11);         //Octave or Matlab
-		//----- ----- ----- -----
-		//fftw_execute(plan_s11); //fftw3
-		//----- 
 		cufftExecC2C(plan, s11_d, s11k_d, CUFFT_FORWARD); //FFT
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//s22k=fft2(s22);         //Octave or Matlab
-		//----- ----- ----- -----
-		//fftw_execute(plan_s22); //fftw3
-		//----- 
 		cufftExecC2C(plan, s22_d, s22k_d, CUFFT_FORWARD); //FFT
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//s12k=fft2(s12);         //Octave or Matlab
-		//----- ----- ----- -----
-		//fftw_execute(plan_s12); //fftw3
-		//----- 
 		cufftExecC2C(plan, s12_d, s12k_d, CUFFT_FORWARD); //FFT
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 		//
 		// strain
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//e11k=fft2(e11);         //Octave or Matlab
-		//----- ----- ----- -----
-		//fftw_execute(plan_e11); //fftw3
-		//----- 
 		cufftExecC2C(plan, e11_d, e11k_d, CUFFT_FORWARD); //FFT
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//e22k=fft2(e22);         //Octave or Matlab
-		//----- ----- ----- -----
-		//fftw_execute(plan_e22); //fftw3
-		//----- 
 		cufftExecC2C(plan, e22_d, e22k_d, CUFFT_FORWARD); //FFT
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//e12k=fft2(e12);         //Octave or Matlab
-		//----- ----- ----- -----
-		//fftw_execute(plan_e12); //fftw3
-		//----- 
 		cufftExecC2C(plan, e12_d, e12k_d, CUFFT_FORWARD); //FFT
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
@@ -271,25 +290,6 @@ void solve_elasticity_2d(int Nx, int Ny,
 		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
 				ii=i*Ny+j;
-				//smatx_real[(ii*2+0)*2+0] = __real__ s11k[ii];
-				//smatx_real[(ii*2+0)*2+1] = __real__ s12k[ii];
-				//smatx_real[(ii*2+1)*2+0] = __real__ s12k[ii];
-				//smatx_real[(ii*2+1)*2+1] = __real__ s22k[ii];
-				//
-				//smatx_imag[(ii*2+0)*2+0] = __imag__ s11k[ii];
-				//smatx_imag[(ii*2+0)*2+1] = __imag__ s12k[ii];
-				//smatx_imag[(ii*2+1)*2+0] = __imag__ s12k[ii];
-				//smatx_imag[(ii*2+1)*2+1] = __imag__ s22k[ii];
-				//
-				//ematx_real[(ii*2+0)*2+0] = __real__ e11k[ii];
-				//ematx_real[(ii*2+0)*2+1] = __real__ e12k[ii];
-				//ematx_real[(ii*2+1)*2+0] = __real__ e12k[ii];
-				//ematx_real[(ii*2+1)*2+1] = __real__ e22k[ii];
-				//
-				//ematx_imag[(ii*2+0)*2+0] = __imag__ e11k[ii];
-				//ematx_imag[(ii*2+0)*2+1] = __imag__ e12k[ii];
-				//ematx_imag[(ii*2+1)*2+0] = __imag__ e12k[ii];
-				//ematx_imag[(ii*2+1)*2+1] = __imag__ e22k[ii];
 				//
 				smatx[(ii*2+0)*2+0] = s11k[ii];
 				smatx[(ii*2+0)*2+1] = s12k[ii];
@@ -316,13 +316,7 @@ void solve_elasticity_2d(int Nx, int Ny,
 								/* Eq.5.46(b): new epsilon(zeta) = epsilon(zeta) - sum( gamma(zeta)*sigma(zeta) )
 								   where gamma=tmatx, sigma=smatx
 								   Note: tmatx is real part only */
-								//ematx_real[(ij*2+ii)*2+jj]=ematx_real[(ij*2+ii)*2+jj]
-								//	-tmatx[(((ij*2+kk)*2+ll)*2+ii)*2+jj]*smatx_real[(ij*2+kk)*2+ll];
-								//
-								//ematx_imag[(ij*2+ii)*2+jj]=ematx_imag[(ij*2+ii)*2+jj]
-								//	-tmatx[(((ij*2+kk)*2+ll)*2+ii)*2+jj]*smatx_imag[(ij*2+kk)*2+ll];
-								ematx[(ij*2+ii)*2+jj]=ematx[(ij*2+ii)*2+jj]
-									-tmatx[(((ij*2+kk)*2+ll)*2+ii)*2+jj]*smatx[(ij*2+kk)*2+ll];
+								ematx[(ij*2+ii)*2+jj] -= tmatx[(((ij*2+kk)*2+ll)*2+ii)*2+jj]*smatx[(ij*2+kk)*2+ll];
 							}//jj
 						}//ii
 					}//ll
@@ -335,21 +329,6 @@ void solve_elasticity_2d(int Nx, int Ny,
 		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
 				ii=i*Ny+j;
-				
-				//e11k[ii][0]=ematx_real[(ii*2+0)*2+0];
-				//e12k[ii][0]=ematx_real[(ii*2+0)*2+1];
-				//e12k[ii][0]=ematx_real[(ii*2+1)*2+0];
-				//e22k[ii][0]=ematx_real[(ii*2+1)*2+1];
-				//
-				//e11k[ii][1]=ematx_imag[(ii*2+0)*2+0];
-				//e12k[ii][1]=ematx_imag[(ii*2+0)*2+1];
-				//e12k[ii][1]=ematx_imag[(ii*2+1)*2+0];
-				//e22k[ii][1]=ematx_imag[(ii*2+1)*2+1];
-				//
-				//e11k[ii] = ematx_real[(ii*2+0)*2+0] + ematx_imag[(ii*2+0)*2+0]*I;
-				//e12k[ii] = ematx_real[(ii*2+0)*2+1] + ematx_imag[(ii*2+0)*2+1]*I;
-				//e12k[ii] = ematx_real[(ii*2+1)*2+0] + ematx_imag[(ii*2+1)*2+0]*I;
-				//e22k[ii] = ematx_real[(ii*2+1)*2+1] + ematx_imag[(ii*2+1)*2+1]*I;
 				//
 				e11k[ii] = ematx[(ii*2+0)*2+0];
 				e12k[ii] = ematx[(ii*2+0)*2+1];
@@ -366,83 +345,68 @@ void solve_elasticity_2d(int Nx, int Ny,
 		/* Take strain components from Fourier space back to
 		   real space (inverse FFT), Step-c */
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//e11=real(ifft2(e11k));    //Octave or Matlab
-		//----- ----- ----- -----
-		//fftw_execute(iplan_e11k); //fftw3
-		//-----
 		cufftExecC2C(iplan, e11k_d, e11_d, CUFFT_INVERSE); //IFFT
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//e22=real(ifft2(e22k));    //Octave or Matlab
-		//----- ----- ----- -----
-		//fftw_execute(iplan_e22k); //fftw3
-		//-----
 		cufftExecC2C(iplan, e22k_d, e22_d, CUFFT_INVERSE); //IFFT
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-		//e12=real(ifft2(e12k));    //Octave or Matlab
-		//----- ----- ----- -----
-		//fftw_execute(iplan_e12k); //fftw3
-		//-----
 		cufftExecC2C(iplan, e12k_d, e12_d, CUFFT_INVERSE); //IFFT
 		cudaDeviceSynchronize();
 		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 		
+		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- on cuda
+		Kernel_calculate_stresses<<<blocks, threads>>>(Nx,Ny,
+			e11_d, e22_d, e12_d,
+			s11_d, s22_d, s12_d,
+			c11_d, c12_d, c44_d,
+			ea[0],ea[1],ea[2],
+			ei11_d, ei22_d, ei11_d,
+			ed11_d, ed22_d, ed12_d);
+		cudaDeviceSynchronize();
+		//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+		
 		cudaMemcpy(e11,e11_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //e11 = e11_h
 		cudaMemcpy(e22,e22_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //e22 = e22_h
 		cudaMemcpy(e12,e12_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //e12 = e12_h
+		//
+		cudaMemcpy(s11,s11_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //s11 = s11_h
+		cudaMemcpy(s22,s22_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //s22 = s22_h
+		cudaMemcpy(s12,s12_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //s12 = s12_h
 		
 		//Calculate stresses
-		for(int i=0;i<Nx;i++){
-			for(int j=0;j<Ny;j++){
-				ii=i*Ny+j;
-				//
-				//e11[ii][0]=e11[ii][0]/(fftsizex*fftsizey);
-				//e22[ii][0]=e22[ii][0]/(fftsizex*fftsizey);
-				//e12[ii][0]=e12[ii][0]/(fftsizex*fftsizey);
-				//
-				//e11[ii][1]=e11[ii][1]/(fftsizex*fftsizey);
-				//e22[ii][1]=e22[ii][1]/(fftsizex*fftsizey);
-				//e12[ii][1]=e12[ii][1]/(fftsizex*fftsizey);
-				//
-				e11[ii] = e11[ii]/(Nx*Ny);
-				e22[ii] = e22[ii]/(Nx*Ny);
-				e12[ii] = e12[ii]/(Nx*Ny);
-				//
-				/* s11[ii][0]=c11[ii]*(ea[0]+e11[ii][0]-ei11[ii]-ed11[ii])
-						  +c12[ii]*(ea[1]+e22[ii][0]-ei22[ii]-ed22[ii]));
-				s22[ii][0]=c21[ii]*(ea[0]+e11[ii][0]-ei11[ii]-ed11[ii])
-						  +c22[ii]*(ea[1]+e22[ii][0]-ei22[ii]-ed22[ii]); */
-				// c21[ii]=c12[ii], c22[ii]=c11[ii], etc
-				//-----
-				//s11[ii][0]=c11[ii]*(ea[0]+e11[ii][0]-ei11[ii]-ed11[ii])
-				//		  +c12[ii]*(ea[1]+e22[ii][0]-ei22[ii]-ed22[ii]);
-				//s22[ii][0]=c12[ii]*(ea[0]+e11[ii][0]-ei11[ii]-ed11[ii])
-				//		  +c11[ii]*(ea[1]+e22[ii][0]-ei22[ii]-ed22[ii]);
-				//s11[ii][1]=0.0;
-				//s22[ii][1]=0.0;
-				//
-				/* s12[ii][0]=c44[ii]*(ea[2]+e12[ii][0]-ei12[ii]-ed12[ii])
-						  +c44[ii]*(ea[2]+e21[ii][0]-ei21[ii]-ed21[ii]); */
-				// e21[ii]=e12[ii], etc
-				//-----
-				//s12[ii][0]=c44[ii]*(ea[2]+e12[ii][0]-ei12[ii]-ed12[ii])*2.0;
-				//
-				//s12[ii][1]=0.0;
-				//
-				s11[ii] = c11[ii]*(ea[0]+e11[ii]-ei11[ii]-ed11[ii])
-						 +c12[ii]*(ea[1]+e22[ii]-ei22[ii]-ed22[ii]);
-				s22[ii] = c12[ii]*(ea[0]+e11[ii]-ei11[ii]-ed11[ii])
-						 +c11[ii]*(ea[1]+e22[ii]-ei22[ii]-ed22[ii]);
-				s12[ii] = c44[ii]*(ea[2]+e12[ii]-ei12[ii]-ed12[ii])*2.0;
-			}
-		}
+		//for(int i=0;i<Nx;i++){
+		//	for(int j=0;j<Ny;j++){
+		//		ii=i*Ny+j;
+		//		//
+		//		e11[ii] /= (Nx*Ny);
+		//		e22[ii] /= (Nx*Ny);
+		//		e12[ii] /= (Nx*Ny);
+		//		//
+		//		/* s11[ii][0]=c11[ii]*(ea[0]+e11[ii][0]-ei11[ii]-ed11[ii])
+		//				  +c12[ii]*(ea[1]+e22[ii][0]-ei22[ii]-ed22[ii]));
+		//		s22[ii][0]=c21[ii]*(ea[0]+e11[ii][0]-ei11[ii]-ed11[ii])
+		//				  +c22[ii]*(ea[1]+e22[ii][0]-ei22[ii]-ed22[ii]); */
+		//		// c21[ii]=c12[ii], c22[ii]=c11[ii], etc
+		//		//-----
+		//		s11[ii] = c11[ii]*(ea[0]+e11[ii]-ei11[ii]-ed11[ii])
+		//				 +c12[ii]*(ea[1]+e22[ii]-ei22[ii]-ed22[ii]);
+		//		s22[ii] = c12[ii]*(ea[0]+e11[ii]-ei11[ii]-ed11[ii])
+		//				 +c11[ii]*(ea[1]+e22[ii]-ei22[ii]-ed22[ii]);
+		//		//
+		//		/* s12[ii][0]=c44[ii]*(ea[2]+e12[ii][0]-ei12[ii]-ed12[ii])
+		//				  +c44[ii]*(ea[2]+e21[ii][0]-ei21[ii]-ed21[ii]); */
+		//		// e21[ii]=e12[ii], etc
+		//		//-----
+		//		s12[ii] = c44[ii]*(ea[2]+e12[ii]-ei12[ii]-ed12[ii])*2.0;
+		//	}
+		//}
 		
 		//check convergence
 		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
 				ii=i*Ny+j;
-				sum_stress[ii] = ( __real__ s11[ii] + __real__ s22[ii] + __real__ s12[ii] );
+				sum_stress[ii] = __real__ ( s11[ii] + s22[ii] + s12[ii] );
 			}
 		}
 		
@@ -464,6 +428,18 @@ void solve_elasticity_2d(int Nx, int Ny,
 		old_norm=normF;
 		
 	}//end iter
+	
+	cudaMemcpy(ei11,ei11_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //ei11 = ei11_h
+	cudaMemcpy(ei22,ei22_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //ei22 = ei22_h
+	cudaMemcpy(ei12,ei12_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //ei12 = ei12_h
+	//
+	cudaMemcpy(c11,c11_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //c11 = c11_h
+	cudaMemcpy(c12,c12_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //c12 = c12_h
+	cudaMemcpy(c44,c44_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //c44 = c44_h
+	//
+	cudaMemcpy(ed11,ed11_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //ed11 = ed11_h
+	cudaMemcpy(ed22,ed22_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //ed22 = ed22_h
+	cudaMemcpy(ed12,ed12_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //ed12 = ed12_h
 	
 	//strain energy
 	//Calculate functional derivative of elastic energy
@@ -523,10 +499,6 @@ void solve_elasticity_2d(int Nx, int Ny,
 	free(e22k);
 	free(e12k);
 	//----- ----- ----- ----- ----- -----
-	//free(smatx_real);
-	//free(smatx_imag);
-	//free(ematx_real);
-	//free(ematx_imag);
 	free(smatx);
 	free(ematx);
 	//

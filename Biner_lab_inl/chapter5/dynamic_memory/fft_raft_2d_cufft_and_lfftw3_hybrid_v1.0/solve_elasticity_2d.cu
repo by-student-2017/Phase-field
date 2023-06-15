@@ -263,8 +263,8 @@ void solve_elasticity_2d(int Nx, int Ny,
 				s11[ii][1]=0.0;
 				s22[ii][1]=0.0;
 				//
-				/* s12[ii][0]=c44[ii]*(ea[3]+e12[ii][0]-ei12[ii]-ed12[ii])
-						  +c44[ii]*(ea[3]+e21[ii][0]-ei21[ii]-ed21[ii]); */
+				/* s12[ii][0]=c44[ii]*(ea[2]+e12[ii][0]-ei12[ii]-ed12[ii])
+						  +c44[ii]*(ea[2]+e21[ii][0]-ei21[ii]-ed21[ii]); */
 				// e21[ii]=e12[ii], etc
 				s12[ii][0]=c44[ii]*(ea[2]+e12[ii][0]-ei12[ii]-ed12[ii])*2.0;
 				//
