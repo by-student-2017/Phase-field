@@ -490,6 +490,18 @@ void solve_elasticity_2d(int Nx, int Ny, int BS,
 	cudaFree(e11k_d);
 	cudaFree(e22k_d);
 	cudaFree(e12k_d);
+	//
+	cudaFree(ei11_d);
+	cudaFree(ei22_d);
+	cudaFree(ei12_d);
+	//
+	cudaFree(c11_d);
+	cudaFree(c12_d);
+	cudaFree(c44_d);
+	//
+	cudaFree(ed11_d);
+	cudaFree(ed22_d);
+	cudaFree(ed12_d);
 	//----- ----- ----- ----- ----- -----
 	free(s11k);
 	free(s22k);
