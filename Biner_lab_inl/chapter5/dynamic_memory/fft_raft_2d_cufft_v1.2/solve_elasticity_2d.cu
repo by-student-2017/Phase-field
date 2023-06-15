@@ -388,13 +388,7 @@ void solve_elasticity_2d(int Nx, int Ny, int BS,
 				// e21[ii]=e12[ii], etc
 				//-----
 				s12[ii] = c44[ii]*(ea[2]+e12[ii]-ei12[ii]-ed12[ii])*2.0;
-			}
-		}
-		
-		//check convergence
-		for(int i=0;i<Nx;i++){
-			for(int j=0;j<Ny;j++){
-				ii=i*Ny+j;
+				//
 				sum_stress[ii] = __real__ (  s11[ii] + s22[ii] + s12[ii] );
 				normF = normF + sum_stress[ii]*sum_stress[ii];
 			}
