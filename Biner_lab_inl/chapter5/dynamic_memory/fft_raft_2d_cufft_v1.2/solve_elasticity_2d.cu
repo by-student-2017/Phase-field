@@ -170,24 +170,7 @@ void solve_elasticity_2d(int Nx, int Ny, int BS,
 	//float c44[Nx][Ny];
 	float  *c44 = (float *)malloc(sizeof(float)*( Nx*Ny ));
 	
-	//for(int i=0;i<Nx;i++){
-	//	for(int j=0;j<Ny;j++){
-	//		ii=i*Ny+j;
-	//		
-	//		//Calculate the eigenstrains
-	//		ei11[ii]=ei0*con[ii];
-	//		ei22[ii]=ei0*con[ii];
-	//		ei12[ii]=0.0*con[ii];
-	//		
-	//		/* Calculate the effective elastic constants at 
-	//		   the grid points based on the composition and
-	//		   using Vegard's law */
-	//		c11[ii]=con[ii]*cp11+(1.0-con[ii])*cm11;
-	//		c12[ii]=con[ii]*cp12+(1.0-con[ii])*cm12;
-	//		c44[ii]=con[ii]*cp44+(1.0-con[ii])*cm44;
-	//	}
-	//}
-	
+	//----- -----
 	float *ei11_d, *ei22_d, *ei12_d; // name of dynamic memory for GPU, CUDA, device
 	ei11_d = (float *)malloc(Nx*Ny*sizeof(float)); //GPU, CUDA, device
 	ei22_d = (float *)malloc(Nx*Ny*sizeof(float)); //GPU, CUDA, device
