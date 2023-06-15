@@ -90,7 +90,7 @@ __global__ void Kernel_semi_implicit_time_integration(
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	jx = blockDim.x*blockIdx.x + threadIdx.x; //<-GPU | CPU -> for(jx=0; jx<nx; jx++){
 	jy = blockDim.y*blockIdx.y + threadIdx.y; //<-GPU | CPU -> for(jy=0; jy<ny; jy++){
-	j  = Nx*jy + jx;
+	j  = Ny*jx + jy;
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 	float denom;
 	//
