@@ -287,32 +287,29 @@ void solve_elasticity_2d(int Nx, int Ny, int BS,
 		//
 		cudaMemcpy(e11k,e11k_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //e11k = e11k_h
 		cudaMemcpy(e22k,e22k_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //e22k = e22k_h
-		cudaMemcpy(e12k,e12k_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //e12k = e12k_h
-		
-		/* Form stress and strain tensors to be used in 
-		   Eq.5.46, Step-b */
-		for(int i=0;i<Nx;i++){
-			for(int j=0;j<Ny;j++){
-				ii=i*Ny+j;
-				//
-				smatx[(ii*2+0)*2+0] = s11k[ii];
-				smatx[(ii*2+0)*2+1] = s12k[ii];
-				smatx[(ii*2+1)*2+0] = s12k[ii];
-				smatx[(ii*2+1)*2+1] = s22k[ii];
-				//
-				ematx[(ii*2+0)*2+0] = e11k[ii];
-				ematx[(ii*2+0)*2+1] = e12k[ii];
-				ematx[(ii*2+1)*2+0] = e12k[ii];
-				ematx[(ii*2+1)*2+1] = e22k[ii];
-			}
-		}
+		cudaMemcpy(e12k,e12k_d,Nx*Ny*sizeof(float _Complex),cudaMemcpyDeviceToHost); //e12k = e12k_h}
 		
 		//Green operator
 		// Calculate strain tensor, Eq.5.46, Step-b
 		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
 				ij=i*Ny+j;
+				
+				//----- ----- ----- ----- ----- 
+				/* Form stress and strain tensors to be used in 
+				   Eq.5.46, Step-b */
+				smatx[(ij*2+0)*2+0] = s11k[ij];
+				smatx[(ij*2+0)*2+1] = s12k[ij];
+				smatx[(ij*2+1)*2+0] = s12k[ij];
+				smatx[(ij*2+1)*2+1] = s22k[ij];
 				//
+				ematx[(ij*2+0)*2+0] = e11k[ij];
+				ematx[(ij*2+0)*2+1] = e12k[ij];
+				ematx[(ij*2+1)*2+0] = e12k[ij];
+				ematx[(ij*2+1)*2+1] = e22k[ij];
+				//----- ----- ----- ----- ----- 
+				
+				//----- ----- ----- ----- ----- 
 				for(int kk=0;kk<2;kk++){
 					for(int ll=0;ll<2;ll++){
 						for(int ii=0;ii<2;ii++){
@@ -325,21 +322,18 @@ void solve_elasticity_2d(int Nx, int Ny, int BS,
 						}//ii
 					}//ll
 				}//kk
-				//
+				//----- ----- ----- ----- ----- 
+				
+				//----- ----- ----- ----- ----- 
+				// Rearrange strain components using symmetry of strain tensor
+				e11k[ij] = ematx[(ij*2+0)*2+0];
+				e12k[ij] = ematx[(ij*2+0)*2+1];
+				//e12k[ij] = ematx[(ij*2+1)*2+0];
+				e22k[ij] = ematx[(ij*2+1)*2+1];
+				//----- ----- ----- ----- ----- 
+				
 			}//Ny
 		}//Nx
-		
-		// Rearrange strain components using symmetry of strain tensor
-		for(int i=0;i<Nx;i++){
-			for(int j=0;j<Ny;j++){
-				ii=i*Ny+j;
-				//
-				e11k[ii] = ematx[(ii*2+0)*2+0];
-				e12k[ii] = ematx[(ii*2+0)*2+1];
-				//e12k[ii] = ematx[(ii*2+1)*2+0];
-				e22k[ii] = ematx[(ii*2+1)*2+1];
-			}
-		}
 		
 		cudaMemcpy(e11k_d,e11k,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //e11k = e11k_h
 		cudaMemcpy(e22k_d,e22k,Nx*Ny*sizeof(float _Complex),cudaMemcpyHostToDevice); //e22k = e22k_h
