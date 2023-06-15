@@ -396,16 +396,10 @@ void solve_elasticity_2d(int Nx, int Ny, int BS,
 			for(int j=0;j<Ny;j++){
 				ii=i*Ny+j;
 				sum_stress[ii] = __real__ (  s11[ii] + s22[ii] + s12[ii] );
-			}
-		}
-		
-		//normF=norm(sum_stress,2.0);
-		for(int i=0;i<Nx;i++){
-			for(int j=0;j<Ny;j++){
-				ii=i*Ny+j;
 				normF = normF + sum_stress[ii]*sum_stress[ii];
 			}
 		}
+		
 		normF=sqrt(normF);
 		
 		if(iter==1){
