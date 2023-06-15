@@ -507,6 +507,14 @@ void solve_elasticity_2d(int Nx, int Ny,
 	cufftDestroy(plan);
 	cufftDestroy(iplan);
 	//----- ----- ----- ----- ----- -----
+	cudaFree(s11_d);
+	cudaFree(s22_d);
+	cudaFree(s12_d);
+	//
+	cudaFree(e11_d);
+	cudaFree(e22_d);
+	cudaFree(e12_d);
+	//
 	cudaFree(s11k_d);
 	cudaFree(s22k_d);
 	cudaFree(s12k_d);
