@@ -321,7 +321,7 @@ void solve_elasticity_2d(int Nx, int Ny,
 								//
 								//ematx_imag[(ij*2+ii)*2+jj]=ematx_imag[(ij*2+ii)*2+jj]
 								//	-tmatx[(((ij*2+kk)*2+ll)*2+ii)*2+jj]*smatx_imag[(ij*2+kk)*2+ll];
-								ematx[(ij*2+ii)*2+jj]=ematx[(ij*2+ii)*2+jj]
+								ematx[(ij*2+ii)*2+jj] +=
 									-tmatx[(((ij*2+kk)*2+ll)*2+ii)*2+jj]*smatx[(ij*2+kk)*2+ll];
 							}//jj
 						}//ii
@@ -405,9 +405,9 @@ void solve_elasticity_2d(int Nx, int Ny,
 				//e22[ii][1]=e22[ii][1]/(fftsizex*fftsizey);
 				//e12[ii][1]=e12[ii][1]/(fftsizex*fftsizey);
 				//
-				e11[ii] = e11[ii]/(Nx*Ny);
-				e22[ii] = e22[ii]/(Nx*Ny);
-				e12[ii] = e12[ii]/(Nx*Ny);
+				e11[ii] /= (Nx*Ny);
+				e22[ii] /= (Nx*Ny);
+				e12[ii] /= (Nx*Ny);
 				//
 				/* s11[ii][0]=c11[ii]*(ea[0]+e11[ii][0]-ei11[ii]-ed11[ii])
 						  +c12[ii]*(ea[1]+e22[ii][0]-ei22[ii]-ed22[ii]));
@@ -442,7 +442,7 @@ void solve_elasticity_2d(int Nx, int Ny,
 		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
 				ii=i*Ny+j;
-				sum_stress[ii] = ( __real__ s11[ii] + __real__ s22[ii] + __real__ s12[ii] );
+				sum_stress[ii] = __real__ (  s11[ii] + s22[ii] + s12[ii] );
 			}
 		}
 		
