@@ -400,5 +400,9 @@ int main(){
 	free(conc);
 	free(dfdconc);
 	free(delsdcc);
+	//
+	free(conk);
+	free(dfdconk);
+	free(delsdck);
 	//----- ----- ----- ----- ----- -----
 }
