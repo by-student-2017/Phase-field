@@ -209,8 +209,8 @@ int main(){
 	//cudaMalloc((void**)&conc_d,    sizeof(cufftComplex)*Nx*Ny*Nz);
 	//
 	cufftHandle plan, iplan;
-	//cufftPlan3d(&plan,  Nx, Ny, CUFFT_R2C);
-	//cufftPlan3d(&iplan, Nx, Ny, CUFFT_C2R);
+	//cufftPlan3d(&plan,  Nx, Ny, Nz, CUFFT_R2C);
+	//cufftPlan3d(&iplan, Nx, Ny, Nz, CUFFT_C2R);
 	cufftPlan3d(&plan,  Nx, Ny, Nz, CUFFT_C2C);
 	cufftPlan3d(&iplan, Nx, Ny, Nz, CUFFT_C2C);
 	//----- ----- ----- ----- ----- -----
