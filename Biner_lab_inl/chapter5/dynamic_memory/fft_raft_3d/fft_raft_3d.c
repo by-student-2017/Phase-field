@@ -366,12 +366,12 @@ int main(){
 		//print results
 		/* If print frequency is reached, output the results to file */
 		if(fmod(istep,nprint)==0){
+			printf("done step: %5d \n",istep);
+			
 			//write vtk file
 			/* Write the results in vtk format for contour plots
 			   to be viewed by using Paraview */
 			write_vtk_grid_values_3D(Nx,Ny,Nz,dx,dy,dz,istep,con_out);
-			
-			printf("done step: %5d \n",istep);
 		}
 		
 	}//end of time step (evolve,for)

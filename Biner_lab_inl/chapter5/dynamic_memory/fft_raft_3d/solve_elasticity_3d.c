@@ -36,7 +36,7 @@
 void green_tensor2_3D();
 
 void solve_elasticity_3d(int Nx, int Ny, int Nz,
-	int *kx, int *ky, int *kz,
+	double *kx, double *ky, double *kz,
 	double *omeg11, double *omeg22, double *omeg33,
 	double *omeg12, double *omeg23, double *omeg13,
 	fftw_complex *s11, fftw_complex *s22, fftw_complex *s33,
