@@ -89,11 +89,11 @@ int main(){
 	//simulation cell parameters
 	int Nx=256*times; //Number of grid points in the x-direction
 	int Ny=256*times; //Number of grid points in the y-direction
-	int Nz= 16*times; //Number of grid points in the z-direction
+	int Nz=  2*times; //Number of grid points in the z-direction
 	
 	int BSX=8; //Number of threads, 2^n=<32, BSX*BSY*BSZ <= 1024
 	int BSY=8; //Number of threads, 2^n=<32, BSX*BSY*BSZ <= 1024
-	int BSZ=4; //Number of threads, 2^n=<32, BSX*BSY*BSZ <= 1024
+	int BSZ=2; //Number of threads, 2^n=<32, BSX*BSY*BSZ <= 1024
 	
 	//Total number of grid points in the simulation cell
 	int NxNyNz=Nx*Ny*Nz;
