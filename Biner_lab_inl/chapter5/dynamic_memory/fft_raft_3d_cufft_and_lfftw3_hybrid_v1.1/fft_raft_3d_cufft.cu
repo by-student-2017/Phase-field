@@ -580,6 +580,9 @@ int main(){
 	cudaFree(conk_d);
 	cudaFree(dfdconk_d);
 	cudaFree(delsdck_d);
+	//
+	cudaFree(k2_d);
+	cudaFree(k4_d);
 	//----- ----- ----- ----- -----
 	fftw_free(s11);
 	fftw_free(s22);
