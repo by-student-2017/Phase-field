@@ -260,8 +260,8 @@ int main(){
 	
 	//----- -----
 	// semi-implicit scheme
-	double numer;
 	double denom;
+	double numer;
 	//----- -----
 	
 	//double con_out[Nx][Ny][Nz];
