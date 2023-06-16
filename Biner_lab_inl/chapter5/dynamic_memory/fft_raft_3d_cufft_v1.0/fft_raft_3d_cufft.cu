@@ -489,22 +489,25 @@ int main(){
 	cudaFree(conk_d);
 	cudaFree(dfdconk_d);
 	cudaFree(delsdck_d);
-	//----- ----- ----- ----- -----
-	cudaFree(s11);
-	cudaFree(s22);
-	cudaFree(s33);
 	//
-	cudaFree(s12);
-	cudaFree(s23);
-	cudaFree(s13);
+	cudaFree(k2_d);
+	cudaFree(k4_d);
 	//----- ----- ----- ----- -----
-	cudaFree(e11);
-	cudaFree(e22);
-	cudaFree(e33);
+	free(s11);
+	free(s22);
+	free(s33);
 	//
-	cudaFree(e12);
-	cudaFree(e23);
-	cudaFree(e13);
+	free(s12);
+	free(s23);
+	free(s13);
+	//----- ----- ----- ----- -----
+	free(e11);
+	free(e22);
+	free(e33);
+	//
+	free(e12);
+	free(e23);
+	free(e13);
 	//----- ----- ----- ----- ----- -----
 	free(ed11);
 	free(ed22);
