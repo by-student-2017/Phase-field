@@ -101,8 +101,13 @@ __global__ void Kernel_semi_implicit_time_integration(
 	float denom;
 	//
 	denom = 1.0 + dtime*coefA*mobility*grad_coef*k4_d[j];
-	conk_d[j].x = ( conk_d[j].x - (dtime*mobility*k2_d[j]*(dfdconk_d[j].x + delsdck_d[j].x)) )/denom;
-	//conk_d[j].y = ( conk_d[j].y - (dtime*mobility*k2_d[j]*(dfdconk_d[j].y + delsdck_d[j].y)) )/denom;
+	conk_d[j].x = ( conk_d[j].x - (dtime*mobility*k2_d[j]*(dfdconk_d[j].x + delsdck_d[j].x)) )/denom; //real part
+	conk_d[j].y = ( conk_d[j].y - (dtime*mobility*k2_d[j]*(dfdconk_d[j].y + delsdck_d[j].y)) )/denom; //imaginary part
+	
+	/* Note: cufftComplex changed between CUDA 1.0 and 1.1.
+	dout[idx].x =  d_signal[idx].y; <- dout[idx][0] = d_signal[idx][1];
+	dout[idx].y = -d_signal[idx].x; <- dout[idx][1] = d_signal[idx][0]*(-1.0);
+	Ref: https://forums.developer.nvidia.com/t/using-cufftcomplex-type-inside-a-kernel-does-it-work/4039 */
 }
 
 int main(){

@@ -18,7 +18,7 @@ if(CUDA_FOUND)
 	)
 	include_directories( ${CUDA_INCLUDE_DIRS} )
 	#link_directories(${CUDA_LIBRARY_DIRS})
-	target_link_libraries(fft_raft_3d_cufft.exe -lcufft -lfftw3)
+	target_link_libraries(fft_raft_3d_cufft.exe -lcufft)
 endif()
 
 # Usage

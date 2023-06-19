@@ -58,6 +58,7 @@ void green_tensor1_3D(int Nx, int Ny, int Nz,
 float free_energy_ch_3d(float con_ijk);
 
 void solve_elasticity_3d(int Nx, int Ny, int Nz,
+	int BSX, int BSY, int BSZ,
 	float *kx, float *ky, float *kz,
 	float *omeg11, float *omeg22, float *omeg33,
 	float *omeg12, float *omeg23, float *omeg13,
@@ -394,6 +395,7 @@ int main(){
 		//derivative of elastic energy
 		//Calculate the derivative of elastic energy
 		solve_elasticity_3d(Nx,Ny,Nz,
+			BSX,BSY,BSZ,
 			kx,ky,kz,
 			omeg11,omeg22,omeg33,
 			omeg12,omeg23,omeg13,
