@@ -12,6 +12,9 @@ fft_FeCr_3d_cufft_and_lfftw3_hybrid_v1.0
 fft_FeCr_3d_cufft_and_lfftw3_hybrid_v1.1
   Compute Time: 199.994278
 ----------------------------------------
+fft_FeCr_3d_cufft_and_lfftw3_hybrid_v1.2
+  Compute Time: 188.956070
+----------------------------------------
 ---------------------------------------- ----------------------------------------
 Note (for cufft)
 [1] https://www.nvidia.co.jp/docs/IO/59373/VolumeI.pdf (Japanese)
