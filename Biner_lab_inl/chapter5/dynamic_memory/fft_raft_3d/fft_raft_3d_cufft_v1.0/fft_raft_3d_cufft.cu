@@ -296,16 +296,6 @@ int main(){
 	float *k4 = (float *)malloc(sizeof(float)*( NxNyNz ));
 	//----- ----- ----- ----- ----- ----- ----- ----- -----
 	
-	//----- for cufft
-	float *k2_d, *k4_d;
-	k2_d  = (float *)malloc(NxNyNz*sizeof(float));
-	k4_d  = (float *)malloc(NxNyNz*sizeof(float));
-	cudaMalloc((void**)&k2_d ,NxNyNz*sizeof(float));
-	cudaMalloc((void**)&k4_d ,NxNyNz*sizeof(float));
-	cudaMemcpy(k2_d,k2,NxNyNz*sizeof(float),cudaMemcpyHostToDevice); //k2 = k2_h
-	cudaMemcpy(k4_d,k4,NxNyNz*sizeof(float),cudaMemcpyHostToDevice); //k4 = k4_h
-	//----- ----- ----- -----
-	
 	//prepare fft (output: kx,ky,kz,k2,k4)
 	prepare_fft_3d(Nx,Ny,Nz,dx,dy,dz,kx,ky,kz,k2,k4); //get FFT coefficients
 	
@@ -489,9 +479,6 @@ int main(){
 	cudaFree(conk_d);
 	cudaFree(dfdconk_d);
 	cudaFree(delsdck_d);
-	//
-	cudaFree(k2_d);
-	cudaFree(k4_d);
 	//----- ----- ----- ----- -----
 	free(s11);
 	free(s22);
