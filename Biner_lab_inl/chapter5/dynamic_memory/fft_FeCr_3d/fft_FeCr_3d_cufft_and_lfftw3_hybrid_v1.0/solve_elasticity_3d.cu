@@ -33,27 +33,32 @@
   tmatx[3][3][3][3]: Green's tensor at i,j,k grid point (real part only)
 */
 
-void green_tensor2_3D();
+void green_tensor2_3D(int Nx, int Ny, int Nz,
+	float *kx, float *ky, float *kz,
+	float *omeg11, float *omeg22, float *omeg33,
+	float *omeg12, float *omeg23, float *omeg13,
+	int i, int j, int k,
+	float *tmatx);
 
 void solve_elasticity_3d(int Nx, int Ny, int Nz,
-	double *kx, double *ky, double *kz,
-	double *omeg11, double *omeg22, double *omeg33,
-	double *omeg12, double *omeg23, double *omeg13,
+	float *kx, float *ky, float *kz,
+	float *omeg11, float *omeg22, float *omeg33,
+	float *omeg12, float *omeg23, float *omeg13,
 	fftw_complex *s11, fftw_complex *s22, fftw_complex *s33,
 	fftw_complex *s12, fftw_complex *s23, fftw_complex *s13,
 	fftw_complex *e11, fftw_complex *e22, fftw_complex *e33,
 	fftw_complex *e12, fftw_complex *e23, fftw_complex *e13,
-	double *ed11, double *ed22, double *ed33,
-	double *ed12, double *ed23, double *ed13,
-	double cm11, double cm12, double cm44,
-	double cp11, double cp12, double cp44,
-	double *ea, double ei0,
-	fftw_complex *con, fftw_complex *delsdc){
+	float *ed11, float *ed22, float *ed33,
+	float *ed12, float *ed23, float *ed13,
+	float cm11, float cm12, float cm44,
+	float cp11, float cp12, float cp44,
+	float *ea, float ei0,
+	float *con, float *delsdc){
 	
 	//----- ----- ----- -----
 	const int fftsizex = Nx, fftsizey = Ny, fftsizez = Nz;
 	const int scale=fftsizex*fftsizey*fftsizez;
-	double fftw3d_scale = (double)scale;
+	float fftw3d_scale = (float)scale;
 	
 	//stress (head s series) components
 	//----- ----- ----- -----
@@ -120,29 +125,29 @@ void solve_elasticity_3d(int Nx, int Ny, int Nz,
 	
 	//----- ----- ----- ----- ----- ----- -----
 	// eigenstrains (head ei series) components
-	//double ei11[Nx][Ny][Nz];
-	double *ei11 = (double *)malloc(sizeof(double)*( NxNyNz ));
-	//double ei22[Nx][Ny][Nz];
-	double *ei22 = (double *)malloc(sizeof(double)*( NxNyNz ));
-	//double ei33[Nx][Ny][Nz];
-	double *ei33 = (double *)malloc(sizeof(double)*( NxNyNz ));
+	//float ei11[Nx][Ny][Nz];
+	float *ei11 = (float *)malloc(sizeof(float)*( NxNyNz ));
+	//float ei22[Nx][Ny][Nz];
+	float *ei22 = (float *)malloc(sizeof(float)*( NxNyNz ));
+	//float ei33[Nx][Ny][Nz];
+	float *ei33 = (float *)malloc(sizeof(float)*( NxNyNz ));
 	//
-	//double ei12[Nx][Ny][Nz];
-	double *ei12 = (double *)malloc(sizeof(double)*( NxNyNz ));
-	//double ei23[Nx][Ny][Nz];
-	double *ei23 = (double *)malloc(sizeof(double)*( NxNyNz ));
-	//double ei13[Nx][Ny][Nz];
-	double *ei13 = (double *)malloc(sizeof(double)*( NxNyNz ));
+	//float ei12[Nx][Ny][Nz];
+	float *ei12 = (float *)malloc(sizeof(float)*( NxNyNz ));
+	//float ei23[Nx][Ny][Nz];
+	float *ei23 = (float *)malloc(sizeof(float)*( NxNyNz ));
+	//float ei13[Nx][Ny][Nz];
+	float *ei13 = (float *)malloc(sizeof(float)*( NxNyNz ));
 	//----- ----- ----- ----- ----- ----- -----
 	
 	//----- ----- ----- ----- ----- ----- -----
 	// elastic modulus components
-	//double c11[Nx][Ny][Nz];
-	double  *c11 = (double *)malloc(sizeof(double)*( NxNyNz ));
-	//double c12[Nx][Ny][Nz];
-	double  *c12 = (double *)malloc(sizeof(double)*( NxNyNz ));
-	//double c44[Nx][Ny][Nz];
-	double  *c44 = (double *)malloc(sizeof(double)*( NxNyNz ));
+	//float c11[Nx][Ny][Nz];
+	float  *c11 = (float *)malloc(sizeof(float)*( NxNyNz ));
+	//float c12[Nx][Ny][Nz];
+	float  *c12 = (float *)malloc(sizeof(float)*( NxNyNz ));
+	//float c44[Nx][Ny][Nz];
+	float  *c44 = (float *)malloc(sizeof(float)*( NxNyNz ));
 	//----- ----- ----- ----- ----- ----- -----
 	
 	//----- ----- -----
@@ -156,22 +161,22 @@ void solve_elasticity_3d(int Nx, int Ny, int Nz,
 				ijk=(i*Ny+j)*Nz+k;
 				//----- ----- ----- ----- -----
 				// Calculate the eigenstrains (head ei series)
-				ei11[ijk] = ei0*con[ijk][0];
-				ei22[ijk] = ei0*con[ijk][0];
-				ei33[ijk] = ei0*con[ijk][0];
+				ei11[ijk] = ei0*con[ijk];
+				ei22[ijk] = ei0*con[ijk];
+				ei33[ijk] = ei0*con[ijk];
 				//
-				ei12[ijk] = 0.0*con[ijk][0];
-				ei23[ijk] = 0.0*con[ijk][0];
-				ei13[ijk] = 0.0*con[ijk][0];
+				ei12[ijk] = 0.0*con[ijk];
+				ei23[ijk] = 0.0*con[ijk];
+				ei13[ijk] = 0.0*con[ijk];
 				//----- ----- ----- ----- -----
 				
 				/* Calculate the effective elastic constants at 
 				   the grid points based on the composition and
 				   using Vegard's law */
 				//----- ----- ----- ----- -----
-				c11[ijk] = con[ijk][0]*cp11 + (1.0-con[ijk][0])*cm11;
-				c12[ijk] = con[ijk][0]*cp12 + (1.0-con[ijk][0])*cm12;
-				c44[ijk] = con[ijk][0]*cp44 + (1.0-con[ijk][0])*cm44;
+				c11[ijk] = con[ijk]*cp11 + (1.0-con[ijk])*cm11;
+				c12[ijk] = con[ijk]*cp12 + (1.0-con[ijk])*cm12;
+				c44[ijk] = con[ijk]*cp44 + (1.0-con[ijk])*cm44;
 				//----- ----- ----- ----- -----
 			}
 		}
@@ -179,80 +184,80 @@ void solve_elasticity_3d(int Nx, int Ny, int Nz,
 	
 	/* Note: elastic modulus in this case. */
 	//----- ----- ----- -----
-	//double c22=c33=c11;
-	//double c21=c12;
-	//double c31=c13=c12;
-	//double c32=c23=c12;
-	//double c55=c66=c44;
+	//float c22=c33=c11;
+	//float c21=c12;
+	//float c31=c13=c12;
+	//float c32=c23=c12;
+	//float c55=c66=c44;
 	//----- ----- ----- -----
-	double cm22,cm33;
+	float cm22,cm33;
 		cm22=cm33=cm11;
-	double cm21;
+	float cm21;
 		cm21=cm12;
-	double cm31,cm13;
+	float cm31,cm13;
 		cm31=cm13=cm12;
-	double cm32,cm23;
+	float cm32,cm23;
 		cm32=cm23=cm12;
-	double cm55, cm66;
+	float cm55, cm66;
 		cm55=cm66=cm44;
 	//----- ----- ----- -----
-	double cp22, cp33;
+	float cp22, cp33;
 		cp22=cp33=cp11;
-	double cp21;
+	float cp21;
 		cp21=cp12;
-	double cp31, cp13;
+	float cp31, cp13;
 		cp31=cp13=cp12;
-	double cp32, cp23;
+	float cp32, cp23;
 		cp32=cp23=cp12;
-	double cp55, cp66;
+	float cp55, cp66;
 		cp55=cp66=cp44;
 	//----- ----- ----- -----
-	double et21;
-	double et32;
-	double et31;
+	float et21;
+	float et32;
+	float et31;
 	//----- ----- ----- -----
 	
 	//----- ----- ----- ----- ----- ----- -----
-	//double smatx_real[Nx][Ny][Nz][3][3];
-	double *smatx_real = (double *)malloc(sizeof(double)*( NxNyNz*3*3 ));
+	//float smatx_real[Nx][Ny][Nz][3][3];
+	float *smatx_real = (float *)malloc(sizeof(float)*( NxNyNz*3*3 ));
 	//
-	//double smatx_imag[Nx][Ny][Nz][3][3];
-	double *smatx_imag = (double *)malloc(sizeof(double)*( NxNyNz*3*3 ));
+	//float smatx_imag[Nx][Ny][Nz][3][3];
+	float *smatx_imag = (float *)malloc(sizeof(float)*( NxNyNz*3*3 ));
 	//----- ----- ----- ----- ----- ----- -----
-	//double ematx_real[Nx][Ny][Nz][3][3];
-	double *ematx_real = (double *)malloc(sizeof(double)*( NxNyNz*3*3 ));
+	//float ematx_real[Nx][Ny][Nz][3][3];
+	float *ematx_real = (float *)malloc(sizeof(float)*( NxNyNz*3*3 ));
 	//
-	//double ematx_imag[Nx][Ny][Nz][3][3];
-	double *ematx_imag = (double *)malloc(sizeof(double)*( NxNyNz*3*3 ));
+	//float ematx_imag[Nx][Ny][Nz][3][3];
+	float *ematx_imag = (float *)malloc(sizeof(float)*( NxNyNz*3*3 ));
 	//----- ----- ----- ----- ----- ----- -----
 	
-	//double tmatx[3][3][3][3];
-	double *tmatx = (double *)malloc(sizeof(double)*( 3*3*3*3 )); //real part only
+	//float tmatx[3][3][3][3];
+	float *tmatx = (float *)malloc(sizeof(float)*( 3*3*3*3 )); //real part only
 	
 	//----- ----- -----
-	double et11=0.0;
-	double et22=0.0;
-	double et33=0.0;
+	float et11=0.0;
+	float et22=0.0;
+	float et33=0.0;
 	//
-	double et12=0.0;
-	double et23=0.0;
-	double et13=0.0;
+	float et12=0.0;
+	float et23=0.0;
+	float et13=0.0;
 	//----- ----- -----
 	
-	//double sum_stress[Nx][Ny][Nz];
-	double *sum_stress = (double *)malloc(sizeof(double)*( NxNyNz ));
+	//float sum_stress[Nx][Ny][Nz];
+	float *sum_stress = (float *)malloc(sizeof(float)*( NxNyNz ));
 	
 	//----- ----- -----
 	//Maximum number of iteration steps
 	int niter=10;
 	//----- ----- -----
-	double old_norm=0.0;
-	double normF=0.0;
+	float old_norm=0.0;
+	float normF=0.0;
 	//----- ----- -----
-	double conver=0.0;
+	float conver=0.0;
 	//----- ----- -----
 	//Tolerance value of convergence tests
-	double tolerance=0.001;
+	float tolerance=0.001;
 	//----- ----- -----
 	
 	/* Solve stress and strain field with 
@@ -623,7 +628,7 @@ void solve_elasticity_3d(int Nx, int Ny, int Nz,
 				et32=et23;
 				et31=et13;
 				//
-				delsdc[ijk][0]=0.5*( (cp11-cm11)*et11*et11 -c11[ijk]*ei0*( et11 + et11 )
+				delsdc[ijk]=0.5*( (cp11-cm11)*et11*et11 -c11[ijk]*ei0*( et11 + et11 )
 								    +(cp12-cm12)*et11*et22 -c12[ijk]*ei0*( et11 + et22 )
 								    +(cp13-cm13)*et11*et33 -c12[ijk]*ei0*( et11 + et33 )
 								    //
@@ -644,7 +649,7 @@ void solve_elasticity_3d(int Nx, int Ny, int Nz,
 								    +(cp66-cm66)*et13*et13 -c44[ijk]*ei0*( et13 + et13 )
 								    +(cp66-cm66)*et31*et31 -c44[ijk]*ei0*( et31 + et31 )
 								   );
-				delsdc[ijk][1]=0.0;
+				//delsdc[ijk][1]=0.0;
 				//----- ----- ----- ----- ----- ----- ----- -----
 			}
 		}

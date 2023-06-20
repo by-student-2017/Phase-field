@@ -293,12 +293,15 @@ void solve_elasticity_3d(int Nx, int Ny, int Nz,
 		fftw_execute(plan_e13);
 		//----- ----- ----- -----
 		
-		/* Form stress and strain tensors to be used in 
-		   Eq.5.46, Step-b */
+		//Green operator
+		// Calculate strain tensor, Eq.5.46, Step-b
 		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
 				for(int k=0;k<Nz;k++){
 					ijk=(i*Ny+j)*Nz+k;
+					
+					/* Form stress and strain tensors to be used in 
+					   Eq.5.46, Step-b */
 					//----- ----- ----- ----- ----- -----
 					// stress (smatx, sXY and sXYk)
 					smatx_real[(ijk*3+0)*3+0]=s11k[ijk][0];
@@ -352,16 +355,7 @@ void solve_elasticity_3d(int Nx, int Ny, int Nz,
 					ematx_imag[(ijk*3+2)*3+1]=e23k[ijk][1];
 					ematx_imag[(ijk*3+2)*3+2]=e33k[ijk][1];
 					//----- ----- ----- ----- ----- -----
-				}
-			}
-		}
-		
-		//Green operator
-		// Calculate strain tensor, Eq.5.46, Step-b
-		for(int i=0;i<Nx;i++){
-			for(int j=0;j<Ny;j++){
-				for(int k=0;k<Nz;k++){
-					ijk=(i*Ny+j)*Nz+k;
+					
 					//----- ----- ----- ----- ----- -----
 					green_tensor2_3D(Nx,Ny,Nz,
 									kx,ky,kz,
@@ -388,15 +382,8 @@ void solve_elasticity_3d(int Nx, int Ny, int Nz,
 						}//ll
 					}//kk
 					//----- ----- ----- ----- ----- -----
-				}//Nz
-			}//Ny
-		}//Nx
-		
-		// Rearrange strain components using symmetry of strain tensor
-		for(int i=0;i<Nx;i++){
-			for(int j=0;j<Ny;j++){
-				for(int k=0;k<Nz;k++){
-					ijk=(i*Ny+j)*Nz+k;
+					
+					// Rearrange strain components using symmetry of strain tensor
 					//----- ----- ----- ----- ----- -----
 					// strain (ematx, eXY and eXYk)
 					e11k[ijk][0]=ematx_real[(ijk*3+0)*3+0];
@@ -423,9 +410,10 @@ void solve_elasticity_3d(int Nx, int Ny, int Nz,
 					e23k[ijk][1]=ematx_imag[(ijk*3+2)*3+1];
 					e33k[ijk][1]=ematx_imag[(ijk*3+2)*3+2];
 					//----- ----- ----- ----- ----- -----
-				}
-			}
-		}
+					
+				}//Nz
+			}//Ny
+		}//Nx
 		
 		//From Fourier space to real space
 		/* Take strain components from Fourier space back to
@@ -535,30 +523,17 @@ void solve_elasticity_3d(int Nx, int Ny, int Nz,
 					s23[ijk][1]=0.0;
 					s13[ijk][1]=0.0;
 					//----- ----- ----- ----- ----- ----- ----- -----
-				}
-			}
-		}
-		
-		//check convergence
-		for(int i=0;i<Nx;i++){
-			for(int j=0;j<Ny;j++){
-				for(int k=0;k<Nz;k++){
-					ijk=(i*Ny+j)*Nz+k;
+					
+					//check convergence
 					sum_stress[ijk] = ( s11[ijk][0] + s22[ijk][0] + s33[ijk][0]
 									   +s12[ijk][0] + s23[ijk][0] + s13[ijk][0] );
-				}
-			}
-		}
-		
-		//normF=norm(sum_stress,2.0);
-		for(int i=0;i<Nx;i++){
-			for(int j=0;j<Ny;j++){
-				for(int k=0;k<Nz;k++){
-					ijk=(i*Ny+j)*Nz+k;
+					
+					//normF=norm(sum_stress,2.0);
 					normF = normF + sum_stress[ijk]*sum_stress[ijk];
 				}
 			}
 		}
+		
 		normF=sqrt(normF);
 		
 		if(iter==1){

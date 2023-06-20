@@ -8,5 +8,5 @@
 2. echo "export DISPLAY=:0.0" >> ~/.bashrc
 3. bash
 
-## paraview on ubuntu 20.04 LTS 
+## ParaView on ubuntu 20.04 LTS 
 - move red line to origin (>1.0 >1.0 >1.0)
