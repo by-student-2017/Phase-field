@@ -343,21 +343,21 @@ int main(){
 				// real part
 				 cuck[ii][0]= (cuck[ii][0]-dtime*k2[ii]*mcoef_cu*dgdcuck[ii][0])/
 					(1.0+dtime*k4[ii]*mcoef_cu*grcoef_cu);
-				 nick[ii][0]= (nick[ii][0]-dtime*k2[ii]*mcoef_ni*dgdnick[ii][0])/
-					(1.0+dtime*k4[ii]*mcoef_ni*grcoef_ni);
 				 mnck[ii][0]= (mnck[ii][0]-dtime*k2[ii]*mcoef_mn*dgdmnck[ii][0])/
 					(1.0+dtime*k4[ii]*mcoef_mn*grcoef_mn);
-				orpck[ii][0]=(orpck[ii][0]-dtime*k2[ii]*mcoef_ni*dgdorck[ii][0])/
+				 nick[ii][0]= (nick[ii][0]-dtime*k2[ii]*mcoef_ni*dgdnick[ii][0])/
+					(1.0+dtime*k4[ii]*mcoef_ni*grcoef_ni);
+				orpck[ii][0]=(orpck[ii][0]-dtime*k2[ii]*mcoef_orp*dgdorck[ii][0])/
 					(1.0+dtime*k4[ii]*mcoef_orp*grcoef_or);
 				//----- ----- ----- -----
 				// imaginary part
 				 cuck[ii][1]= (cuck[ii][1]-dtime*k2[ii]*mcoef_cu*dgdcuck[ii][1])/
 					(1.0+dtime*k4[ii]*mcoef_cu*grcoef_cu);
-				 nick[ii][1]= (nick[ii][1]-dtime*k2[ii]*mcoef_ni*dgdnick[ii][1])/
-					(1.0+dtime*k4[ii]*mcoef_ni*grcoef_ni);
 				 mnck[ii][1]= (mnck[ii][1]-dtime*k2[ii]*mcoef_mn*dgdmnck[ii][1])/
 					(1.0+dtime*k4[ii]*mcoef_mn*grcoef_mn);
-				orpck[ii][1]=(orpck[ii][1]-dtime*k2[ii]*mcoef_ni*dgdorck[ii][1])/
+				 nick[ii][1]= (nick[ii][1]-dtime*k2[ii]*mcoef_ni*dgdnick[ii][1])/
+					(1.0+dtime*k4[ii]*mcoef_ni*grcoef_ni);
+				orpck[ii][1]=(orpck[ii][1]-dtime*k2[ii]*mcoef_orp*dgdorck[ii][1])/
 					(1.0+dtime*k4[ii]*mcoef_orp*grcoef_or);
 				//----- ----- ----- -----
 			}
@@ -367,10 +367,10 @@ int main(){
 		Fourier space to real space (inverse FFT transformations) */
 		//cuc=real(ifft2(cuck));
 		fftw_execute(iplan_cuck);
-		//nic=real(ifft2(nic);
-		fftw_execute(iplan_nick);
 		//mnc=real(ifft2(mnck));
 		fftw_execute(iplan_mnck);
+		//nic=real(ifft2(nic);
+		fftw_execute(iplan_nick);
 		//orpc=real(ifft2(orpck));
 		fftw_execute(iplan_orpck);
 		
