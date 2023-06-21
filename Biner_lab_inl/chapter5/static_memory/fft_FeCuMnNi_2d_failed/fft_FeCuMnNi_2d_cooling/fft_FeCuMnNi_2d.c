@@ -17,32 +17,35 @@ the alpha phase at temperature T. */
 #include <math.h> //mod() and -lm
 #include <time.h>
 
-//#include <fftw3.h>
-//gcc test.c -lfftw3 -lm
-#include <mpi.h> //mpi version
-#include <fftw3-mpi.h> //mpi version
-//mpicc test.c -lfftw3_mpi -lfftw3 -lm
-//Note: need -lfftw3 for " undefined reference to symbol 'fftw_malloc'"
+#include <fftw3.h>
+//gcc test.c -lfftw3
+//#include <mpi.h> //mpi version
+//#include <fftw3-mpi.h> //mpi version
 
-void init_FeCuMnNi_micro_2d_mpi(int Nx, int Ny, 
-	double cu0, double mn0, double ni0,
-	double *cu, double *mn, double *ni, double *orp,
-	ptrdiff_t local_n0, ptrdiff_t local_0_start);
+#define Nx 128 //Number of grid points in the x-direction
+#define Ny 128 //Number of grid points in the y-direction
 
-void prepare_fft_2d(int Nx, int Ny, 
-	double dx, double dy,
-	double *kx, double *ky, 
-	double *k2, double *k4);
+	double  cu[Nx][Ny];
+	double  mn[Nx][Ny];
+	double  ni[Nx][Ny];
+	double orp[Nx][Ny];
+	
+	double kx[Nx];
+	double ky[Ny];
+	double k2[Nx][Ny];
+	double k4[Nx][Ny];
+	
+	double dgdcu[Nx][Ny];
+	double dgdmn[Nx][Ny];
+	double dgdni[Nx][Ny];
+	double dgdor[Nx][Ny];
 
-void FeCuMnNi_free_energy_2d(int Nx, int Ny, 
-	double *cu, double *mn, double *ni, double *orp, double tempr,
-	double *dgdcu, double *dgdmn, double *dgdni, double *dgdor);
+void init_FeCuMnNi_micro_2d();
+void prepare_fft_2d();
+void FeCuMnNi_free_energy_2d();
+void write_vtk_grid_values_2D();
 
-void write_vtk_grid_values_2D(int nx, int ny, 
-	double dx, double dy, int istep, 
-	double *data1, double *data2, double *data3, double *data4);
-
-int main(int argc, char **argv){
+int main(){
 	clock_t start, end;
 	double compute_time;
 	
@@ -50,8 +53,8 @@ int main(int argc, char **argv){
 	start = clock();
 	
 	//simulation cell parameters
-	int Nx=128;
-	int Ny=128;
+	//int Nx=128;
+	//int Ny=128;
 	
 	//Total number of grid points in the simulation cell
 	//int NxNy=Nx*Ny;
@@ -132,144 +135,126 @@ int main(int argc, char **argv){
 	DCuA=1.0;
 	
 	int ii;
-	int iimpi;
 	
 	//double  cu[Nx][Ny];
-	 double *cu = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	//double  mn[Nx][Ny];
-	 double *mn = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	//double  ni[Nx][Ny];
-	 double *ni = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	//double orp[Nx][Ny];
-	double *orp = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	
+	//prepare microstructure
+	init_FeCuMnNi_micro_2d(Nx,Ny,cu0,mn0,ni0,cu,mn,ni,orp);
+	
+	//----- ----- ----- ----- ----- -----
+	const int fftsizex = Nx, fftsizey = Ny;
+	/* fftw_complex *in, *out; // in[i][0] for real, in[i][1] for imag.
+	    in = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	   out = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	   fftw_plan plan, iplan;
+	   plan = fftw_plan_dft_2d(fftsize, fftsize, in, out, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
+	  iplan = fftw_plan_dft_2d(fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT */
+	//
+	//array, Cu
+	fftw_complex *cuc, *cuck;
+	 cuc = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	cuck = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	fftw_plan plan_cuc, iplan_cuck;
+	plan_cuc = fftw_plan_dft_2d(fftsizex, fftsizey, cuc, cuck, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
+	iplan_cuck = fftw_plan_dft_2d(fftsizex, fftsizey, cuck, cuc, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
+	//
+	//array, Mn
+	fftw_complex *mnc, *mnck;
+	 mnc = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	mnck = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	fftw_plan plan_mnc, iplan_mnck;
+	plan_mnc = fftw_plan_dft_2d(fftsizex, fftsizey, mnc, mnck, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
+	iplan_mnck = fftw_plan_dft_2d(fftsizex, fftsizey, mnck, mnc, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
+	//
+	//array, Ni
+	fftw_complex *nic, *nick;
+	 nic = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	nick = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	fftw_plan plan_nic, iplan_nick;
+	plan_nic = fftw_plan_dft_2d(fftsizex, fftsizey, nic, nick, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
+	iplan_nick = fftw_plan_dft_2d(fftsizex, fftsizey, nick, nic, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
+	//
+	//array, orp
+	fftw_complex *orpc, *orpck;
+	 orpc = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	orpck = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	fftw_plan plan_orpc, iplan_orpck;
+	plan_orpc = fftw_plan_dft_2d(fftsizex, fftsizey, orpc, orpck, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
+	iplan_orpck = fftw_plan_dft_2d(fftsizex, fftsizey, orpck, orpc, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
+	//
+	//
+	//array, dG/dCu
+	fftw_complex *dgdcuc, *dgdcuck;
+	 dgdcuc = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	dgdcuck = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	fftw_plan plan_dgdcuc;
+	plan_dgdcuc = fftw_plan_dft_2d(fftsizex, fftsizey, dgdcuc, dgdcuck, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
+	//fftw_plan iplan_dgdcuck;
+	//iplan_dgdcuck = fftw_plan_dft_2d(fftsizex, fftsizey, dgdcuck, dgdcuc, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
+	//
+	//array, dG/dMn
+	fftw_complex *dgdmnc, *dgdmnck;
+	 dgdmnc = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	dgdmnck = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	fftw_plan plan_dgdmnc;
+	plan_dgdmnc = fftw_plan_dft_2d(fftsizex, fftsizey, dgdmnc, dgdmnck, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
+	//fftw_plan iplan_dgdmnck;
+	//iplan_dgdmnck = fftw_plan_dft_2d(fftsizex, fftsizey, dgdmnck, dgdmnc, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
+	//
+	//array, dG/dNi
+	fftw_complex *dgdnic, *dgdnick;
+	 dgdnic = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	dgdnick = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	fftw_plan plan_dgdnic;
+	plan_dgdnic = fftw_plan_dft_2d(fftsizex, fftsizey, dgdnic, dgdnick, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
+	//fftw_plan iplan_dgdnick;
+	//iplan_dgdnick = fftw_plan_dft_2d(fftsizex, fftsizey, dgdnick, dgdnic, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
+	//
+	//array, dG/dor
+	fftw_complex *dgdorc, *dgdorck;
+	 dgdorc = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	dgdorck = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * fftsizex*fftsizey);
+	fftw_plan plan_dgdorc;
+	plan_dgdorc = fftw_plan_dft_2d(fftsizex, fftsizey, dgdorc, dgdorck, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
+	//fftw_plan iplan_dgdorck;
+	//iplan_dgdorck = fftw_plan_dft_2d(fftsizex, fftsizey, dgdorck, dgdorc, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
+	//----- ----- ----- ----- ----- -----
+	//
+	//initialization
+	for(int i=0;i<Nx;i++){
+		for(int j=0;j<Ny;j++){
+			ii=i*Ny+j;
+			//----- ----- ----- -----
+			 cuc[ii][0] =  cu[i][j];
+			 cuc[ii][1] =  0.0;
+			//----- ----- ----- -----
+			 mnc[ii][0] =  mn[i][j];
+			 mnc[ii][1] =  0.0;
+			//----- ----- ----- -----
+			 nic[ii][0] =  ni[i][j];
+			 nic[ii][1] =  0.0;
+			//----- ----- ----- -----
+			orpc[ii][0] =  orp[i][j];
+			orpc[ii][1] =  0.0;
+			//----- ----- ----- -----
+		}
+	}
+	//
 	//double kx[Nx];
-	double *kx = (double *)malloc(sizeof(double)*( Nx ));
 	//double ky[Ny];
-	double *ky = (double *)malloc(sizeof(double)*( Ny ));
 	//double k2[Nx][Ny];
-	double *k2 = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	//double k4[Nx][Ny];
-	double *k4 = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	
 	//prepare fft (output: kx,ky,k2,k4)
 	prepare_fft_2d(Nx,Ny,dx,dy,kx,ky,k2,k4); //get FFT coefficients
 	
 	//double dgdcu[Nx][Ny];
-	double *dgdcu = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	//double dgdmn[Nx][Ny];
-	double *dgdmn = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	//double dgdni[Nx][Ny];
-	double *dgdni = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	//double dgdor[Nx][Ny];
-	double *dgdor = (double *)malloc(sizeof(double)*( Nx*Ny ));
-	
-	//----- ----- ----- ----- ----- -----
-	const ptrdiff_t fftsizex = Nx, fftsizey = Ny;
-	ptrdiff_t alloc_local, local_n0, local_0_start;
-	
-	int rank;
-	//int num_proc;
-	
-	MPI_Init(&argc, &argv);
-	//MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
-	fftw_mpi_init();
-	
-	alloc_local = fftw_mpi_local_size_2d(fftsizex, fftsizey, MPI_COMM_WORLD, &local_n0, &local_0_start);
-	
-	//array, Cu
-	fftw_complex *cuc, *cuck;
-	 cuc = fftw_alloc_complex(alloc_local);
-	cuck = fftw_alloc_complex(alloc_local);
-	fftw_plan plan_cuc, iplan_cuck;
-	plan_cuc = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, cuc, cuck, MPI_COMM_WORLD, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
-	iplan_cuck = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, cuck, cuc, MPI_COMM_WORLD, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
-	//
-	//array, Mn
-	fftw_complex *mnc, *mnck;
-	 mnc = fftw_alloc_complex(alloc_local);
-	mnck = fftw_alloc_complex(alloc_local);
-	fftw_plan plan_mnc, iplan_mnck;
-	plan_mnc = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, mnc, mnck, MPI_COMM_WORLD, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
-	iplan_mnck = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, mnck, mnc, MPI_COMM_WORLD, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
-	//
-	//array, Ni
-	fftw_complex *nic, *nick;
-	 nic = fftw_alloc_complex(alloc_local);
-	nick = fftw_alloc_complex(alloc_local);
-	fftw_plan plan_nic, iplan_nick;
-	plan_nic = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, nic, nick, MPI_COMM_WORLD, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
-	iplan_nick = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, nick, nic, MPI_COMM_WORLD, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
-	//
-	//array, orp
-	fftw_complex *orpc, *orpck;
-	 orpc = fftw_alloc_complex(alloc_local);
-	orpck = fftw_alloc_complex(alloc_local);
-	fftw_plan plan_orpc, iplan_orpck;
-	plan_orpc = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, orpc, orpck, MPI_COMM_WORLD, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
-	iplan_orpck = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, orpck, orpc, MPI_COMM_WORLD, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
-	//
-	//
-	//array, dG/dCu
-	fftw_complex *dgdcuc, *dgdcuck;
-	 dgdcuc = fftw_alloc_complex(alloc_local);
-	dgdcuck = fftw_alloc_complex(alloc_local);
-	fftw_plan plan_dgdcuc;
-	plan_dgdcuc = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, dgdcuc, dgdcuck, MPI_COMM_WORLD, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
-	//fftw_plan iplan_dgdcuck;
-	//iplan_dgdcuck = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, dgdcuck, dgdcuc, MPI_COMM_WORLD, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
-	//
-	//array, dG/dMn
-	fftw_complex *dgdmnc, *dgdmnck;
-	 dgdmnc = fftw_alloc_complex(alloc_local);
-	dgdmnck = fftw_alloc_complex(alloc_local);
-	fftw_plan plan_dgdmnc;
-	plan_dgdmnc = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, dgdmnc, dgdmnck, MPI_COMM_WORLD, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
-	//fftw_plan iplan_dgdmnck;
-	//iplan_dgdmnck = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, dgdmnck, dgdmnc, MPI_COMM_WORLD, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
-	//
-	//array, dG/dNi
-	fftw_complex *dgdnic, *dgdnick;
-	 dgdnic = fftw_alloc_complex(alloc_local);
-	dgdnick = fftw_alloc_complex(alloc_local);
-	fftw_plan plan_dgdnic;
-	plan_dgdnic = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, dgdnic, dgdnick, MPI_COMM_WORLD, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
-	//fftw_plan iplan_dgdnick;
-	//iplan_dgdnick = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, dgdnick, dgdnic, MPI_COMM_WORLD, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
-	//
-	//array, dG/dor
-	fftw_complex *dgdorc, *dgdorck;
-	 dgdorc = fftw_alloc_complex(alloc_local);
-	dgdorck = fftw_alloc_complex(alloc_local);
-	fftw_plan plan_dgdorc;
-	plan_dgdorc = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, dgdorc, dgdorck, MPI_COMM_WORLD, FFTW_FORWARD,  FFTW_ESTIMATE); //For forward FFT
-	//fftw_plan iplan_dgdorck;
-	//iplan_dgdorck = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, dgdorck, dgdorc, MPI_COMM_WORLD, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
-	//----- ----- ----- ----- ----- -----
-	//
-	//prepare microstructure
-	init_FeCuMnNi_micro_2d_mpi(Nx,Ny,cu0,mn0,ni0,cu,mn,ni,orp,local_n0,local_0_start);
-	//
-	//initialization
-	for(int i=0;i<local_n0;i++){
-		for(int j=0;j<Ny;j++){
-			ii=i*Ny+j;
-			iimpi=(local_0_start+i)*Ny+j;
-			//----- ----- ----- -----
-			 cuc[ii][0] =  cu[iimpi];
-			 cuc[ii][1] =  0.0;
-			//----- ----- ----- -----
-			 mnc[ii][0] =  mn[iimpi];
-			 mnc[ii][1] =  0.0;
-			//----- ----- ----- -----
-			 nic[ii][0] =  ni[iimpi];
-			 nic[ii][1] =  0.0;
-			//----- ----- ----- -----
-			orpc[ii][0] =  orp[iimpi];
-			orpc[ii][1] =  0.0;
-			//----- ----- ----- -----
-		}
-	}
 	
 	double mcoef_cu;
 	double mcoef_mn;
@@ -320,21 +305,20 @@ int main(int argc, char **argv){
 		FeCuMnNi_free_energy_2d(Nx,Ny,cu,mn,ni,orp,tempr,dgdcu,dgdmn,dgdni,dgdor);
 		//Note: output array (real): dgdcu, dgdmn, dgdni, dgdor
 		
-		for(int i=0;i<local_n0;i++){
+		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
 				ii=i*Ny+j;
-				iimpi=(local_0_start+i)*Ny+j;
 				//----- ----- ----- -----
-				dgdcuc[ii][0] = dgdcu[iimpi];
+				dgdcuc[ii][0] = dgdcu[i][j];
 				dgdcuc[ii][1] = 0.0;
 				//----- ----- ----- -----
-				dgdmnc[ii][0] = dgdmn[iimpi];
+				dgdmnc[ii][0] = dgdmn[i][j];
 				dgdmnc[ii][1] = 0.0;
 				//----- ----- ----- -----
-				dgdnic[ii][0] = dgdni[iimpi];
+				dgdnic[ii][0] = dgdni[i][j];
 				dgdnic[ii][1] = 0.0;
 				//----- ----- ----- -----
-				dgdorc[ii][0] = dgdor[iimpi];
+				dgdorc[ii][0] = dgdor[i][j];
 				dgdorc[ii][1] = 0.0;
 				//----- ----- ----- -----
 			}
@@ -351,20 +335,19 @@ int main(int argc, char **argv){
 		//dgdorck=fft2(dgdorc);
 		fftw_execute(plan_dgdorc);
 		
-		for(int i=0;i<local_n0;i++){
+		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
 				ii=i*Ny+j;
-				iimpi=(local_0_start+i)*Ny+j;
 				
 				//mobilities
 				/* Calculate the mobility of each alloying elements,
 				   Eq.5.24, based on the current values of
 				   concentration and order parameter */
 				/* Mi(eta,T) = ci0*(1.0-ci0)*{(1.0-eta)*Dia(T)/RT + eta*Dig(T)/RT} (Eq.5.24)
-				   eta=orp[iimpi] */
-				mcoef_cu=cu0*(1.0-cu0)*( (1.0-orp[iimpi])*DCuA + orp[iimpi]*DCuG );
-				mcoef_mn=mn0*(1.0-mn0)*( (1.0-orp[iimpi])*DMnA + orp[iimpi]*DMnG );
-				mcoef_ni=ni0*(1.0-ni0)*( (1.0-orp[iimpi])*DNiA + orp[iimpi]*DNiG );
+				   eta=orp[i][j] */
+				mcoef_cu=cu0*(1.0-cu0)*( (1.0-orp[i][j])*DCuA + orp[i][j]*DCuG );
+				mcoef_mn=mn0*(1.0-mn0)*( (1.0-orp[i][j])*DMnA + orp[i][j]*DMnG );
+				mcoef_ni=ni0*(1.0-ni0)*( (1.0-orp[i][j])*DNiA + orp[i][j]*DNiG );
 				//
 				mcoef_orp=0.1;
 				
@@ -375,26 +358,26 @@ int main(int argc, char **argv){
 				// These are related by Eq.5.14 (Cahn-Hilliard for ci) or Eq.5.21 (Allen-Cahn for eta)
 				//----- ----- ----- -----
 				// real part
-				 cuck[ii][0]= (cuck[ii][0]-dtime*k2[iimpi]*mcoef_cu*dgdcuck[ii][0])/
-					(1.0+dtime*k4[iimpi]*mcoef_cu*grcoef_cu);
-				 mnck[ii][0]= (mnck[ii][0]-dtime*k2[iimpi]*mcoef_mn*dgdmnck[ii][0])/
-					(1.0+dtime*k4[iimpi]*mcoef_mn*grcoef_mn);
-				 nick[ii][0]= (nick[ii][0]-dtime*k2[iimpi]*mcoef_ni*dgdnick[ii][0])/
-					(1.0+dtime*k4[iimpi]*mcoef_ni*grcoef_ni);
+				 cuck[ii][0]= (cuck[ii][0]-dtime*k2[i][j]*mcoef_cu*dgdcuck[ii][0])/
+					(1.0+dtime*k4[i][j]*mcoef_cu*grcoef_cu);
+				 mnck[ii][0]= (mnck[ii][0]-dtime*k2[i][j]*mcoef_mn*dgdmnck[ii][0])/
+					(1.0+dtime*k4[i][j]*mcoef_mn*grcoef_mn);
+				 nick[ii][0]= (nick[ii][0]-dtime*k2[i][j]*mcoef_ni*dgdnick[ii][0])/
+					(1.0+dtime*k4[i][j]*mcoef_ni*grcoef_ni);
 				//
 				orpck[ii][0]=(orpck[ii][0]-dtime*mcoef_orp*dgdorck[ii][0])/
-					(1.0+dtime*k2[iimpi]*mcoef_orp*grcoef_or);
+					(1.0+dtime*k2[i][j]*mcoef_orp*grcoef_or);
 				//----- ----- ----- -----
 				// imaginary part
-				 cuck[ii][1]= (cuck[ii][1]-dtime*k2[iimpi]*mcoef_cu*dgdcuck[ii][1])/
-					(1.0+dtime*k4[iimpi]*mcoef_cu*grcoef_cu);
-				 mnck[ii][1]= (mnck[ii][1]-dtime*k2[iimpi]*mcoef_mn*dgdmnck[ii][1])/
-					(1.0+dtime*k4[iimpi]*mcoef_mn*grcoef_mn);
-				 nick[ii][1]= (nick[ii][1]-dtime*k2[iimpi]*mcoef_ni*dgdnick[ii][1])/
-					(1.0+dtime*k4[iimpi]*mcoef_ni*grcoef_ni);
+				 cuck[ii][1]= (cuck[ii][1]-dtime*k2[i][j]*mcoef_cu*dgdcuck[ii][1])/
+					(1.0+dtime*k4[i][j]*mcoef_cu*grcoef_cu);
+				 mnck[ii][1]= (mnck[ii][1]-dtime*k2[i][j]*mcoef_mn*dgdmnck[ii][1])/
+					(1.0+dtime*k4[i][j]*mcoef_mn*grcoef_mn);
+				 nick[ii][1]= (nick[ii][1]-dtime*k2[i][j]*mcoef_ni*dgdnick[ii][1])/
+					(1.0+dtime*k4[i][j]*mcoef_ni*grcoef_ni);
 				//
 				orpck[ii][1]=(orpck[ii][1]-dtime*mcoef_orp*dgdorck[ii][1])/
-					(1.0+dtime*k2[iimpi]*mcoef_orp*grcoef_or);
+					(1.0+dtime*k2[i][j]*mcoef_orp*grcoef_or);
 				//----- ----- ----- -----
 			}
 		}
@@ -411,10 +394,9 @@ int main(int argc, char **argv){
 		fftw_execute(iplan_orpck);
 		
 		//for small deviations
-		for(int i=0;i<local_n0;i++){
+		for(int i=0;i<Nx;i++){
 			for(int j=0;j<Ny;j++){
 				ii=i*Ny+j;
-				iimpi=(local_0_start+i)*Ny+j;
 				//----- ----- ----- -----
 				 cuc[ii][0] =  cuc[ii][0]/(fftsizex*fftsizey);
 				 cuc[ii][1] =  cuc[ii][1]/(fftsizex*fftsizey);
@@ -455,10 +437,10 @@ int main(int argc, char **argv){
 				}
 				nic[ii][1]=0.0;
 				//----- ----- ----- -----
-				 cu[iimpi]  = cuc[ii][0];
-				 mn[iimpi]  = mnc[ii][0];
-				 ni[iimpi]  = nic[ii][0];
-				orp[iimpi] = orpc[ii][0];
+				 cu[i][j]  = cuc[ii][0];
+				 mn[i][j]  = mnc[ii][0];
+				 ni[i][j]  = nic[ii][0];
+				orp[i][j] = orpc[ii][0];
 				//----- ----- ----- -----
 			}
 		}
@@ -466,32 +448,21 @@ int main(int argc, char **argv){
 		//print results
 		/* If print frequency is reached, output the results to file */
 		if(fmod(istep,nprint)==0){
-			//
-			MPI_Gather(&cu[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, &cu[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-			MPI_Gather(&mn[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, &mn[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-			MPI_Gather(&ni[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, &ni[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-			MPI_Gather(&orp[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, &orp[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-			//
-			MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-			if (rank == 0){
-				//write vtk file
-				/* Write the results in vtk format for contour plots
-				   to be viewed by using Paraview */
-				write_vtk_grid_values_2D(Nx,Ny,dx,dy,istep,cu,mn,ni,orp);
-				
-				printf("done step: %5d, time %e [s], Temp: %8.3lf [K] \n",istep,ttime,tempr);
-			}
+			//write vtk file
+			/* Write the results in vtk format for contour plots
+			   to be viewed by using Paraview */
+			write_vtk_grid_values_2D(Nx,Ny,dx,dy,istep,cu,mn,ni,orp);
+			
+			printf("done step: %5d, time %e [s], Temp: %8.3lf [K] \n",istep,ttime,tempr);
 		}
 		
 	}//end of time step (evolve,for)
 	
-	if (rank == 0){
-		//calculate the execution time and print it
-		/* Calculate the compute time and print it to screen */
-		end = clock();
-		compute_time = ((double) (end - start)) / CLOCKS_PER_SEC;
-		printf("Compute Time: %lf \n", compute_time);
-	}
+	//calculate the execution time and print it
+	/* Calculate the compute time and print it to screen */
+	end = clock();
+	compute_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+	printf("Compute Time: %lf \n", compute_time);
 	
 	//----- ----- ----- ----- ----- -----
 	fftw_destroy_plan(plan_cuc);
@@ -526,5 +497,4 @@ int main(int argc, char **argv){
 	fftw_free(dgdorc);
 	fftw_free(dgdorck);
 	//----- ----- ----- ----- ----- -----
-	MPI_Finalize(); //for fftw3_mpi
 }

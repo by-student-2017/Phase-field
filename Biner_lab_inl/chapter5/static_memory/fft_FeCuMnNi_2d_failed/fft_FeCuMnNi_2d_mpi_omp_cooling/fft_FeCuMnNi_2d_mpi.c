@@ -24,23 +24,38 @@ the alpha phase at temperature T. */
 //mpicc test.c -lfftw3_mpi -lfftw3 -lm
 //Note: need -lfftw3 for " undefined reference to symbol 'fftw_malloc'"
 
-void init_FeCuMnNi_micro_2d_mpi(int Nx, int Ny, 
-	double cu0, double mn0, double ni0,
-	double *cu, double *mn, double *ni, double *orp,
-	ptrdiff_t local_n0, ptrdiff_t local_0_start);
+//+threads version
+//mpicc test.c -lfftw3_mpi -lfftw3_threads -lfftw3 -lm -lpthread
 
-void prepare_fft_2d(int Nx, int Ny, 
-	double dx, double dy,
-	double *kx, double *ky, 
-	double *k2, double *k4);
+#include <omp.h>
+//mpicc test.c -fopenmp -lfftw3_omp -lfftw3 -lm -lpthread
+//export OMP_NUM_THREADS=4
 
-void FeCuMnNi_free_energy_2d(int Nx, int Ny, 
-	double *cu, double *mn, double *ni, double *orp, double tempr,
-	double *dgdcu, double *dgdmn, double *dgdni, double *dgdor);
+#define Nx 128 //Number of grid points in the x-direction
+#define Ny 128 //Number of grid points in the y-direction
 
-void write_vtk_grid_values_2D(int nx, int ny, 
-	double dx, double dy, int istep, 
-	double *data1, double *data2, double *data3, double *data4);
+	double  cu[Nx][Ny];
+	double  mn[Nx][Ny];
+	double  ni[Nx][Ny];
+	double orp[Nx][Ny];
+	
+	double kx[Nx];
+	double ky[Ny];
+	double k2[Nx][Ny];
+	double k4[Nx][Ny];
+	
+	double dgdcu[Nx][Ny];
+	double dgdmn[Nx][Ny];
+	double dgdni[Nx][Ny];
+	double dgdor[Nx][Ny];
+
+void init_FeCuMnNi_micro_2d();
+void prepare_fft_2d();
+void FeCuMnNi_free_energy_2d();
+void write_vtk_grid_values_2D();
+
+int threads_ok;
+//int nthreads=2; //number of threads
 
 int main(int argc, char **argv){
 	clock_t start, end;
@@ -50,8 +65,8 @@ int main(int argc, char **argv){
 	start = clock();
 	
 	//simulation cell parameters
-	int Nx=128;
-	int Ny=128;
+	//int Nx=128;
+	//int Ny=128;
 	
 	//Total number of grid points in the simulation cell
 	//int NxNy=Nx*Ny;
@@ -132,48 +147,50 @@ int main(int argc, char **argv){
 	DCuA=1.0;
 	
 	int ii;
-	int iimpi;
 	
 	//double  cu[Nx][Ny];
-	 double *cu = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	//double  mn[Nx][Ny];
-	 double *mn = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	//double  ni[Nx][Ny];
-	 double *ni = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	//double orp[Nx][Ny];
-	double *orp = (double *)malloc(sizeof(double)*( Nx*Ny ));
+	
+	//prepare microstructure
+	init_FeCuMnNi_micro_2d(Nx,Ny,cu0,mn0,ni0,cu,mn,ni,orp);
 	
 	//double kx[Nx];
-	double *kx = (double *)malloc(sizeof(double)*( Nx ));
 	//double ky[Ny];
-	double *ky = (double *)malloc(sizeof(double)*( Ny ));
 	//double k2[Nx][Ny];
-	double *k2 = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	//double k4[Nx][Ny];
-	double *k4 = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	
 	//prepare fft (output: kx,ky,k2,k4)
 	prepare_fft_2d(Nx,Ny,dx,dy,kx,ky,k2,k4); //get FFT coefficients
 	
 	//double dgdcu[Nx][Ny];
-	double *dgdcu = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	//double dgdmn[Nx][Ny];
-	double *dgdmn = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	//double dgdni[Nx][Ny];
-	double *dgdni = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	//double dgdor[Nx][Ny];
-	double *dgdor = (double *)malloc(sizeof(double)*( Nx*Ny ));
 	
 	//----- ----- ----- ----- ----- -----
 	const ptrdiff_t fftsizex = Nx, fftsizey = Ny;
 	ptrdiff_t alloc_local, local_n0, local_0_start;
 	
 	int rank;
-	//int num_proc;
 	
-	MPI_Init(&argc, &argv);
-	//MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
+	//MPI version
+	//MPI_Init(&argc, &argv);
+	
+	//MPI+threads version
+	int provided;
+	MPI_Init_thread(&argc, &argv, MPI_THREAD_FUNNELED, &provided);
+	threads_ok = provided >= MPI_THREAD_FUNNELED;
+	
+	if (threads_ok) threads_ok = fftw_init_threads();
 	fftw_mpi_init();
+	
+	//if (threads_ok) fftw_plan_with_nthreads(nthreads);
+	if (threads_ok) fftw_plan_with_nthreads(omp_get_max_threads());
+	
+	//int num_proc;
+	//MPI_Comm_size(MPI_COMM_WORLD, &num_proc);
 	
 	alloc_local = fftw_mpi_local_size_2d(fftsizex, fftsizey, MPI_COMM_WORLD, &local_n0, &local_0_start);
 	
@@ -247,25 +264,21 @@ int main(int argc, char **argv){
 	//iplan_dgdorck = fftw_mpi_plan_dft_2d(fftsizex, fftsizey, dgdorck, dgdorc, MPI_COMM_WORLD, FFTW_BACKWARD, FFTW_ESTIMATE); //For inverse FFT
 	//----- ----- ----- ----- ----- -----
 	//
-	//prepare microstructure
-	init_FeCuMnNi_micro_2d_mpi(Nx,Ny,cu0,mn0,ni0,cu,mn,ni,orp,local_n0,local_0_start);
-	//
 	//initialization
 	for(int i=0;i<local_n0;i++){
 		for(int j=0;j<Ny;j++){
 			ii=i*Ny+j;
-			iimpi=(local_0_start+i)*Ny+j;
 			//----- ----- ----- -----
-			 cuc[ii][0] =  cu[iimpi];
+			 cuc[ii][0] =  cu[local_0_start+i][j];
 			 cuc[ii][1] =  0.0;
 			//----- ----- ----- -----
-			 mnc[ii][0] =  mn[iimpi];
+			 mnc[ii][0] =  mn[local_0_start+i][j];
 			 mnc[ii][1] =  0.0;
 			//----- ----- ----- -----
-			 nic[ii][0] =  ni[iimpi];
+			 nic[ii][0] =  ni[local_0_start+i][j];
 			 nic[ii][1] =  0.0;
 			//----- ----- ----- -----
-			orpc[ii][0] =  orp[iimpi];
+			orpc[ii][0] =  orp[local_0_start+i][j];
 			orpc[ii][1] =  0.0;
 			//----- ----- ----- -----
 		}
@@ -323,18 +336,17 @@ int main(int argc, char **argv){
 		for(int i=0;i<local_n0;i++){
 			for(int j=0;j<Ny;j++){
 				ii=i*Ny+j;
-				iimpi=(local_0_start+i)*Ny+j;
 				//----- ----- ----- -----
-				dgdcuc[ii][0] = dgdcu[iimpi];
+				dgdcuc[ii][0] = dgdcu[local_0_start+i][j];
 				dgdcuc[ii][1] = 0.0;
 				//----- ----- ----- -----
-				dgdmnc[ii][0] = dgdmn[iimpi];
+				dgdmnc[ii][0] = dgdmn[local_0_start+i][j];
 				dgdmnc[ii][1] = 0.0;
 				//----- ----- ----- -----
-				dgdnic[ii][0] = dgdni[iimpi];
+				dgdnic[ii][0] = dgdni[local_0_start+i][j];
 				dgdnic[ii][1] = 0.0;
 				//----- ----- ----- -----
-				dgdorc[ii][0] = dgdor[iimpi];
+				dgdorc[ii][0] = dgdor[local_0_start+i][j];
 				dgdorc[ii][1] = 0.0;
 				//----- ----- ----- -----
 			}
@@ -354,17 +366,16 @@ int main(int argc, char **argv){
 		for(int i=0;i<local_n0;i++){
 			for(int j=0;j<Ny;j++){
 				ii=i*Ny+j;
-				iimpi=(local_0_start+i)*Ny+j;
 				
 				//mobilities
 				/* Calculate the mobility of each alloying elements,
 				   Eq.5.24, based on the current values of
 				   concentration and order parameter */
 				/* Mi(eta,T) = ci0*(1.0-ci0)*{(1.0-eta)*Dia(T)/RT + eta*Dig(T)/RT} (Eq.5.24)
-				   eta=orp[iimpi] */
-				mcoef_cu=cu0*(1.0-cu0)*( (1.0-orp[iimpi])*DCuA + orp[iimpi]*DCuG );
-				mcoef_mn=mn0*(1.0-mn0)*( (1.0-orp[iimpi])*DMnA + orp[iimpi]*DMnG );
-				mcoef_ni=ni0*(1.0-ni0)*( (1.0-orp[iimpi])*DNiA + orp[iimpi]*DNiG );
+				   eta=orp[local_0_start+i][j] */
+				mcoef_cu=cu0*(1.0-cu0)*( (1.0-orp[local_0_start+i][j])*DCuA + orp[local_0_start+i][j]*DCuG );
+				mcoef_mn=mn0*(1.0-mn0)*( (1.0-orp[local_0_start+i][j])*DMnA + orp[local_0_start+i][j]*DMnG );
+				mcoef_ni=ni0*(1.0-ni0)*( (1.0-orp[local_0_start+i][j])*DNiA + orp[local_0_start+i][j]*DNiG );
 				//
 				mcoef_orp=0.1;
 				
@@ -375,26 +386,26 @@ int main(int argc, char **argv){
 				// These are related by Eq.5.14 (Cahn-Hilliard for ci) or Eq.5.21 (Allen-Cahn for eta)
 				//----- ----- ----- -----
 				// real part
-				 cuck[ii][0]= (cuck[ii][0]-dtime*k2[iimpi]*mcoef_cu*dgdcuck[ii][0])/
-					(1.0+dtime*k4[iimpi]*mcoef_cu*grcoef_cu);
-				 mnck[ii][0]= (mnck[ii][0]-dtime*k2[iimpi]*mcoef_mn*dgdmnck[ii][0])/
-					(1.0+dtime*k4[iimpi]*mcoef_mn*grcoef_mn);
-				 nick[ii][0]= (nick[ii][0]-dtime*k2[iimpi]*mcoef_ni*dgdnick[ii][0])/
-					(1.0+dtime*k4[iimpi]*mcoef_ni*grcoef_ni);
+				 cuck[ii][0]= (cuck[ii][0]-dtime*k2[local_0_start+i][j]*mcoef_cu*dgdcuck[ii][0])/
+					(1.0+dtime*k4[local_0_start+i][j]*mcoef_cu*grcoef_cu);
+				 mnck[ii][0]= (mnck[ii][0]-dtime*k2[local_0_start+i][j]*mcoef_mn*dgdmnck[ii][0])/
+					(1.0+dtime*k4[local_0_start+i][j]*mcoef_mn*grcoef_mn);
+				 nick[ii][0]= (nick[ii][0]-dtime*k2[local_0_start+i][j]*mcoef_ni*dgdnick[ii][0])/
+					(1.0+dtime*k4[local_0_start+i][j]*mcoef_ni*grcoef_ni);
 				//
 				orpck[ii][0]=(orpck[ii][0]-dtime*mcoef_orp*dgdorck[ii][0])/
-					(1.0+dtime*k2[iimpi]*mcoef_orp*grcoef_or);
+					(1.0+dtime*k2[local_0_start+i][j]*mcoef_orp*grcoef_or);
 				//----- ----- ----- -----
 				// imaginary part
-				 cuck[ii][1]= (cuck[ii][1]-dtime*k2[iimpi]*mcoef_cu*dgdcuck[ii][1])/
-					(1.0+dtime*k4[iimpi]*mcoef_cu*grcoef_cu);
-				 mnck[ii][1]= (mnck[ii][1]-dtime*k2[iimpi]*mcoef_mn*dgdmnck[ii][1])/
-					(1.0+dtime*k4[iimpi]*mcoef_mn*grcoef_mn);
-				 nick[ii][1]= (nick[ii][1]-dtime*k2[iimpi]*mcoef_ni*dgdnick[ii][1])/
-					(1.0+dtime*k4[iimpi]*mcoef_ni*grcoef_ni);
+				 cuck[ii][1]= (cuck[ii][1]-dtime*k2[local_0_start+i][j]*mcoef_cu*dgdcuck[ii][1])/
+					(1.0+dtime*k4[local_0_start+i][j]*mcoef_cu*grcoef_cu);
+				 mnck[ii][1]= (mnck[ii][1]-dtime*k2[local_0_start+i][j]*mcoef_mn*dgdmnck[ii][1])/
+					(1.0+dtime*k4[local_0_start+i][j]*mcoef_mn*grcoef_mn);
+				 nick[ii][1]= (nick[ii][1]-dtime*k2[local_0_start+i][j]*mcoef_ni*dgdnick[ii][1])/
+					(1.0+dtime*k4[local_0_start+i][j]*mcoef_ni*grcoef_ni);
 				//
 				orpck[ii][1]=(orpck[ii][1]-dtime*mcoef_orp*dgdorck[ii][1])/
-					(1.0+dtime*k2[iimpi]*mcoef_orp*grcoef_or);
+					(1.0+dtime*k2[local_0_start+i][j]*mcoef_orp*grcoef_or);
 				//----- ----- ----- -----
 			}
 		}
@@ -414,7 +425,6 @@ int main(int argc, char **argv){
 		for(int i=0;i<local_n0;i++){
 			for(int j=0;j<Ny;j++){
 				ii=i*Ny+j;
-				iimpi=(local_0_start+i)*Ny+j;
 				//----- ----- ----- -----
 				 cuc[ii][0] =  cuc[ii][0]/(fftsizex*fftsizey);
 				 cuc[ii][1] =  cuc[ii][1]/(fftsizex*fftsizey);
@@ -455,10 +465,10 @@ int main(int argc, char **argv){
 				}
 				nic[ii][1]=0.0;
 				//----- ----- ----- -----
-				 cu[iimpi]  = cuc[ii][0];
-				 mn[iimpi]  = mnc[ii][0];
-				 ni[iimpi]  = nic[ii][0];
-				orp[iimpi] = orpc[ii][0];
+				 cu[local_0_start+i][j]  = cuc[ii][0];
+				 mn[local_0_start+i][j]  = mnc[ii][0];
+				 ni[local_0_start+i][j]  = nic[ii][0];
+				orp[local_0_start+i][j] = orpc[ii][0];
 				//----- ----- ----- -----
 			}
 		}
@@ -467,10 +477,10 @@ int main(int argc, char **argv){
 		/* If print frequency is reached, output the results to file */
 		if(fmod(istep,nprint)==0){
 			//
-			MPI_Gather(&cu[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, &cu[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-			MPI_Gather(&mn[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, &mn[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-			MPI_Gather(&ni[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, &ni[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-			MPI_Gather(&orp[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, &orp[local_0_start*Ny], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+			MPI_Gather(cu[local_0_start], local_n0*Ny, MPI_DOUBLE, cu[local_0_start], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+			MPI_Gather(mn[local_0_start], local_n0*Ny, MPI_DOUBLE, mn[local_0_start], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+			MPI_Gather(ni[local_0_start], local_n0*Ny, MPI_DOUBLE, ni[local_0_start], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+			MPI_Gather(orp[local_0_start], local_n0*Ny, MPI_DOUBLE, orp[local_0_start], local_n0*Ny, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 			//
 			MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 			if (rank == 0){

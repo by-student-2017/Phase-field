@@ -392,7 +392,7 @@ int main(int argc, char **argv){
 						(1.0+dtime*k4[iimpi]*mcoef_ni*grcoef_ni);
 					//
 					orpck[ii][0]=(orpck[ii][0]-dtime*mcoef_orp*dgdorck[ii][0])/
-						(1.0+dtime*k2[ii]*mcoef_orp*grcoef_or);
+						(1.0+dtime*k2[iimpi]*mcoef_orp*grcoef_or);
 					//----- ----- ----- -----
 					// imaginary part
 					 cuck[ii][1]= (cuck[ii][1]-dtime*k2[iimpi]*mcoef_cu*dgdcuck[ii][1])/
@@ -403,7 +403,7 @@ int main(int argc, char **argv){
 						(1.0+dtime*k4[iimpi]*mcoef_ni*grcoef_ni);
 					//
 					orpck[ii][1]=(orpck[ii][1]-dtime*mcoef_orp*dgdorck[ii][1])/
-						(1.0+dtime*k2[ii]*mcoef_orp*grcoef_or);
+						(1.0+dtime*k2[iimpi]*mcoef_orp*grcoef_or);
 					//----- ----- ----- -----
 				}
 			}
