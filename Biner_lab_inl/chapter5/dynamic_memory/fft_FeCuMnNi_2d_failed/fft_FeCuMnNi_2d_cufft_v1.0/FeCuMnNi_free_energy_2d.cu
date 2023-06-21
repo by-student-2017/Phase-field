@@ -151,7 +151,7 @@ void FeCuMnNi_free_energy_2d(int Nx, int Ny,
 	float gcunig; // sum(Gg(ci)) of gamma phase
 	float thrc=0.0;
 	float dgcu;
-	float dhdor;
+	//float dhdor;
 	
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Ny;j++){
@@ -631,10 +631,10 @@ void FeCuMnNi_free_energy_2d(int Nx, int Ny,
 			//dgdor[ii][0]=(gcunia+elaste)*( 2.0*orp[ii]*(3.0-2.0*orp[ii]) + orp[ii]*orp[ii]*-2.0 )*-1.0
 			//				  +gcunig*( 2.0*orp[ii]*(3.0-2.0*orp[ii]) + orp[ii]*orp[ii]*-2.0 )
 			//				  +constw*( 2.0*orp[ii]*(1.0-orp[ii])*(1.0-2.0*orp[ii]) );
-			dhdor=6.0*orp[ii]*(1.0-orp[ii]);
-			dgdor[ii]=(gcunia+elaste)*( -dhdor ) // -(6.0*orp[ii]-6.0*orp[ii]*orp[ii])
-							  +gcunig*(  dhdor ) //  (6.0*orp[ii]-6.0*orp[ii]*orp[ii])
-							  +constw*( funcg*(2.0-4.0*orp[ii]) );
+			//dhdor=6.0*orp[ii]*(1.0-orp[ii]); //-> 6.0*funcg
+			dgdor[ii]=(gcunia+elaste)*( -6.0*funcg ) // -(6.0*orp[ii]-6.0*orp[ii]*orp[ii]) = -6.0*funcg
+							  +gcunig*(  6.0*funcg ) //  (6.0*orp[ii]-6.0*orp[ii]*orp[ii]) =  6.0*funcg
+							  +constw*( funcg*(2.0-4.0*orp[ii]) ); //funcg=orp[ii]*(1.0-orp[ii]);
 		}//j
 	}//i
 	return;
