@@ -354,6 +354,7 @@ int main(){
 				mcoef_cu=cu0*(1.0-cu0)*( (1.0-orp[ii])*DCuA + orp[ii]*DCuG );
 				mcoef_mn=mn0*(1.0-mn0)*( (1.0-orp[ii])*DMnA + orp[ii]*DMnG );
 				mcoef_ni=ni0*(1.0-ni0)*( (1.0-orp[ii])*DNiA + orp[ii]*DNiG );
+				//
 				mcoef_orp=0.1;
 				
 				//time integration
@@ -369,8 +370,9 @@ int main(){
 					(1.0+dtime*k4[ii]*mcoef_mn*grcoef_mn);
 				 nick[ii][0]= (nick[ii][0]-dtime*k2[ii]*mcoef_ni*dgdnick[ii][0])/
 					(1.0+dtime*k4[ii]*mcoef_ni*grcoef_ni);
-				orpck[ii][0]=(orpck[ii][0]-dtime*k2[ii]*mcoef_orp*dgdorck[ii][0])/
-					(1.0+dtime*k4[ii]*mcoef_orp*grcoef_or);
+				//
+				orpck[ii][0]=(orpck[ii][0]-dtime*mcoef_orp*dgdorck[ii][0])/
+					(1.0+dtime*k2[ii]*mcoef_orp*grcoef_or);
 				//----- ----- ----- -----
 				// imaginary part
 				 cuck[ii][1]= (cuck[ii][1]-dtime*k2[ii]*mcoef_cu*dgdcuck[ii][1])/
@@ -379,8 +381,9 @@ int main(){
 					(1.0+dtime*k4[ii]*mcoef_mn*grcoef_mn);
 				 nick[ii][1]= (nick[ii][1]-dtime*k2[ii]*mcoef_ni*dgdnick[ii][1])/
 					(1.0+dtime*k4[ii]*mcoef_ni*grcoef_ni);
-				orpck[ii][1]=(orpck[ii][1]-dtime*k2[ii]*mcoef_orp*dgdorck[ii][1])/
-					(1.0+dtime*k4[ii]*mcoef_orp*grcoef_or);
+				//
+				orpck[ii][1]=(orpck[ii][1]-dtime*mcoef_orp*dgdorck[ii][1])/
+					(1.0+dtime*k2[ii]*mcoef_orp*grcoef_or);
 				//----- ----- ----- -----
 			}
 		}
@@ -439,15 +442,6 @@ int main(){
 					nic[ii][0]=0.0001;
 				}
 				nic[ii][1]=0.0;
-				//----- ----- ----- -----
-				//order parameter
-				if(orpc[ii][0]>=0.9999){
-					orpc[ii][0]=0.9999;
-				}
-				if(orpc[ii][0]<=0.0001){
-					orpc[ii][0]=0.0001;
-				}
-				orpc[ii][1]=0.0;
 				//----- ----- ----- -----
 				 cu[ii]  = cuc[ii][0];
 				 mn[ii]  = mnc[ii][0];
