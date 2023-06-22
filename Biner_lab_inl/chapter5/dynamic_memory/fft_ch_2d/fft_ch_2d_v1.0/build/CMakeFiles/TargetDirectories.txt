@@ -1,3 +1,0 @@
-/mnt/d/Phase-field/programing_phase_field_modeling/code/chapter5/dynamic_memory/fft_ch_2d/fft_ch_2d_v1.0/build/CMakeFiles/fft_ch_2d.exe.dir
-/mnt/d/Phase-field/programing_phase_field_modeling/code/chapter5/dynamic_memory/fft_ch_2d/fft_ch_2d_v1.0/build/CMakeFiles/edit_cache.dir
-/mnt/d/Phase-field/programing_phase_field_modeling/code/chapter5/dynamic_memory/fft_ch_2d/fft_ch_2d_v1.0/build/CMakeFiles/rebuild_cache.dir
