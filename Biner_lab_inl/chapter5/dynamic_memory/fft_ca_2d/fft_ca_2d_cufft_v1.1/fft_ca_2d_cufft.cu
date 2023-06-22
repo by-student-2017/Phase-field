@@ -222,9 +222,6 @@ int main(){
 	
 	float _Complex *dfdetac = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
 	float _Complex *etac    = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
-	//
-	float _Complex *dfdetak = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
-	float _Complex *etak    = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
 	
 	int bs=BS; // Number of threads, 16 or 32
 	dim3 blocks(Nx/bs,Ny/bs,1); //nx*ny = blocks * threads
@@ -396,6 +393,9 @@ int main(){
 	//
 	cudaFree(etak_d);
 	cudaFree(dfdetak_d);
+	//
+	cudaFree(k2_d);
+	cudaFree(k4_d);
 	//----- ----- ----- ----- ----- -----
 	free(kx);
 	free(ky);
@@ -409,8 +409,5 @@ int main(){
 	//
 	free(etac);
 	free(dfdetac);
-	//
-	free(etak);
-	free(dfdetak);
 	//----- ----- ----- ----- ----- -----
 }
