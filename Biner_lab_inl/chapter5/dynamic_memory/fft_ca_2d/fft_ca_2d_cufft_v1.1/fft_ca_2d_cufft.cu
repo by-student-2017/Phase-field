@@ -212,9 +212,6 @@ int main(){
 	float *eta2 = (float *)malloc(sizeof(float)*( NxNy ));
 	
 	//----- ----- ----- -----
-	float denom;
-	float _Complex numer;
-	//----- ----- ----- -----
 	float grain_sum;
 	//----- ----- ----- -----
 	int ncount;
