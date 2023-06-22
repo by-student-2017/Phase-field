@@ -3,11 +3,12 @@ Windows11 and WSL2(Ubuntu-22.04)
 
 (On WSL2(Ubuntu-22.04)
 1. sudo apt update
-2. sudo apt -y install gcc build-essential libfftw3-dev
+2. sudo apt -y install gcc build-essential
 3. cmake -S . -B build/ -G"Unix Makefiles"
-4. cmake --build build/ --target fft_ch_2d.exe
+4. cmake --build build/ --target fft_ca_2d.exe
 5. cd ./build
-6. ./fft_ch_2d.exe
+6. cp ../grain_25.inp ./
+7. ./fft_ca_2d.exe
 
 (On windows11)
 6. paraview

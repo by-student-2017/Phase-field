@@ -25,7 +25,7 @@ int main(){
 	//open an output file for writing total bulk energy values
 	FILE *out2=fopen("area_frac.out","w");
 	
-	//simulation cell parameters
+	//simulation cell parameters (These values are dummy)
 	int Nx=64; //Number of grid points in the x-direction
 	int Ny=64; //Number of grid points in the y-direction
 	
