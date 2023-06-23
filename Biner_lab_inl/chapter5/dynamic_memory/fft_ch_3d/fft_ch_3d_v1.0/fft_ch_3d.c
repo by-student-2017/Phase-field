@@ -1,4 +1,4 @@
-/* 2D semi-implicit spectral phase-field code
+/* 3D semi-implicit spectral phase-field code
    for solving Cahn-Hilliard equation */
 
 /* This program solves conserved phase-field equation with
