@@ -139,7 +139,7 @@ int main(){
 			for(int j=0;j<Ny;j++){
 				for(int k=0;k<Nz;k++){
 					ii=(i*Ny+j)*Nz+k;
-					fscanf(in1,"%5d %5d %5d %lf",&mx,&my,&mz,&den[ii]);
+					fscanf(in1,"%5d %5d %5d %f",&mx,&my,&mz,&den[ii]);
 					denc[ii] = den[ii];
 				}
 			}
@@ -330,7 +330,7 @@ int main(){
 	//calculate the execution time and print it
 	end = clock();
 	compute_time = ((float) (end - start)) / CLOCKS_PER_SEC;
-	printf("Compute Time: %lf \n", compute_time);
+	printf("Compute Time: %f \n", compute_time);
 	
 	//----- ----- ----- ----- ----- -----
 	cufftDestroy(plan);
