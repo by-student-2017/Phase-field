@@ -354,6 +354,9 @@ int main(){
 	//
 	cudaFree(f_ff_d);
 	cudaFree(ff_d);
+	//
+	cudaFree(k2_d);
+	cudaFree(k4_d);
 	//----- ----- ----- ----- ----- -----
 	free(kx);
 	free(ky);

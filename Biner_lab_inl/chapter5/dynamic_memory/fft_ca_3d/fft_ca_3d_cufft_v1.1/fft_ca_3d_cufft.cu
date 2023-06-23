@@ -215,12 +215,12 @@ int main(){
 	
 	//----- for cufft
 	float *k2_d, *k4_d;
-	k2_d  = (float *)malloc(Nx*Ny*sizeof(float));
-	k4_d  = (float *)malloc(Nx*Ny*sizeof(float));
-	cudaMalloc((void**)&k2_d ,Nx*Ny*sizeof(float));
-	cudaMalloc((void**)&k4_d ,Nx*Ny*sizeof(float));
-	cudaMemcpy(k2_d,k2,Nx*Ny*sizeof(float),cudaMemcpyHostToDevice); //k2 = k2_h
-	cudaMemcpy(k4_d,k4,Nx*Ny*sizeof(float),cudaMemcpyHostToDevice); //k4 = k4_h
+	k2_d  = (float *)malloc(NxNyNz*sizeof(float));
+	k4_d  = (float *)malloc(NxNyNz*sizeof(float));
+	cudaMalloc((void**)&k2_d ,NxNyNz*sizeof(float));
+	cudaMalloc((void**)&k4_d ,NxNyNz*sizeof(float));
+	cudaMemcpy(k2_d,k2,NxNyNz*sizeof(float),cudaMemcpyHostToDevice); //k2 = k2_h
+	cudaMemcpy(k4_d,k4,NxNyNz*sizeof(float),cudaMemcpyHostToDevice); //k4 = k4_h
 	//----- ----- ----- -----
 	
 	float *eta  = (float *)malloc(sizeof(float)*( NxNyNz ));
