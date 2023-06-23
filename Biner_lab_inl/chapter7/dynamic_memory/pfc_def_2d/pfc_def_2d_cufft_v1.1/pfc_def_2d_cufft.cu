@@ -167,9 +167,7 @@ int main(){
 	//----- ----- ----- ----- ----- -----
 	float _Complex *denc   = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
 	float _Complex *den3c  = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
-	float _Complex *Nonxc  = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
 	float _Complex *f_den  = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
-	float _Complex *f_den3 = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
 	float _Complex *f_ff   = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
 	float _Complex *ffc    = (float _Complex *)malloc(sizeof(float _Complex)*( Nx*Ny ));
 	//----- ----- ----- ----- ----- -----
@@ -202,11 +200,6 @@ int main(){
 		}
 	}
 	
-	//----- ----- ----- ----- ----- -----
-	//float Linx[Nx][Ny];
-	float *Linx  = (float *)malloc(sizeof(float)*( Nx*Ny ));
-	//float denom[Nx][Ny];
-	float *denom = (float *)malloc(sizeof(float)*( Nx*Ny ));
 	//----- ----- ----- ----- ----- -----
 	float energy=0.0;
 	float energy0=0.0;
@@ -390,9 +383,7 @@ int main(){
 	//
 	free(denc);
 	free(den3c);
-	free(Nonxc);
 	free(f_den);
-	free(f_den3);
 	free(f_ff);
 	free(ffc);
 	free(den);
