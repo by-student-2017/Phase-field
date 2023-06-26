@@ -13,3 +13,4 @@
 
 ## Editor
 - SAKURA:  https://sakura-editor.github.io/index.en.html
+- https://sakura-editor.github.io/ (Japanese)
