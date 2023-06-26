@@ -258,10 +258,10 @@ int main(){
 	con_d     = (float *)malloc(nx*ny*sizeof(float)); //GPU, CUDA, device
 	new_con_d = (float *)malloc(nx*ny*sizeof(float)); //GPU, CUDA, device
 	//
-	cudaMalloc((void**)&con_d ,   nx*ny*sizeof(float)); // define dynamic memory for GPU (device)
+	cudaMalloc((void**)&con_d,    nx*ny*sizeof(float)); // define dynamic memory for GPU (device)
 	cudaMalloc((void**)&new_con_d,nx*ny*sizeof(float)); // define dynamic memory for GPU (device)
 	//
-	//copy F_h(cpu,host) to f_d(cuda,device)
+	//copy con_h(cpu,host) to con_d(cuda,device)
 	cudaMemcpy(con_d,con,nx*ny*sizeof(float),cudaMemcpyHostToDevice); //con = con_h
 	//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	
