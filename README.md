@@ -11,5 +11,5 @@
 ## ParaView on ubuntu 20.04 LTS 
 - move red line to origin (>1.0 >1.0 >1.0)
 
-## Edita
+## Editor
 - SAKURA:  https://sakura-editor.github.io/index.en.html
