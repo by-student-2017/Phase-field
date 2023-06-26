@@ -12,5 +12,5 @@
 - move red line to origin (>1.0 >1.0 >1.0)
 
 ## Editor
-- SAKURA:  https://sakura-editor.github.io/index.en.html
-- https://sakura-editor.github.io/ (Japanese)
+- SAKURA: https://sakura-editor.github.io/index.en.html
+- SAKURA: https://sakura-editor.github.io/ (Japanese)
