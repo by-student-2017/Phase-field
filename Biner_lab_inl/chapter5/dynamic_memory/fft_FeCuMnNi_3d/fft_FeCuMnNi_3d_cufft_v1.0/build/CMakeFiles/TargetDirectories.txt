@@ -1,0 +1,3 @@
+/mnt/d/Phase-field/programing_phase_field_modeling/code/chapter5/dynamic_memory/fft_FeCuMnNi_3d_failed/fft_FeCuMnNi_3d_cufft_v1.0/build/CMakeFiles/fft_FeCuMnNi_3d_cufft.exe.dir
+/mnt/d/Phase-field/programing_phase_field_modeling/code/chapter5/dynamic_memory/fft_FeCuMnNi_3d_failed/fft_FeCuMnNi_3d_cufft_v1.0/build/CMakeFiles/edit_cache.dir
+/mnt/d/Phase-field/programing_phase_field_modeling/code/chapter5/dynamic_memory/fft_FeCuMnNi_3d_failed/fft_FeCuMnNi_3d_cufft_v1.0/build/CMakeFiles/rebuild_cache.dir
