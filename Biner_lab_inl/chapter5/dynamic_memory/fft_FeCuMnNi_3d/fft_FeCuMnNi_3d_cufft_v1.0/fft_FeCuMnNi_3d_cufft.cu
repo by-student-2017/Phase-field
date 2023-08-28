@@ -157,7 +157,7 @@ int main(){
 	int ii;
 	
 	//----- ----- ----- ----- ----- -----
-	//const int fftsizex = Nx, fftsizey = Ny;
+	//const int fftsizex = Nx, fftsizey = Ny, fftsizez = Nz;
 	//----- ----- ----- ----- 
 	cufftComplex *cu_d, *cuk_d; // Cu
 	cudaMalloc((void**)&cu_d,    sizeof(cufftComplex)*Nx*Ny*Nz);
@@ -428,17 +428,17 @@ int main(){
 					//ii=i*Ny*Nz+j*Nz+k;
 					ii=(i*Ny+j)*Nz+k;
 					//----- ----- ----- -----
-					cu[ii] = ( __real__ cuc[ii] )/(Nx*Ny);
-					//cu[ii] =  creal(cuc[ii])/(Nx*Ny); //For #include <_Complex.h>
+					cu[ii] = ( __real__ cuc[ii] )/(Nx*Ny*Nz);
+					//cu[ii] =  creal(cuc[ii])/(Nx*Ny*Nz); //For #include <_Complex.h>
 					//----- -----
-					mn[ii] = ( __real__ mnc[ii] )/(Nx*Ny);
-					//mn[ii] =  creal(mnc[ii])/(Nx*Ny); //For #include <_Complex.h>
+					mn[ii] = ( __real__ mnc[ii] )/(Nx*Ny*Nz);
+					//mn[ii] =  creal(mnc[ii])/(Nx*Ny*Nz); //For #include <_Complex.h>
 					//----- -----
-					ni[ii] = ( __real__ nic[ii] )/(Nx*Ny);
-					//ni[ii] =  creal(nic[ii])/(Nx*Ny); //For #include <_Complex.h>
+					ni[ii] = ( __real__ nic[ii] )/(Nx*Ny*Nz);
+					//ni[ii] =  creal(nic[ii])/(Nx*Ny*Nz); //For #include <_Complex.h>
 					//----- -----
-					orp[ii] = ( __real__ orpc[ii] )/(Nx*Ny);
-					//orp[ii] =  creal(orpc[ii])/(Nx*Ny); //For #include <_Complex.h>
+					orp[ii] = ( __real__ orpc[ii] )/(Nx*Ny*Nz);
+					//orp[ii] =  creal(orpc[ii])/(Nx*Ny*Nz); //For #include <_Complex.h>
 					//----- ----- ----- -----
 					//Cu
 					if(cu[ii]>=0.9999){
