@@ -5,9 +5,9 @@ Windows11 and WSL2(Ubuntu-22.04)
 1. sudo apt update
 2. sudo apt -y install gcc build-essential
 3. cmake -S . -B build/ -G"Unix Makefiles"
-4. cmake --build build/ --target fft_ch_3d.exe
+4. cmake --build build/ --target fft_ch_3d_cufft.exe
 5. cd ./build
-6. ./fft_ch_3d.exe
+6. ./fft_ch_3d_cufft.exe
 
 (On windows11)
 6. paraview
