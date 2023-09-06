@@ -21,7 +21,7 @@ float FeCr_chem_poten_3d(float cr_ijk, float tempr){
 	
 	/* Derivative of chemical energy with respect to Cr at current grid point.
 	   Note that it is normallized with the value of RT */
-	dfdcr_ijk=(-cr_ijk*(20500.0-9.68*tempr)+(10.0-cr_ijk)*(20500.0-9.68*tempr)
+	dfdcr_ijk=(-cr_ijk*(20500.0-9.68*tempr)+(1.0-cr_ijk)*(20500.0-9.68*tempr)
 			 +(log(cr_ijk)-log(1.0-cr_ijk))*RT
 			  )/RT;
 	

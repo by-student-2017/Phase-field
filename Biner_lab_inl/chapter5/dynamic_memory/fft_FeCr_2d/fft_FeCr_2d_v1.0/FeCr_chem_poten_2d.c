@@ -21,7 +21,7 @@ double FeCr_chem_poten_2d(double cr_ij, double tempr){
 	
 	/* Derivative of chemical energy with respect to Cr at current grid point.
 	   Note that it is normallized with the value of RT */
-	dfdcr_ij=(-cr_ij*(20500.0-9.68*tempr)+(10.0-cr_ij)*(20500.0-9.68*tempr)
+	dfdcr_ij=(-cr_ij*(20500.0-9.68*tempr)+(1.0-cr_ij)*(20500.0-9.68*tempr)
 			  +(log(cr_ij)-log(1.0-cr_ij))*RT
 			 )/RT;
 	
