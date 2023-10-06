@@ -14,3 +14,10 @@
 ## Editor
 - SAKURA: https://sakura-editor.github.io/index.en.html
 - SAKURA: https://sakura-editor.github.io/ (Japanese)
+
+
+## Acknowledgment ######################################
+- This project (modified version) is/was partially supported by the following :
+  + meguREnergy Co., Ltd.
+  + ATSUMITEC Co., Ltd.
+  + RIKEN
