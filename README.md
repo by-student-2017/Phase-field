@@ -15,9 +15,14 @@
 - SAKURA: https://sakura-editor.github.io/index.en.html
 - SAKURA: https://sakura-editor.github.io/ (Japanese)
 
-
 ## Acknowledgment ######################################
 - This project (modified version) is/was partially supported by the following :
   + meguREnergy Co., Ltd.
   + ATSUMITEC Co., Ltd.
   + RIKEN
+
+## Information of CUDA vs. OpenACC
+- https://proc-cpuinfo.fixstars.com/2020/06/openacc-vs-openmp-gpu-offloading/
+- https://www.jsces.org/activity/journal/files/tutorial_2103.pdf
+- https://www.cc.u-tokyo.ac.jp/events/lectures/209/20230630-1.pdf
+- https://www.cfca.nao.ac.jp/files/20230117ymiki.pdf
