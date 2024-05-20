@@ -19,7 +19,6 @@
 - This project (modified version) is/was partially supported by the following :
   + meguREnergy Co., Ltd.
   + ATSUMITEC Co., Ltd.
-  + RIKEN
 
 ## Information of CUDA vs. OpenACC
 - https://proc-cpuinfo.fixstars.com/2020/06/openacc-vs-openmp-gpu-offloading/
