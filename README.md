@@ -1,5 +1,28 @@
 # Phase-field
 
+## Installation
+1. (open Linux)
+2. cd $HOME
+3. git clone https://github.com/by-student-2017/Phase-field.git
+
+## Usage
+1. cd $HOME/Phase-field
+2. cd Koyama_lab_nu
+3. cd programs_ubuntu_version
+4. cd Chapter4_Section2_three_phase_v2
+5. ls
+6. cat readme.txt
+7. sudo apt update
+8. sudo apt -y install g++
+9. sudo apt -y install paraview paraview-dev
+10. g++ three_phase_v2.cpp -o three_phase
+11. ./three_phase
+
+## Note 1
+- "Paraview" can be used on Windows, so don't worry about it. Load the vtk file output from the calculation into "Paraview".
+- Steps 7, 8, 9 and 10 only need to be done once.
+
+## Note 2
 - Please read "readme.txt" in each file for rights and citations.
 - I recommend using "ubuntu 18.04 LTS" for WSL (windows10) due to image display issues.
 
@@ -14,15 +37,6 @@
 ## Editor
 - SAKURA: https://sakura-editor.github.io/index.en.html
 - SAKURA: https://sakura-editor.github.io/ (Japanese)
-
-## Installation
-1. (open Linux)
-2. cd $HOME
-3. git clone https://github.com/by-student-2017/Phase-field.git
-
-## Usage
-1. cd $HOME/Phase-field
-2. cd 
 
 ##Acknowledgment ######################################
 - This project (modified version) is/was partially supported by the following :
