@@ -5,7 +5,7 @@
 2. cd $HOME
 3. git clone https://github.com/by-student-2017/Phase-field.git
 
-## Usage
+## Tutorial 1
 1. cd $HOME/Phase-field
 2. cd Koyama_lab_nu
 3. cd programs_ubuntu_version
@@ -17,6 +17,15 @@
 9. sudo apt -y install paraview paraview-dev
 10. g++ three_phase_v2.cpp -o three_phase
 11. ./three_phase
+
+## Tutorial 2
+12. vim parameters.txt
+13. (keyboard) i
+14. (change "temp= 900.0        ! Temperature [K]" to "temp= 450.0        ! Temperature [K]")
+15. (keyboard) Esc
+16. (keyboard) :wq
+17. (keyboard) Enter
+18. ./three_phase
 
 ## Note 1
 - "Paraview" can be used on Windows, so don't worry about it. Load the vtk file output from the calculation into "Paraview".
