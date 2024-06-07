@@ -18,6 +18,11 @@
 10. g++ three_phase_v2.cpp -o three_phase
 11. ./three_phase
 
+## copy Linux to Win
+12. cd ../
+13. ls
+14. cp -r Chapter4_Section2_three_phase_v2 /mnt/c/Users/*/Desktop
+
 ## Tutorial 2 (change parameter)
 12. vim parameters.txt
 13. (keyboard) i
@@ -26,6 +31,8 @@
 16. (keyboard) :wq
 17. (keyboard) Enter
 18. ./three_phase
+
+## Tutorial 4
 
 ## Note 1
 - "Paraview" can be used on Windows, so don't worry about it. Load the vtk file output from the calculation into "Paraview".
