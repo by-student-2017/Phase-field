@@ -1,7 +1,7 @@
 # Phase-field
 
 ## Installation
-1. (open Linux)
+1. (open Linux. e.g., Ubuntu or WSL(windows))
 2. cd $HOME
 3. git clone https://github.com/by-student-2017/Phase-field.git
 
