@@ -16,9 +16,15 @@
 - SAKURA: https://sakura-editor.github.io/ (Japanese)
 
 ## Installation
-1. git clone 
+1. (open Linux)
+2. cd $HOME
+3. git clone https://github.com/by-student-2017/Phase-field.git
 
-## Acknowledgment ######################################
+## Usage
+1. cd $HOME/Phase-field
+2. cd 
+
+##Acknowledgment ######################################
 - This project (modified version) is/was partially supported by the following :
   + meguREnergy Co., Ltd.
   + ATSUMITEC Co., Ltd.
