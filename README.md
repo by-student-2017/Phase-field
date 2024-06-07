@@ -4,6 +4,9 @@
 1. (open Linux. e.g., Ubuntu or WSL(windows))
 2. cd $HOME
 3. git clone https://github.com/by-student-2017/Phase-field.git
+4. sudo apt update
+5. sudo apt -y install g++
+6. sudo apt -y install paraview paraview-dev
 
 ## Tutorial 1 (basic run)
 1. cd $HOME/Phase-field
@@ -12,29 +15,26 @@
 4. cd Chapter4_Section2_three_phase_v2
 5. ls
 6. cat readme.txt
-7. sudo apt update
-8. sudo apt -y install g++
-9. sudo apt -y install paraview paraview-dev
-10. g++ three_phase_v2.cpp -o three_phase
-11. ./three_phase
+7. g++ three_phase_v2.cpp -o three_phase
+8. ./three_phase
 
 ## copy linux to win
-12. cd ../
-13. ls
-14. cp -r Chapter4_Section2_three_phase_v2 /mnt/c/Users/*/Desktop
+9. cd ../
+10. ls
+11. cp -r Chapter4_Section2_three_phase_v2 /mnt/c/Users/*/Desktop
 
 ## Tutorial 2 (change parameter)
-15. vim parameters.txt
-16. (keyboard) i
-17. (change "temp= 900.0        ! Temperature [K]" to "temp= 450.0        ! Temperature [K]")
-18. (keyboard) Esc
-19. (keyboard) :wq
-20. (keyboard) Enter
-21. ./three_phase
+12. vim parameters.txt
+13. (keyboard) i
+14. (change "temp= 900.0        ! Temperature [K]" to "temp= 450.0        ! Temperature [K]")
+15. (keyboard) Esc
+16. (keyboard) :wq
+17. (keyboard) Enter
+18. ./three_phase
 
 ## copy win to linux
-15. (rewrite parameter of parameters.txt)
-16. cp /mnt/c/Users/*/Desktop/Chapter4_Section2_three_phase_v2/parameters.txt $HOME/Phase-field/Koyama_lab_nu/programs_ubuntu_version/Chapter4_Section2_three_phase_v2/
+12. (rewrite parameter of parameters.txt)
+13. cp /mnt/c/Users/*/Desktop/Chapter4_Section2_three_phase_v2/parameters.txt $HOME/Phase-field/Koyama_lab_nu/programs_ubuntu_version/Chapter4_Section2_three_phase_v2/
 
 ## Note 1
 - Press (keyboard) [tab] while entering the text will automatically write a continuation or search for candidates.
