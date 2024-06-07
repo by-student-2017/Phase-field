@@ -18,25 +18,28 @@
 10. g++ three_phase_v2.cpp -o three_phase
 11. ./three_phase
 
-## copy Linux to Win
+## copy linux to win
 12. cd ../
 13. ls
 14. cp -r Chapter4_Section2_three_phase_v2 /mnt/c/Users/*/Desktop
 
 ## Tutorial 2 (change parameter)
-12. vim parameters.txt
-13. (keyboard) i
-14. (change "temp= 900.0        ! Temperature [K]" to "temp= 450.0        ! Temperature [K]")
-15. (keyboard) Esc
-16. (keyboard) :wq
-17. (keyboard) Enter
-18. ./three_phase
+15. vim parameters.txt
+16. (keyboard) i
+17. (change "temp= 900.0        ! Temperature [K]" to "temp= 450.0        ! Temperature [K]")
+18. (keyboard) Esc
+19. (keyboard) :wq
+20. (keyboard) Enter
+21. ./three_phase
 
-## Tutorial 4
+## copy win to linux
+15. (rewrite parameter of parameters.txt)
+16. cp /mnt/c/Users/*/Desktop/Chapter4_Section2_three_phase_v2/parameters.txt $HOME/Phase-field/Koyama_lab_nu/programs_ubuntu_version/Chapter4_Section2_three_phase_v2/
 
 ## Note 1
 - "Paraview" can be used on Windows, so don't worry about it. Load the vtk file output from the calculation into "Paraview".
 - Steps 7, 8, 9 and 10 only need to be done once.
+- Press (keyboard) [tab] while entering the text will automatically write a continuation or search for candidates.
 
 ## Note 2
 - Please read "readme.txt" in each file for rights and citations.
