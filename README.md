@@ -37,9 +37,9 @@
 16. cp /mnt/c/Users/*/Desktop/Chapter4_Section2_three_phase_v2/parameters.txt $HOME/Phase-field/Koyama_lab_nu/programs_ubuntu_version/Chapter4_Section2_three_phase_v2/
 
 ## Note 1
+- Press (keyboard) [tab] while entering the text will automatically write a continuation or search for candidates.
 - "Paraview" can be used on Windows, so don't worry about it. Load the vtk file output from the calculation into "Paraview".
 - Steps 7, 8, 9 and 10 only need to be done once.
-- Press (keyboard) [tab] while entering the text will automatically write a continuation or search for candidates.
 
 ## Note 2
 - Please read "readme.txt" in each file for rights and citations.
