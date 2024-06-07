@@ -5,7 +5,7 @@
 2. cd $HOME
 3. git clone https://github.com/by-student-2017/Phase-field.git
 
-## Tutorial 1
+## Tutorial 1 (basic run)
 1. cd $HOME/Phase-field
 2. cd Koyama_lab_nu
 3. cd programs_ubuntu_version
@@ -18,7 +18,7 @@
 10. g++ three_phase_v2.cpp -o three_phase
 11. ./three_phase
 
-## Tutorial 2
+## Tutorial 2 (change parameter)
 12. vim parameters.txt
 13. (keyboard) i
 14. (change "temp= 900.0        ! Temperature [K]" to "temp= 450.0        ! Temperature [K]")
