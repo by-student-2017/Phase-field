@@ -15,6 +15,9 @@
 - SAKURA: https://sakura-editor.github.io/index.en.html
 - SAKURA: https://sakura-editor.github.io/ (Japanese)
 
+## Installation
+1. git clone 
+
 ## Acknowledgment ######################################
 - This project (modified version) is/was partially supported by the following :
   + meguREnergy Co., Ltd.
