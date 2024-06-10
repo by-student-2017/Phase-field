@@ -28,7 +28,7 @@
 13. (keyboard) i
 14. (change "temp= 900.0        ! Temperature [K]" to "temp= 450.0        ! Temperature [K]")
 15. (keyboard) Esc
-16. (keyboard) :wq
+16. (keyboard) :qw
 17. (keyboard) Enter
 18. ./three_phase
 
