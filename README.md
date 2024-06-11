@@ -6,6 +6,12 @@
 - The Phase-field method code shown here is written exactly as in the textbook, so it is easier to understand than the DVXalpha method SCAT, FLAPW method as represented by WIEN2k, and KKR method codes such as Akai-KKR. The Phase-field method code is also suitable for learning coding techniques.
 - Undeveloped: 3D dendrite growth, effects of oxygen defects in PbTiO3, crystal growth dependence on plane orientation, etc.
 
+- Biner_lab_inl is a C-language, GPU-compatible version of the textbook code by Dr. Biner
+- Koyama_lab_nu is a textbook code by Dr. Koyama that reads parameters from the text
+
+- dynamic memory is dynamic memory allocation that allows calculations of 4 GB or more (i.e. allows calculations of large systems)
+- static memory is static memory allocation that allows calculations of less than 4 GB (only small systems can be calculated, but the calculation speed is slightly faster)
+
 ## Installation
 1. (open Linux. e.g., Ubuntu or WSL(windows))
 2. cd $HOME
@@ -111,6 +117,9 @@
 3. pfc_def_2d or pfc_2d (input: bi_2r_2d.inp)
 - "3d" is the same procedure as "2d".
 - Note: The "PFC" code is available on this github as well as on "https://github.com/eimrek/phase-field-crystal-mpi". However, this is quite difficult code. Before trying to improve this difficult code, I recommend that you deepen your understanding by using the code on github here and textbooks such as those by Dr. Biner.
+
+## Python code
+- see https://github.com/Yamanaka-Lab-TUAT
 
 ## Acknowledgment
 - This project (modified version) is/was partially supported by the following :
