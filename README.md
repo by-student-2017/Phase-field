@@ -135,6 +135,9 @@
 4. (open WSL, e.g., ubuntu)
 5. cd $HOME
 6. cp -r  /mnt/c/Users/*/Desktop/Phase-field ./
+7. ls
+- "/mnt/c" = C drive
+- "-r" is an option that means to copy the contents of the directory (=folder)
 
 ## Acknowledgment
 - This project (modified version) is/was partially supported by the following :
