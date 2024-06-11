@@ -13,6 +13,8 @@
 
 - For "python" code examples, see Dr. Yamanaka's https://github.com/Yamanaka-Lab-TUAT.
 
+- I plan to continue using C language in the future. Python has many advantages, but it often causes confusion due to specification changes. Readers who want to avoid short-term use should consider using C language.
+
 - Undeveloped: 3D dendrite growth, effects of oxygen defects in PbTiO3, crystal growth dependence on plane orientation, etc.
 
 ## Installation
