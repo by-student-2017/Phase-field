@@ -86,11 +86,7 @@
 + Memory：32 GB
 + GPU: NVIDIA GeForce RTX3070
 + WSL2: VERSION="22.04.1 LTS (Jammy Jellyfish)"
-+ [Quantum Espresso ver.7.2](https://www.quantum-espresso.org/release-notes/release-notes-QE7-2.html)
-+ [PSLibrary 1.0.0](https://dalcorso.github.io/pslibrary/)
-+ [DFTB+ ver.23.1](https://dftbplus.org/download/dftb-stable)
 + Python 3.10.12
-+ Please, see "Installation_note_WSL2.txt"
 
 ## Acknowledgment
 - This project (modified version) is/was partially supported by the following :
