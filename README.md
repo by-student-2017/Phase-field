@@ -23,6 +23,7 @@
 9. cd ../
 10. ls
 11. cp -r Chapter4_Section2_three_phase_v2 /mnt/c/Users/*/Desktop
+- "*" is your PC name. You can search with the [Tab] key (on your keyboard).
 
 ## Tutorial 2 (change parameter)
 12. vim parameters.txt
