@@ -69,6 +69,9 @@
 8. wsl --update
 9. wsl --shutdown
 
+## GPU setting (not need this setting)
+- see Takaki_lab_kit/ubuntu_version/Accelerate_phase-field_simulation_with_GPU/2d/readme.txt
+
 ## Acknowledgment
 - This project (modified version) is/was partially supported by the following :
   + meguREnergy Co., Ltd.
