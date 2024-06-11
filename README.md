@@ -82,12 +82,35 @@
 2. echo "export DISPLAY=:0.0" >> ~/.bashrc
 3. bash
 
+## OS
+- This github code can be used in various environments such as Windows and Linux. Windows and Linux each have their own advantages and disadvantages, so please use it in the environment that is easiest for you. It is also worth considering using WSL or cygwin.
+
+- ## Problems with line break symbols depending on the OS
+- The line break symbol may differ depending on the OS, so it may not work. To change the line break symbol, do the following:
+- Convert CRLF (Windows) => LF (Linux): sed -i 's/\r//g' *.txt
+- Convert LF (Linux) => CRLF (Windows): sed -i 's/$/\r/g' *.txt
+
+## Cygwin
+- see https://www5.hp-ez.com/hp/calculations/page424 
+
+## Paraview
+- https://www.paraview.org/download/
+
 ## ParaView on ubuntu 20.04 LTS 
 - move red line to origin (>1.0 >1.0 >1.0)
 
 ## Editor
 - SAKURA: https://sakura-editor.github.io/index.en.html (free)
 - SAKURA: https://sakura-editor.github.io/ (Japanese) (free)
+
+## Phase-Field Crystal (PFC) method
+- https://github.com/by-student-2017/Phase-field/tree/main/Biner_lab_inl/chapter7/dynamic_memory
+- "PFC" performs calculations in the order shown below. The previous calculation serves as the input file for the next calculation.
+1. pfc_2d (get output file: final_conf.out)
+2. pfc_poly_2d (input: final_conf.out from pfc_2d) (output: bi_2r_2d.inp) (Select a circle or vertical line defect in the code (pfc_poly_2d.c).)
+3. pfc_def_2d or pfc_2d (input: bi_2r_2d.inp)
+- "3d" is the same procedure as "2d".
+- Note: The "PFC" code is available on this github as well as on "https://github.com/eimrek/phase-field-crystal-mpi". However, this is quite difficult code. Before trying to improve this difficult code, I recommend that you deepen your understanding by using the code on github here and textbooks such as those by Dr. Biner.
 
 ## GPU setting (not need this setting)
 - see Takaki_lab_kit/ubuntu_version/Accelerate_phase-field_simulation_with_GPU/2d/readme.txt
@@ -104,29 +127,6 @@
 + GPU: NVIDIA GeForce RTX3070
 + WSL2: VERSION="22.04.1 LTS (Jammy Jellyfish)"
 + Python 3.10.12
-
-## OS
-- This github code can be used in various environments such as Windows and Linux. Windows and Linux each have their own advantages and disadvantages, so please use it in the environment that is easiest for you. It is also worth considering using WSL or cygwin.
-
-## Cygwin
-- see https://www5.hp-ez.com/hp/calculations/page424 
-
-## Paraview
-- https://www.paraview.org/download/
-
-## Phase-Field Crystal (PFC) method
-- https://github.com/by-student-2017/Phase-field/tree/main/Biner_lab_inl/chapter7/dynamic_memory
-- "PFC" performs calculations in the order shown below. The previous calculation serves as the input file for the next calculation.
-1. pfc_2d (get output file: final_conf.out)
-2. pfc_poly_2d (input: final_conf.out from pfc_2d) (output: bi_2r_2d.inp) (Select a circle or vertical line defect in the code (pfc_poly_2d.c).)
-3. pfc_def_2d or pfc_2d (input: bi_2r_2d.inp)
-- "3d" is the same procedure as "2d".
-- Note: The "PFC" code is available on this github as well as on "https://github.com/eimrek/phase-field-crystal-mpi". However, this is quite difficult code. Before trying to improve this difficult code, I recommend that you deepen your understanding by using the code on github here and textbooks such as those by Dr. Biner.
-
-## Problems with line break symbols depending on the OS
-- The line break symbol may differ depending on the OS, so it may not work. To change the line break symbol, do the following:
-- Convert CRLF (Windows) => LF (Linux): sed -i 's/\r//g' *.txt
-- Convert LF (Linux) => CRLF (Windows): sed -i 's/$/\r/g' *.txt
 
 ## Acknowledgment
 - This project (modified version) is/was partially supported by the following :
