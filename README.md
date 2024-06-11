@@ -19,7 +19,7 @@
 7. g++ three_phase_v2.cpp -o three_phase
 8. ./three_phase
 
-## copy linux to win
+## Copy linux to windows
 9. cd ../
 10. ls
 11. cp -r Chapter4_Section2_three_phase_v2 /mnt/c/Users/*/Desktop
@@ -33,7 +33,7 @@
 17. (keyboard) Enter
 18. ./three_phase
 
-## copy win to linux
+## Copy windows to linux
 12. (rewrite parameter of parameters.txt)
 13. cp /mnt/c/Users/*/Desktop/Chapter4_Section2_three_phase_v2/parameters.txt $HOME/Phase-field/Koyama_lab_nu/programs_ubuntu_version/Chapter4_Section2_three_phase_v2/
 
@@ -72,7 +72,8 @@
 ## GPU setting (not need this setting)
 - see Takaki_lab_kit/ubuntu_version/Accelerate_phase-field_simulation_with_GPU/2d/readme.txt
 - Takaki_lab_kit/ubuntu_version/Accelerate_phase-field_simulation_with_GPU
-- 
+- "cufft" in Biner_lab_inl
+- Note: Although it depends on the calculation conditions and the system, a GPU is about 10 times faster than parallelization using a general high-end CPU. If you have the time, it is a good idea to use it. In normal use, this difference is often wiped out when you are taking a nap, so it is a good idea to consider using a GPU when you are experiencing problems such as a calculation not completing on the CPU.
 
 ## Acknowledgment
 - This project (modified version) is/was partially supported by the following :
