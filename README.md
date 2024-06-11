@@ -33,6 +33,7 @@
 16. (keyboard) :wq
 17. (keyboard) Enter
 18. ./three_phase
+- Note: It is easier to rewrite using "gedit", so it is a good idea to make use of "VcXsrv" or similar.
 
 ## Copy windows to linux
 12. (rewrite parameter of parameters.txt)
