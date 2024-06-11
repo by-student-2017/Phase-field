@@ -103,6 +103,14 @@
 ## Paraview
 - https://www.paraview.org/download/
 
+## Phase-Field Crystal (PFC) method
+- https://github.com/by-student-2017/Phase-field/tree/main/Biner_lab_inl/chapter7/dynamic_memory
+- "PFC" performs calculations in the order shown below. The previous calculation serves as the input file for the next calculation.
+1. pfc_2d (get output file: final_conf.out)
+2. pfc_poly_2d (input: final_conf.out from pfc_2d) (output: bi_2r_2d.inp) (Select a circle or vertical line defect in the code (pfc_poly_2d.c).)
+3. pfc_def_2d or pfc_2d (input: bi_2r_2d.inp)
+- "3d" is the same procedure as "2d".
+
 ## Acknowledgment
 - This project (modified version) is/was partially supported by the following :
   + meguREnergy Co., Ltd.
