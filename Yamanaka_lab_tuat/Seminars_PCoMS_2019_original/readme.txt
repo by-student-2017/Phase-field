@@ -1,5 +1,6 @@
 PCoMS 3day seminar 2019 (Professional development Consortium for Computational Materials Science)
-Assoc. Prof. Yamanaka will give a lecture on "Fundamental theory & Programming for Phase-field modeling" for PCoMS 3days-----------------------------------------------------------------------
+Assoc. Prof. Yamanaka will give a lecture on "Fundamental theory & Programming for Phase-field modeling" for PCoMS 3days
+-----------------------------------------------------------------------
  seminar 2019 at August 23-25th, 2019 in Yamagata Japan. Sample source codes written by Python and the ipynb files for Jupyter Notebook will be disrtibuted to participants and students.
 -----------------------------------------------------------------------
 ## Notes and Disclaimers
