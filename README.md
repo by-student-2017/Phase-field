@@ -128,6 +128,14 @@
 + WSL2: VERSION="22.04.1 LTS (Jammy Jellyfish)"
 + Python 3.10.12
 
+## Appendix: from Windows to Linux
+1. Code => Download ZIP
+2. (unpack) Phase-field-main.zip
+3. Change the file name in the folder to "Phase-field" and place it on the desktop.
+4. (open WSL, e.g., ubuntu)
+5. cd $HOME
+6. cp -r  /mnt/c/Users/*/Desktop/Phase-field ./
+
 ## Acknowledgment
 - This project (modified version) is/was partially supported by the following :
   + meguREnergy Co., Ltd.
