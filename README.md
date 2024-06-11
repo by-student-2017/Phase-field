@@ -1,5 +1,5 @@
 # Phase-field
-- This github provides examples for not only "libfftw3" but also "cuFFT".
+- This github provides examples for not only "libfftw3" but also "cuFFT". By writing it in C, we were able to expand it to use "cuFFT".
 - The C code is constructed according to the formulas in Dr. Biner's textbook (https://link.springer.com/book/10.1007/978-3-319-41196-5). There are also several settings for Paraview that are not described in the textbook, so please refer to them. The Paraview settings for the progression of destruction in "CPF" are particularly worthy of mention.
 - The Phase-field method code shown here is written exactly as in the textbook, so it is easier to understand than the DVXalpha method SCAT, FLAPW as represented by WIEN2k, and KKR method codes such as Akai-KKR. The Phase-field method code is also suitable for learning coding techniques.
 - Undeveloped: 3D dendrite growth, effects of oxygen defects in PbTiO3, crystal growth dependence on plane orientation, etc.
