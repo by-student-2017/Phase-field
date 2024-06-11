@@ -6,7 +6,8 @@
 3. git clone https://github.com/by-student-2017/Phase-field.git
 4. sudo apt update
 5. sudo apt -y install g++
-6. sudo apt -y install paraview paraview-dev
+6. sudo apt -y install gcc build-essential libfftw3-dev
+7. sudo apt -y install paraview paraview-dev
 
 ## Tutorial 1 (basic run)
 1. cd $HOME/Phase-field
@@ -39,7 +40,6 @@
 ## Note 1
 - Press (keyboard) [tab] while entering the text will automatically write a continuation or search for candidates.
 - "Paraview" can be used on Windows, so don't worry about it. Load the vtk file output from the calculation into "Paraview".
-- Steps 7, 8, 9 and 10 only need to be done once.
 
 ## Note 2
 - Please read "readme.txt" in each file for rights and citations.
@@ -71,6 +71,8 @@
 
 ## GPU setting (not need this setting)
 - see Takaki_lab_kit/ubuntu_version/Accelerate_phase-field_simulation_with_GPU/2d/readme.txt
+- Takaki_lab_kit/ubuntu_version/Accelerate_phase-field_simulation_with_GPU
+- 
 
 ## Acknowledgment
 - This project (modified version) is/was partially supported by the following :
