@@ -137,6 +137,7 @@
 6. cp -r  /mnt/c/Users/*/Desktop/Phase-field ./
 7. ls
 - "/mnt/c" = C drive
+- The asterisk (*) is "something appropriate (here PC or username)
 - "-r" is an option that means to copy the contents of the directory (=folder)
 
 ## Acknowledgment
