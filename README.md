@@ -1,6 +1,6 @@
 # Phase-field
 - This github provides examples for not only "libfftw3" but also "cuFFT".
-- Undeveloped: 3D dendrite growth, effects of oxygen defects in PbTiO3, etc.
+- Undeveloped: 3D dendrite growth, effects of oxygen defects in PbTiO3, etc., crystal growth dependence on plane orientation, etc.
 
 ## Installation
 1. (open Linux. e.g., Ubuntu or WSL(windows))
