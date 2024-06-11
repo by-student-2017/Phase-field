@@ -1,7 +1,7 @@
 # Phase-field
 - This github provides examples for not only "libfftw3" but also "cuFFT".
 - The C code is constructed according to the formulas in Dr. Biner's textbook (https://link.springer.com/book/10.1007/978-3-319-41196-5). There are also several settings for Paraview that are not described in the textbook, so please refer to them.
-- Undeveloped: 3D dendrite growth, effects of oxygen defects in PbTiO3, etc., crystal growth dependence on plane orientation, etc.
+- Undeveloped: 3D dendrite growth, effects of oxygen defects in PbTiO3, crystal growth dependence on plane orientation, etc.
 
 ## Installation
 1. (open Linux. e.g., Ubuntu or WSL(windows))
