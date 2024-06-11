@@ -11,6 +11,8 @@
 - dynamic memory is dynamic memory allocation that allows calculations of 4 GB or more (i.e. allows calculations of large systems)
 - static memory is static memory allocation that allows calculations of less than 4 GB (only small systems can be calculated, but the calculation speed is slightly faster)
 
+- For "python" code examples, see Dr. Yamanaka's https://github.com/Yamanaka-Lab-TUAT.
+
 - Undeveloped: 3D dendrite growth, effects of oxygen defects in PbTiO3, crystal growth dependence on plane orientation, etc.
 
 ## Installation
@@ -118,9 +120,6 @@
 3. pfc_def_2d or pfc_2d (input: bi_2r_2d.inp)
 - "3d" is the same procedure as "2d".
 - Note: The "PFC" code is available on this github as well as on "https://github.com/eimrek/phase-field-crystal-mpi". However, this is quite difficult code. Before trying to improve this difficult code, I recommend that you deepen your understanding by using the code on github here and textbooks such as those by Dr. Biner.
-
-## Python code
-- see https://github.com/Yamanaka-Lab-TUAT
 
 ## Acknowledgment
 - This project (modified version) is/was partially supported by the following :
