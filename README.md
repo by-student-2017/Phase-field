@@ -45,18 +45,6 @@
 - Please read "readme.txt" in each file for rights and citations.
 - I recommend using "ubuntu 18.04 LTS" for WSL (windows10) due to image display issues.
 
-## XLaunch (ubuntu 20.04 LTS or ubuntu 22.04 LTS on windows10)
-1. sudo strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
-2. echo "export DISPLAY=:0.0" >> ~/.bashrc
-3. bash
-
-## ParaView on ubuntu 20.04 LTS 
-- move red line to origin (>1.0 >1.0 >1.0)
-
-## Editor
-- SAKURA: https://sakura-editor.github.io/index.en.html (free)
-- SAKURA: https://sakura-editor.github.io/ (Japanese) (free)
-
 ## WSL (windows 11 + VcXsrv)
 - see https://www5.hp-ez.com/hp/calculations/page513 (Japanese)
 1. Settings -> Projection to PC -> Optional Features -> Other Windows Features
@@ -68,7 +56,19 @@
 7. wsl --install -d Ubuntu-20.04
 8. wsl --update
 9. wsl --shutdown
-- Note: If you have "VcXsrv" or similar available, you can edit code and parameters with "gedit" instead of "vim", which is very convenient. If you find it troublesome to use "copy -r" just to edit text, it is a good idea to have "VcXsrv" or similar available.
+- Note: If you have "VcXsrv" or similar available, you can edit code and parameters with "gedit" instead of "vim", which is very convenient. If you find it troublesome to use "copy -r" just to edit text, it is a good idea to have "VcXsrv" or similar available (e.g., XLaunch, etc).
+
+## XLaunch (ubuntu 20.04 LTS or ubuntu 22.04 LTS on windows10)
+1. sudo strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
+2. echo "export DISPLAY=:0.0" >> ~/.bashrc
+3. bash
+
+## ParaView on ubuntu 20.04 LTS 
+- move red line to origin (>1.0 >1.0 >1.0)
+
+## Editor
+- SAKURA: https://sakura-editor.github.io/index.en.html (free)
+- SAKURA: https://sakura-editor.github.io/ (Japanese) (free)
 
 ## GPU setting (not need this setting)
 - see Takaki_lab_kit/ubuntu_version/Accelerate_phase-field_simulation_with_GPU/2d/readme.txt
