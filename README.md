@@ -57,6 +57,18 @@
 - SAKURA: https://sakura-editor.github.io/index.en.html
 - SAKURA: https://sakura-editor.github.io/ (Japanese)
 
+## WSL (windows 11 + VcXsrv)
+- see https://www5.hp-ez.com/hp/calculations/page513 (Japanese)
+1. Settings -> Projection to PC -> Optional Features -> Other Windows Features
+2. ☑ Windows Subsystem for Linux
+3. ☑ Virtual Machine Platform
+4. OK
+5. (Open a command prompt with administrator privileges)
+6. wsl --list --d
+7. wsl --install -d Ubuntu-20.04
+8. wsl --update
+9. wsl --shutdown
+
 ##Acknowledgment ######################################
 - This project (modified version) is/was partially supported by the following :
   + meguREnergy Co., Ltd.
