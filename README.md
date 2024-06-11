@@ -78,6 +78,20 @@
 - "cufft" in Biner_lab_inl
 - Note: Although it depends on the calculation conditions and the system, a GPU is about 10 times faster than parallelization using a general high-end CPU. If you have the time, it is a good idea to use it. In normal use, this difference is often wiped out when you are taking a nap, so it is a good idea to consider using a GPU when you are experiencing problems such as a calculation not completing on the CPU.
 
+## PC specs used for test
++ OS: Microsoft Windows 11 Home 64 bit
++ BIOS: 1.14.0
++ CPU： 12th Gen Intel(R) Core(TM) i7-12700
++ Base Board：0R6PCT (A01)
++ Memory：32 GB
++ GPU: NVIDIA GeForce RTX3070
++ WSL2: VERSION="22.04.1 LTS (Jammy Jellyfish)"
++ [Quantum Espresso ver.7.2](https://www.quantum-espresso.org/release-notes/release-notes-QE7-2.html)
++ [PSLibrary 1.0.0](https://dalcorso.github.io/pslibrary/)
++ [DFTB+ ver.23.1](https://dftbplus.org/download/dftb-stable)
++ Python 3.10.12
++ Please, see "Installation_note_WSL2.txt"
+
 ## Acknowledgment
 - This project (modified version) is/was partially supported by the following :
   + meguREnergy Co., Ltd.
