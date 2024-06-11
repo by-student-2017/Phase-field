@@ -68,6 +68,7 @@
 7. wsl --install -d Ubuntu-20.04
 8. wsl --update
 9. wsl --shutdown
+- Note: If you have "VcXsrv" or similar available, you can edit code and parameters with "gedit" instead of "vim", which is very convenient. If you find it troublesome to use "copy -r" just to edit text, it is a good idea to have "VcXsrv" or similar available.
 
 ## GPU setting (not need this setting)
 - see Takaki_lab_kit/ubuntu_version/Accelerate_phase-field_simulation_with_GPU/2d/readme.txt
