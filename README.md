@@ -123,6 +123,11 @@
 - "3d" is the same procedure as "2d".
 - Note: The "PFC" code is available on this github as well as on "https://github.com/eimrek/phase-field-crystal-mpi". However, this is quite difficult code. Before trying to improve this difficult code, I recommend that you deepen your understanding by using the code on github here and textbooks such as those by Dr. Biner.
 
+## Problems with line break symbols depending on the OS
+- The line break symbol may differ depending on the OS, so it may not work. To change the line break symbol, do the following:
+- Convert CRLF (Windows) => LF (Linux): sed -i 's/\r//g' *.txt
+- Convert LF (Linux) => CRLF (Windows): sed -i 's/$/\r/g' *.txt
+
 ## Acknowledgment
 - This project (modified version) is/was partially supported by the following :
   + meguREnergy Co., Ltd.
