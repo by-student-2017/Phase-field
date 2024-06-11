@@ -92,7 +92,7 @@
 + WSL2: VERSION="22.04.1 LTS (Jammy Jellyfish)"
 + Python 3.10.12
 
-## Note
+## OS
 - This github code can be used in various environments such as Windows and Linux. Windows and Linux each have their own advantages and disadvantages, so please use it in the environment that is easiest for you. It is also worth considering using WSL or cygwin.
 
 ## Cygwin
