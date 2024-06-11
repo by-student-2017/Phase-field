@@ -54,8 +54,8 @@
 - move red line to origin (>1.0 >1.0 >1.0)
 
 ## Editor
-- SAKURA: https://sakura-editor.github.io/index.en.html
-- SAKURA: https://sakura-editor.github.io/ (Japanese)
+- SAKURA: https://sakura-editor.github.io/index.en.html (free)
+- SAKURA: https://sakura-editor.github.io/ (Japanese) (free)
 
 ## WSL (windows 11 + VcXsrv)
 - see https://www5.hp-ez.com/hp/calculations/page513 (Japanese)
