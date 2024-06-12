@@ -169,6 +169,12 @@ Fig. Steps 1 to 7 above. The "Paraview" procedure in this diagram was forgotten 
 ![Tutorial_3_2](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_3_2.png)
 Fig. Steps 8 to 10 above.
 
+![Tutorial_3_3](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_3_3.png)
+Fig. Structure during distortion (0 steps).
+
+![Tutorial_3_4](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_3_4.png)
+Fig. Structure after distortion (350000 steps).
+
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
 - I recommend using "ubuntu 18.04 LTS" for WSL (windows10) due to image display issues.
