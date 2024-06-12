@@ -82,7 +82,10 @@ Fig.
 Fig. 
 
 ![Tutorial_2_1_3](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_2_1_3.png)
-Fig. 
+Fig. Example of data transfer. The [Tab] key did not work well with "$HOME", so it was changed to "~". Either "$HOME" or "~" is fine, so choose the method that you find easiest. 
+- "/mnt/c" = C drive
+- The asterisk (*) is "something appropriate (here PC or username)
+- "-r" is an option that means to copy the contents of the directory (=folder)
 
 ## Tutorial 2_2 (change parameter on vim)
 12. vim parameters.txt
