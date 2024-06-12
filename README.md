@@ -130,7 +130,7 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 ## Q&A 3 (How should I create the initial structure in Multi-Phase-Field (MPF)?)
 - I am preparing code to create an initial structure using Voronoi polyhedrons (https://github.com/by-student-2017/Phase-field/tree/main/Biner_lab_inl/Appendix).
 
-## Phase-Field Crystal (PFC) method
+# Phase-Field Crystal (PFC) method
 - https://github.com/by-student-2017/Phase-field/tree/main/Biner_lab_inl/chapter7/dynamic_memory
 - "PFC" performs calculations in the order shown below. The previous calculation serves as the input file for the next calculation.
 1. pfc_2d (get output file: final_conf.out)
