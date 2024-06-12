@@ -58,7 +58,11 @@ Fig. The processing after the calculation is performed. In this example, it fini
 15. (click "play") |>
 
 ![Paraview_1](https://github.com/by-student-2017/Phase-field/blob/main/Fig/paraview_1.png)
+Fig. A sequence of operations for "Paraview".
+
 ![Paraview_2](https://github.com/by-student-2017/Phase-field/blob/main/Fig/paraview_2.png)
+Fig. A sequence of operations for "Paraview". The data with the extension "vtk" is the data to be loaded by "Paraview". You can also drag and drop it, but this way the series of numbered data will be loaded properly.
+
 ![Paraview_3](https://github.com/by-student-2017/Phase-field/blob/main/Fig/paraview_3.png)
 Fig. A sequence of operations for "Paraview". In the last image, click the "<-->" in the second or third row at the top left (near the left side of "concentration_A") to automatically change the color gradation range to an appropriate value.
 
