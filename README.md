@@ -39,6 +39,9 @@ Fig. Building a computing environment using WSL2 (ubuntu 22.04 LTS). The content
 7. g++ three_phase_v2.cpp -o three_phase
 8. ./three_phase
 
+![Tutorial1](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_1_basic_run.png)
+Fig. 
+
 ## Copy linux to windows
 9. cd ../
 10. ls
