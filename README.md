@@ -186,6 +186,9 @@ Fig. Structure after distortion (350000 steps).
 7. set yrange [-0.01:-0.006]
 8. replot
 
+![Tutorial_3_5](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_3_strain_vs_energy_density.png)
+Fig. Strain vs. Energy density.
+
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
 - I recommend using "ubuntu 18.04 LTS" for WSL (windows10) due to image display issues.
