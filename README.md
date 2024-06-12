@@ -81,7 +81,7 @@ Fig. A sequence of operations for "Paraview". In the last image, click the "<-->
 - Note: It is easier to rewrite using "gedit", so it is a good idea to make use of "VcXsrv" or similar.
 
 ## Q&A (What should I do with the parameters?)
-- The parameters can be obtained from the TDB file used in the phase diagram calculation (CALPHAD). It is difficult to understand the contents of the TDB file, but the results are worth the effort. https://www5.hp-ez.com/hp/calculations/page516 provides a link to the paper that describes the parameters, so please use it as a reference when reading the TDB file.
+- The parameters can be obtained from the TDB file used in the phase diagram calculation (CALPHAD). It is difficult to understand the contents of the TDB file, but the results are worth the effort. https://www5.hp-ez.com/hp/calculations/page516 provides a link to the paper that describes the parameters, so please use it as a reference when reading the TDB file. There are many papers in Japanese. This was not intentional, and the main reason is that I was unable to find many English papers in my environment, even though I looked for English papers.
 
 ## Note 1
 - Press (keyboard) [tab] while entering the text will automatically write a continuation or search for candidates.
