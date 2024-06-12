@@ -75,6 +75,15 @@ Fig. A sequence of operations for "Paraview". The figure shows "Time: 7" (=sp_re
 12. (rewrite parameter of parameters.txt) (e.g., change "temp= 900.0        ! Temperature [K]" to "temp= 450.0        ! Temperature [K]")
 13. cp /mnt/c/Users/*/Desktop/Chapter4_Section2_three_phase_v2/parameters.txt $HOME/Phase-field/Koyama_lab_nu/programs_ubuntu_version/Chapter4_Section2_three_phase_v2/
 
+![Tutorial_2_1_1](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_2_1_1.png)
+Fig.
+
+![Tutorial_2_1_2](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_2_1_2.png)
+Fig. 
+
+![Tutorial_2_1_3](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_2_1_3.png)
+Fig. 
+
 ## Tutorial 2_2 (change parameter on vim)
 12. vim parameters.txt
 13. (keyboard) i
