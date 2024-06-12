@@ -106,7 +106,7 @@ Fig. Example of data transfer. The [Tab] key did not work well with "$HOME", so 
 Fig. Editing a parameter file on Linux. Use the "cd" command to move to the directory you want to edit. Use "ls" to display the contents of the directory and check if the desired file is there. Use "vim" to edit the "parameters.txt" file, which contains the parameters. This series of commands is shown in the figure above.
 
 ![Tutorial_2_2_2](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_2_2_2.png)
-Fig. Editing a parameter file on Linux. Press the "i" key on your keyboard to enable editing. Also notice that "-- INSART --" is displayed in the bottom left.
+Fig. Editing a parameter file on Linux. Press the "i" key on your keyboard to enable editing. Also notice that "-- INSERT --" is displayed in the bottom left.
 
 ![Tutorial_2_2_3](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_2_2_3.png)
 Fig. Editing a parameter file on Linux. Use the directional pad to move to the desired location, change the number using the numeric keypad, press the "Esc" key, enter ":wq" to save over the existing file, and then press "Enter."　":wq" is displayed in the bottom left of the image, indicating that the series of commands has been entered successfully.
