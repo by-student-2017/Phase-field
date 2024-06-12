@@ -60,6 +60,7 @@ Fig. The processing after the calculation is performed. In this example, it fini
 ![Paraview_1](https://github.com/by-student-2017/Phase-field/blob/main/Fig/paraview_1.png)
 ![Paraview_2](https://github.com/by-student-2017/Phase-field/blob/main/Fig/paraview_2.png)
 ![Paraview_3](https://github.com/by-student-2017/Phase-field/blob/main/Fig/paraview_3.png)
+Fig. A sequence of operations for "Paraview". In the last image, click the "<-->" in the second or third row at the top left (near the left side of "concentration_A") to automatically change the color gradation range to an appropriate value.
 
 ## Tutorial 2 (change parameter)
 12. vim parameters.txt
