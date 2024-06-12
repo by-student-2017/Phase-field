@@ -22,9 +22,10 @@
 2. sudo apt update
 3. sudo apt -y install g++
 4. sudo apt -y install gcc build-essential libfftw3-dev
-5. cd $HOME
-6. git clone https://github.com/by-student-2017/Phase-field.git
-7. ls
+5. sudo apt -y install cmake
+6. cd $HOME
+7. git clone https://github.com/by-student-2017/Phase-field.git
+8. ls
 
 ![Installation](https://github.com/by-student-2017/Phase-field/blob/main/Fig/installation.png)
 Fig. Building a computing environment using WSL2 (ubuntu 22.04 LTS on Windows). The content displayed will vary depending on the user's environment, but as long as no errors are displayed, that's fine.
@@ -141,7 +142,9 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 
 ## Tutorial 3
 1. cd ~/Phase-field/Biner_lab_inl/chapter7/dynamic_memory
-2. 
+2. cd pfc_def_2d
+3. cd pfc_def_2d
+4. 
 
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
