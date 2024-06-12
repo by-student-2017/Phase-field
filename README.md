@@ -148,7 +148,7 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 - The necessary information is written in "readme.txt", so please install only the parts that have not been installed previously.
 - The description for ubuntu 18.04 LTS can also be used for ubuntu 20.04 LTS, ubuntu 22.04 LTS, etc.
 
-## Tutorial 3 (PFC, defect, 2d version)
+## Tutorial 3 (PFC, deformation, 2d version)
 - Input files are also prepared in the directory so that you can run it immediately.
 - Here, we will show you how to perform calculations using the input files that have already been prepared. The procedure is the same for other directories (called files in Windows).
 1. cd ~/Phase-field/Biner_lab_inl/chapter7/dynamic_memory
