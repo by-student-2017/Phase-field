@@ -81,10 +81,10 @@ Fig. A sequence of operations for "Paraview". The figure shows "Time: 7" (=sp_re
 - "*" is your PC name. You can search with the [Tab] key (on your keyboard).
 
 ![Tutorial_2_1_1](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_2_1_1.png)
-Fig.
+Fig. Editing a parameter file on Windows.
 
 ![Tutorial_2_1_2](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_2_1_2.png)
-Fig. 
+Fig. Editing a parameter file on Windows.
 
 ![Tutorial_2_1_3](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_2_1_3.png)
 Fig. Example of data transfer. The [Tab] key did not work well with "$HOME", so it was changed to "~". Either "$HOME" or "~" is fine, so choose the method that you find easiest. 
