@@ -175,7 +175,7 @@ Fig. Structure during distortion (0 steps).
 ![Tutorial_3_4](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_3_4.png)
 Fig. Structure after distortion (350000 steps).
 
-## Plot (strain vs. energy density) (need VcXsrv)
+## Plot (strain vs. energy density) (need VcXsrv or XLaunch)
 1. sudo apt -y install gnuplot
 2. cd ~/Phase-field/Biner_lab_inl/chapter7/dynamic_memory/pfc_def_2d/pfc_def_2d
 3. gnuplot
