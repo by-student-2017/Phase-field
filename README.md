@@ -126,6 +126,9 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 - I recommend Dr. Biner's textbook (https://link.springer.com/book/10.1007/978-3-319-41196-5). It would be good to compare it with my code.
 - Although it is written in Japanese, I also recommend Dr. Koyama's textbook "フェーズフィールド法入門" (Introduction to the Phase Field Method) (ISBN-10: 4621086588, ISBN-13: 978-4621086582).
 
+## Q&A 3 (How should I create the initial structure in MPF?)
+- I am preparing code to create an initial structure using Voronoi polyhedrons (https://github.com/by-student-2017/Phase-field/tree/main/Biner_lab_inl/Appendix).
+
 ## Phase-Field Crystal (PFC) method
 - https://github.com/by-student-2017/Phase-field/tree/main/Biner_lab_inl/chapter7/dynamic_memory
 - "PFC" performs calculations in the order shown below. The previous calculation serves as the input file for the next calculation.
