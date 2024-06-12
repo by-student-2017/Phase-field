@@ -323,7 +323,7 @@ int main(int argc, char **argv){
 				//output the results in vtk file format for contour plots to be viewed by using paraview
 				write_vtk_grid_values_3D(Nx,Ny,Nz,dx,dy,dz,dx0,istep,den_out,ff_out);
 				
-				printf("done step: %5d \n", istep);
+				printf("done step: %8d \n", istep);
 			}
 		}
 		
