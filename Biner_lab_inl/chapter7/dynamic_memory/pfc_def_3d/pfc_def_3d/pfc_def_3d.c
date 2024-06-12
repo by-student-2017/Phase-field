@@ -287,7 +287,7 @@ int main(){
 			//average free energy density
 			energy = energy/(Nx*Ny*Nz);
 			
-			if(istep==nprint){
+			if(istep==0){
 				energy0=energy;
 			}
 			
