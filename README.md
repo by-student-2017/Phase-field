@@ -114,7 +114,7 @@ Fig. Editing a parameter file on Linux. Use the directional pad to move to the d
 ![Tutorial_2_2_4](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_2_2_4.png)
 Fig. Editing a parameter file on Linux. You can display the contents of the parameter file with "cat parameters.txt". You can see that "temp = 450.0" is displayed, which confirms that the rewriting and transfer were successful. When you use the "ls" command to display the executable files written in green, you can run the calculation. The command begins with "./". "./" means the current directory. The figure shows the calculation being run when "./three_phase" is entered.
 
-- Note: In this example, all the components of kappa are set to the same value, as described in the textbook (kapa_c1c = kapa_c2c = kapa_c3c). For future expansion, 2 and 3 are shown, but please input the same value.
+- Note: In this example, all the components of kappa are set to the same value, as described in the Dr. Koyama's textbook textbook (kapa_c1c = kapa_c2c = kapa_c3c). For future expansion, 2 and 3 are shown, but please input the same value.
 
 ## Q&A 1 (What should I do with the parameters?)
 - The parameters can be obtained from the TDB file used in the phase diagram calculation (CALPHAD). It is difficult to understand the contents of the TDB file, but the results are worth the effort. https://www5.hp-ez.com/hp/calculations/page516 provides a link to the paper that describes the parameters, so please use it as a reference when reading the TDB file. There are many papers in Japanese. This was not intentional, and the main reason is that I was unable to find many English papers in my environment, even though I looked for English papers.
