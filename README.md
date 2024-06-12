@@ -150,6 +150,7 @@ Fig. A sequence of operations for "Paraview". In the last image, click the "<-->
 + Memory：32 GB
 + GPU: NVIDIA GeForce RTX3070
 + WSL2: VERSION="22.04.1 LTS (Jammy Jellyfish)"
++ Paraview 5.11.2
 + Python 3.10.12
 
 ## Appendix: from Windows to Linux
