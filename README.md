@@ -84,7 +84,7 @@ Fig. A sequence of operations for "Paraview". The figure shows "Time: 7" (=sp_re
 Fig. Editing a parameter file on Windows.
 
 ![Tutorial_2_1_2](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_2_1_2.png)
-Fig. Editing a parameter file on Windows.
+Fig. Editing a parameter file on Windows. Here, the temperature is changed from 900 K to 450 K. Only the temperature is changed for this tutorial, but other parameters should also be appropriate for 450 K.
 
 ![Tutorial_2_1_3](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_2_1_3.png)
 Fig. Example of data transfer. The [Tab] key did not work well with "$HOME", so it was changed to "~". Either "$HOME" or "~" is fine, so choose the method that you find easiest. 
