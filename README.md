@@ -161,7 +161,7 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 10. ./build/pfc_def_2d.exe
 
 ![Tutorial_3_1](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_3_1.png)
-Fig. Steps 1 to 7 above.
+Fig. Steps 1 to 7 above. The "Paraview" procedure in this diagram was forgotten to be corrected, so the 3D version is shown. 
 
 ![Tutorial_3_2](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_3_2.png)
 Fig. Steps 8 to 10 above.
