@@ -108,7 +108,7 @@ Fig. Editing a parameter file on Linux. Use the "cd" command to move to the dire
 Fig. Editing a parameter file on Linux. Press the "i" key on your keyboard to enable editing. Also notice that "-- INSART --" is displayed in the bottom left.
 
 ![Tutorial_2_2_3](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_2_2_3.png)
-Fig. Editing a parameter file on Linux.
+Fig. Editing a parameter file on Linux. Use the directional pad to move to the desired location, change the number using the numeric keypad, press the "Esc" key, enter ":wq" to save over the existing file, and then press "Enter."　":wq" is displayed in the bottom left of the image, indicating that the series of commands has been entered successfully.
 
 ![Tutorial_2_2_4](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_2_2_4.png)
 Fig. Editing a parameter file on Linux.
