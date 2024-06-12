@@ -1,7 +1,7 @@
 # Phase-field
 
 ## Features
-- This github provides examples for not only "libfftw3" but also "cuFFT". By writing it in C++, we were able to expand it to use "cuFFT". It is characterized by not only two -dimensional but also a 3D version of code.
+- This github provides examples for not only "libfftw3" but also "cuFFT". By writing it in C series, we were able to expand it to use "cuFFT". It is characterized by not only two -dimensional but also a 3D version of code.
 - The C code is constructed according to the formulas in Dr. Biner's textbook (https://link.springer.com/book/10.1007/978-3-319-41196-5). There are also several settings for Paraview that are not described in the textbook, so please refer to them. The Paraview settings for the progression of destruction in "Phase-Field Crystal (PFC) method" are particularly worthy of mention.
 - The Phase-field method code shown here is written exactly as in the textbook, so it is easier to understand than the DVXalpha method SCAT, FLAPW method as represented by WIEN2k, and KKR method codes such as Akai-KKR. The Phase-field method code is also suitable for learning coding techniques
 
