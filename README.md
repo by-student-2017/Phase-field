@@ -142,6 +142,7 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 ## Additional installation (For Biner_lab_inl)
 1. sudo apt update
 2. sudo apt -y install cmake
+- The necessary information is written in "readme.txt", so please install only the parts that have not been installed previously.
 
 ## Tutorial 3
 1. cd ~/Phase-field/Biner_lab_inl/chapter7/dynamic_memory
