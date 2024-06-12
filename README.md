@@ -111,6 +111,7 @@ Fig. Example of data transfer. The [Tab] key did not work well with "$HOME", so 
 ## Q&A 2 (Where do I start with programming?)
 - Dr. Koyama describes the functions you will actually need for coding in “Gc.cpp” (https://github.com/by-student-2017/Phase-field/blob/main/Koyama_lab_nu/C_windows10_version/examples_win_and_ubuntu/Gc.cpp), so he recommends using this code (Gc.cpp) as a base to build your code.
 - I recommend Dr. Biner's textbook (https://link.springer.com/book/10.1007/978-3-319-41196-5). It would be good to compare it with my code.
+- Although it is written in Japanese, I also recommend Dr. Koyama's textbook "フェーズフィールド法入門" (Introduction to the Phase Field Method) (ISBN-10: 4621086588, ISBN-13: 978-4621086582).
 
 ## Note 1
 - Press (keyboard) [tab] while entering the text will automatically write a continuation or search for candidates.
