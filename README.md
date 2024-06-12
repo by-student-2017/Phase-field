@@ -73,7 +73,7 @@ Fig. A sequence of operations for "Paraview". The figure shows "Time: 7" (=sp_re
 - Since the newline symbols are different between Windows and Linux, we recommend that you edit on Linux (for example, vim or gedit) if you need to add newlines when editing.
 - However, vim can be difficult to use if you are not familiar with it, so here we will first explain how to change the parameters on Windows and then transfer the file to Linux.
 
-## Tutorial 2_1 (change parameter using "Copy windows to linux" method)
+## Tutorial 2_1 (change parameter using "Copy the file you edited in Windows to Linux" method)
 12. (rewrite parameter of parameters.txt) (e.g., change "temp= 900.0        ! Temperature [K]" to "temp= 450.0        ! Temperature [K]")
 13. cp /mnt/c/Users/*/Desktop/Chapter4_Section2_three_phase_v2/parameters.txt $HOME/Phase-field/Koyama_lab_nu/programs_ubuntu_version/Chapter4_Section2_three_phase_v2/
 14. ls
