@@ -175,6 +175,11 @@ Fig. Structure during distortion (0 steps).
 ![Tutorial_3_4](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_3_4.png)
 Fig. Structure after distortion (350000 steps).
 
+## plot strain vs. energy density
+1. cd ~/Phase-field/Biner_lab_inl/chapter7/dynamic_memory/pfc_def_2d/pfc_def_2d
+2. gnuplot
+3. plot "energy.out" u 1:2 w l
+
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
 - I recommend using "ubuntu 18.04 LTS" for WSL (windows10) due to image display issues.
