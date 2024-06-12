@@ -76,6 +76,9 @@ Fig. A sequence of operations for "Paraview". The figure shows "Time: 7" (=sp_re
 ## Tutorial 2_1 (change parameter using "Copy windows to linux" method)
 12. (rewrite parameter of parameters.txt) (e.g., change "temp= 900.0        ! Temperature [K]" to "temp= 450.0        ! Temperature [K]")
 13. cp /mnt/c/Users/*/Desktop/Chapter4_Section2_three_phase_v2/parameters.txt $HOME/Phase-field/Koyama_lab_nu/programs_ubuntu_version/Chapter4_Section2_three_phase_v2/
+14. ls
+15. cat parameters.txt
+16. ./three_phase
 - "/mnt/c" = C drive
 - "*" is your PC name. You can search with the [Tab] key (on your keyboard).
 
