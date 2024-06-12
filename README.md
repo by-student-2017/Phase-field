@@ -149,11 +149,15 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 - PFC is provided in "chapter 7" of "Biner_lab_inl". Input files are also prepared in the directory so that you can run it immediately.
 - Here, we will show you how to perform calculations using the input files that have already been prepared. The procedure is the same for other directories (called files in Windows).
 1. cd ~/Phase-field/Biner_lab_inl/chapter7/dynamic_memory
-2. cd pfc_def_2d
+2. ls
 3. cd pfc_def_2d
-4. cmake -S . -B build/ -G"Unix Makefiles"
-5. cmake --build build/ --target pfc_def_2d.exe
-6. ./build/pfc_def_2d.exe
+4. ls
+5. cd pfc_def_2d
+6. ls
+7. cat readme.txt
+8. cmake -S . -B build/ -G"Unix Makefiles"
+9. cmake --build build/ --target pfc_def_2d.exe
+10. ./build/pfc_def_2d.exe
 
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
