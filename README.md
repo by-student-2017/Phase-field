@@ -66,7 +66,8 @@ Fig. A sequence of operations for "Paraview".
 Fig. A sequence of operations for "Paraview". The data with the extension "vtk" is the data to be loaded by "Paraview". You can also drag and drop it, but this way the series of numbered data will be loaded properly.
 
 ![Paraview_3](https://github.com/by-student-2017/Phase-field/blob/main/Fig/paraview_3.png)
-Fig. A sequence of operations for "Paraview". The figure shows "Time: 7" (=sp_result000007.vtk). In the last image, click the "<-->" in the second or third row at the top left (near the left side of "concentration_A") to automatically change the color gradation range to an appropriate value.
+Fig. A sequence of operations for "Paraview". The figure shows "Time: 7" (=sp_result000007.vtk). In the last image, click the "<-->" in the second or third row at the top left (near the left side of "concentration_A") to automatically change the color gradation range to an appropriate value. 
+- Note: In this example, all the components of kappa are set to the same value, as described in the textbook. For future expansion, 2 and 3 are shown, but please input the same value.
 
 ## Tutorial 2 (change parameter)
 - There are several ways to edit the parameter file.
