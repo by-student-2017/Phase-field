@@ -183,6 +183,8 @@ Fig. Structure after distortion (350000 steps).
 5. set ylabel "Energy density"
 6. plot "energy.out" u 1:2 w l t ""
 - In this tutorial, the "Energy density" is different from that in textbooks because the calculation is done from a state with initial distortion.
+7. set yrange [-0.01:-0.006]
+8. replot
 
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
