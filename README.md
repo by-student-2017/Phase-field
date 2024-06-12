@@ -48,6 +48,9 @@ Fig. Go to the directory you want to calculate, compile it in C++, and run it.ã€
 11. cp -r Chapter4_Section2_three_phase_v2 /mnt/c/Users/*/Desktop
 - "*" is your PC name. You can search with the [Tab] key (on your keyboard).
 
+![Copy_linux_to_windows](https://github.com/by-student-2017/Phase-field/blob/main/Fig/copy_linux_to_windows.png)
+Fig. 
+
 ## Tutorial 2 (change parameter)
 12. vim parameters.txt
 13. (keyboard) i
