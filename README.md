@@ -57,6 +57,10 @@ Fig. The processing after the calculation is performed. In this example, it fini
 14. (click) [Apply]
 15. (click "play") |>
 
+![Paraview_1](https://github.com/by-student-2017/Phase-field/blob/main/Fig/paraview_1.png)
+![Paraview_2](https://github.com/by-student-2017/Phase-field/blob/main/Fig/paraview_2.png)
+![Paraview_3](https://github.com/by-student-2017/Phase-field/blob/main/Fig/paraview_3.png)
+
 ## Tutorial 2 (change parameter)
 12. vim parameters.txt
 13. (keyboard) i
