@@ -28,6 +28,7 @@
 
 ![Installation](https://github.com/by-student-2017/Phase-field/blob/main/Fig/installation.png)
 Fig. Building a computing environment using WSL2 (ubuntu 22.04 LTS).
+
 The content displayed will vary depending on the user's environment, but as long as no errors are displayed, that's fine.
 
 ## Tutorial 1 (basic run)
