@@ -72,6 +72,7 @@ Fig. A sequence of operations for "Paraview". The figure shows "Time: 7" (=sp_re
 - There are several ways to edit the parameter file.
 - Since the newline symbols are different between Windows and Linux, we recommend that you edit on Linux (for example, vim or gedit) if you need to add newlines when editing.
 - However, vim can be difficult to use if you are not familiar with it, so here we will first explain how to change the parameters on Windows and then transfer the file to Linux.
+- Of course, you can change the parameters by rewriting the C code (.cpp). In this case, you will need to compile each time you make a change.
 
 ## Tutorial 2_1 (change parameter using "Copy the file you edited in Windows to Linux" method)
 12. (rewrite parameter of parameters.txt) (e.g., change "temp= 900.0        ! Temperature [K]" to "temp= 450.0        ! Temperature [K]")
