@@ -8,8 +8,8 @@
 - Biner_lab_inl is a C-language, GPU-compatible version of the textbook code by Dr. Biner.
 - Koyama_lab_nu is a textbook code by Dr. Koyama that reads parameters from the text. It is also characterized by the output for "Paraview".
 
-- dynamic memory is dynamic memory allocation that allows calculations of 4 GB or more (i.e. allows calculations of large systems)
-- static memory is static memory allocation that allows calculations of less than 4 GB (only small systems can be calculated, but the calculation speed is slightly faster. In addition, the code is a little simpler, so it is suitable for initial learning. If you want to flexibly change the scale of calculations without frequently repeating compilation, we recommend using "dynamic memory".)
+- dynamic_memory is dynamic memory allocation that allows calculations of 4 GB or more (i.e. allows calculations of large systems)
+- static_memory is static memory allocation that allows calculations of less than 4 GB (only small systems can be calculated, but the calculation speed is slightly faster. In addition, the code is a little simpler, so it is suitable for initial learning. If you want to flexibly change the scale of calculations without frequently repeating compilation, we recommend using "dynamic memory".)
 
 - For "python" code examples, see Dr. Yamanaka's https://github.com/Yamanaka-Lab-TUAT or Dr. Koyama's https://www.material.nagoya-u.ac.jp/PFM/Phase-Field_Modeling.htm (e.g., https://www.material.nagoya-u.ac.jp/PFM/zairyougaku_zoho_koyama.htm) (Japanese)
 
