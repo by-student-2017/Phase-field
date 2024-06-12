@@ -64,7 +64,7 @@ Fig. A sequence of operations for "Paraview".
 Fig. A sequence of operations for "Paraview". The data with the extension "vtk" is the data to be loaded by "Paraview". You can also drag and drop it, but this way the series of numbered data will be loaded properly.
 
 ![Paraview_3](https://github.com/by-student-2017/Phase-field/blob/main/Fig/paraview_3.png)
-Fig. A sequence of operations for "Paraview". In the last image, click the "<-->" in the second or third row at the top left (near the left side of "concentration_A") to automatically change the color gradation range to an appropriate value.
+Fig. A sequence of operations for "Paraview". In the last image, click the "<-->" in the second or third row at the top left (near the left side of "concentration_A") to automatically change the color gradation range to an appropriate value. The figure shows "Time: 7" (=sp_result000007.vtk).
 
 ## Tutorial 2_1 (change parameter using "Copy windows to linux" method)
 12. (rewrite parameter of parameters.txt) (e.g., change "temp= 900.0        ! Temperature [K]" to "temp= 450.0        ! Temperature [K]")
