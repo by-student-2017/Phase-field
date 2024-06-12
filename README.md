@@ -179,7 +179,10 @@ Fig. Structure after distortion (350000 steps).
 1. sudo apt -y install gnuplot
 2. cd ~/Phase-field/Biner_lab_inl/chapter7/dynamic_memory/pfc_def_2d/pfc_def_2d
 3. gnuplot
-4. plot "energy.out" u 1:2 w l
+4. set xlabel "Strain"
+5. set ylabel "Energy density"
+6. plot "energy.out" u 1:2 w l t ""
+- In this tutorial, the "Energy density" is different from that in textbooks because the calculation is done from a state with initial distortion.
 
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
