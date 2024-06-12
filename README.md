@@ -88,7 +88,7 @@ Fig. A sequence of operations for "Paraview". The figure shows "Time: 7" (=sp_re
 - The values ​​of representative parameters and methods for calculating approximate values ​​are described in "ミクロ組織の熱力学" (Thermodynamics of Microstructures) (Japan Institute of Metals)(ISBN-10: 488903028X, ISBN-13: 978-4889030280)(Japanese). The subjects and their values ​​are shown in diagrams, so if your local library has it, it's a good idea to take a look at it.
 
 ## Q&A 2 (Where do I start with programming?)
-- 
+- Dr. Koyama describes the functions you will actually need for coding in “Gc.cpp” (https://github.com/by-student-2017/Phase-field/blob/main/Koyama_lab_nu/C_windows10_version/examples_win_and_ubuntu/Gc.cpp), so he recommends using this code (Gc.cpp) as a base to build your code.
 
 ## Note 1
 - Press (keyboard) [tab] while entering the text will automatically write a continuation or search for candidates.
