@@ -187,6 +187,7 @@ Fig. Structure after distortion (350000 steps).
 8. replot
 
 ![Tutorial_3_5](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_3_strain_vs_energy_density.png)
+
 Fig. Strain vs. Energy density.
 
 ## Note
