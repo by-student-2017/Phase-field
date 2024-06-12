@@ -139,6 +139,10 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 - "3d" is the same procedure as "2d".
 - Note: The "PFC" code is available on this github as well as on "https://github.com/eimrek/phase-field-crystal-mpi". However, this is quite difficult code. Before trying to improve this difficult code, I recommend that you deepen your understanding by using the code on github here and textbooks such as those by Dr. Biner.
 
+## Tutorial 3
+1. cd ~/Phase-field/Biner_lab_inl/chapter7/dynamic_memory
+2. 
+
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
 - I recommend using "ubuntu 18.04 LTS" for WSL (windows10) due to image display issues.
