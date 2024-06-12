@@ -159,6 +159,12 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 9. cmake --build build/ --target pfc_def_2d.exe
 10. ./build/pfc_def_2d.exe
 
+![Tutorial_3_1](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_3_1.png)
+Fig. Steps 1 to 7 above.
+
+![Tutorial_3_2](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_3_2.png)
+Fig. Steps 8 to 10 above.
+
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
 - I recommend using "ubuntu 18.04 LTS" for WSL (windows10) due to image display issues.
