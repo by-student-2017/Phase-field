@@ -147,7 +147,9 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 1. cd ~/Phase-field/Biner_lab_inl/chapter7/dynamic_memory
 2. cd pfc_def_2d
 3. cd pfc_def_2d
-4. 
+4. cmake -S . -B build/ -G"Unix Makefiles"
+5. cmake --build build/ --target pfc_def_2d.exe
+6. ./build/pfc_def_2d.exe
 
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
