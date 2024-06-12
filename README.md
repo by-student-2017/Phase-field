@@ -74,7 +74,7 @@ Fig. A sequence of operations for "Paraview". The figure shows "Time: 7" (=sp_re
 - However, vim can be difficult to use if you are not familiar with it, so here we will first explain how to change the parameters on Windows and then transfer the file to Linux.
 - Of course, you can change the parameters by rewriting the C code (.cpp). In this case, you will need to compile each time you make a change.
 
-## Tutorial 2_1 (change parameter using "Copy the file you edited in Windows to Linux" method)
+## Tutorial 2.1 (change parameter using "Copy the file you edited in Windows to Linux" method)
 12. (rewrite parameter of parameters.txt) (e.g., change "temp= 900.0        ! Temperature [K]" to "temp= 450.0        ! Temperature [K]")
 13. cp /mnt/c/Users/*/Desktop/Chapter4_Section2_three_phase_v2/parameters.txt $HOME/Phase-field/Koyama_lab_nu/programs_ubuntu_version/Chapter4_Section2_three_phase_v2/
 14. ls
@@ -92,7 +92,7 @@ Fig. Editing a parameter file on Windows. Here, the temperature is changed from 
 ![Tutorial_2_1_3](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_2_1_3.png)
 Fig. Example of data transfer. The [Tab] key did not work well with "$HOME", so it was changed to "`~`". Either "$HOME" or "`~`" is fine, so choose the method that you find easiest. You can display the contents of the parameter file with "cat parameters.txt". You can see that "temp = 450.0" is displayed, which confirms that the rewriting and transfer were successful. When you use the "ls" command to display the executable files written in green, you can run the calculation. The command begins with "./". "./" means the current directory. The figure shows the calculation being run when "./three_phase" is entered.
 
-## Tutorial 2_2 (change parameter on vim)
+## Tutorial 2.2 (change parameter on vim)
 12. vim parameters.txt
 13. (keyboard) i
 14. (change "temp= 900.0        ! Temperature [K]" to "temp= 450.0        ! Temperature [K]")
