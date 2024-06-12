@@ -66,11 +66,11 @@ Fig. A sequence of operations for "Paraview". The data with the extension "vtk" 
 ![Paraview_3](https://github.com/by-student-2017/Phase-field/blob/main/Fig/paraview_3.png)
 Fig. A sequence of operations for "Paraview". In the last image, click the "<-->" in the second or third row at the top left (near the left side of "concentration_A") to automatically change the color gradation range to an appropriate value.
 
-## Copy windows to linux
+## Tutorial 2_2 (change parameter using "Copy windows to linux" method)
 12. (rewrite parameter of parameters.txt)
 13. cp /mnt/c/Users/*/Desktop/Chapter4_Section2_three_phase_v2/parameters.txt $HOME/Phase-field/Koyama_lab_nu/programs_ubuntu_version/Chapter4_Section2_three_phase_v2/
 
-## Tutorial 2 (change parameter)
+## Tutorial 2_2 (change parameter on vim)
 12. vim parameters.txt
 13. (keyboard) i
 14. (change "temp= 900.0        ! Temperature [K]" to "temp= 450.0        ! Temperature [K]")
