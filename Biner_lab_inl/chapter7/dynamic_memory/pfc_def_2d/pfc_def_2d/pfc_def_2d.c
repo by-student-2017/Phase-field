@@ -275,7 +275,7 @@ int main(){
 			//output the results in vtk file format for contour plots to be viewed by using paraview
 			write_vtk_grid_values_2D(Nx,Ny,dx,dy,dx0,istep,den_out,ff_out);
 			
-			printf("done step: %7d \n", istep);
+			printf("done step: %8d \n", istep);
 		}
 		
 		//if intermediate configuration files are required, print the density field to file
