@@ -307,7 +307,7 @@ int main(int argc, char **argv){
 			//average free energy density
 			energy = energy/(Nx*Ny*Nz);
 			
-			if(istep==1){
+			if(istep==nprint){
 				energy0=energy;
 			}
 			
