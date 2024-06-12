@@ -22,9 +22,9 @@
 2. sudo apt update
 3. sudo apt -y install g++
 4. sudo apt -y install gcc build-essential libfftw3-dev
-6. cd $HOME
-7. git clone https://github.com/by-student-2017/Phase-field.git
-8. ls
+5. cd $HOME
+6. git clone https://github.com/by-student-2017/Phase-field.git
+7. ls
 
 ![Installation](https://github.com/by-student-2017/Phase-field/blob/main/Fig/installation.png)
 Fig. Building a computing environment using WSL2 (ubuntu 22.04 LTS on Windows). The content displayed will vary depending on the user's environment, but as long as no errors are displayed, that's fine.
