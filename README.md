@@ -11,7 +11,7 @@
 - dynamic memory is dynamic memory allocation that allows calculations of 4 GB or more (i.e. allows calculations of large systems)
 - static memory is static memory allocation that allows calculations of less than 4 GB (only small systems can be calculated, but the calculation speed is slightly faster)
 
-- For "python" code examples, see Dr. Yamanaka's https://github.com/Yamanaka-Lab-TUAT or Dr. Koyama's https://www.material.nagoya-u.ac.jp/PFM/Phase-Field_Modeling.htm
+- For "python" code examples, see Dr. Yamanaka's https://github.com/Yamanaka-Lab-TUAT or Dr. Koyama's https://www.material.nagoya-u.ac.jp/PFM/Phase-Field_Modeling.htm (e.g., https://www.material.nagoya-u.ac.jp/PFM/zairyougaku_zoho_koyama.htm) (Japanese)
 
 - I plan to continue using C language in the future. Python has many advantages, but it often causes confusion due to specification changes. Readers who are considering long -term use need to consider the use of different languages, such as C and Fortran and Octave.
 
