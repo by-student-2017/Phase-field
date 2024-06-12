@@ -126,11 +126,17 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 - I recommend Dr. Biner's textbook (https://link.springer.com/book/10.1007/978-3-319-41196-5). It would be good to compare it with my code.
 - Although it is written in Japanese, I also recommend Dr. Koyama's textbook "フェーズフィールド法入門" (Introduction to the Phase Field Method) (ISBN-10: 4621086588, ISBN-13: 978-4621086582).
 
-## Note 1
-- Press (keyboard) [tab] while entering the text will automatically write a continuation or search for candidates.
-- "Paraview" can be used on Windows, so don't worry about it. Load the vtk file output from the calculation into "Paraview".
+## Phase-Field Crystal (PFC) method
+- https://github.com/by-student-2017/Phase-field/tree/main/Biner_lab_inl/chapter7/dynamic_memory
+- "PFC" performs calculations in the order shown below. The previous calculation serves as the input file for the next calculation.
+1. pfc_2d (get output file: final_conf.out)
+2. pfc_poly_2d (input: final_conf.out from pfc_2d) (output: bi_2r_2d.inp) (Select a circle or vertical line defect in the code (pfc_poly_2d.c).)
+3. pfc_def_2d or pfc_2d (input: bi_2r_2d.inp)
+- "3d" is the same procedure as "2d".
+- Note: The "PFC" code is available on this github as well as on "https://github.com/eimrek/phase-field-crystal-mpi". However, this is quite difficult code. Before trying to improve this difficult code, I recommend that you deepen your understanding by using the code on github here and textbooks such as those by Dr. Biner.
 
-## Note 2
+
+## Note
 - Please read "readme.txt" in each file for rights and citations.
 - I recommend using "ubuntu 18.04 LTS" for WSL (windows10) due to image display issues.
 
@@ -165,6 +171,7 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 
 ## Paraview
 - https://www.paraview.org/download/
+- "Paraview" can be used on Windows, so don't worry about it. Load the vtk file output from the calculation into "Paraview".
 
 ## ParaView on ubuntu 20.04 LTS 
 - move red line to origin (>1.0 >1.0 >1.0)
@@ -172,15 +179,6 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 ## Editor
 - SAKURA: https://sakura-editor.github.io/index.en.html (free)
 - SAKURA: https://sakura-editor.github.io/ (Japanese) (free)
-
-## Phase-Field Crystal (PFC) method
-- https://github.com/by-student-2017/Phase-field/tree/main/Biner_lab_inl/chapter7/dynamic_memory
-- "PFC" performs calculations in the order shown below. The previous calculation serves as the input file for the next calculation.
-1. pfc_2d (get output file: final_conf.out)
-2. pfc_poly_2d (input: final_conf.out from pfc_2d) (output: bi_2r_2d.inp) (Select a circle or vertical line defect in the code (pfc_poly_2d.c).)
-3. pfc_def_2d or pfc_2d (input: bi_2r_2d.inp)
-- "3d" is the same procedure as "2d".
-- Note: The "PFC" code is available on this github as well as on "https://github.com/eimrek/phase-field-crystal-mpi". However, this is quite difficult code. Before trying to improve this difficult code, I recommend that you deepen your understanding by using the code on github here and textbooks such as those by Dr. Biner.
 
 ## GPU setting (not need this setting)
 - see Takaki_lab_kit/ubuntu_version/Accelerate_phase-field_simulation_with_GPU/2d/readme.txt
