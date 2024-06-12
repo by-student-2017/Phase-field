@@ -278,7 +278,7 @@ int main(int argc, char **argv){
 			//average free energy density
 			energy = energy/(Nx*Ny);
 			
-			if(istep==1){
+			if(istep==0){
 				energy0=energy;
 			}
 			
