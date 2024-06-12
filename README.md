@@ -19,12 +19,12 @@
 
 ## Installation
 1. (open Linux. e.g., Ubuntu or WSL(windows))
-2. cd $HOME
-3. git clone https://github.com/by-student-2017/Phase-field.git
-4. sudo apt update
-5. sudo apt -y install g++
-6. sudo apt -y install gcc build-essential libfftw3-dev
-7. sudo apt -y install paraview paraview-dev
+2. sudo apt update
+3. sudo apt -y install g++
+4. sudo apt -y install gcc build-essential libfftw3-dev
+5. cd $HOME
+6. git clone https://github.com/by-student-2017/Phase-field.git
+7. ls
 
 ## Tutorial 1 (basic run)
 1. cd $HOME/Phase-field
