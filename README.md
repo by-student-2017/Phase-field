@@ -161,7 +161,7 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 8. cmake -S . -B build/ -G"Unix Makefiles"
 9. cmake --build build/ --target pfc_def_2d.exe
 10. ./build/pfc_def_2d.exe
-- The output file "energy.out" has the first column as "Strain" and the second column as "energy density" (stretching in the x direction and shrinking in the y direction).
+- The first column of the output file "energy.out" is "Strain" (stretches in the x direction, shrinks in the y direction), and the second column is "energy density".
 
 ![Tutorial_3_1](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_3_1.png)
 Fig. Steps 1 to 7 above. The "Paraview" procedure in this diagram was forgotten to be corrected, so the 3D version is shown. 
