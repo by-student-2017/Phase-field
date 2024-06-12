@@ -51,6 +51,12 @@ Fig. Go to the directory you want to calculate, compile it in C++, and run it.ã€
 ![Copy_linux_to_windows](https://github.com/by-student-2017/Phase-field/blob/main/Fig/copy_linux_to_windows.png)
 Fig. The processing after the calculation is performed. In this example, it finished after 49 iterations. As long as the necessary data was calculated before Aborted (core dumped), there is no need to worry about it for now. Press the [Tab] key in "cp -r Chapter4_Section2_three_phase_v2 /mnt/c/Users/" to display candidates. In my environment, I have a desktop in "manab", so I save the data to the desktop as shown in the figure.
 
+## Paraview
+12. (Open "Paraview" on windows)
+13. File -> Open ... -> sp_result..vtk -> OK
+14. (click) [Apply]
+15. (click "play") |>
+
 ## Tutorial 2 (change parameter)
 12. vim parameters.txt
 13. (keyboard) i
