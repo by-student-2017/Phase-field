@@ -22,7 +22,6 @@
 2. sudo apt update
 3. sudo apt -y install g++
 4. sudo apt -y install gcc build-essential libfftw3-dev
-5. sudo apt -y install cmake
 6. cd $HOME
 7. git clone https://github.com/by-student-2017/Phase-field.git
 8. ls
