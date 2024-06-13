@@ -205,7 +205,6 @@ stran=stran+5.0e-4*dx0;
 - The strain is set to "stran", which is distorted by 5.0e-4 times from the initial lattice constant (dx0).
 - Therefore, it is simply subtracted from the reset reference. For example, if we take the value in the second line of energy.out (2.356194e-03 -1.006057e-02) as the new reference, we get:
 ```
-cd ~/Phase-field/Biner_lab_inl/chapter7/dynamic_memory/pfc_def_2d/pfc_def_2d
 gnuplot
 set xlabel "Strain"
 set ylabel "Energy density"
