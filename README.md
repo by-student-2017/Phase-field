@@ -124,7 +124,7 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 - The stress tensor is obtained from first-principles calculations or molecular dynamics (MD). When using a graph neural network (GNN), e.g., CHGNet, to obtain the bulk modulus, it is more accurate to use an equation of state, such as the Birch-Murnahan equation of state, to calculate it. The diffusion coefficient is obtained from first-principles MD, classical MD, etc. The temperature dependence of the free energy requires phonon calculations.
 - Recently, a method has been developed in which machine learning (particle methods such as Bayesian optimization) is used to find appropriate parameters while comparing images obtained from experiments with images from the phase-field method. Since it is difficult to achieve a high degree of fit with the phase-field method, like the Rietveld method with XRD, for various reasons, it is necessary to approach the method with the understanding that it is sufficient to reproduce the experiment to a certain extent.
 - The values ​​of representative parameters and methods for calculating approximate values ​​are described in "ミクロ組織の熱力学" (Thermodynamics of Microstructures) (Japan Institute of Metals)(ISBN-10: 488903028X, ISBN-13: 978-4889030280)(Japanese). The subjects and their values ​​are shown in diagrams, so if your local library has it, it's a good idea to take a look at it.
-- Some information on diffusion coefficients is summarized on this page (https://www5.hp-ez.com/hp/calculations/page508).
+- Some information on diffusion coefficients is summarized on this page (https://www5.hp-ez.com/hp/calculations/page508). 
 
 
 ## Q&A 2 (Where do I start with programming?)
