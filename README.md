@@ -139,6 +139,7 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 
 ## Phase-Field Crystal (PFC) method
 - "PFC" is provided in "chapter 7" of "Biner_lab_inl".
+- see https://www.google.co.jp/books/edition/Programming_Phase_Field_Modeling/nooJDgAAQBAJ?hl=en&gbpv=1 , e.g., p.338.
 - "PFC" performs calculations in the order shown below. The previous calculation serves as the input file for the next calculation.
 1. pfc_2d (get output file: final_conf.out)
 2. pfc_poly_2d (input: final_conf.out from pfc_2d) (output: bi_2r_2d.inp) (Select a circle or vertical line defect in the code (pfc_poly_2d.c).)
@@ -146,7 +147,6 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 - "3d" is the same procedure as "2d".
 - Note: The "PFC" code is available on this github as well as on "https://github.com/eimrek/phase-field-crystal-mpi". However, this is quite difficult code. Before trying to improve this difficult code, I recommend that you deepen your understanding by using the code on github here and textbooks such as those by Dr. Biner.
 - see https://github.com/by-student-2017/Phase-field/tree/main/Biner_lab_inl/chapter7/dynamic_memory
-- see https://www.google.co.jp/books/edition/Programming_Phase_Field_Modeling/nooJDgAAQBAJ?hl=en&gbpv=1 , e.g., p.338.
 
 ## Additional installation (For Biner_lab_inl)
 1. sudo apt update
