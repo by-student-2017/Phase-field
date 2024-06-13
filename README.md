@@ -229,7 +229,7 @@ Fig. When the value in the second line of "energy.out" (= 5000 steps) is reset a
 - "cd": Used to move between directories (called folders in Windows). A very important feature. The current directory is displayed to the left of where you enter a command. If you enter "pwd", the current directory will be displayed.
 - "ls": Shows the contents of a directory. My favorite command is "ls -ltra" with the option to show the most recent values ​​at the bottom. This is a useful command to find out which files have been updated.
 - "cp": Copy. If you want to copy the contents of the directory as well, add the option "-r" and use "cp -r".
-- "find": A command to search for files. For example, "find *.png" will search for files with ".png" ("*" is a wildcard and means "something"). You can search flexibly in many ways, such as "find g*.png" to search for files with "g" at the beginning and ".png" at the end.
+- "find": A command to search for files. For example, "find `*`.png" will search for files with ".png" ("`*`" is a wildcard and means "something"). You can search flexibly in many ways, such as "find g*.png" to search for files with "g" at the beginning and ".png" at the end.
 - "grep": You can search the contents of a file. It is useful to use "grep -n" with the "-n" option to display the corresponding line number. It is easy to find the part of the code you need to rewrite. However, it is much more convenient for beginners to use github search on a browser.
 - "sed": It is often used to replace characters in a file. If you can use this and "awk" freely, you can do a lot of things. One use case is to prepare a template file, change the parameters, and create new input files one after another.
 
