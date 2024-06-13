@@ -221,6 +221,7 @@ Fig. When the value in the second line of "energy.out" (= 5000 steps) is reset a
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
 - I recommend using "ubuntu 18.04 LTS" for WSL (windows10) due to image display issues.
+- Unlike libfftw3, which is already mature, the specifications of CUDA on GPUs may change and become unusable. The specifications of Dr. Takaki's GPU have also changed since it was described in his paper. There is a good chance that the code written on this github will be confused by the changes in the specifications of CUDA, which is "not yet matured," and become difficult to use. In that case, please rewrite the parts that have changed the specifications yourself.
 
 ## Explanation of commonly used commands in Linux
 - "sudo": Used to run commands with administrator privileges. Often used when using "apt install" for compilers and various libraries. Without "sudo" and without administrator privileges, the installation will be stopped midway.
