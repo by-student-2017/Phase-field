@@ -226,7 +226,8 @@ Fig. When the value in the second line of "energy.out" (= 5000 steps) is reset a
 - "sudo": Used to run commands with administrator privileges. Often used when using "apt install" for compilers and various libraries. Without "sudo" and without administrator privileges, the installation will be stopped midway.
 - "-y": It is often used with "sudo apt -y install". It is the same as choosing "yes" when asked [yes/no] during the installation.
 - "sudo apt update": This is necessary to update the links to various libraries to new ones. Since changes occur frequently, I also run "sudo apt update" frequently on this github.
-- "cd": 
+- "cd": Used to move between directories (called folders in Windows). A very important feature. The current directory is displayed to the left of where you enter a command. If you enter "pwd", the current directory will be displayed.
+- "ls": Shows the contents of a directory. My favorite command is "ls -ltra" with the option to show the most recent values ​​at the bottom. This is a useful command to find out which files have been updated.
 
 ## WSL (windows 11 + VcXsrv)
 - see https://www5.hp-ez.com/hp/calculations/page513 (Japanese)
