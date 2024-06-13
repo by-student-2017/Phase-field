@@ -199,6 +199,10 @@ Fig. Strain vs. Energy density.
 			energy=energy-energy0;
 ```
 - As in textbooks, the "energy density" at the beginning of the calculation is set to energy0, and the difference from that is displayed in "energy.out". Therefore, you can reset the reference structure and recalculate the strain and energy density.
+```
+stran=stran+5.0e-4*dx0;
+```
+- The strain is set to stran, which is distorted by 5.0e-4 times from the initial lattice constant (dx0). Therefore, it is simply subtracted from the reset reference.
 
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
