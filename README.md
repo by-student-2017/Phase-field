@@ -226,7 +226,6 @@ Fig. When the value in the second line of "energy.out" (= 5000 steps) is reset a
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
 - Unlike libfftw3, which is already mature, the specifications of CUDA on GPUs may change and become unusable. The GPU specifications in Professor Takaki's paper have also changed since they were written in the paper. There is a good chance that the code you wrote on this github will be confused by the changes in the "not yet mature" CUDA specifications and become difficult to use. In that case, please rewrite the parts that have changed the specifications yourself.
-- I recommend using "ubuntu 18.04 LTS" for WSL (windows10) due to image display issues.0
 
 ## Explanation of commonly used commands in Linux
 - "sudo": Used to run commands with administrator privileges. Often used when using "apt install" for compilers and various libraries. Without "sudo" and without administrator privileges, the installation will be stopped midway.
@@ -271,6 +270,7 @@ Fig. When the value in the second line of "energy.out" (= 5000 steps) is reset a
 ## Paraview
 - https://www.paraview.org/download/
 - "Paraview" can be used on Windows, so don't worry about it. Load the vtk file output from the calculation into "Paraview".
+- - I recommend using "ubuntu 18.04 LTS" for WSL (windows10) due to image display issues.0
 
 ## ParaView on ubuntu 20.04 LTS 
 - move red line to origin (>1.0 >1.0 >1.0)
