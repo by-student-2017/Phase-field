@@ -228,6 +228,8 @@ Fig. When the value in the second line of "energy.out" (= 5000 steps) is reset a
 - "sudo apt update": This is necessary to update the links to various libraries to new ones. Since changes occur frequently, I also run "sudo apt update" frequently on this github.
 - "cd": Used to move between directories (called folders in Windows). A very important feature. The current directory is displayed to the left of where you enter a command. If you enter "pwd", the current directory will be displayed.
 - "ls": Shows the contents of a directory. My favorite command is "ls -ltra" with the option to show the most recent values ​​at the bottom. This is a useful command to find out which files have been updated.
+- "cp": Copy. If you want to copy the contents of the directory as well, add the option "-r" and use "cp -r".
+- 
 
 ## WSL (windows 11 + VcXsrv)
 - see https://www5.hp-ez.com/hp/calculations/page513 (Japanese)
