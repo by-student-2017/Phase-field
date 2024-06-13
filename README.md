@@ -40,7 +40,7 @@ Fig. Building a computing environment using WSL2 (ubuntu 22.04 LTS on Windows). 
 8. ./three_phase
 
 ![Tutorial1](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_1_basic_run.png)
-Fig. Go to the directory you want to calculate, compile it in C++, and run it.　If you use the "Tab" key while entering a command, it will write the continuation or candidates. If you want to reuse previous input, the up and down keys are also useful, so it's good to remember them. The above is done using such a function.
+Fig. Go to the directory you want to calculate, compile it in C++ (= g++), and run it.　If you use the "Tab" key while entering a command, it will write the continuation or candidates. If you want to reuse previous input, the up and down keys are also useful, so it's good to remember them. The above is done using such a function.
 
 ## Copy the Linux directory to Windows
 9. cd ../
