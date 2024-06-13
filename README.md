@@ -214,7 +214,7 @@ plot "energy.out" u ($1 - 2.356194e-03):($2 - -1.006057e-02) w l t "The new stan
 
 ![Tutorial_3_6](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_3_strain_vs_energy_density_new_std.png)
 
-Fig. When the value in the second line of "energy.out" (= 5000 steps) is reset as the new standard, the difference is simply calculated in "gnuplot" "plot" (x is ($1 - 2.356194e-03), y is ($2 - -1.006057e-02)).
+Fig. When the value in the second line of "energy.out" (= 5000 steps) is reset as the new standard, the difference is simply calculated in gnuplot (x is ($1 - 2.356194e-03), y is ($2 - -1.006057e-02)).
 
 - The initial structure is different from the textbook, so it does not match perfectly, but you can see that it behaves the same as the figure in the textbook. Since I spent time making it possible to calculate with "libfftw3-mpi" and "cuFFT" and changing the output method of Paraview, I have not yet made it possible to change the parameters in parameters.txt in this code. Interested readers may want to try making it possible to change the parameters.
 
