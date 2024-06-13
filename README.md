@@ -222,6 +222,11 @@ Fig. When the value in the second line of "energy.out" (= 5000 steps) is reset a
 - Please read "readme.txt" in each file for rights and citations.
 - I recommend using "ubuntu 18.04 LTS" for WSL (windows10) due to image display issues.
 
+## Explanation of commonly used commands in Linux
+- "sudo": Used to run commands with administrator privileges. Often used when using "apt install" for compilers and various libraries. Without "sudo" and without administrator privileges, the installation will be stopped midway.
+- "-y": It is often used with "sudo apt -y install". It is the same as choosing "yes" when asked [yes/no] during the installation.
+- "sudo apt update": This is necessary to update the links to various libraries to new ones. Since changes occur frequently, I also run "sudo apt update" frequently on this github.
+
 ## WSL (windows 11 + VcXsrv)
 - see https://www5.hp-ez.com/hp/calculations/page513 (Japanese)
 1. Settings -> Projection to PC -> Optional Features -> Other Windows Features
