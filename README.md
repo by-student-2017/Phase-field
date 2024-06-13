@@ -5,7 +5,7 @@
 - The C code is constructed according to the formulas in Dr. Biner's textbook (https://link.springer.com/book/10.1007/978-3-319-41196-5). There are also several settings for Paraview that are not described in the textbook, so please refer to them. The Paraview settings for the progression of destruction in "Phase-Field Crystal (PFC) method" are particularly worthy of mention.
 - The Phase-field method code shown here is written exactly as in the textbook, so it is easier to understand than the DVXalpha method SCAT, FLAPW method as represented by WIEN2k, and KKR method codes such as Akai-KKR. The Phase-field method code is also suitable for learning coding techniques
 
-- Biner_lab_inl is a C-language, GPU-compatible version of the textbook code by Dr. Biner.
+- Biner_lab_inl is a C-language or GPU-compatible version of the textbook code by Dr. Biner.
 - Koyama_lab_nu is a textbook code by Dr. Koyama that reads parameters from the text. It is also characterized by the output for "Paraview".
 
 - "dynamic_memory" is dynamic memory allocation that allows calculations of 4 GB or more (i.e. allows calculations of large systems)
