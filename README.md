@@ -198,7 +198,7 @@ Fig. Strain vs. Energy density.
 			
 			energy=energy-energy0;
 ```
-- As in textbooks, the "energy density" at the start of the calculation is set to energy0, and the difference from that is displayed in "energy.out".
+- As in textbooks, the "energy density" at the beginning of the calculation is set to energy0, and the difference from that is displayed in "energy.out". Therefore, you can reset the reference structure and recalculate the strain and energy density.
 
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
