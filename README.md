@@ -209,12 +209,12 @@ gnuplot
 set xlabel "Strain"
 set ylabel "Energy density"
 set xrange [0:]
-plot "energy.out" u ($1 - 2.356194e-03):($2 - -1.006057e-02) w l t "The new standard"
+plot "energy.out" u ($1 - 2.356194e-03):($2 - -1.006057e-02) w l t "The new standard at 5000 steps"
 ```
 
 ![Tutorial_3_6](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_3_strain_vs_energy_density_new_std.png)
 
-Fig. 
+Fig. When the value in the second line of "energy.out" (= 5000 steps) is reset as the new standard, the difference is simply calculated in "gnuplot" "plot" (x is ($1 - 2.356194e-03), y is ($2 - -1.006057e-02)).
 
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
