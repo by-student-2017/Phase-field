@@ -139,7 +139,7 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 
 ## Phase-Field Crystal (PFC) method
 - "PFC" is provided in "chapter 7" of "Biner_lab_inl".
-- see https://www.google.co.jp/books/edition/Programming_Phase_Field_Modeling/nooJDgAAQBAJ?hl=en&gbpv=1 , e.g., p.338. (Google Books)
+- see https://www.google.co.jp/books/edition/Programming_Phase_Field_Modeling/nooJDgAAQBAJ?hl=en&gbpv=1 , e.g., p.338.
 - see https://github.com/by-student-2017/Phase-field/tree/main/Biner_lab_inl/chapter7/dynamic_memory
 - "PFC" performs calculations in the order shown below. The previous calculation serves as the input file for the next calculation.
 1. pfc_2d (get output file: final_conf.out)
