@@ -191,13 +191,14 @@ Fig. Structure after distortion (350000 steps).
 
 Fig. Strain vs. Energy density.
 
-///
+```
 			if(istep==0){
 				energy0=energy;
 			}
 			
 			energy=energy-energy0;
-///
+```
+- As in textbooks, the "energy density" at the start of the calculation is set to energy0, and the difference from that is displayed in "energy.out".
 
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
