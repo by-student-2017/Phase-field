@@ -227,7 +227,7 @@ Fig. When the value in the second line of "energy.out" (= 5000 steps) is reset a
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
 - Unlike libfftw3, which is already mature, the specifications of CUDA on GPUs may change and become unusable. The GPU specifications in Professor Takaki's paper have also changed since they were written in the paper. There is a good chance that the code you wrote on this github will be confused by the changes in the "not yet mature" CUDA specifications and become difficult to use. In that case, please rewrite the parts that have changed the specifications yourself.
-- Biner's textbook includes sintering that is not described in other textbooks (see https://www.google.co.jp/books/edition/Programming_Phase_Field_Modeling/nooJDgAAQBAJ?hl=en&gbpv=1 , p.54). The C version is available here (https://github.com/by-student-2017/Phase-field/tree/main/Biner_lab_inl/chapter4/dynamic_memory/fd_sint_2d).
+- Dr. Biner's textbook includes sintering that is not described in other textbooks (see https://www.google.co.jp/books/edition/Programming_Phase_Field_Modeling/nooJDgAAQBAJ?hl=en&gbpv=1 , p.54). The C version is available here (https://github.com/by-student-2017/Phase-field/tree/main/Biner_lab_inl/chapter4/dynamic_memory/fd_sint_2d).
 
 ## Explanation of commonly used commands in Linux
 - "sudo": Used to run commands with administrator privileges. Often used when using "apt install" for compilers and various libraries. Without "sudo" and without administrator privileges, the installation will be stopped midway.
