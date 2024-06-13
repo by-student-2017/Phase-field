@@ -151,7 +151,7 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 ## Tutorial 3 (PFC, deformation, 2d version) 
 - Info: Compute time: 8496 s = 2.36 h for Notebook PC (m3-8100Y and memory 8 GB)
 - Input files are also prepared in the directory so that you can run it immediately.
-- Here, we will show you how to perform calculations using the input files that have already been prepared. The procedure is the same for other directories (called files in Windows).
+- Here, we will show you how to perform calculations using the input files that have already been prepared. The procedure is the same for other directories (called folders in Windows).
 1. cd ~/Phase-field/Biner_lab_inl/chapter7/dynamic_memory
 2. ls
 3. cd pfc_def_2d
