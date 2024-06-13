@@ -209,8 +209,12 @@ gnuplot
 set xlabel "Strain"
 set ylabel "Energy density"
 set xrange [0:]
-plot "energy.out" u ($1 - 2.356194e-03):($2 - -1.006057e-02) w l t ""
+plot "energy.out" u ($1 - 2.356194e-03):($2 - -1.006057e-02) w l t "The new standard"
 ```
+
+![Tutorial_3_6](https://github.com/by-student-2017/Phase-field/blob/main/Fig/tutorial_3_strain_vs_energy_density_new_std.png)
+
+Fig. 
 
 ## Note
 - Please read "readme.txt" in each file for rights and citations.
