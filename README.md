@@ -70,6 +70,9 @@ Fig. A sequence of operations for "Paraview". The figure shows "Time: 7" (=sp_re
 
 - Note 1: If you want to match Dr. Koyama's textbook, set Nstep to 100.
 - Note 2: It is not designed to display all three components simultaneously. Change "concentration_A" to "concentration_B" or "concentration_C" in Paraview to display the distribution of each component. If you want to display the changes in each component in a single image, simply rewrite the code so that a value is added to each component in advance (e.g., Chapter4_Section6_MPF0_v2).
+```
+				pht[i*ND+j]+=ph[k*ND*ND+i*ND+j]*float(k);
+```
 
 ## Tutorial 2 (change parameter)
 - There are several ways to edit the parameter file.
