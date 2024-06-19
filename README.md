@@ -141,7 +141,10 @@ Fig. Editing a parameter file on Linux. You can display the contents of the para
 - I recommend Dr. Biner's textbook (https://link.springer.com/book/10.1007/978-3-319-41196-5). It would be good to compare it with my code.
 - Although it is written in Japanese, I also recommend Dr. Koyama's textbook "フェーズフィールド法入門" (Introduction to the Phase Field Method) (ISBN-10: 4621086588, ISBN-13: 978-4621086582).
 
-## Q&A 3 (How should I create the initial structure in Multi-Phase-Field (MPF)?)
+## Q&A 3 (Dynamic memory arrays in C)
+- In C, it is common to make multi-dimensional arrays into one-dimensional arrays for several reasons. For example, make the two-dimensional array "c2h[ip][j]" into a one-dimensional array "c2h[ip*ND+j]". I prevent myself from making mistakes by commenting the state before making it into a one-dimensional array in the code with "//".
+
+## Q&A 4 (How should I create the initial structure in Multi-Phase-Field (MPF)?)
 - I am preparing code to create an initial structure using Voronoi polyhedrons (https://github.com/by-student-2017/Phase-field/tree/main/Biner_lab_inl/Appendix).
 
 ## Phase-Field Crystal (PFC) method
