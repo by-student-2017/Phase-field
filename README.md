@@ -70,7 +70,7 @@ Fig. A sequence of operations for "Paraview". The figure shows "Time: 7" (=sp_re
 
 - Note 1: If you want to match Dr. Koyama's textbook, set Nstep to 100.
 - Note 2: It is not designed to display all three components simultaneously. Change "concentration_A" to "concentration_B" or "concentration_C" in Paraview to display the distribution of each component.
-- Note 3: If you want to display the changes in each component in a single image, simply rewrite the code to multiply each component's value by an integer in advance. For example, in Chapter4_Section6_MPF0_v2, each component is colored by multiplying it by float(k), as shown in the code snippet below.
+- Note 3: If you want to see the changes in each component in a single image, rewrite the code to pre-multiply each component value by an integer. For example, in Chapter4_Section6_MPF0_v2, we color each component by multiplying it by float(k) like this:
 ```
 				pht[i*ND+j]+=ph[k*ND*ND+i*ND+j]*float(k);
 ```
