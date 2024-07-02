@@ -68,7 +68,7 @@ Fig. A sequence of operations for "Paraview". The data with the extension "vtk" 
 ![Paraview_3](https://github.com/by-student-2017/Phase-field/blob/main/Fig/paraview_3.png)
 Fig. A sequence of operations for "Paraview". The figure shows "Time: 7" (=sp_result000007.vtk). In the last image, click the "<-->" in the second or third row at the top left (near the left side of "concentration_A") to automatically change the color gradation range to an appropriate value. 
 
-- Note 0: A space is required immediately after the "=". A space is required immediately before and after the "!". It is a good idea to align the "!" characters.
+- Note 0: There must be a space immediately after the "=". There must be a space immediately before the "!". It is a good idea to align the "!". This is done to simplify the code.
 - Note 1: If you want to match Dr. Koyama's textbook, set Nstep to 100.
 - Note 2: It is not designed to display all three components simultaneously. Change "concentration_A" to "concentration_B" or "concentration_C" in Paraview to display the distribution of each component.
 - Note 3: If you want to see the changes in each component in a single image, rewrite the code so that each component value is pre-multiplied by an integer and then summed up and displayed. For example, in [Chapter4_Section6_MPF0_v2](https://github.com/by-student-2017/Phase-field/blob/main/Koyama_lab_nu/programs_ubuntu_version/Chapter4_Section6_MPF0_v2/MPF0_v2.cpp) (Line 372), we color each component by multiplying it by "float(k)" like this:
