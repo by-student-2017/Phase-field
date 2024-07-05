@@ -1092,6 +1092,14 @@ void datsave_paraview(double *ch, double *Estr,
 			}
 		}
 	}
+	fprintf(fp,"VECTORS vectors float \n"); // Displacement field is drawn with arrows (Vector data)
+	for(k=0;k<=ndzm;k++){
+		for(j=0;j<=ndym;j++){
+			for(i=0;i<=ndxm;i++){
+				fprintf(fp,"%10.6f %10.6f %10.6f\n", u1[i*NDY*NDZ+j*NDZ+k], u2[i*NDY*NDZ+j*NDZ+k], u3[i*NDY*NDZ+j*NDZ+k]);
+			}
+		}
+	}
 	fclose(fp);
 }
 //************ Reading field data *****************************************
