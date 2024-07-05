@@ -717,6 +717,12 @@ void datsave_paraview(double *ch, double *Estr,
 			fprintf(fp,"%10.6f\n", u2[i*ND+j]);
 		}
 	}
+	fprintf(fp,"VECTORS vectors float \n");
+	for(j=0;j<=ndm;j++){
+		for(i=0;i<=ndm;i++){
+			fprintf(fp,"%10.6f %10.6f %10.6f\n", u1[i*ND+j], u2[i*ND+j], 0.0); // Displacement field is drawn with arrows
+		}
+	}
 	fclose(fp);
 }
 //************ Load field data *****************************************

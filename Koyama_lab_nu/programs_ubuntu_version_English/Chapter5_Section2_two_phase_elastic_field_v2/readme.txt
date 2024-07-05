@@ -10,7 +10,10 @@ ubuntu 18.04 LTS
 6. paraview
   a1. File -> Open ... -> pf_result000000.vtk -> OK
   a2. (click) [Apply] 
-  a3. (click "play") |>
+  a3. (click) [Glyph]
+  a4. Scale Array [No scale array
+  a5. Scale Factor [5]
+  a6. (click) [Apply]
 -----------------------------------------------------------------------
 ubuntu 18.04 LTS
 
@@ -23,5 +26,8 @@ ubuntu 18.04 LTS
 6. paraview
   a1. File -> Open ... -> pf_result000000.vtk -> OK
   a2. (click) [Apply] 
-  a3. (click "play") |>
+  a3. (click) [Glyph]
+  a4. Scale Array [No scale array
+  a5. Scale Factor [5]
+  a6. (click) [Apply]
 -----------------------------------------------------------------------
