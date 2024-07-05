@@ -17,4 +17,12 @@ ubuntu 18.04 LTS
   a6. (click "play") |>
   a7. (click "Rescale to Data Range")
   a8. (click "play") |>
+8. paraview
+  a1. File -> Open ... -> el_result..vtk -> OK
+  a2. (click) [Apply] 
+  a3. (click) [Glyph]
+  a4. Scale Array [No scale array]
+  a5. Scale Factor [5]
+  a6. (click) [Apply]
+Note: Transparency; Properties -> Opacity
 -----------------------------------------------------------------------
