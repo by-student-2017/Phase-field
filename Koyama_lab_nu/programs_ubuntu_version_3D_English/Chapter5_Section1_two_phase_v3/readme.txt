@@ -14,7 +14,7 @@ ubuntu 20.04 LTS
   a1. File -> Open ... -> sp_result..vtk -> OK
   a2. (click) [Apply] 
   a3. (click) [Glyph]
-  a4. Scale Array [No scale array
+  a4. Scale Array [No scale array]
   a5. Scale Factor [5]
   a6. (click) [Apply]
 -----------------------------------------------------------------------
