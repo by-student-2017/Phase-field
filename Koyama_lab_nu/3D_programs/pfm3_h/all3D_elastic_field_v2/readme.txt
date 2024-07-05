@@ -24,4 +24,5 @@ ubuntu 18.04 LTS
   a4. Scale Array [No scale array]
   a5. Scale Factor [5]
   a6. (click) [Apply]
+Note: Transparency; Properties -> Opacity
 -----------------------------------------------------------------------
