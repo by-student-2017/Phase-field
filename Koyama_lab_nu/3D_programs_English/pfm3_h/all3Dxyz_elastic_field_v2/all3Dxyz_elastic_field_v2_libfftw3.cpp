@@ -283,6 +283,7 @@ int main(void)
 //*** initial field settings ***************
 	//ini000();
 	datin(ch, NDX, NDY, NDZ); //Read phase field
+	ndxm = NDX-1; ndym = NDY-1; ndzm = NDZ-1;
 
  	//gwinsize(INX,INY); ginit(1); gsetorg(0,0);// drow figure
 
