@@ -646,10 +646,13 @@ start: ;
 								   -6.0*c2);//gradient potential
 				//
 				// dEstr/dc = (dEstr/dr)/(dc/dr) = (dEstr/dx)/(dc/dx) + (dEstr/dy)/(dc/dy) + (dEstr/dz)/(dc/dz)
-				c2k_str = (Estr[ip*ND*ND+j*ND+k]-Estr[im*ND*ND+j*ND+k])/(c2h[ip*ND*ND+j*ND+k]-c2h[im*ND*ND+j*ND+k])
-						 +(Estr[i*ND*ND+jp*ND+k]-Estr[i*ND*ND+jm*ND+k])/(c2h[i*ND*ND+jp*ND+k]-c2h[i*ND*ND+jm*ND+k])
-						 +(Estr[i*ND*ND+j*ND+kp]-Estr[i*ND*ND+j*ND+km])/(c2h[i*ND*ND+j*ND+kp]-c2h[i*ND*ND+j*ND+km]);
-
+				c2k_str = 0.0;
+				/*
+				c2k_str = (Estr[ip*ND*ND+j*ND+k]-Estr[im*ND*ND+j*ND+k])/(c2h[ip*ND*ND+j*ND+k]-c2h[im*ND*ND+j*ND+k]+1e-6)
+						 +(Estr[i*ND*ND+jp*ND+k]-Estr[i*ND*ND+jm*ND+k])/(c2h[i*ND*ND+jp*ND+k]-c2h[i*ND*ND+jm*ND+k]+1e-6)
+						 +(Estr[i*ND*ND+j*ND+kp]-Estr[i*ND*ND+j*ND+km])/(c2h[i*ND*ND+j*ND+kp]-c2h[i*ND*ND+j*ND+km]+1e-6);
+				*/
+				//
 				c2k[i*ND*ND+j*ND+k]=c2k_chem+c2k_su+c2k_str;//diffusion potential
 			}
 		}
