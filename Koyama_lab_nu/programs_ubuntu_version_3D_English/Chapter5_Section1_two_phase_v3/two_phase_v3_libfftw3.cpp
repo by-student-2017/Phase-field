@@ -554,8 +554,8 @@ start: ;
 				// New version
 				// Estr(r) = (1/2) * C ijkl * (epsilon_c ij - epsilon_0 ij) * (epsilon_c kl - epsilon_0 kl)
 				epc[1][1] = ep11c[i*ND*ND+j*ND+k]; epc[1][2] = ep12c[i*ND*ND+j*ND+k]; epc[1][3] = ep13c[i*ND*ND+j*ND+k];
-				epc[2][1] = ep11c[i*ND*ND+j*ND+k]; epc[2][2] = ep12c[i*ND*ND+j*ND+k]; epc[2][3] = ep13c[i*ND*ND+j*ND+k];
-				epc[3][1] = ep11c[i*ND*ND+j*ND+k]; epc[3][2] = ep12c[i*ND*ND+j*ND+k]; epc[3][3] = ep13c[i*ND*ND+j*ND+k];
+				epc[2][1] = ep12c[i*ND*ND+j*ND+k]; epc[2][2] = ep22c[i*ND*ND+j*ND+k]; epc[2][3] = ep23c[i*ND*ND+j*ND+k];
+				epc[3][1] = ep13c[i*ND*ND+j*ND+k]; epc[3][2] = ep23c[i*ND*ND+j*ND+k]; epc[3][3] = ep33c[i*ND*ND+j*ND+k];
 				//
 				for(int ie=1;ie<=3;ie++){
 					for(int je=1;je<=3;je++){
