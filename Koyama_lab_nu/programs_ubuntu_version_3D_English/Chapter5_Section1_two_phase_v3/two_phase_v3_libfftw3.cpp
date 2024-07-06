@@ -644,8 +644,10 @@ start: ;
 								   +c2h[i*ND*ND+jp*ND+k]+c2h[i*ND*ND+jm*ND+k]
       							   +c2h[i*ND*ND+j*ND+kp]+c2h[i*ND*ND+j*ND+km]
 								   -6.0*c2);//gradient potential
+				//
+				c2k_str=Estr[i*ND*ND+j*ND+k];//Elastic potential
 
-				c2k[i*ND*ND+j*ND+k]=c2k_chem+c2k_su;//diffusion potential
+				c2k[i*ND*ND+j*ND+k]=c2k_chem+c2k_su+c2k_str;//diffusion potential
 			}
 		}
 	}
@@ -665,26 +667,7 @@ start: ;
       				 +c2k[i*ND*ND+j*ND+kp]+c2k[i*ND*ND+j*ND+km]
 					 -6.0*c2k[i*ND*ND+j*ND+k];	//Second derivative of the diffusion potential
 				//
-				//****** Calculation of elastic potential [equation (4.8)] ********************************
-				// epsilonT ij = epsilon0 ij - average epsilon0 ij - d(epsilonC ij) - epsilonA ij
-				epT[1][1] = ep11h0[i*ND*ND+j*ND+k] - ep0[1][1] - ec11[i*ND*ND+j*ND+k] - ep_a[1][1];
-				epT[2][2] = ep22h0[i*ND*ND+j*ND+k] - ep0[2][2] - ec22[i*ND*ND+j*ND+k] - ep_a[2][2];
-				epT[3][3] = ep33h0[i*ND*ND+j*ND+k] - ep0[3][3] - ec33[i*ND*ND+j*ND+k] - ep_a[3][3];
-	epT[1][2] = epT[2][1] = ep12h0[i*ND*ND+j*ND+k] - ep0[1][2] - ec12[i*ND*ND+j*ND+k] - ep_a[1][2];
-	epT[1][3] = epT[3][1] = ep13h0[i*ND*ND+j*ND+k] - ep0[1][3] - ec13[i*ND*ND+j*ND+k] - ep_a[1][3];
-	epT[2][3] = epT[3][2] = ep23h0[i*ND*ND+j*ND+k] - ep0[2][3] - ec23[i*ND*ND+j*ND+k] - ep_a[3][3];
-				//
-				s2k_str= cec[1][1][1][1]*eta_c[1][1]*epT[1][1]
-						+cec[2][2][2][2]*eta_c[2][2]*epT[2][2]
-						+cec[3][3][3][3]*eta_c[3][3]*epT[3][3]
-						+cec[1][1][2][2]*eta_c[1][1]*epT[2][2]*2.0
-						+cec[1][1][3][3]*eta_c[1][1]*epT[3][3]*2.0
-						+cec[2][2][3][3]*eta_c[2][2]*epT[3][3]*2.0
-						+cec[2][3][2][3]*eta_c[2][3]*epT[2][3]*4.0
-						+cec[1][3][1][3]*eta_c[1][3]*epT[1][3]*4.0
-						+cec[1][2][1][2]*eta_c[1][2]*epT[1][2]*4.0;
-				//
-				c2ddtt = cmob22*(dakd2 - s2k_str);//diffusion equation
+				c2ddtt = cmob22*dakd2;//diffusion equation
 				//
 				c2h2[i*ND*ND+j*ND+k]=c2h[i*ND*ND+j*ND+k]+c2ddtt*delt;//Time evolution of the concentration field
 				//
