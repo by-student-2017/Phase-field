@@ -79,6 +79,8 @@ int main(void)
 	//
 	//double epT[4][4];
 	double s1ddtt, s2ddtt;							//Time variation of s1 and s2 (left side of evolution equation)
+	//
+	double dc[4];
 	
 //****** Setting calculation conditions and material constants ****************************************
 	printf("---------------------------------\n");
@@ -668,12 +670,15 @@ start: ;
 								   -6.0*c2);//gradient potential
 				//
 				// dEstr/dc = (dEstr/dr)/(dc/dr) = (dEstr/dx)/(dc/dx) + (dEstr/dy)/(dc/dy) + (dEstr/dz)/(dc/dz)
-				c2k_str = 0.0;
-				/*
-				c2k_str = (Estr[ip*ND*ND+j*ND+k]-Estr[im*ND*ND+j*ND+k])/(c2h[ip*ND*ND+j*ND+k]-c2h[im*ND*ND+j*ND+k]+1e-6)
-						 +(Estr[i*ND*ND+jp*ND+k]-Estr[i*ND*ND+jm*ND+k])/(c2h[i*ND*ND+jp*ND+k]-c2h[i*ND*ND+jm*ND+k]+1e-6)
-						 +(Estr[i*ND*ND+j*ND+kp]-Estr[i*ND*ND+j*ND+km])/(c2h[i*ND*ND+j*ND+kp]-c2h[i*ND*ND+j*ND+km]+1e-6);
-				*/
+				c2k_str = 0.0; // Estr[J/m^3] => x "b1*b1*b1/rtemp" => dimensionless
+				dc[1] = (c2h[ip*ND*ND+j*ND+k]-c2h[im*ND*ND+j*ND+k])/2.0;
+				if( abs(dc[1]) >= 1e-6){ c2k_str += (Estr[ip*ND*ND+j*ND+k]-Estr[im*ND*ND+j*ND+k])*b1*b1*b1/rtemp/2.0/dc[1]; }
+				//
+				dc[2] = (c2h[i*ND*ND+jp*ND+k]-c2h[i*ND*ND+jm*ND+k])/2.0;
+				if( abs(dc[2]) >= 1e-6){ c2k_str += (Estr[i*ND*ND+jp*ND+k]-Estr[i*ND*ND+jm*ND+k])*b1*b1*b1/rtemp/2.0/dc[2]; }
+				//
+				dc[3] = (c2h[i*ND*ND+j*ND+kp]-c2h[i*ND*ND+j*ND+km])/2.0;
+				if( abs(dc[3]) >= 1e-6){ c2k_str += (Estr[i*ND*ND+j*ND+kp]-Estr[i*ND*ND+j*ND+km])*b1*b1*b1/rtemp/2.0/dc[3]; }
 				//
 				c2k[i*ND*ND+j*ND+k]=c2k_chem+c2k_su+c2k_str;//diffusion potential
 			}
