@@ -89,6 +89,9 @@ int main(void)
 	//double ef1, ef2, ef3, ef11, ef22, ef33, ef12, ef13, ef23;	//Elastic function
 	
 	double Estr1, Estr2, Estr3, Estr4, Estr5;//Working variables when calculating elastic strain energy
+	
+	double epc[4][4];
+	double eta[4][4];
 
 //****** Setting of calculation conditions and material constants ****************************************
 	printf("---------------------------------\n");
@@ -308,6 +311,7 @@ int main(void)
 //*** initial field settings ***************
 	//ini000();
 	datin(ch, NDX, NDY, NDZ); //Read phase field
+	ndxm = NDX-1; ndym = NDY-1; ndzm = NDZ-1;
 
  	//gwinsize(INX,INY); ginit(1); gsetorg(0,0);// drow figure
 
@@ -528,7 +532,7 @@ iplan = fftw_plan_dft_3d(fftsizex, fftsizey, fftsizez, in, out, FFTW_BACKWARD, F
 
 				//Calculation of elastic stress field [equation (5.27)]
 				// Hooke's law: sigma ij = C ijkl * (epsilon_c kl - epsilon_0 kl)
-				// epsilon_0 ij = eta ij * phase-field = eta ij * ph
+				// epsilon_0 kl = eta ij * phase-field = eta ij * ph
 				// Vegard's law: epsilon = eta*(c-c0)
 				//sig11[i][j][k]=c11*ec11[i][j][k]+c12*ec22[i][j][k]+c12*ec33[i][j][k]
 				//							   -(c11+2.*c12)*ep000*(ch[i][j][k]-c0);
@@ -556,7 +560,7 @@ iplan = fftw_plan_dft_3d(fftsizex, fftsizey, fftsizez, in, out, FFTW_BACKWARD, F
 											   -c66*2.0*eta23*(ch[i*NDY*NDZ+j*NDZ+k]-c0);
 
 				//Calculation of elastic strain energy field [equation (5.28)]
-				// Estr(r) = (1/2) * C ijkl * (epsilon_c ij - epsilon_0 ij) * (epsilon_c kl - epsilon_0 kl)
+				// Estr(r) = (1/2) * C ijkl * (epsilon_c kl - epsilon_0 kl) * (epsilon_c kl - epsilon_0 kl)
 				//Estr1=1.5*(c11+2.0*c12)*ep000*ep000*ch[i][j][k]*ch[i][j][k];
 				//Estr2=-(c11+2.0*c12)*(ep11c[i][j][k]
 				//	                 +ep22c[i][j][k]
@@ -573,6 +577,10 @@ iplan = fftw_plan_dft_3d(fftsizex, fftsizey, fftsizez, in, out, FFTW_BACKWARD, F
 				//Estr[i][j][k]=Estr1+Estr2+Estr3+Estr4+Estr5;
 				//
 				//Estr1=1.5*(c11+c12+c13)*ep000*ep000*ch[i*NDY*NDZ+j*NDZ+k]*ch[i*NDY*NDZ+j*NDZ+k];
+				// Estr(r) = (1/2) * C ijkl * (epsilon_c kl - epsilon_0 kl) * (epsilon_c kl - epsilon_0 kl)
+				
+				/*
+				// old version
 				// Estr(r) = (1/2) * C ijkl * (epsilon_c ij - epsilon_0 ij) * (epsilon_c kl - epsilon_0 kl)
 				//   = (1/2) * C ijkl * ( epsilon_c ij * epsilon_c kl - epsilon_c ij * epsilon_c kl - epsilon_0 ij * epsilon_c kl + epsilon_0 ij * epsilon_0 kl)
 				//   Estr1 = (1/2) * C ijkl *   epsilon_0 ij * epsilon_0 kl, i=j, k=l (e.g., c12 = C 1122)
@@ -581,22 +589,22 @@ iplan = fftw_plan_dft_3d(fftsizex, fftsizey, fftsizez, in, out, FFTW_BACKWARD, F
 				//   Estr4 = (1/2) * C ijkl *   epsilon_c ij * epsilon_c kl, i=j, k=l, i!=k
 				//   Estr5 = (1/2) * C ijkl *   epsilon_c ij * epsilon_c kl, i!=j, k!=l
 				Estr1=0.5*c11*(eta11*ch[i*NDY*NDZ+j*NDZ+k])*(eta11*ch[i*NDY*NDZ+j*NDZ+k])
-					 +0.5*c12*(eta11*ch[i*NDY*NDZ+j*NDZ+k])*(eta22*ch[i*NDY*NDZ+j*NDZ+k])
-					 +0.5*c13*(eta11*ch[i*NDY*NDZ+j*NDZ+k])*(eta33*ch[i*NDY*NDZ+j*NDZ+k])
-					 +0.5*c12*(eta22*ch[i*NDY*NDZ+j*NDZ+k])*(eta11*ch[i*NDY*NDZ+j*NDZ+k]) //c21=c12
+					 +0.5*c12*(eta12*ch[i*NDY*NDZ+j*NDZ+k])*(eta12*ch[i*NDY*NDZ+j*NDZ+k])
+					 +0.5*c13*(eta13*ch[i*NDY*NDZ+j*NDZ+k])*(eta13*ch[i*NDY*NDZ+j*NDZ+k])
+					 +0.5*c12*(eta12*ch[i*NDY*NDZ+j*NDZ+k])*(eta12*ch[i*NDY*NDZ+j*NDZ+k]) //c21=c12
 					 +0.5*c22*(eta22*ch[i*NDY*NDZ+j*NDZ+k])*(eta22*ch[i*NDY*NDZ+j*NDZ+k])
-					 +0.5*c23*(eta22*ch[i*NDY*NDZ+j*NDZ+k])*(eta33*ch[i*NDY*NDZ+j*NDZ+k])
-					 +0.5*c13*(eta33*ch[i*NDY*NDZ+j*NDZ+k])*(eta11*ch[i*NDY*NDZ+j*NDZ+k]) //c31=c13
-					 +0.5*c23*(eta33*ch[i*NDY*NDZ+j*NDZ+k])*(eta22*ch[i*NDY*NDZ+j*NDZ+k]) //c32=c23
+					 +0.5*c23*(eta23*ch[i*NDY*NDZ+j*NDZ+k])*(eta23*ch[i*NDY*NDZ+j*NDZ+k])
+					 +0.5*c13*(eta13*ch[i*NDY*NDZ+j*NDZ+k])*(eta13*ch[i*NDY*NDZ+j*NDZ+k]) //c31=c13
+					 +0.5*c23*(eta23*ch[i*NDY*NDZ+j*NDZ+k])*(eta23*ch[i*NDY*NDZ+j*NDZ+k]) //c32=c23
 					 +0.5*c33*(eta33*ch[i*NDY*NDZ+j*NDZ+k])*(eta33*ch[i*NDY*NDZ+j*NDZ+k]);
 				Estr2=0.5*c11*(ep11c[i*NDY*NDZ+j*NDZ+k])*(eta11*ch[i*NDY*NDZ+j*NDZ+k])*-2.0 // = -2.0 * epsilon_c * epsilon_0
-					 +0.5*c12*(ep11c[i*NDY*NDZ+j*NDZ+k])*(eta22*ch[i*NDY*NDZ+j*NDZ+k])*-2.0
-					 +0.5*c13*(ep11c[i*NDY*NDZ+j*NDZ+k])*(eta33*ch[i*NDY*NDZ+j*NDZ+k])*-2.0
-					 +0.5*c12*(ep22c[i*NDY*NDZ+j*NDZ+k])*(eta11*ch[i*NDY*NDZ+j*NDZ+k])*-2.0 //c21=c12
+					 +0.5*c12*(ep11c[i*NDY*NDZ+j*NDZ+k])*(eta12*ch[i*NDY*NDZ+j*NDZ+k])*-2.0
+					 +0.5*c13*(ep11c[i*NDY*NDZ+j*NDZ+k])*(eta13*ch[i*NDY*NDZ+j*NDZ+k])*-2.0
+					 +0.5*c12*(ep22c[i*NDY*NDZ+j*NDZ+k])*(eta12*ch[i*NDY*NDZ+j*NDZ+k])*-2.0 //c21=c12
 					 +0.5*c22*(ep22c[i*NDY*NDZ+j*NDZ+k])*(eta22*ch[i*NDY*NDZ+j*NDZ+k])*-2.0
-					 +0.5*c23*(ep22c[i*NDY*NDZ+j*NDZ+k])*(eta33*ch[i*NDY*NDZ+j*NDZ+k])*-2.0
-					 +0.5*c13*(ep33c[i*NDY*NDZ+j*NDZ+k])*(eta11*ch[i*NDY*NDZ+j*NDZ+k])*-2.0 //c31=c13
-					 +0.5*c23*(ep33c[i*NDY*NDZ+j*NDZ+k])*(eta22*ch[i*NDY*NDZ+j*NDZ+k])*-2.0 //c32=c23
+					 +0.5*c23*(ep22c[i*NDY*NDZ+j*NDZ+k])*(eta23*ch[i*NDY*NDZ+j*NDZ+k])*-2.0
+					 +0.5*c13*(ep33c[i*NDY*NDZ+j*NDZ+k])*(eta13*ch[i*NDY*NDZ+j*NDZ+k])*-2.0 //c31=c13
+					 +0.5*c23*(ep33c[i*NDY*NDZ+j*NDZ+k])*(eta23*ch[i*NDY*NDZ+j*NDZ+k])*-2.0 //c32=c23
 					 +0.5*c33*(ep33c[i*NDY*NDZ+j*NDZ+k])*(eta33*ch[i*NDY*NDZ+j*NDZ+k])*-2.0;
 				Estr3=0.5*c11*(ep11c[i*NDY*NDZ+j*NDZ+k]*ep11c[i*NDY*NDZ+j*NDZ+k])
 					 +0.5*c22*(ep22c[i*NDY*NDZ+j*NDZ+k]*ep22c[i*NDY*NDZ+j*NDZ+k])
@@ -604,11 +612,33 @@ iplan = fftw_plan_dft_3d(fftsizex, fftsizey, fftsizez, in, out, FFTW_BACKWARD, F
 				Estr4=0.5*c12*(ep11c[i*NDY*NDZ+j*NDZ+k]*ep22c[i*NDY*NDZ+j*NDZ+k])*2.0 //2.0*c12=c12+c21
 					 +0.5*c13*(ep11c[i*NDY*NDZ+j*NDZ+k]*ep33c[i*NDY*NDZ+j*NDZ+k])*2.0 //2.0*c13=c13+c31
 				     +0.5*c23*(ep22c[i*NDY*NDZ+j*NDZ+k]*ep33c[i*NDY*NDZ+j*NDZ+k])*2.0;//2.0*c23=c23+c32
-				Estr5=0.5*c44*(ep23c[i*NDY*NDZ+j*NDZ+k]*ep23c[i*NDY*NDZ+j*NDZ+k])*4.0 //4.0*c23*c23=c23*c23+c23*c32+c32*c23*c33*c33
+				Estr5=0.5*c44*(ep12c[i*NDY*NDZ+j*NDZ+k]*ep12c[i*NDY*NDZ+j*NDZ+k])*4.0 //4.0*c12*c12=c12*c12+c12*c21+c21*c12*c22*c22
 					 +0.5*c55*(ep13c[i*NDY*NDZ+j*NDZ+k]*ep13c[i*NDY*NDZ+j*NDZ+k])*4.0 //4.0*c13*c13=c13*c13+c13*c31+c31*c13*c33*c33
-					 +0.5*c66*(ep12c[i*NDY*NDZ+j*NDZ+k]*ep12c[i*NDY*NDZ+j*NDZ+k])*4.0;//4.0*c12*c12=c12*c12+c12*c21+c21*c12*c22*c22
+					 +0.5*c66*(ep23c[i*NDY*NDZ+j*NDZ+k]*ep23c[i*NDY*NDZ+j*NDZ+k])*4.0;//4.0*c23*c23=c23*c23+c23*c32+c32*c23*c33*c33
 				Estr[i*NDY*NDZ+j*NDZ+k]=Estr1+Estr2+Estr3+Estr4+Estr5;
-				//dEstr/dph = C ijkl * (epsilon_c kl - epsilon_0 kl) * eta ij
+				*/
+				
+				// New version
+				// Estr(r) = (1/2) * C ijkl * (epsilon_c ij - epsilon_0 ij) * (epsilon_c kl - epsilon_0 kl)
+				epc[1][1] = ep11c[i*NDY*NDZ+j*NDZ+k]; epc[1][2] = ep12c[i*NDY*NDZ+j*NDZ+k]; epc[1][3] = ep13c[i*NDY*NDZ+j*NDZ+k];
+				epc[2][1] = ep12c[i*NDY*NDZ+j*NDZ+k]; epc[2][2] = ep22c[i*NDY*NDZ+j*NDZ+k]; epc[2][3] = ep23c[i*NDY*NDZ+j*NDZ+k];
+				epc[3][1] = ep13c[i*NDY*NDZ+j*NDZ+k]; epc[3][2] = ep23c[i*NDY*NDZ+j*NDZ+k]; epc[3][3] = ep33c[i*NDY*NDZ+j*NDZ+k];
+				//
+				eta[1][1] = eta11*ch[i*NDY*NDZ+j*NDZ+k]; eta[1][2] = eta12*ch[i*NDY*NDZ+j*NDZ+k]; eta[1][3] = eta13*ch[i*NDY*NDZ+j*NDZ+k];
+				eta[2][1] = eta12*ch[i*NDY*NDZ+j*NDZ+k]; eta[2][2] = eta22*ch[i*NDY*NDZ+j*NDZ+k]; eta[2][3] = eta23*ch[i*NDY*NDZ+j*NDZ+k];
+				eta[3][1] = eta13*ch[i*NDY*NDZ+j*NDZ+k]; eta[3][2] = eta23*ch[i*NDY*NDZ+j*NDZ+k]; eta[3][3] = eta33*ch[i*NDY*NDZ+j*NDZ+k];
+				//
+				for(int ie=1;ie<=3;ie++){
+					for(int je=1;je<=3;je++){
+						for(int ke=1;ke<=3;ke++){
+							for(int le=1;le<=3;le++){
+								Estr[i*NDY*NDZ+j*NDZ+k] += 0.5*cec[ie][je][ke][le]*(epc[ie][je] - eta[ie][je])*(epc[ke][le] - eta[ke][le]);
+							}
+						}
+					}
+				}
+				//
+				
 			}
 		}
 	}
