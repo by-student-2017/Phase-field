@@ -508,6 +508,13 @@ start: ;
 				sig13[i*ND*ND+j*ND+k]=2.0*c55*ec13[i*ND*ND+j*ND+k];
 				sig23[i*ND*ND+j*ND+k]=2.0*c44*ec23[i*ND*ND+j*ND+k];
 				//
+				// Estr(r) = (1/2) * C ijkl * (epsilon_c ij - epsilon_0 ij) * (epsilon_c kl - epsilon_0 kl)
+				//   = (1/2) * C ijkl * ( epsilon_c ij * epsilon_c kl - epsilon_c ij * epsilon_c kl - epsilon_0 ij * epsilon_c kl + epsilon_0 ij * epsilon_0 kl)
+				//   Estr1 = (1/2) * C ijkl *   epsilon_0 ij * epsilon_0 kl, i=j, k=l (e.g., c12 = C 1122)
+				//   Estr2 = (1/2) * C ijkl * - epsilon_c ij * epsilon_c kl - epsilon_0 ij * epsilon_c kl = - 2.0 * epsilon_c ij * epsilon_c kl, i=j, k=l
+				//   Estr3 = (1/2) * C ijkl *   epsilon_c ij * epsilon_c kl, i=j, k=l, i=k 
+				//   Estr4 = (1/2) * C ijkl *   epsilon_c ij * epsilon_c kl, i=j, k=l, i!=k
+				//   Estr5 = (1/2) * C ijkl *   epsilon_c ij * epsilon_c kl, i!=j, k!=l
 				Estr1=0.5*(c11*eta_c[1][1]*eta_c[1][1]
 						  +c12*eta_c[1][1]*eta_c[2][2]
 						  +c13*eta_c[1][1]*eta_c[3][3]
