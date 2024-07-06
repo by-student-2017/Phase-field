@@ -574,6 +574,12 @@ iplan = fftw_plan_dft_3d(fftsizex, fftsizey, fftsizez, in, out, FFTW_BACKWARD, F
 				//
 				//Estr1=1.5*(c11+c12+c13)*ep000*ep000*ch[i*NDY*NDZ+j*NDZ+k]*ch[i*NDY*NDZ+j*NDZ+k];
 				// Estr(r) = (1/2) * C ijkl * (epsilon_c ij - epsilon_0 ij) * (epsilon_c kl - epsilon_0 kl)
+				//   = (1/2) * C ijkl * ( epsilon_c ij * epsilon_c kl - epsilon_c ij * epsilon_c kl - epsilon_0 ij * epsilon_c kl + epsilon_0 ij * epsilon_0 kl)
+				//   Estr1 = (1/2) * C ijkl *   epsilon_0 ij * epsilon_0 kl, i=j, k=l (e.g., c12 = C 1122)
+				//   Estr2 = (1/2) * C ijkl * - epsilon_c ij * epsilon_c kl - epsilon_0 ij * epsilon_c kl = - 2.0 * epsilon_c ij * epsilon_c kl, i=j, k=l
+				//   Estr3 = (1/2) * C ijkl *   epsilon_c ij * epsilon_c kl, i=j, k=l, i=k 
+				//   Estr4 = (1/2) * C ijkl *   epsilon_c ij * epsilon_c kl, i=j, k=l, i!=k
+				//   Estr5 = (1/2) * C ijkl *   epsilon_c ij * epsilon_c kl, i!=j, k!=l
 				Estr1=0.5*c11*(eta11*ch[i*NDY*NDZ+j*NDZ+k])*(eta11*ch[i*NDY*NDZ+j*NDZ+k])
 					 +0.5*c12*(eta11*ch[i*NDY*NDZ+j*NDZ+k])*(eta22*ch[i*NDY*NDZ+j*NDZ+k])
 					 +0.5*c13*(eta11*ch[i*NDY*NDZ+j*NDZ+k])*(eta33*ch[i*NDY*NDZ+j*NDZ+k])
