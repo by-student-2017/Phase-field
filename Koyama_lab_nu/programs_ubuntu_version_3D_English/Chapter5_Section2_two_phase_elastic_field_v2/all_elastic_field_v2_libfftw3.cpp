@@ -460,7 +460,7 @@ iplan = fftw_plan_dft_3d(fftsize, fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW
 
 				//Calculation of elastic stress field [equation (5.27)]
 				// Hooke's law: sigma ij = C ijkl * (epsilon_c kl - epsilon_0 kl)
-				// epsilon_0 kl = eta ij * phase-field
+				// epsilon_0 ij = eta ij * phase-field
 				// Vegard's law: epsilon = eta*(c-c0)
 				//sig11[i][j][k]=c11*ec11[i][j][k]+c12*ec22[i][j][k]+c12*ec33[i][j][k]
 				//							   -(c11+2.*c12)*ep000*(ch[i][j][k]-c0);
@@ -483,7 +483,7 @@ iplan = fftw_plan_dft_3d(fftsize, fftsize, fftsize, in, out, FFTW_BACKWARD, FFTW
 				sig23[i*ND*ND+j*ND+k]=2.*c44*ec23[i*ND*ND+j*ND+k];
 
 				//Calculation of elastic strain energy field [equation (5.28)]
-				// Estr(r) = (1/2) * C ijkl * (epsilon_c kl - epsilon_0 kl) * (epsilon_c kl - epsilon_0 kl)
+				// Estr(r) = (1/2) * C ijkl * (epsilon_c ij - epsilon_0 ij) * (epsilon_c kl - epsilon_0 kl)
 				//Estr1=1.5*(c11+2.0*c12)*ep000*ep000*ch[i][j][k]*ch[i][j][k];
 				//Estr2=-(c11+2.0*c12)*(ep11c[i][j][k]
 				//	                 +ep22c[i][j][k]
