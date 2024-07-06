@@ -762,7 +762,7 @@ double zuij(int i0, int j0, int k0, int iii, int ND)
 	zij=0.0;
 	for(m=1;m<=3;m++) {
 		for(n=1;n<=3;n++) {
-			//zij=zij-(om[m][iii]/alnn)*sigma[m][n]*nec[n]; // eq.(5.30) or eq.(II 3.9), alnn=|k}
+			//zij=zij-(om[m][iii]/alnn)*sigma[m][n]*nec[n]; // eq.(5.30) or eq.(II 3.9), alnn=|k|, where k is wave vector k=(kx,ky,kz)
 			zij=zij+sigma[m][n]*nec[n]*om[m][iii];
 		}
 	}
