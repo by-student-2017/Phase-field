@@ -891,7 +891,7 @@ double zuij(int i0, int j0, int k0, int iii, int ND)
 			zij=zij+sigma[m][n]*nec[n]*om[m][iii];
 		}
 	}
-	zij=-zij/alnn;
+	zij=-zij/alnn; // eq.(5.30) or eq.(II 3.9), alnn=|k|, where k is wave vector k=(kx,ky,kz)
 	return(zij);
 }
 
