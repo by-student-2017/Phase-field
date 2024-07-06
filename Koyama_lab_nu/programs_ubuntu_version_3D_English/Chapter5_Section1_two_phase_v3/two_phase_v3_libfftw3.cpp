@@ -71,7 +71,7 @@ int main(void)
 	
 	double ep_a[4][4];								//elastic strain related external force
 	//
-	double s2k_str;
+	double c2k_str;
 	double sum11, sum22, sum33;						//spatial integral of s1 and s2
 	double sum12, sum13, sum23;						//spatial integral of s1 and s2
 	double ep0[4][4];								//Mean value of transformation strain in the structure
