@@ -628,6 +628,7 @@ iplan = fftw_plan_dft_3d(fftsizex, fftsizey, fftsizez, in, out, FFTW_BACKWARD, F
 				eta[2][1] = eta12*ch[i*NDY*NDZ+j*NDZ+k]; eta[2][2] = eta22*ch[i*NDY*NDZ+j*NDZ+k]; eta[2][3] = eta23*ch[i*NDY*NDZ+j*NDZ+k];
 				eta[3][1] = eta13*ch[i*NDY*NDZ+j*NDZ+k]; eta[3][2] = eta23*ch[i*NDY*NDZ+j*NDZ+k]; eta[3][3] = eta33*ch[i*NDY*NDZ+j*NDZ+k];
 				//
+				Estr[i*NDY*NDZ+j*NDZ+k] = 0.0;
 				for(int ie=1;ie<=3;ie++){
 					for(int je=1;je<=3;je++){
 						for(int ke=1;ke<=3;ke++){
