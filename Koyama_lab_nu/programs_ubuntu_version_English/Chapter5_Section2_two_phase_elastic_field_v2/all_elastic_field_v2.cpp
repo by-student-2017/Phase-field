@@ -63,7 +63,7 @@ int main(void)
 	int i, j, k, l, iii, jjj;							//integer
 	//int ip, im, jp, jm;								//integer
 
-	//double c;	//êiƒtƒF[ƒYƒtƒB[ƒ‹ƒhj
+	//double c;	//Phase Field
 	//double qrh1[ND][ND], qih1[ND][ND];				//Fourier transform of the field
 	//double ec11[ND][ND], ec22[ND][ND], ec12[ND][ND];	//restraint strain array
 
@@ -208,7 +208,7 @@ int main(void)
 	cec[1][1][3][3]=cec[3][3][1][1]=c12;
 	cec[2][2][3][3]=cec[3][3][2][2]=c12;
 
-//--- Eigen stress (stress when elastically deformed by Eigen strain)j--------------
+//--- Eigen stress (stress when elastically deformed by Eigen strain)ï¼‰--------------
 	sigma[1][1]=cec[1][1][1][1]*eta_c[1][1]
 			   +cec[1][1][2][2]*eta_c[2][2]
 			   +cec[1][1][3][3]*eta_c[3][3]; //sigma1
@@ -406,7 +406,7 @@ int main(void)
 	//				sig11, sig22, sig33, sig12, u1, u2, ND);	//save
 	datsave_paraview(ch, Estr, ep11c, ep22c, ep12c,
 					sig11, sig22, sig33, sig12, u1, u2, ND);	//save
-	//if(keypress()){return 0;}//ƒL[‘Ò‚¿ó‘Ô
+	//if(keypress()){return 0;}//ã‚­ãƒ¼å¾…ã¡çŠ¶æ…‹
 	printf("Finished \n");
 
 	std::exit(0);
