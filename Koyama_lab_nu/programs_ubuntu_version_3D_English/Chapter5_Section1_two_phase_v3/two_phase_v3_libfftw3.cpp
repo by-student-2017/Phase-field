@@ -509,15 +509,15 @@ start: ;
 				sig23[i*ND*ND+j*ND+k]=2.0*c44*ec23[i*ND*ND+j*ND+k];
 				//
 				Estr1=0.5*(c11*eta_c[1][1]*eta_c[1][1]
-						  +c12*eta_c[1][2]*eta_c[1][2]
-						  +c13*eta_c[1][3]*eta_c[1][3]
-						  +c12*eta_c[1][2]*eta_c[1][2]
+						  +c12*eta_c[1][1]*eta_c[2][2]
+						  +c13*eta_c[1][1]*eta_c[3][3]
+						  +c12*eta_c[2][2]*eta_c[1][1]
 						  +c22*eta_c[2][2]*eta_c[2][2]
-						  +c23*eta_c[2][3]*eta_c[2][3]
-						  +c13*eta_c[1][3]*eta_c[1][3]
-						  +c23*eta_c[2][3]*eta_c[2][3]
+						  +c23*eta_c[2][2]*eta_c[3][3]
+						  +c13*eta_c[3][3]*eta_c[1][1]
+						  +c23*eta_c[3][3]*eta_c[2][2]
 						  +c33*eta_c[3][3]*eta_c[3][3])*c2h[i*ND*ND+j*ND+k]*c2h[i*ND*ND+j*ND+k];
-				Estr2=-0.5*(c11*ep11c[i*ND*ND+j*ND+k]*eta_c[1][1]
+				Estr2=-(c11*ep11c[i*ND*ND+j*ND+k]*eta_c[1][1]
 					   +c12*ep11c[i*ND*ND+j*ND+k]*eta_c[2][2]
 					   +c13*ep11c[i*ND*ND+j*ND+k]*eta_c[3][3]
 					   +c12*ep22c[i*ND*ND+j*ND+k]*eta_c[1][1]
