@@ -227,7 +227,7 @@ int main(void)
 	cec[1][1][3][3]=cec[3][3][1][1]=c13;
 	cec[2][2][3][3]=cec[3][3][2][2]=c23;
 
-//--- Eigen stress (stress when elastically deformed by Eigen strain)j--------------
+//--- Eigen stress (stress when elastically deformed by Eigen strain)Âj--------------
 	sigma[1][1]=cec[1][1][1][1]*eta_c[1][1]
 			   +cec[1][1][2][2]*eta_c[2][2]
 			   +cec[1][1][3][3]*eta_c[3][3]; //sigma1
@@ -887,7 +887,7 @@ double zuij(int i0, int j0, int k0, int iii, int ND)
 	zij=0.0;
 	for(m=1;m<=3;m++) {
 		for(n=1;n<=3;n++) {
-			//zij=zij-(om[m][iii]/alnn)*sigma[m][n]*nec[n]; // eq.(5.30) or eq.(II 3.9), alnn=|k}
+			//zij=zij-(om[m][iii]/alnn)*sigma[m][n]*nec[n]; // eq.(5.30) or eq.(II 3.9), alnn=|k|, where k is wave vector k=(kx,ky,kz)
 			zij=zij+sigma[m][n]*nec[n]*om[m][iii];
 		}
 	}
