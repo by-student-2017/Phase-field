@@ -497,9 +497,9 @@ start: ;
 				ep11c[i*ND*ND+j*ND+k]=ec11[i*ND*ND+j*ND+k]+eta_c[1][1]*c0;
 				ep22c[i*ND*ND+j*ND+k]=ec22[i*ND*ND+j*ND+k]+eta_c[2][2]*c0;
 				ep33c[i*ND*ND+j*ND+k]=ec33[i*ND*ND+j*ND+k]+eta_c[3][3]*c0;
-				ep12c[i*ND*ND+j*ND+k]=ec12[i*ND*ND+j*ND+k];
-				ep13c[i*ND*ND+j*ND+k]=ec13[i*ND*ND+j*ND+k];
-				ep23c[i*ND*ND+j*ND+k]=ec23[i*ND*ND+j*ND+k];
+				ep12c[i*ND*ND+j*ND+k]=ec12[i*ND*ND+j*ND+k]+eta_c[1][2]*c0;
+				ep13c[i*ND*ND+j*ND+k]=ec13[i*ND*ND+j*ND+k]+eta_c[1][3]*c0;
+				ep23c[i*ND*ND+j*ND+k]=ec23[i*ND*ND+j*ND+k]+eta_c[2][3]*c0;
 				//
 				sig11[i*ND*ND+j*ND+k]=c11*ec11[i*ND*ND+j*ND+k]+c12*ec22[i*ND*ND+j*ND+k]+c13*ec33[i*ND*ND+j*ND+k]
 											   -(c11+c12+c13)*eta_c[1][1]*(c2h[i*ND*ND+j*ND+k]-c0);
@@ -557,11 +557,12 @@ start: ;
 				epc[2][1] = ep12c[i*ND*ND+j*ND+k]; epc[2][2] = ep22c[i*ND*ND+j*ND+k]; epc[2][3] = ep23c[i*ND*ND+j*ND+k];
 				epc[3][1] = ep13c[i*ND*ND+j*ND+k]; epc[3][2] = ep23c[i*ND*ND+j*ND+k]; epc[3][3] = ep33c[i*ND*ND+j*ND+k];
 				//
+				Estr[i*ND*ND+j*ND+k] = 0.0;
 				for(int ie=1;ie<=3;ie++){
 					for(int je=1;je<=3;je++){
 						for(int ke=1;ke<=3;ke++){
 							for(int le=1;le<=3;le++){
-								Estr[i*ND*ND+j*ND+k] += 0.5*cec[ie][je][ke][le]*(epc[ie][je] - eta_c[ie][je])*(epc[ke][le] - eta_c[ke][le]);
+								Estr[i*ND*ND+j*ND+k] += 0.5*cec[ie][je][ke][le]*(epc[ie][je] - eta_c[ie][je]*c2h[i*ND*ND+j*ND+k])*(epc[ke][le] - eta_c[ke][le]*c2h[i*ND*ND+j*ND+k]);
 							}
 						}
 					}
