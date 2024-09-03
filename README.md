@@ -331,3 +331,6 @@ Fig. When the value in the second line of "energy.out" (= 5000 steps) is reset a
 - https://www.jsces.org/activity/journal/files/tutorial_2103.pdf
 - https://www.cc.u-tokyo.ac.jp/events/lectures/209/20230630-1.pdf
 - https://www.cfca.nao.ac.jp/files/20230117ymiki.pdf
+
+## other codes
+- https://github.com/schiedung/PhaseField/blob/master/apps/kobayashi-cpu/KobayashiCPU.cpp
