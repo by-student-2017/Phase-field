@@ -323,7 +323,6 @@ Fig. When the value in the second line of "energy.out" (= 5000 steps) is reset a
 
 ## Acknowledgment
 - This project (modified version) is/was partially supported by the following :
-  + meguREnergy Co., Ltd.
   + ATSUMITEC Co., Ltd.
 
 ## Information of CUDA vs. OpenACC
