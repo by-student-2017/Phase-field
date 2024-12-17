@@ -321,10 +321,6 @@ Fig. When the value in the second line of "energy.out" (= 5000 steps) is reset a
 - The asterisk (*) is "something appropriate (here PC or username)
 - "-r" is an option that means to copy the contents of the directory (=folder)
 
-## Acknowledgment
-- This project (modified version) is/was partially supported by the following :
-  + ATSUMITEC Co., Ltd.
-
 ## Information of CUDA vs. OpenACC
 - https://proc-cpuinfo.fixstars.com/2020/06/openacc-vs-openmp-gpu-offloading/
 - https://www.jsces.org/activity/journal/files/tutorial_2103.pdf
